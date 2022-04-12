@@ -1,0 +1,19 @@
+{
+  "skiLipCheck":true,
+  "compilerOptions": {
+    "module": "commonJs",
+    "experimentalDecorators": true,
+    "target":"es5",
+    "outDir":"./build/",
+    "sourceMap": true,
+    "jsx": "react",
+    "baseUrl": "./src",
+    "paths": {
+      "Components/*":["./src/components"]
+    }
+  },
+  "include": [
+    "src/**/*"
+  ]
+
+}

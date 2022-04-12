@@ -1,0 +1,1 @@
+{"ast":null,"code":"/** This is a placeholder, not real render in dom */\nvar Option = function Option() {\n  return null;\n};\n\nOption.isSelectOption = true;\nexport default Option;","map":null,"metadata":{},"sourceType":"module"}

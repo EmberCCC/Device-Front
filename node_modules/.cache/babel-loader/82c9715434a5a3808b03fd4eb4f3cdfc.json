@@ -1,0 +1,1 @@
+{"ast":null,"code":"export * from './icons';\nexport * from './components/twoTonePrimaryColor';\nexport { default as createFromIconfontCN } from './components/IconFont';\nexport { default } from './components/Icon';","map":null,"metadata":{},"sourceType":"module"}

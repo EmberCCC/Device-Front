@@ -1,0 +1,13 @@
+.header{
+    background-color: white;
+    justify-content: space-between;
+    height: 100%;
+}
+.headerMenu{
+    justify-items: center;
+}
+.labelForCom{
+    border: 1px solid black;
+    border-radius: 0;
+    width: 40%;
+}

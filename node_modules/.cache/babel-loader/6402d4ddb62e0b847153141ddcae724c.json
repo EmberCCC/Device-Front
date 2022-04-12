@@ -1,0 +1,1 @@
+{"ast":null,"code":"/** This is a placeholder, not real render in dom */\nvar OptGroup = function OptGroup() {\n  return null;\n};\n\nOptGroup.isSelectOptGroup = true;\nexport default OptGroup;","map":null,"metadata":{},"sourceType":"module"}

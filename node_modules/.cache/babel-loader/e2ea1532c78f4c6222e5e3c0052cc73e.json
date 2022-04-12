@@ -1,0 +1,1 @@
+{"ast":null,"code":"import * as React from 'react';\n\nfunction Footer(_ref) {\n  var children = _ref.children;\n  return React.createElement(\"tfoot\", null, children);\n}\n\nexport default Footer;","map":null,"metadata":{},"sourceType":"module"}

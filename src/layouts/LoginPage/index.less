@@ -1,0 +1,156 @@
+.login_container {
+    height: 100%;
+    background: url('https://assets-boranet.oss-cn-hangzhou.aliyuncs.com/img/background.png') no-repeat center fixed;
+    background-size: cover;
+    background-position: center 0;
+    overflow: hidden;
+}
+
+.login-big-title {
+    text-align: center;
+    font-size: 33px;
+    // color: #161616;
+    position: absolute;
+    top: 150px;
+    left: 0;
+    right: 0;
+}
+
+.login_logo {
+    text-align: left;
+
+    img {
+        width: 132px;
+        height: 34px;
+    }
+}
+
+.login_title {
+    font-size: 50px;
+    font-family: MicrosoftYaHei;
+    color: rgba(22, 22, 22, 1) !important;
+}
+
+@media screen and (min-width:1920px) {
+
+    .login_form {
+        // width: 20%;
+        margin: 246px 0 0 190px;
+    }
+
+    .basic_login {
+        margin: 0 auto;
+    }
+}
+
+@media screen and (max-width:1920px) {
+    .login-big-title {
+        top: 150px;
+    }
+
+    .login_form {
+        // width: 25%;
+        margin: 180px 0 0 190px;
+
+    }
+
+    .basic_login {
+        margin: 0 auto;
+    }
+}
+
+@media screen and (max-width:1280px) {
+    .login_title {
+        font-size: 33px
+    }
+
+    .login_logo {
+        text-align: left;
+
+        img {
+            width: 88px;
+            height: 23px;
+        }
+    }
+
+    .login-big-title {
+        font-size: 40px;
+        top: 100px;
+    }
+
+    .login_form {
+        // width: 30%;
+        margin: 164px 0 0 127px;
+    }
+
+    .basic_login {
+        margin: 0 auto;
+    }
+}
+
+@media screen and (max-width:968px) {
+    .login-big-title {
+        top: 100px;
+        font-size: 38px
+    }
+
+    .login_form {
+        // width: 45%;
+        margin: 164px 0 0 127px;
+
+        // margin: 200px auto;
+    }
+
+    .basic_login {
+        margin: 0 auto;
+    }
+}
+
+
+@media screen and (max-width:768px) {
+    .login-big-title {
+        top: 120px;
+        font-size: 36px
+    }
+
+    .login_form {
+        // width: 60%;
+        margin: 200px auto;
+        text-align: center;
+    }
+}
+
+@media screen and (max-width:376px) {
+    .login-big-title {
+        top: 120px;
+        font-size: 34px
+    }
+
+    .login_form {
+        // width: 80%;
+        text-align: center;
+        margin: 200px auto;
+    }
+}
+
+
+
+.basic_login {
+    // border-radius: 3px;
+    background: transparent;
+    // box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.3);
+    padding: 0;
+
+    //     &>div {
+    //      text-align: center;
+    //  }
+    .login-form {
+        margin-top: 24px;
+
+        .login-btn {
+            &>button {
+                width: 100%;
+            }
+        }
+    }
+}

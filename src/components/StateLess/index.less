@@ -1,0 +1,44 @@
+/* 表格状态前圆形使用样式 */
+.circle-status{
+  span{
+    vertical-align: middle;
+    display: inline-block;
+  }
+  span:nth-child(1){
+    border-radius: 50%;
+    //width: 6px;
+    //height: 6px;
+    width: 24px;
+    height: 24px;
+    margin-right: 5px;
+  }
+  .circle-green{  //已派单
+    //background: #53c319;
+    background: url("../../assets/alreadySent.png")
+  }
+  .circle-deepGreen{  //已响应
+    //background: #009764;
+    background: url("../../assets/responded.png")
+  }
+  .circle-blue{  //已完成
+    //background: #6236FF;
+    background: url("../../assets/completed.png")
+  }
+  .circle-red{  //未完成
+    //background: #F04864;
+    background: url("../../assets/undone.png")
+  }
+  .circle-gray{  //已重派
+    //background: #999999;
+    background: url("../../assets/alreadySent.png")
+  }
+  .circle-yellow{  //未派单
+    //background: #facc20;
+    background: url("../../assets/noOrder.png")
+  }
+  .circle-reject{  //已拒绝
+    //background: pink;
+    background: url("../../assets/rejected.png")
+  }
+
+}

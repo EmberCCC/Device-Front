@@ -1,0 +1,68 @@
+/* 全局样式文件 */
+@import './layout.less';
+@import './mixins.less';
+@import './iconfont.css';
+@import './newIcon/iconfont.css';
+
+#root {
+    height: 100%;
+    width: 100%;
+}
+
+li {
+    list-style: none;
+}
+
+.type_line {
+    border-top: 1px solid #e8e8e8;
+}
+
+/* 表格操作文字样式 */
+.table_button {
+    span:nth-child(2n-1) {
+        cursor: pointer;
+        color: #6236FF;
+    }
+
+    span:nth-child(2n) {
+        margin: 0 2px;
+        color: gray;
+    }
+}
+
+.ant-form-item {
+    margin-bottom: 10px !important;
+}
+
+/* 表格内分割线的样式 */
+.ant-divider,
+.ant-divider-vertical {
+    margin: 0 4px !important;
+}
+
+/* 字体优化 */
+
+.icon {
+    width: 1em;
+    height: 1em;
+    vertical-align: -0.15em;
+    fill: currentColor;
+    overflow: hidden;
+}
+
+.ant-menu-dark.ant-menu-inline .ant-menu-submenu-title {
+    height: 51px !important;
+    line-height: 51px !important;
+}
+
+/* 全局设置 Menu样式 */
+#manu_container {
+    height: 100%;
+}
+
+// .ant-layout-sider{
+//   background:linear-gradient(#64687D,#3D415A) !important;
+// }
+// .ant-menu-dark.ant-menu-inline, .ant-menu-dark.ant-menu-vertical, .ant-menu-dark.ant-menu-vertical-left, .ant-menu-dark.ant-menu-vertical-right{
+//   height:calc(100% - 55px);
+// }

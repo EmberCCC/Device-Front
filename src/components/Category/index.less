@@ -1,0 +1,39 @@
+.categoryLayout {
+    border-bottom: 1px dashed rgba(0, 0, 0, .2);
+    box-sizing: border-box;
+    transition: height .3s linear 0s;
+    -webkit-transition: height .3s linear 0s;
+    -o-transition: height .3s linear 0s;
+    -moz-transition: height .3s linear 0s;
+    -ms-transition: height .3s linear 0s;
+
+    .category-box {
+        display: flex;
+        line-height: 32px;
+
+        .category-title {
+            margin-right: 24px;
+            font-size: 14px;
+        }
+
+        .category-content {
+            flex: 1;
+
+            .category-tag {
+                margin-right: 24px;
+                padding: 0 8px;
+                font-size: 14px;
+                opacity: .85;
+            }
+        }
+
+        .category-spread {
+            color: #6236FF;
+            cursor: pointer;
+
+            span {
+                margin: 0 0 11px 0;
+            }
+        }
+    }
+}

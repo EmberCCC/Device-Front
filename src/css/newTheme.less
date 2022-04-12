@@ -1,0 +1,334 @@
+#root {
+
+    // padding: 20px 13px;
+    .ant-layout-sider-children #manu_container {
+        background: linear-gradient(137deg, rgba(76, 56, 148, 1) 0%, rgba(32, 30, 106, 1) 100%) !important;
+        ;
+    }
+
+    .ant-sider-menu-content {
+        min-width: 197px !important;
+        // background: linear-gradient(129deg, rgba(255, 42, 142, 1) 0%, rgba(98, 54, 255, 1) 52%, rgba(50, 197, 255, 1) 100%) !important;
+        //box-shadow: 0px 0px 10px 0px rgba(157, 157, 157, 1) !important;
+        // box-shadow:0px 0px 8px 0px rgba(98,56,255,1);
+        box-shadow: 0px 0px 10px 0px rgba(157, 157, 157, 1);
+        border-radius: 10px;
+        margin: 20px 0 20px 13px;
+
+        .ant-menu {
+            background: transparent !important;
+            position: relative;
+            z-index: 1000;
+        }
+
+        .ant-menu-dark {
+            box-shadow: none !important;
+        }
+
+        .ant-menu-inline {
+            padding: 0 13px;
+            box-shadow: none !important;
+
+            .ant-menu-item-selected {
+                background: rgba(255, 255, 255, 1) !important;
+                color: #6236FF !important;
+            }
+
+            .ant-menu-item {
+                border-radius: 7px;
+                margin: 0;
+            }
+        }
+    }
+
+    .ant-layout-sider-collapsed {
+        min-width: 80px !important;
+    }
+
+
+
+    .right_layout {
+        margin: 20px 13px 20px 13px !important;
+        // position: relative;
+
+        .header_layout {
+            height: auto;
+
+            div:nth-child(1) {
+                // position: absolute;
+                // left: 200px;
+                // z-index: 100000;
+
+                .trigger {
+                    // padding-left: 0px !important;
+                }
+            }
+        }
+    }
+
+    #manu_container {
+        .menu_logo {
+            position: absolute !important;
+            bottom: 27px !important;
+            left: 0 !important;
+            right: 0 !important;
+            text-align: center !important;
+            z-index: 2;
+            padding: 0;
+
+            img {
+                height: 30px;
+                cursor: pointer;
+            }
+        }
+    }
+
+    //开始
+
+    //左侧菜单
+    .ant-layout-sider-children {
+        #manu_container {
+            & > ul{
+                //height: 100%;
+                background: url(https://assets-boranet.oss-cn-hangzhou.aliyuncs.com/img/left_menu.png) no-repeat bottom !important;
+                overflow: auto;
+            }
+        }
+    }
+
+    //中间内容bg
+    .ant-layout-content {
+        border-radius: 10px;
+        //padding:0 !important;
+        margin: -5px !important;
+        background-color: transparent !important;
+
+        //box-shadow:0px 0px 10px 0px rgba(209,209,209,1);
+    }
+
+    //下拉框、按钮、输入框
+    .ant-select {
+
+        //font-size:9px;
+        .ant-select-selection {
+            border: 2px solid #DEDEDE;
+            border-radius: 3px;
+            background-color: #FBFBFB;
+
+            .ant-select-selection__placeholder {
+                color: #9D9D9D;
+            }
+
+        }
+    }
+
+    .add-btn {
+        background-color: #32C5FF;
+        border-color: #32C5FF;
+    }
+
+    .btn-border-purple {
+        border-radius: 3px;
+        border: 2px solid #6236FF !important;
+        color: #6236FF;
+        background-color: transparent;
+    }
+
+    .btn-border-gray {
+        border-radius: 3px;
+        border: 2px solid #C4C4C4 !important;
+        color: #4A4A4A;
+        background-color: transparent;
+    }
+
+    .ant-input {
+        background: rgba(251, 251, 251, 1);
+        border-radius: 3px;
+        border: 2px solid #DEDEDE;
+        color: #9D9D9D;
+    }
+
+    //table
+    .ant-table {
+        table {
+            border-color: #E2E2E2;
+            border-radius: 4px 4px 4px 4px;
+        }
+    }
+
+    .ant-table-thead>tr>th {
+        background-color: #E2E2E2;
+    }
+
+    .ant-table-column-title {
+        font-size: 12px;
+        color: #161616;
+        font-weight: normal;
+    }
+
+    .ant-table-tbody {
+        background: #FAFAFA;
+    }
+
+    .ant-table-row {
+        color: #9D9D9D;
+        font-size: 12px;
+        font-weight: normal;
+        border: 1px solid #E2E2E2;
+    }
+
+    //设备状态
+    .ant-badge-status-success {
+        background: rgba(50, 197, 255, 1);
+        box-shadow: 0px 0px 3px 0px rgba(50, 197, 255, 1);
+    }
+
+    .ant-badge-status-error {
+        background: rgba(255, 42, 142, 1);
+        box-shadow: 0px 0px 3px 0px rgba(255, 42, 142, 1);
+    }
+
+    .ant-tag-magenta {
+        color: #FF2A8E;
+        background: transparent;
+        border: 1px solid rgba(255, 42, 142, 1);
+    }
+
+    .ant-tag-blue {
+        color: #32C5FF;
+        background: transparent;
+        border: 1px solid rgba(50, 197, 255, 1);
+    }
+
+    .ant-tag-gold {
+        color: #FFA200;
+        background: transparent;
+        border: 1px solid rgba(255, 162, 0, 1);
+    }
+
+    //任务等级
+    .ant-tag {
+        border-radius: 7px;
+        line-height: 16px;
+    }
+
+    //Tab
+    .ant-tabs-ink-bar {
+        height: 0px;
+    }
+
+    .ant-tabs-bar {
+        margin: 0;
+    }
+
+    .tab-content-bg {
+        background-color: #fff;
+        box-shadow: 0px 0px 10px 0px rgba(209, 209, 209, 1);
+        padding: 20px;
+        border-radius: 0 0 10px 10px;
+        min-height: 400px;
+    }
+
+    .ant-tabs-nav .ant-tabs-tab {
+        margin: 0;
+    }
+
+    .ant-tabs-tab-active {
+        background-color: #fff;
+        border-top: 3px solid #6236FF;
+        border-radius: 3px;
+        //box-shadow:0px 0px 10px 0px rgba(209,209,209,1);
+    }
+
+    .ant-tabs-bar {
+        border: none;
+    }
+
+    //icon
+    .icon-spacing {
+        margin-right: 6px;
+    }
+}
+
+//结束
+
+
+.ant-layout-sider-children {
+    #manu_container {
+        background: linear-gradient(129deg, rgba(255, 42, 142, 1) 0%, rgba(98, 54, 255, 1) 50%, rgba(50, 197, 255, 1) 100%);
+
+        .ant-menu {
+            background: transparent !important;
+            position: relative;
+            z-index: 1000;
+        }
+
+        .ant-menu-dark {
+            box-shadow: none !important;
+        }
+
+        .ant-menu-inline {
+            padding: 0 13px;
+            box-shadow: none !important;
+            height: 85% !important;
+            overflow: hidden;
+            overflow-y: auto;
+
+            .ant-menu-item-selected {
+                background: rgba(255, 255, 255, 1) !important;
+                color: #6236FF !important;
+            }
+
+            .ant-menu-item {
+                border-radius: 7px;
+                margin: 0;
+            }
+        }
+
+        .menu_logo {
+            position: absolute !important;
+            bottom: 27px !important;
+            left: 0 !important;
+            right: 0 !important;
+            text-align: center !important;
+            z-index: 2;
+            padding: 0;
+
+            img {
+                height: 27px;
+            }
+        }
+    }
+}
+
+.ant-drawer-close {
+    display: none !important;
+}
+
+.ant-layout-header {
+    display: flex;
+    align-items: center;
+
+    .crumb_layout {
+        flex: 1;
+    }
+}
+
+// .equip_layout {
+//     height: 100%;
+
+//     >div {
+//         height: 100%;
+
+//         >.tab-content-bg {
+//             height: 100%
+//         }
+//     }
+// }
+// #home_content {
+//     padding-bottom: 8px !important;
+// }
+#root .right_layout .header_layout {
+    z-index: 1000;
+    margin-bottom: 10px;
+}
