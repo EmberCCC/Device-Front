@@ -25,7 +25,8 @@ class Home {
   @observable columns = [];
   @observable dataSource = [];
   @observable itemDataT = []
-  @observable PageInfo = { pageIndex: 1, pageSize: 2 ,total:0}
+  @observable uploadData = {}
+  @observable PageInfo = { pageIndex: 1, pageSize: 2, total: 0 }
 
   /* 设置登陆信息 */
   @action async setLogin(params, finished) {
@@ -235,13 +236,22 @@ class Home {
   @action changeValue(key, value) {
     this[key] = value;
   }
+
+  //修改展示模式
   @action changeModel(value) {
     this.model = value;
   }
 
+  //修改二级表单
+  @action changeSecondFormId(value) {
+    this.secondFormId = value;
+  }
+
+  //获取所有数据以及字段
   @action.bound async queryAll(params) {
     this.isLoading = true;
     this.dataSource = []
+    this.columns = []
     params.pageIndex = params.pageIndex - 1;
     try {
       let res = await services.getRequest(services.requestList.getFieldNameAndType, params);
@@ -259,19 +269,19 @@ class Home {
           columns.push(obj)
         }
         columns.push({
-          title:'提交人',
-          dataIndex:'lastModifyPeopleNickName',
-          key:'lastModifyPeopleNickName'
+          title: '提交人',
+          dataIndex: 'lastModifyPeopleNickName',
+          key: 'lastModifyPeopleNickName'
         })
         columns.push({
-          title:'提交时间',
-          dataIndex:'createTime',
-          key:'createTime'
+          title: '提交时间',
+          dataIndex: 'createTime',
+          key: 'createTime'
         })
         columns.push({
-          title:'更新时间',
-          dataIndex:'updateTime',
-          key:'updateTime'
+          title: '更新时间',
+          dataIndex: 'updateTime',
+          key: 'updateTime'
         })
         this.columns = columns
         for (var i = 0; i < dataDataSource.length; i++) {
@@ -294,6 +304,7 @@ class Home {
     }
   }
 
+  //添加一条新的数据
   @action.bound async addNew(params) {
     this.isLoading = true;
     try {
@@ -307,6 +318,7 @@ class Home {
     }
   }
 
+  //查询字段
   @action.bound async queryField(params) {
     this.itemDataT = [];
     this.isLoading = true;
@@ -321,6 +333,7 @@ class Home {
     }
   }
 
+  //删除一个数据
   @action.bound async deleteObj(params) {
     this.isLoading = true;
     try {
@@ -334,6 +347,7 @@ class Home {
     }
   }
 
+  //更新字段表
   @action.bound async updateField(params) {
     this.isLoading = true;
     try {
@@ -347,6 +361,7 @@ class Home {
     }
   }
 
+  //更新一条数据
   @action.bound async updataObj(params) {
     console.log(params);
     this.isLoading = true;
@@ -360,8 +375,9 @@ class Home {
       console.log(error);
     }
   }
-  
-  @action.bound async countObj(params){
+
+  //获取数据总条数
+  @action.bound async countObj(params) {
     this.isLoading = true;
     try {
       let res = await services.getRequest(services.requestList.countObj, params);
