@@ -323,7 +323,79 @@ class Home {
     this.itemDataT = [];
     this.isLoading = true;
     try {
-      let res = await services.getRequest(services.requestList.getAllForm, params);
+      // let res = await services.getRequest(services.requestList.getAllForm, params);
+      let res = {}
+      res.code = 0
+      res.data = {}
+      res.data.data = [
+        {
+          "secondFormId": 0,
+          "properties": [
+            {
+              "propertyId": "tenement_1_form1_1_form2_0_id_1",
+              "typeId": "1",
+              "name": "车间",
+              "order": 1,
+              "others": {
+                // ........
+              }
+            },
+            {
+              "propertyId": "tenement_1_form1_1_form2_0_id_2",
+              "typeId": "1",
+              "name": "车间1",
+              "order": 2,
+              "others": {
+                // ........
+              }
+            },
+            {
+              "propertyId": "tenement_1_form1_1_form2_0_id_3",
+              "typeId": "1",
+              "name": "车间2",
+              "order": 3,
+              "others": {
+                // ........
+              }
+            },
+          ]
+        },
+        {
+          "secondFormId": 1,
+          "properties": [
+            {
+              "propertyId": "tenement_1_form1_1_form2_1_id_1",
+              "typeId": "1",
+              "name": "车间3",
+              "order": 1,
+              "others": {
+                // ........
+              }
+            },
+            {
+              "propertyId": "tenement_1_form1_1_form2_1_id_2",
+              "typeId": "1",
+              "name": "车间1",
+              "order": 2,
+              "others": {
+                // ........
+              }
+            },
+            {
+              "propertyId": "tenement_1_form1_1_form2_1_id_3",
+              "typeId": "1",
+              "name": "车间2",
+              "order": 3,
+              "others": {
+                // ........
+              }
+            },
+          ]
+        },
+        {
+          "secondFormId": 2,
+        }
+      ]
       this.isLoading = false
       if (isDataExist(res)) {
         this.itemDataT = res.data.data;

@@ -1,51 +1,36 @@
-/*
- * @Author: your name
- * @Date: 2022-04-11 16:11:20
- * @LastEditTime: 2022-04-13 09:14:13
- * @LastEditors: Please set LastEditors
- * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
- * @FilePath: \bl-device-manage-test\src\layouts\FlowManage\index.js
- */
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
+import { Layout, Button, Menu, Dropdown, Divider } from 'antd';
 import ReactFlow, {
   ReactFlowProvider,
+  addEdge,
   useNodesState,
   useEdgesState,
-  addEdge,
-  useReactFlow,
+  Controls,
 } from 'react-flow-renderer';
 
-import './index.css';
 import Sidebar from './Sidebar';
 
-const flowKey = 'example-flow';
-
-const getNodeId = () => `randomnode_${+new Date()}`;
-
+import './index.css';
+const { Header, Sider, Content } = Layout;
 const initialNodes = [
-  { id: '1', data: { label: 'Node 1' }, position: { x: 100, y: 100 } },
-  { id: '2', data: { label: 'Node 2' }, position: { x: 100, y: 200 } },
+  {
+    id: '1',
+    type: 'input',
+    data: { label: 'input node' },
+    position: { x: 250, y: 5 },
+  },
 ];
 
-const initialEdges = [{ id: 'e1-2', source: '1', target: '2' }];
+let id = 0;
+const getId = () => `dndnode_${id++}`;
 
-const SaveRestore = () => {
+const DnDFlow = () => {
   const reactFlowWrapper = useRef(null);
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-  const [rfInstance, setRfInstance] = useState(null);
-  const { setViewport } = useReactFlow();
+  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const [reactFlowInstance, setReactFlowInstance] = useState(null);
 
-  const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), [setEdges]);
-
-  const onSave = useCallback(() => {
-    if (rfInstance) {
-      const flow = rfInstance.toObject();
-      console.log(flow);
-      localStorage.setItem(flowKey, JSON.stringify(flow));
-    }
-  }, [rfInstance]);
-
+  const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), []);
 
   const onDragOver = useCallback((event) => {
     event.preventDefault();
@@ -64,12 +49,12 @@ const SaveRestore = () => {
         return;
       }
 
-      const position = rfInstance.project({
+      const position = reactFlowInstance.project({
         x: event.clientX - reactFlowBounds.left,
         y: event.clientY - reactFlowBounds.top,
       });
       const newNode = {
-        id: getNodeId(),
+        id: getId(),
         type,
         position,
         data: { label: `${type} node` },
@@ -77,30 +62,47 @@ const SaveRestore = () => {
 
       setNodes((nds) => nds.concat(newNode));
     },
-    [rfInstance]
+    [reactFlowInstance]
   );
+
+  const onSave = useCallback(() => {
+    if (reactFlowInstance) {
+      const flow = reactFlowInstance.toObject();
+      console.log(flow);
+      localStorage.setItem('example-flow', JSON.stringify(flow));
+    }
+  }, [reactFlowInstance]);
+
   return (
-    <ReactFlow
-      nodes={nodes}
-      edges={edges}
-      onNodesChange={onNodesChange}
-      onEdgesChange={onEdgesChange}
-      onConnect={onConnect}
-      onInit={setRfInstance}
-      onDrop={onDrop}
-      onDragOver={onDragOver}
-      fitView
-    >
-      <Sidebar />
-      <div className="save__controls">
-        <button onClick={onSave}>save</button>
+    <Layout>
+      <Header className='header'>
+        <Button type="primary" className='save'>保存</Button>
+      </Header>
+      <div className="dndflow">
+        <ReactFlowProvider>
+          <Content>
+            <div className="reactflow-wrapper" ref={reactFlowWrapper}>
+              <ReactFlow
+                nodes={nodes}
+                edges={edges}
+                onNodesChange={onNodesChange}
+                onEdgesChange={onEdgesChange}
+                onConnect={onConnect}
+                onInit={setReactFlowInstance}
+                onDrop={onDrop}
+                onDragOver={onDragOver}
+                fitView
+              >
+                <Controls />
+              </ReactFlow>
+            </div>
+          </Content>
+          <Sidebar />
+        </ReactFlowProvider>
       </div>
-    </ReactFlow>
+    </Layout>
+
   );
 };
 
-export default () => (
-  <ReactFlowProvider>
-    <SaveRestore />
-  </ReactFlowProvider>
-);
+export default DnDFlow;

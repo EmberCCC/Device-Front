@@ -107,7 +107,7 @@ class HeaderLayout extends Component {
           <Option value="manage">管理全部数据</Option>
           <Option value="look">查看全部数据</Option>
         </Select>
-        <NavLink to={{ pathname: '/edit', state: { selectedKeys: toJS(selectedKeys), item: toJS(itemDataT), secondFormId: toJS(secondFormId) } }} style={{ float: 'right' }}><Button type='primary'>编辑表单</Button></NavLink>
+        <NavLink to={{ pathname: '/design', state: { selectedKeys: toJS(selectedKeys), item: toJS(itemDataT), secondFormId: toJS(secondFormId) } }} style={{ float: 'right' }}><Button type='primary'>编辑表单</Button></NavLink>
       </Header>
     );
   }

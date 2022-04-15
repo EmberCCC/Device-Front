@@ -82,33 +82,36 @@ module.exports = function (proxy, allowedHost) {
     },
     public: allowedHost,
     proxy: {
-      "/manage": {
-        //"target": "http://zuultest.boranet.cn",
-        "target": "http://localhost:5555",
-        "changeOrigin": true,
-        "pathRewrite": {}
-      },
-      "/studio": {
-        "target": "http://devcloud.boranet.cn",
-        "changeOrigin": true,
-        "pathRewrite": {}
-      },
+      // "/manage": {
+      //   //"target": "http://zuultest.boranet.cn",
+      //   "target": "http://localhost:5555",
+      //   "changeOrigin": true,
+      //   "pathRewrite": {}
+      // },
+      // "/studio": {
+      //   "target": "http://devcloud.boranet.cn",
+      //   "changeOrigin": true,
+      //   "pathRewrite": {}
+      // },
       "/uaa": {
         //"target": "http://zuultest.boranet.cn",
         // "target": "http://localhost:5555",
-        "target": "http://misaki.center:8000",
+        // "target": "http://misaki.center:8000",
+        "target": "http://192.168.43.55:8000",
         "changeOrigin": true,
         "pathRewrite": {}
       },
       "/mongo": {
         //"target": "http://zuultest.boranet.cn",
-        "target": "http://misaki.center:8000",
+        // "target": "http://misaki.center:8000",
+        "target": "http://192.168.43.55:8000",
         "changeOrigin": true,
         "pathRewrite": {}
       },
       "/mysql": {
         //"target": "http://zuultest.boranet.cn",
-        "target": "http://misaki.center:8000",
+        // "target": "http://misaki.center:8000",
+        "target": "http://192.168.43.55:8000",
         "changeOrigin": true,
         "pathRewrite": {}
       },

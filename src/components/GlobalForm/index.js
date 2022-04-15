@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-04-05 11:02:45
- * @LastEditTime: 2022-04-12 23:29:51
+ * @LastEditTime: 2022-04-14 07:08:32
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage-test\src\components\GlobalForm\index.js
@@ -34,21 +34,27 @@ class GlobalForm extends React.Component {
                 let itemData1 = itemDataT.filter(function (txt) {
                     return txt.secondFormId == secondFormId
                 })
+                console.log(toJS(itemData1));
                 if (itemData1.length == 0) {
                     return [];
                 }
                 toJS(itemData1)
-                let properties = {}
-                properties = toJS(itemData1[0].properties)
-                properties.forEach(element => {
-                    let ele = {}
-                    ele.label = element.name
-                    ele.attr = element.others
-                    delete ele.attr.value
-                    ele.propertyId = element.propertyId
-                    ele.name = typeName[element.typeId]
-                    obj.push(ele)
-                });
+                if (itemData1[0].properties != undefined && itemData1[0].properties.length != 0) {
+                    let properties = {}
+                    properties = toJS(itemData1[0].properties)
+                    properties.forEach(element => {
+                        let ele = {}
+                        ele.label = element.name
+                        ele.attr = element.others
+                        delete ele.attr.value
+                        ele.propertyId = element.propertyId
+                        ele.name = typeName[element.typeId]
+                        obj.push(ele)
+                    });
+                }else{
+                    itemData = []
+                    return []
+                }
             }
             itemData = obj
             return obj
@@ -115,7 +121,7 @@ class GlobalForm extends React.Component {
         };
 
         const sub = (values) => {
-            const { firstFormId, addNew,uploadData } = this.props.HomeStore
+            const { firstFormId, addNew, uploadData } = this.props.HomeStore
             let itemObj = uploadData
             itemData.forEach(element => {
                 let key = element.propertyId
@@ -153,7 +159,7 @@ class GlobalForm extends React.Component {
         }
         return <div>
             <Tabs size='large' activeKey={this.props.HomeStore.secondFormId.toString()} onChange={changeTabs}>
-                {this.props.HomeStore.itemDataT.map((item,index)=>{
+                {this.props.HomeStore.itemDataT.map((item, index) => {
                     return <TabPane tab={<div><EditOutlined />{item.secondFormId + 1}</div>} key={(index).toString()} />
                 })}
             </Tabs>
@@ -166,7 +172,7 @@ class GlobalForm extends React.Component {
         </div>
     }
 
-    componentWillUnmount(){
+    componentWillUnmount() {
         this.props.HomeStore.uploadData = {}
         this.props.HomeStore.secondFormId = 0
     }

@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-03-22 09:57:32
- * @LastEditTime: 2022-04-10 18:53:39
+ * @LastEditTime: 2022-04-14 08:08:02
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage\src\utils\loashTools.js
@@ -177,27 +177,13 @@ const generatePathArr = index => {
     arr.pop()
     return arr
 }
-/* 
-[
-    {
-        "name": "Input", type
-        "attr": {
-            "style": {
-                "width": "60%"
-            },
-            "value": "",
-            "placeholder": "请输入"
-        },
-        "label": "文本框"
-    }
-]
-*/
-const changeObj = (firstFormId,secondFormId,obj,index) => {
+
+const changeObj = (firstFormId,obj) => {
     const newObj = {}
     newObj.firstFormId = firstFormId
-    newObj.secondFormId = secondFormId
+    newObj.secondFormId = obj.secondFormId
     newObj.name = obj.label
-    newObj.order = (index + 1).toString()
+    newObj.order = obj.order
     newObj.typeId = (typeId[obj.name]).toString()
     newObj.others = obj.attr
     return newObj

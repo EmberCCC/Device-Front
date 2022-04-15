@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-11-02 14:29:58
- * @LastEditTime: 2022-04-11 14:44:23
+ * @LastEditTime: 2022-04-14 20:55:31
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage\src\routes\home.js
@@ -30,9 +30,15 @@ const LoginPage = Loadable({
   loading: LoadingComponent
 });
 
+const DesignPage = Loadable({
+  loader: () => import('./DesignRouter'),
+  loading: LoadingComponent
+});
+
 export {
   HomeRouter,
   EditPage,
   LoginPage,
-  FlowPage
+  FlowPage,
+  DesignPage
 };

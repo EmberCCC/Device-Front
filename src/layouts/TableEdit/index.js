@@ -1,14 +1,15 @@
 /*
  * @Author: your name
  * @Date: 2022-03-22 09:57:59
- * @LastEditTime: 2022-04-11 14:55:56
+ * @LastEditTime: 2022-04-14 21:35:45
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage\src\layouts\TableEdit\index.js
  */
 
 import React, { Component } from 'react';
-import { Tag, Layout, Button, Modal, message, Form, Input, Select, Menu } from 'antd';
+import { Tag, Layout, Button, Modal, message, Form, Input, Select, Menu, Tabs } from 'antd';
+import { EditOutlined } from '@ant-design/icons';
 // Default SortableJS
 import Sortable from 'react-sortablejs';
 import _ from 'lodash';
@@ -18,7 +19,6 @@ import { indexToArray, getItem, setInfo, isPath, getCloneItem, itemRemove, itemA
 import { formItemData, GlobalComponent } from './config';
 import EditableTable from './EditableTable/index';
 import './index.css'
-import { NavLink } from 'react-router-dom';
 import { toJS } from 'mobx';
 import * as services from '../../services/home';
 import { typeName } from 'constants/status_constant';
@@ -44,52 +44,54 @@ const sortableOption = {
 @observer
 class EditPage extends Component {
   state = {
-    newObj :[],
-    curItemKey :'',
-    curItemName : '',
-    curItemType : '',
-    isChoose : false
+    totalObj: [],
+    newObj: [],
+    curItemKey: '',
+    curItemName: '',
+    curItemType: '',
+    isChoose: false
   }
   render() {
-    const {firstFormId} = this.props.HomeStore;                  // 组件数据
+    const { firstFormId, secondFormId } = this.props.HomeStore;                  // 组件数据
+    const { TabPane } = Tabs;
     let obj = this.state.newObj
 
     const handleLabelChange = (e) => {
       const val = e.target.value;
       this.setState({
-        curItemName : val
+        curItemName: val
       })
       obj[this.state.curItemKey].label = val;
       this.setState({
-        newObj:obj
+        newObj: obj
       })
     }
 
     const handleDel = () => {
       let newTreeData = itemRemove(this.state.curItemKey, obj);
       this.setState({
-        curItemKey :'',
-        curItemName :'',
-        curItemType :''
+        curItemKey: '',
+        curItemName: '',
+        curItemType: ''
       })
       console.log(newTreeData);
       this.setState({
-        newObj:newTreeData
+        newObj: newTreeData
       })
     }
 
     const sortableChoose = (e) => {
       console.log(e)
       this.setState({
-        isChoose : true
+        isChoose: true
       })
       const curKey = e.item.getAttribute('data-id');
       const curName = e.item.firstChild.innerText;
       const curType = e.item.getAttribute('type');
       this.setState({
-        curItemKey :curKey,
-        curItemName :curName,
-        curItemType :curType
+        curItemKey: curKey,
+        curItemName: curName,
+        curItemType: curType
       })
     };
 
@@ -103,7 +105,6 @@ class EditPage extends Component {
       const { newIndex } = e;
       // 新路径 为根节点时直接使用index
       const newPath = parentPath ? `${parentPath}-${newIndex}` : newIndex;
-      console.log('nameOrIndex:' + nameOrIndex, 'parentPath:' + parentPath, 'newIndex:' + newIndex, 'newPath:' + newPath)
       // 判断是否为路径 路径执行移动，非路径为新增
       if (isPath(nameOrIndex)) {
         // 旧的路径index
@@ -118,7 +119,7 @@ class EditPage extends Component {
           newTreeData = itemAdd(newPath, newTreeData, dragItem)
           // 更新视图
           this.setState({
-            newObj:newTreeData
+            newObj: newTreeData
           })
           console.log(this.state.newObj);
           return
@@ -128,7 +129,7 @@ class EditPage extends Component {
         // 删除元素 获得新数据
         newData = itemRemove(oldIndex, newData);
         this.setState({
-          newObj:newData
+          newObj: newData
         })
         console.log(this.state.newObj);
         return
@@ -145,7 +146,7 @@ class EditPage extends Component {
       }
       let Data = itemAdd(newPath, this.state.newObj, newItem)
       this.setState({
-        newObj:Data
+        newObj: Data
       })
       obj = this.state.newObj
     };
@@ -170,7 +171,7 @@ class EditPage extends Component {
       console.log(Data);
       // 调用父组件更新方法
       this.setState({
-        newObj:Data
+        newObj: Data
       })
     };
 
@@ -194,7 +195,7 @@ class EditPage extends Component {
                       onAdd: e => sortableAdd(e),
                       onChoose: e => sortableChoose(e),
                       onSort: e => this.setState({
-                        isChoose : false
+                        isChoose: false
                       }),
                     }}
                   >
@@ -273,22 +274,48 @@ class EditPage extends Component {
     }
 
     const saveForm = () => {
+      let test = this.state.totalObj.filter((item) => {
+        return item.secondFormId != secondFormId
+      })
+      this.state.newObj.map((item, index) => {
+        item.secondFormId = secondFormId
+        item.order = (index + 1).toString()
+        test.push(item)
+      })
+      this.setState({
+        totalObj: test
+      })
       let text = []
-      obj.map((element, index) => {
-        text.push(changeObj(firstFormId, 0, element, index))
+      this.state.totalObj.map((element) => {
+        text.push(changeObj(firstFormId,element))
       });
       console.log(text);
       save(text)
     }
+
+    const changeTabs = (e) => {
+      let test = this.state.totalObj.filter((item) => {
+        return item.secondFormId != secondFormId
+      })
+      this.state.newObj.map((item, index) => {
+        item.secondFormId = secondFormId
+        item.order = (index + 1).toString()
+        test.push(item)
+      })
+      let arr = []
+      arr = this.state.totalObj.filter((item) => {
+        return item.secondFormId == Number(e)
+      })
+      this.setState({
+        totalObj: test,
+        newObj: arr
+      })
+      this.props.HomeStore.changeSecondFormId(Number(e))
+    }
     return (
       <Layout>
         <Header className="header">
-          <NavLink to='/basic'><Button type='dashed' className='backButton'>Back</Button></NavLink>
-          <Menu theme="light" mode="horizontal" defaultSelectedKeys={['2']} justify='center' className='headerMenu'>
-            <Menu.Item key="1">nav 1</Menu.Item>
-            <Menu.Item key="2">nav 2</Menu.Item>
-            <Menu.Item key="3">nav 3</Menu.Item>
-          </Menu>
+          <Button>新手引导</Button>
           <Button onClick={saveForm}>保存</Button>
         </Header>
         <Layout>
@@ -326,6 +353,11 @@ class EditPage extends Component {
                 minHeight: 300,
               }}
             >
+              <Tabs size='large' activeKey={this.props.HomeStore.secondFormId.toString()} onChange={changeTabs}>
+                {this.props.HomeStore.itemDataT.map((item, index) => {
+                  return <TabPane tab={<div><EditOutlined />{item.secondFormId + 1}</div>} key={(index).toString()} />
+                })}
+              </Tabs>
               <Sortable
                 className='formContent'
                 ref={c => c && c.sortable}
@@ -335,12 +367,13 @@ class EditPage extends Component {
                   onAdd: e => sortableAdd(e),
                   onChoose: e => sortableChoose(e),
                   onSort: e => this.setState({
-                    isChoose : false
+                    isChoose: false
                   }),
                 }}
                 key={uniqueId()}
                 style={{ minHeight: '100%' }}
               >
+
                 {loop(this.state.newObj, '')}
               </Sortable>
             </Content>
@@ -370,29 +403,34 @@ class EditPage extends Component {
       </Layout>
     );
   }
-  componentWillMount(){
-    const { itemDataT, secondFormId } = this.props.HomeStore;
+  componentWillMount() {
+    const {secondFormId,firstFormId } = this.props.HomeStore;
+    let params = {};
+    params.firstFormId = firstFormId;
+    this.props.HomeStore.queryField(params)
     let arr = []
-    if (itemDataT.length != 0) {
-      let newObj = itemDataT.filter((txt)=>{
-        return txt.secondFormId == secondFormId
-      })
-      newObj[0].properties.map((txt)=>{
-        if (txt.propertyId != undefined) {
-          let ele = {}
-          ele.secondFormId = toJS(secondFormId)
-          ele.label = txt.name
-          ele.attr = toJS(txt.others)
-          ele.propertyId = txt.propertyId
-          ele.name = typeName[txt.typeId]
-          arr.push(ele)
-        }else{
-          arr.push(txt)
+    let newArr = []
+    if (this.props.HomeStore.itemDataT.length != 0) {
+      this.props.HomeStore.itemDataT.map((item) => {
+        if (item.properties != undefined && item.properties.length != 0) {
+          item.properties.map((txt) => {
+            let ele = {}
+            ele.secondFormId = toJS(item.secondFormId)
+            ele.label = txt.name
+            ele.attr = toJS(txt.others)
+            ele.propertyId = txt.propertyId || ""
+            ele.name = typeName[txt.typeId]
+            arr.push(ele)
+            if (ele.secondFormId == secondFormId) {
+              newArr.push(ele)
+            }
+          })
         }
       })
     }
     this.setState({
-      newObj:toJS(arr)
+      newObj: newArr,
+      totalObj: toJS(arr)
     })
   }
 }
