@@ -1,6 +1,6 @@
- 
+
 import { Rate, Input, Divider, DatePicker, InputNumber, Switch, Slider, Checkbox, Radio, Select } from 'antd';
- 
+
 const { MonthPicker, RangePicker, WeekPicker } = DatePicker;
 const { TextArea } = Input;
 const CheckboxGroup = Checkbox.Group;
@@ -29,17 +29,8 @@ const GlobalComponent = {
   Select,
   Rate,
 };
- 
+
 const formItemData = [
-  // {
-  //   name: 'Containers',
-  //   attr: {
-  //     style: {
-  //       border: '1px solid #40a9ff'
-  //     }
-  //   },
-  //   label: '容器'
-  // },
   {
     name: 'RangePicker',
     attr: {
@@ -60,33 +51,11 @@ const formItemData = [
     },
     label: '日选择框'
   },
-  // {
-  //   name: 'MonthPicker',
-  //   attr: {
-  //     style: {
-  //       width: '60%'
-  //     },
-  //     value: undefined,
-  //     placeholder: '请选择月份'
-  //   },
-  //   label: '月选择框'
-  // },
-  // {
-  //   name: 'WeekPicker',
-  //   attr: {
-  //     style: {
-  //       width: '60%',
-  //     },
-  //     value: undefined,
-  //     placeholder: '请选择周期'
-  //   },
-  //   label: '周选择框'
-  // },
   {
     name: 'Input',
     attr: {
-      style:{
-        width:'60%'
+      style: {
+        width: '60%'
       },
       value: '',
       placeholder: '请输入'
@@ -96,8 +65,8 @@ const formItemData = [
   {
     name: 'TextArea',
     attr: {
-      style:{
-        width:'60%'
+      style: {
+        width: '60%'
       },
       value: '',
       placeholder: '请输入'
@@ -111,41 +80,14 @@ const formItemData = [
     },
     label: '数字框'
   },
-  // {
-  //   name: 'Switch',
-  //   attr: {
-  //     style: {
-  //       width: 44,
-  //     },
-  //     value: false,
-  //   },
-  //   label: '开关'
-  // },
-  // {
-  //   name: 'Slider',
-  //   attr: {
-  //     style: {
-  //       width: '60%',
-  //       padding: '0'
-  //     },
-  //     value: 10
-  //   },
-  //   label: '滑动条'
-  // },
-  // {
-  //   name: 'Rate',
-  //   attr: {
-  //     style: { 
-  //       width: '60%',
-  //       color: '#47FECF' 
-  //     },
-  //     value: 0
-  //   },
-  //   label: '评分'
-  // },
   {
     name: 'Divider',
-    attr: {},
+    attr: {
+      style: {
+        border: '2px solid grey', 
+        borderRadius: '2px'
+      }
+    },
     label: '分割线'
   },
   {
@@ -173,5 +115,5 @@ const formItemData = [
     label: '下拉框'
   },
 ];
- 
+
 export { formItemData, GlobalComponent, options }

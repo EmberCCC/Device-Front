@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-04-02 11:12:08
- * @LastEditTime: 2022-04-13 08:46:27
+ * @LastEditTime: 2022-04-17 10:48:47
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage-test\src\layouts\BasicManage\ComputerPage\index.js
@@ -15,7 +15,6 @@ import { toJS } from 'mobx';
 import GlobalTabel from 'components/GlobalTabel';
 
 
-@inject('BasicStore')
 @inject('HomeStore')
 @observer
 class CommonTable extends Component {

@@ -1,14 +1,14 @@
 /*
  * @Author: your name
  * @Date: 2022-03-22 09:57:59
- * @LastEditTime: 2022-04-14 21:35:45
+ * @LastEditTime: 2022-04-19 18:37:58
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage\src\layouts\TableEdit\index.js
  */
 
 import React, { Component } from 'react';
-import { Tag, Layout, Button, Modal, message, Form, Input, Select, Menu, Tabs } from 'antd';
+import { Tag, Layout, Button, Modal, message, Form, Input, Select, Tabs, InputNumber } from 'antd';
 import { EditOutlined } from '@ant-design/icons';
 // Default SortableJS
 import Sortable from 'react-sortablejs';
@@ -39,7 +39,6 @@ const sortableOption = {
 };
 
 
-@inject('BasicStore')
 @inject('HomeStore')
 @observer
 class EditPage extends Component {
@@ -49,6 +48,7 @@ class EditPage extends Component {
     curItemKey: '',
     curItemName: '',
     curItemType: '',
+    curItemMention: '',
     isChoose: false
   }
   render() {
@@ -67,6 +67,18 @@ class EditPage extends Component {
       })
     }
 
+    const handleMentionChange = (e) => {
+      const val = e.target.value;
+      this.setState({
+        curItemMention: val
+      })
+      obj[this.state.curItemKey].attr.placeholder = val;
+      this.setState({
+        newObj: obj
+      })
+    }
+
+
     const handleDel = () => {
       let newTreeData = itemRemove(this.state.curItemKey, obj);
       this.setState({
@@ -74,13 +86,13 @@ class EditPage extends Component {
         curItemName: '',
         curItemType: ''
       })
-      console.log(newTreeData);
       this.setState({
         newObj: newTreeData
       })
     }
 
     const sortableChoose = (e) => {
+      console.log(this.state.newObj);
       console.log(e)
       this.setState({
         isChoose: true
@@ -88,10 +100,12 @@ class EditPage extends Component {
       const curKey = e.item.getAttribute('data-id');
       const curName = e.item.firstChild.innerText;
       const curType = e.item.getAttribute('type');
+      const curMention = e.item.getAttribute('mention');
       this.setState({
         curItemKey: curKey,
         curItemName: curName,
-        curItemType: curType
+        curItemType: curType,
+        curItemMention: curMention
       })
     };
 
@@ -121,7 +135,6 @@ class EditPage extends Component {
           this.setState({
             newObj: newTreeData
           })
-          console.log(this.state.newObj);
           return
         }
         // 添加拖拽元素
@@ -131,7 +144,6 @@ class EditPage extends Component {
         this.setState({
           newObj: newData
         })
-        console.log(this.state.newObj);
         return
       }
 
@@ -168,7 +180,6 @@ class EditPage extends Component {
       });
       // 最新的数据 根节点时直接调用data
       const Data = parentPath ? setInfo(parentPath, this.state.newObj, parent) : parent
-      console.log(Data);
       // 调用父组件更新方法
       this.setState({
         newObj: Data
@@ -210,8 +221,9 @@ class EditPage extends Component {
                 data-id={indexs}
                 key={indexs}
                 type={item.name}
+                mention={item.attr.placeholder ? item.attr.placeholder : ''}
                 className='formItemStyle'
-                style={(this.state.isChoose && indexs === this.state.curItemKey) ? { border: '1px solid #FF3333' } : {}}
+                style={(this.state.isChoose && indexs === this.state.curItemKey) ? { border: '1px solid blue', borderRadius: '5px' } : {}}
               >
                 {
                   item.name !== 'Divider' &&
@@ -248,7 +260,9 @@ class EditPage extends Component {
 
     const getDataSource = (options) => {
       obj[this.state.curItemKey].attr.options = [...options];
-      this.obj = obj
+      this.setState({
+        newObj: obj
+      })
     }
 
     const save = (params) => {
@@ -267,6 +281,7 @@ class EditPage extends Component {
 
         },
         onCancel() {
+          console.log(params);
           console.log('Cancel');
         },
       });
@@ -285,9 +300,10 @@ class EditPage extends Component {
       this.setState({
         totalObj: test
       })
+      let arr = test
       let text = []
-      this.state.totalObj.map((element) => {
-        text.push(changeObj(firstFormId,element))
+      arr.map((element) => {
+        text.push(changeObj(firstFormId, element))
       });
       console.log(text);
       save(text)
@@ -378,13 +394,22 @@ class EditPage extends Component {
               </Sortable>
             </Content>
             <Sider theme='light' width={'20%'} style={{ textAlign: 'center' }}>
-              <h3 className='textHead'>字段设置</h3>
+              <h3 className='textHead'>字段属性</h3>
               <Form className='itemForm'>
-                <Form.Item label="组件Key">
-                  <Input value={this.state.curItemKey} disabled />
-                </Form.Item>
                 <Form.Item label="标签名">
                   <Input value={this.state.curItemName} disabled={!this.state.isChoose} onChange={handleLabelChange} />
+                </Form.Item>
+                <Form.Item label="提示文字">
+                  <Input value={this.state.curItemMention} disabled={!this.state.isChoose} onChange={handleMentionChange} />
+                </Form.Item>
+                <Form.Item label="描述信息">
+                  <Input/>
+                </Form.Item>
+                <Form.Item label="格式">
+                  <Input />
+                </Form.Item>
+                <Form.Item label="默认值">
+                  <Input  />
                 </Form.Item>
                 {
                   ['CheckboxGroup', 'RadioGroup', 'Select'].includes(this.state.curItemType) &&
@@ -404,14 +429,15 @@ class EditPage extends Component {
     );
   }
   componentWillMount() {
-    const {secondFormId,firstFormId } = this.props.HomeStore;
+    const { secondFormId, firstFormId } = this.props.HomeStore;
     let params = {};
     params.firstFormId = firstFormId;
     this.props.HomeStore.queryField(params)
     let arr = []
     let newArr = []
     if (this.props.HomeStore.itemDataT.length != 0) {
-      this.props.HomeStore.itemDataT.map((item) => {
+      this.props.HomeStore.itemDataT.map((item, index) => {
+        let order = 1;
         if (item.properties != undefined && item.properties.length != 0) {
           item.properties.map((txt) => {
             let ele = {}
@@ -420,6 +446,8 @@ class EditPage extends Component {
             ele.attr = toJS(txt.others)
             ele.propertyId = txt.propertyId || ""
             ele.name = typeName[txt.typeId]
+            ele.order = (order++).toString();
+
             arr.push(ele)
             if (ele.secondFormId == secondFormId) {
               newArr.push(ele)

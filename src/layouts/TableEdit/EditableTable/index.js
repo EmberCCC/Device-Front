@@ -11,7 +11,7 @@ class EditableCell extends React.Component {
     }
     return <Input />;
   };
- 
+
   renderCell = () => {
     const {
       editing,
@@ -40,7 +40,7 @@ class EditableCell extends React.Component {
     return <EditableContext.Consumer>{this.renderCell}</EditableContext.Consumer>;
   }
 }
- 
+
 export default class EditableTable extends React.Component {
   EditRef = React.createRef();
   constructor(props) {
@@ -90,7 +90,7 @@ export default class EditableTable extends React.Component {
       },
     ];
   }
- 
+
   componentDidUpdate({ curItemKey }) {
     if (curItemKey !== this.props.curItemKey) {
       this.setState({ data: this.props.options })
@@ -154,7 +154,7 @@ export default class EditableTable extends React.Component {
         cell: EditableCell,
       },
     };
- 
+
     const columns = this.columns.map(col => {
       if (!col.editable) {
         return col;
