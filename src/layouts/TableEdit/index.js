@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-03-22 09:57:59
- * @LastEditTime: 2022-04-19 18:37:58
+ * @LastEditTime: 2022-04-19 22:38:39
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage\src\layouts\TableEdit\index.js
@@ -49,6 +49,7 @@ class EditPage extends Component {
     curItemName: '',
     curItemType: '',
     curItemMention: '',
+    curItemDescripe: '',
     isChoose: false
   }
   render() {
@@ -78,6 +79,16 @@ class EditPage extends Component {
       })
     }
 
+    const handleDescripeChange = (e) => {
+      const val = e.target.value;
+      this.setState({
+        curItemDescripe: val
+      })
+      obj[this.state.curItemKey].attr.descripe = val;
+      this.setState({
+        newObj: obj
+      })
+    }
 
     const handleDel = () => {
       let newTreeData = itemRemove(this.state.curItemKey, obj);
@@ -101,11 +112,13 @@ class EditPage extends Component {
       const curName = e.item.firstChild.innerText;
       const curType = e.item.getAttribute('type');
       const curMention = e.item.getAttribute('mention');
+      const curDescripe = e.item.getAttribute('descripe');
       this.setState({
         curItemKey: curKey,
         curItemName: curName,
         curItemType: curType,
-        curItemMention: curMention
+        curItemMention: curMention,
+        curItemDescripe: curDescripe
       })
     };
 
@@ -228,6 +241,10 @@ class EditPage extends Component {
                 {
                   item.name !== 'Divider' &&
                   <div className='formItemLabel'>{this.state.isChoose ? (indexs === this.state.curItemKey ? this.state.curItemName : item.label) : item.label}</div>
+                }
+                {
+                  item.attr.descripe &&
+                  <div className='formItemDescripe'>{item.attr.descripe}</div>
                 }
                 {
                   renderDiffComponents(item, indexs, ComponentInfo)
@@ -403,13 +420,13 @@ class EditPage extends Component {
                   <Input value={this.state.curItemMention} disabled={!this.state.isChoose} onChange={handleMentionChange} />
                 </Form.Item>
                 <Form.Item label="描述信息">
-                  <Input/>
+                  <Input value={this.state.curItemDescripe} disabled={!this.state.isChoose} onChange={handleDescripeChange} />
                 </Form.Item>
                 <Form.Item label="格式">
-                  <Input />
+                  <Input disabled={!this.state.isChoose} />
                 </Form.Item>
                 <Form.Item label="默认值">
-                  <Input  />
+                  <Input disabled={!this.state.isChoose} />
                 </Form.Item>
                 {
                   ['CheckboxGroup', 'RadioGroup', 'Select'].includes(this.state.curItemType) &&

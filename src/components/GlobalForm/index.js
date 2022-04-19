@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-04-05 11:02:45
- * @LastEditTime: 2022-04-17 10:49:13
+ * @LastEditTime: 2022-04-19 22:46:51
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage-test\src\components\GlobalForm\index.js
@@ -14,6 +14,7 @@ import { GlobalComponent } from 'layouts/TableEdit/config';
 import { inject, observer } from 'mobx-react';
 import { typeName } from 'constants/status_constant';
 import { toJS } from 'mobx';
+import '../../layouts/TableEdit/index.css'
 
 const { Option } = Select;
 @inject('HomeStore')
@@ -50,7 +51,7 @@ class GlobalForm extends React.Component {
                         ele.name = typeName[element.typeId]
                         obj.push(ele)
                     });
-                }else{
+                } else {
                     itemData = []
                     return []
                 }
@@ -88,6 +89,7 @@ class GlobalForm extends React.Component {
         // 递归函数
         const loop = (arr, index) => {
             arr = changeField()
+            console.log(arr);
             return (
                 arr.map((item, i) => {
                     const indexs = index === '' ? String(i) : `${index}-${i}`;
@@ -100,6 +102,7 @@ class GlobalForm extends React.Component {
                             )
                         }
                         const ComponentInfo = GlobalComponent[item.name]
+                        console.log(item.attr.describe);
                         return (
                             <Form.Item
                                 key={indexs}
@@ -107,6 +110,10 @@ class GlobalForm extends React.Component {
                                 name={item.label}
                                 className='formItemStyle'
                             >
+                                {
+                                    item.attr.descripe &&
+                                    <div className='formItemDescripe'>{item.attr.descripe}</div>
+                                }
                                 {
                                     renderDiffComponents(item, indexs, ComponentInfo)
                                 }
