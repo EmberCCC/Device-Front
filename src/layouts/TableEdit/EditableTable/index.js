@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Table, Input, InputNumber, Form, Button } from 'antd';
- 
+import { Form } from '@ant-design/compatible';
+import { Table, Input, InputNumber, Button } from 'antd';
+
 const EditableContext = React.createContext();
- 
+
 class EditableCell extends React.Component {
   getInput = () => {
     if (this.props.inputType === 'number') {
@@ -12,7 +13,7 @@ class EditableCell extends React.Component {
     return <Input />;
   };
 
-  renderCell = () => {
+  renderCell = ({ getFieldDecorator }) => {
     const {
       editing,
       dataIndex,
@@ -26,8 +27,16 @@ class EditableCell extends React.Component {
     return (
       <td {...restProps}>
         {editing ? (
-          <Form.Item style={{ margin: 0 }} name={dataIndex} rules={[{required:true}]}>
-            {this.getInput()}
+          <Form.Item style={{ margin: 0 }}>
+            {getFieldDecorator(dataIndex, {
+              rules: [
+                {
+                  required: true,
+                  message: `请输入 ${title}!`,
+                },
+              ],
+              initialValue: record[dataIndex],
+            })(this.getInput())}
           </Form.Item>
         ) : (
           children
@@ -35,60 +44,60 @@ class EditableCell extends React.Component {
       </td>
     );
   };
- 
+
   render() {
     return <EditableContext.Consumer>{this.renderCell}</EditableContext.Consumer>;
   }
 }
 
-export default class EditableTable extends React.Component {
-  EditRef = React.createRef();
+class EditableTable extends React.Component {
   constructor(props) {
     super(props);
     const { options } = this.props;
-    this.state = { data: options, editingKey: '', count: options.length };
-    this.columns = [
-      {
-        title: '显示值',
-        dataIndex: 'label',
-        width: '30%',
-        editable: true,
-      },
-      {
-        title: '传递值',
-        dataIndex: 'value',
-        width: '30%',
-        editable: true,
-      },
-      {
-        title: '操作',
-        dataIndex: 'operation',
-        render: (text, record) => {
-          const { editingKey } = this.state;
-          const editable = this.isEditing(record);
-          return editable ? (
-            <span>
-              <EditableContext.Consumer>
-                {form => (
-                  <a
-                    onClick={() => this.save(form, record.key)}
-                    style={{ marginRight: 15 }}
-                  >
-                    保存
-                  </a>
-                )}
-              </EditableContext.Consumer>
-              <a onClick={() => this.cancel(record.key)}>取消</a>
-            </span>
-          ) : (
-            <span>
-              <a disabled={editingKey !== ''} onClick={() => this.edit(record.key)}>编辑</a>
-              <a style={{ marginLeft: 15, color: '#FF3333' }} onClick={() => this.delete(record.key)}>删除</a>
-            </span>
-          );
+    this.state = {
+      data: options, editingKey: '', count: options.length, columns: [
+        {
+          title: '显示值',
+          dataIndex: 'label',
+          width: '30%',
+          editable: true,
         },
-      },
-    ];
+        {
+          title: '传递值',
+          dataIndex: 'value',
+          width: '30%',
+          editable: true,
+        },
+        {
+          title: '操作',
+          dataIndex: 'operation',
+          render: (text, record) => {
+            const { editingKey } = this.state;
+            const editable = this.isEditing(record);
+            return editable ? (
+              <span>
+                <EditableContext.Consumer>
+                  {form => (
+                    <a
+                      onClick={() => this.save(form, record.key)}
+                      style={{ marginRight: 15 }}
+                    >
+                      保存
+                    </a>
+                  )}
+                </EditableContext.Consumer>
+                <a onClick={() => this.cancel(record.key)}>取消</a>
+              </span>
+            ) : (
+              <span>
+                <a disabled={editingKey !== ''} onClick={() => this.edit(record.key)}>编辑</a>
+                <a style={{ marginLeft: 15, color: '#FF3333' }} onClick={() => this.delete(record.key)}>删除</a>
+              </span>
+            );
+          },
+        },
+      ]
+    };
   }
 
   componentDidUpdate({ curItemKey }) {
@@ -96,14 +105,18 @@ export default class EditableTable extends React.Component {
       this.setState({ data: this.props.options })
     }
   }
- 
-  isEditing = record => record.key === this.state.editingKey;
- 
+
+  isEditing = record => {
+    return record.key == this.state.editingKey
+  };
+
   cancel = () => {
+    this.reset()
     this.setState({ editingKey: '' });
   };
- 
+
   save(form, key) {
+    this.reset()
     form.validateFields((error, row) => {
       if (error) {
         return;
@@ -123,17 +136,49 @@ export default class EditableTable extends React.Component {
       this.setState({ data: newData, editingKey: '' });
     });
   }
- 
+
   edit(key) {
-    this.setState({ editingKey: key });
+    this.reset()
+    this.setState({ editingKey: key});
   }
- 
+  reset(key){
+    let columns = this.state.columns
+    columns.pop()
+    columns.push({
+      title: '操作',
+      dataIndex: 'operation',
+      render: (text, record) => {
+        const { editingKey } = this.state;
+        const editable = this.isEditing(record);
+        return editable ? (
+          <span>
+            <EditableContext.Consumer>
+              {form => (
+                <a
+                  onClick={() => this.save(form, record.key)}
+                  style={{ marginRight: 15 }}
+                >
+                  保存
+                </a>
+              )}
+            </EditableContext.Consumer>
+            <a onClick={() => this.cancel(record.key)}>取消</a>
+          </span>
+        ) : (
+          <span>
+            <a disabled={editingKey !== ''} onClick={() => this.edit(record.key)}>编辑</a>
+            <a style={{ marginLeft: 15, color: '#FF3333' }} onClick={() => this.delete(record.key)}>删除</a>
+          </span>
+        );
+      },
+    })
+  }
   delete = key => {
     const data = [...this.state.data];
     this.props.getDataSource(data.filter(item => item.key !== key))
-    this.setState({ data: data.filter(item => item.key !== key) });
+    this.setState({ data: data.filter(item => item.key !== key), editingKey: '' });
   };
- 
+
   add = () => {
     const { count, data } = this.state;
     const newData = {
@@ -147,15 +192,14 @@ export default class EditableTable extends React.Component {
       count: count + 1,
     });
   };
- 
+
   render() {
     const components = {
       body: {
         cell: EditableCell,
       },
     };
-
-    const columns = this.columns.map(col => {
+    const columns = this.state.columns.map(col => {
       if (!col.editable) {
         return col;
       }
@@ -163,15 +207,14 @@ export default class EditableTable extends React.Component {
         ...col,
         onCell: record => ({
           record,
-          inputType: col.dataIndex === 'value' ? 'number' : 'text',
+          inputType: 'text',
           dataIndex: col.dataIndex,
           title: col.title,
           editing: this.isEditing(record),
         }),
       };
     });
-    console.log(this.state.data);
-    console.log(columns);
+
     return (
       <EditableContext.Provider value={this.props.form}>
         <Button disabled={this.props.disabled} onClick={this.add} type="primary" style={{ marginBottom: 16 }}>添加选项</Button>
@@ -187,8 +230,9 @@ export default class EditableTable extends React.Component {
     );
   }
 }
- 
- 
+
+const EditableFormTable = Form.create()(EditableTable);
+
 EditableCell.propTypes = {
   editing: PropTypes.bool,
   dataIndex: PropTypes.string,
@@ -199,7 +243,7 @@ EditableCell.propTypes = {
   children: PropTypes.array.isRequired,
   restProps: PropTypes.object,
 }
- 
+
 EditableTable.propTypes = {
   form: PropTypes.object.isRequired,
   getDataSource: PropTypes.func.isRequired,
@@ -207,4 +251,5 @@ EditableTable.propTypes = {
   options: PropTypes.array,
   disabled: PropTypes.bool.isRequired
 }
- 
+
+export default EditableFormTable

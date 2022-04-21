@@ -1,13 +1,13 @@
 /*
  * @Author: your name
  * @Date: 2022-04-07 11:58:39
- * @LastEditTime: 2022-04-11 13:42:39
+ * @LastEditTime: 2022-04-21 15:36:17
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage-test\src\components\GlobalTabel\index.js
  */
 import React, { useState } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form, Typography ,Modal, message,Divider } from 'antd';
+import { Table, Input, InputNumber, Popconfirm, Form, Typography, Modal, message, Divider } from 'antd';
 import { toJS } from 'mobx';
 
 const EditableCell = ({
@@ -64,8 +64,6 @@ const GlobalTabel = (props) => {
   };
 
   const cancel = (e) => {
-    console.log(e.current);
-    console.log(page);
     page.pageIndex = e.current;
     getData(page)
     setEditingKey('');
@@ -78,32 +76,37 @@ const GlobalTabel = (props) => {
       const index = newData.findIndex((item) => key === item.key);
       if (index > -1) {
         const item = newData[index];
-        let params = {}
-        params.firstFormId = firstFormId
-        params.secondFormId = secondFormId
-        params.dataId = item.id.toString()
-        console.log(toJS(data[index]));
-        Modal.confirm({
-          title: '提示',
-          content: '是否确认修改该条数据',
-          okText: '确认',
-          cancelText: '取消',
-          onOk() {
-            getData(page)
-            message.success('修改成功')
-          },
-          onCancel() {
-            console.log('Cancel');
-          },
-        });
-    
-        updataData(params)
         newData.splice(index, 1, { ...item, ...row });
       } else {
         newData.push(row);
       }
-      setEditingKey('');
-      getData(page)
+      const item = newData[index];
+      let params = {}
+      params.firstFormId = firstFormId
+      params.secondFormId = secondFormId
+      params.dataId = item.id.toString()
+      Modal.confirm({
+        title: '提示',
+        content: '是否确认修改该条数据',
+        okText: '确认',
+        cancelText: '取消',
+        onOk() {
+          let newObj = {}
+          console.log(item);
+          Object.keys(item).map((obj) => {
+            if (obj.startsWith('tenement')) {
+              newObj[obj] = item[obj]
+            }
+          })
+          params.updataData = newObj
+          updataData(params)
+          setEditingKey('')
+          message.success('修改成功')
+        },
+        onCancel() {
+          console.log('Cancel');
+        },
+      });
     } catch (errInfo) {
       console.log('Validate Failed:', errInfo);
     }
@@ -122,6 +125,7 @@ const GlobalTabel = (props) => {
       onOk() {
         del(params)
         getData(page)
+        setEditingKey('')
         message.success('删除成功')
       },
       onCancel() {
@@ -132,12 +136,12 @@ const GlobalTabel = (props) => {
   const columns = props.columns
   let obj = columns
   const text = obj.pop()
-  if (text != undefined && !('align' in text) ) {
+  if (text != undefined && !('align' in text)) {
     obj.push(text)
   }
   obj.push({
     align: 'right',
-    width:'20%',
+    width: '20%',
     title: '操作',
     dataIndex: '操作',
     render: (_, record) => {
@@ -155,8 +159,8 @@ const GlobalTabel = (props) => {
           <Popconfirm title="Sure to cancel?" onConfirm={cancel}>
             <a>Cancel</a>
           </Popconfirm>
-          <Divider type='vertical'/>
-          <a onClick={() =>deleteRecord(record)}>Delete</a>
+          <Divider type='vertical' />
+          <a onClick={() => deleteRecord(record)}>Delete</a>
         </span>
       ) : (
         <span>
@@ -181,7 +185,7 @@ const GlobalTabel = (props) => {
       ...col,
       onCell: (record) => ({
         record,
-        inputType: col.dataIndex === 'age' ? 'number' : 'text',
+        inputType: 'text',
         dataIndex: col.dataIndex,
         title: col.title,
         editing: isEditing(record),

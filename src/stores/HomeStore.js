@@ -254,7 +254,76 @@ class Home {
     this.columns = []
     params.pageIndex = params.pageIndex - 1;
     try {
-      let res = await services.getRequest(services.requestList.getFieldNameAndType, params);
+      // let res = await services.getRequest(services.requestList.getFieldNameAndType, params);
+      let res = {}
+      res.code = 0;
+      res.data = {}
+      res.data.data = {
+        "firstFormId": 1,
+        "columns": [
+            {
+                "propertyId": "tenement_1_form1_1_form2_0_id_1",
+                "typeId": 1,
+                "name": "机房",
+                "updateTime": "2022-04-09T12:41:47.647+0000",
+                "others": {
+                    "style": {
+                        "width": "60%"
+                    },
+                    "value": "",
+                    "placeholder": "请输入"
+                }
+            },
+            {
+                "propertyId": "tenement_1_form1_1_form2_0_id_2",
+                "typeId": 1,
+                "name": "测试字段",
+                "updateTime": "2022-04-09T12:41:47.647+0000",
+                "others": {
+                    "style": {
+                        "width": "60%"
+                    },
+                    "value": "",
+                    "placeholder": "请输入"
+                }
+            }
+        ],
+        "dataSource": [
+            {
+                "dataId": 1,
+                "tenementId": 1,
+                "data": {
+                    "tenement_1_form1_1_form2_0_id_1": "车间一"
+                },
+                "lastModifyPeopleNickName": "超级管理员",
+                "createTime": "2022-04-10T05:16:14.330+0000",
+                "updateTime": "2022-04-10T05:16:14.330+0000",
+                "isDelete": false
+            },
+            {
+                "dataId": 2,
+                "tenementId": 1,
+                "data": {
+                    "tenement_1_form1_1_form2_0_id_1": "车间二"
+                },
+                "lastModifyPeopleNickName": "超级管理员",
+                "createTime": "2022-04-10T05:16:23.758+0000",
+                "updateTime": "2022-04-10T05:16:23.758+0000",
+                "isDelete": false
+            },
+            {
+                "dataId": 3,
+                "tenementId": 1,
+                "data": {
+                    "tenement_1_form1_1_form2_0_id_1": "车间三"
+                },
+                "lastModifyPeopleNickName": "超级管理员",
+                "createTime": "2022-04-10T05:16:29.825+0000",
+                "updateTime": "2022-04-10T05:16:29.825+0000",
+                "isDelete": false
+            }
+        ]
+    }
       this.isLoading = false;
       if (isDataExist(res)) {
         const dataColumns = res.data.data.columns
@@ -324,80 +393,6 @@ class Home {
     this.isLoading = true;
     try {
       let res = await services.getRequest(services.requestList.getAllForm, params);
-      // let res = {}
-      // res.code = 0
-      // res.data = {}
-      // res.data.data = [
-      //   {
-      //     "secondFormId": 0,
-      //     "properties": [
-      //       {
-      //         "propertyId": "tenement_1_form1_1_form2_0_id_1",
-      //         "typeId": "1",
-      //         "name": "车间",
-      //         "order": 1,
-      //         "others": {
-      //           'descripe':'111',
-      //           'placeholder':'121321'
-      //           // ........
-      //         }
-      //       },
-      //       {
-      //         "propertyId": "tenement_1_form1_1_form2_0_id_2",
-      //         "typeId": "1",
-      //         "name": "车间1",
-      //         "order": 2,
-      //         "others": {
-      //           // ........
-      //         }
-      //       },
-      //       {
-      //         "propertyId": "tenement_1_form1_1_form2_0_id_3",
-      //         "typeId": "1",
-      //         "name": "车间2",
-      //         "order": 3,
-      //         "others": {
-      //           // ........
-      //         }
-      //       },
-      //     ]
-      //   },
-      //   {
-      //     "secondFormId": 1,
-      //     "properties": [
-      //       {
-      //         "propertyId": "tenement_1_form1_1_form2_1_id_1",
-      //         "typeId": "1",
-      //         "name": "车间3",
-      //         "order": 1,
-      //         "others": {
-      //           // ........
-      //         }
-      //       },
-      //       {
-      //         "propertyId": "tenement_1_form1_1_form2_1_id_2",
-      //         "typeId": "1",
-      //         "name": "车间1",
-      //         "order": 2,
-      //         "others": {
-      //           // ........
-      //         }
-      //       },
-      //       {
-      //         "propertyId": "tenement_1_form1_1_form2_1_id_3",
-      //         "typeId": "1",
-      //         "name": "车间2",
-      //         "order": 3,
-      //         "others": {
-      //           // ........
-      //         }
-      //       },
-      //     ]
-      //   },
-      //   {
-      //     "secondFormId": 2,
-      //   }
-      // ]
       this.isLoading = false
       if (isDataExist(res)) {
         this.itemDataT = res.data.data;

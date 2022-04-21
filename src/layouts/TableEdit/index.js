@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-03-22 09:57:59
- * @LastEditTime: 2022-04-19 22:38:39
+ * @LastEditTime: 2022-04-20 15:50:03
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage\src\layouts\TableEdit\index.js
@@ -103,8 +103,6 @@ class EditPage extends Component {
     }
 
     const sortableChoose = (e) => {
-      console.log(this.state.newObj);
-      console.log(e)
       this.setState({
         isChoose: true
       })
@@ -449,7 +447,7 @@ class EditPage extends Component {
     const { secondFormId, firstFormId } = this.props.HomeStore;
     let params = {};
     params.firstFormId = firstFormId;
-    this.props.HomeStore.queryField(params)
+    // this.props.HomeStore.queryField(params)
     let arr = []
     let newArr = []
     if (this.props.HomeStore.itemDataT.length != 0) {
@@ -464,7 +462,6 @@ class EditPage extends Component {
             ele.propertyId = txt.propertyId || ""
             ele.name = typeName[txt.typeId]
             ele.order = (order++).toString();
-
             arr.push(ele)
             if (ele.secondFormId == secondFormId) {
               newArr.push(ele)
