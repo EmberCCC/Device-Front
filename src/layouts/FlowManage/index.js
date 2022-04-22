@@ -92,7 +92,7 @@ const nodeTypes = { FlowNode: FlowNode, CopyNode: CopyNode };
 let id = 0;
 const getId = () => `node_${++id}`;
 
-function DnDFlow (props) {
+function DnDFlow(props) {
   const reactFlowWrapper = useRef(null);
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
