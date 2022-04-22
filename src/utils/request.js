@@ -40,6 +40,7 @@ export function request(url, options) {
     ...defaultOptions,
     ...options
   };
+  console.log(url);
   console.log(options);
   return (
     fetch(url, options)

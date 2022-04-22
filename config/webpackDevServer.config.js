@@ -98,7 +98,8 @@ module.exports = function (proxy, allowedHost) {
         // "target": "http://localhost:5555",
         // "target": "http://misaki.center:8000",
         // "target": "http://192.168.43.55:8000",
-        "target": "http://192.168.0.5:8000",
+        // "target": "http://192.168.0.5:8000",
+        "target": "http://device.misaki.center:8888",
         "changeOrigin": true,
         "pathRewrite": {}
       },
@@ -106,7 +107,8 @@ module.exports = function (proxy, allowedHost) {
         //"target": "http://zuultest.boranet.cn",
         // "target": "http://misaki.center:8000",
         // "target": "http://192.168.43.55:8000",
-        "target": "http://192.168.0.5:8000",
+        // "target": "http://192.168.0.5:8000",
+        "target": "http://device.misaki.center:8888",
         "changeOrigin": true,
         "pathRewrite": {}
       },
@@ -114,7 +116,8 @@ module.exports = function (proxy, allowedHost) {
         //"target": "http://zuultest.boranet.cn",
         // "target": "http://misaki.center:8000",
         // "target": "http://192.168.43.55:8000",
-        "target": "http://192.168.0.5:8000",
+        // "target": "http://192.168.0.5:8000",
+        "target": "http://device.misaki.center:8888",
         "changeOrigin": true,
         "pathRewrite": {}
       },

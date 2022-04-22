@@ -263,9 +263,10 @@ class Home {
         const dataSource = [];
         for (var i = 0; i < dataColumns.length; i++) {
           var obj = {}
-          obj.title = dataColumns[i].name
-          obj.dataIndex = dataColumns[i].propertyId
-          obj.key = dataColumns[i].propertyId
+          obj.title = dataColumns[i].name || ''
+          obj.dataIndex = dataColumns[i].propertyId || ''
+          obj.key = dataColumns[i].propertyId || ''
+          obj.type = dataColumns[i].typeId
           columns.push(obj)
         }
         columns.push({

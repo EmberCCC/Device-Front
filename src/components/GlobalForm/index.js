@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-04-05 11:02:45
- * @LastEditTime: 2022-04-19 22:46:51
+ * @LastEditTime: 2022-04-22 18:19:02
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage-test\src\components\GlobalForm\index.js
@@ -23,9 +23,7 @@ class GlobalForm extends React.Component {
     render() {
         const { secondFormId, itemDataT } = this.props.HomeStore
         const loading = this.props.loading
-        const getData = this.props.getData
         const { TabPane } = Tabs;
-        let page = { pageIndex: 1, pageSize: 2 }
         let itemData = []
         //转换为所需对象
         const changeField = () => {
@@ -34,7 +32,6 @@ class GlobalForm extends React.Component {
                 let itemData1 = itemDataT.filter(function (txt) {
                     return txt.secondFormId == secondFormId
                 })
-                console.log(toJS(itemData1));
                 if (itemData1.length == 0) {
                     return [];
                 }
@@ -89,7 +86,6 @@ class GlobalForm extends React.Component {
         // 递归函数
         const loop = (arr, index) => {
             arr = changeField()
-            console.log(arr);
             return (
                 arr.map((item, i) => {
                     const indexs = index === '' ? String(i) : `${index}-${i}`;
@@ -102,7 +98,6 @@ class GlobalForm extends React.Component {
                             )
                         }
                         const ComponentInfo = GlobalComponent[item.name]
-                        console.log(item.attr.describe);
                         return (
                             <Form.Item
                                 key={indexs}
@@ -144,8 +139,6 @@ class GlobalForm extends React.Component {
                 okText: '确认',
                 cancelText: '取消',
                 onOk: () => {
-                    console.log(params);
-                    getData(page)
                     addNew(params).then(res => {
                         message.success('添加成功')
                     })
