@@ -1,14 +1,14 @@
 /*
  * @Author: your name
  * @Date: 2022-03-22 09:57:59
- * @LastEditTime: 2022-04-20 15:50:03
+ * @LastEditTime: 2022-04-23 14:17:27
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage\src\layouts\TableEdit\index.js
  */
 
 import React, { Component } from 'react';
-import { Tag, Layout, Button, Modal, message, Form, Input, Select, Tabs, InputNumber } from 'antd';
+import { Tag, Layout, Button, Modal, message, Form, Input, Select, Tabs } from 'antd';
 import { EditOutlined } from '@ant-design/icons';
 // Default SortableJS
 import Sortable from 'react-sortablejs';
@@ -95,7 +95,8 @@ class EditPage extends Component {
       this.setState({
         curItemKey: '',
         curItemName: '',
-        curItemType: ''
+        curItemType: '',
+        curDescripe:''
       })
       this.setState({
         newObj: newTreeData
@@ -281,6 +282,7 @@ class EditPage extends Component {
     }
 
     const save = (params) => {
+      console.log(params);
       Modal.confirm({
         title: '提示',
         content: '是否修改该表单',
@@ -443,6 +445,7 @@ class EditPage extends Component {
       </Layout>
     );
   }
+
   componentWillMount() {
     const { secondFormId, firstFormId } = this.props.HomeStore;
     let params = {};

@@ -298,7 +298,6 @@ class Home {
           dataSource.push(obj)
         }
         this.dataSource = dataSource;
-        console.log(toJS(this.dataSource));
       }
     } catch (error) {
       console.log(error);

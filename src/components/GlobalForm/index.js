@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-04-05 11:02:45
- * @LastEditTime: 2022-04-22 18:19:02
+ * @LastEditTime: 2022-04-23 14:11:44
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage-test\src\components\GlobalForm\index.js
@@ -40,6 +40,7 @@ class GlobalForm extends React.Component {
                     let properties = {}
                     properties = toJS(itemData1[0].properties)
                     properties.forEach(element => {
+                        console.log(element);
                         let ele = {}
                         ele.label = element.name
                         ele.attr = element.others
@@ -60,6 +61,7 @@ class GlobalForm extends React.Component {
 
         const handleLabelChange = (e) => {
             const x = Object.keys(e);
+            console.log(x);
             itemData.map(item => {
                 if (item.label == x[0]) {
                     item.attr.value = e[x[0]];
@@ -98,21 +100,21 @@ class GlobalForm extends React.Component {
                             )
                         }
                         const ComponentInfo = GlobalComponent[item.name]
+                        const text = item.attr.descripe || ''
+                        console.log(item.attr);
                         return (
                             <Form.Item
                                 key={indexs}
                                 label={item.label}
                                 name={item.label}
                                 className='formItemStyle'
+                                extra={text}
                             >
-                                {
-                                    item.attr.descripe &&
-                                    <div className='formItemDescripe'>{item.attr.descripe}</div>
-                                }
                                 {
                                     renderDiffComponents(item, indexs, ComponentInfo)
                                 }
                             </Form.Item>
+
                         )
                     } else {
                         return null
