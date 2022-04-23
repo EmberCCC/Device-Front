@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-04-02 11:12:08
- * @LastEditTime: 2022-04-23 10:31:02
+ * @LastEditTime: 2022-04-24 00:28:21
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage-test\src\layouts\BasicManage\ComputerPage\index.js
@@ -64,10 +64,12 @@ class CommonTable extends Component {
   getField = () => {
     const { firstFormId } = this.props.HomeStore
     let params = {};
+    this.props.HomeStore.PageInfo.pageSize = 2;
+    this.props.HomeStore.PageInfo.pageIndex = 1
     params.firstFormId = firstFormId;
+    console.log(this.props.HomeStore.PageInfo);
     this.props.HomeStore.queryField(params)
   }
-
   componentWillMount() {
     const { firstFormId } = this.props.HomeStore
     let params = {};
