@@ -239,6 +239,7 @@ class Home {
 
   //修改展示模式
   @action changeModel(value) {
+    this.reSavePage();
     this.model = value;
   }
 
@@ -316,6 +317,17 @@ class Home {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  @action reSavePage() {
+    let params = {};
+    params.firstFormId = this.firstFormId
+    params.pageIndex = this.PageInfo.pageIndex
+    params.pageSize = this.PageInfo.pageSize
+    this.PageInfo.pageIndex = 1;
+    this.PageInfo.pageSize = 2;
+    this.PageInfo.current = 1;
+    this.queryAll(params)
   }
 
   //查询字段

@@ -101,7 +101,7 @@ class HeaderLayout extends Component {
             </span>
           </Dropdown>
         </div>
-        <Select value={this.props.HomeStore.getModel()} style={{ width: 180, float: 'left' }} onSelect={value => { this.props.HomeStore.changeModel(value) }}>
+        <Select value={this.props.HomeStore.getModel()} style={{ width: 180, float: 'left' }} onSelect={value => { this.props.HomeStore.changeModel(value)}}>
           <Option value="submit">直接提交数据</Option>
           <Option value="subitAndManage">提交并管理本人数据</Option>
           <Option value="manage">管理全部数据</Option>

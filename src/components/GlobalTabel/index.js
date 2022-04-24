@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-04-07 11:58:39
- * @LastEditTime: 2022-04-24 00:23:46
+ * @LastEditTime: 2022-04-24 00:44:18
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage-test\src\components\GlobalTabel\index.js
@@ -81,17 +81,15 @@ const GlobalTabel = (props) => {
   const getData = props.getData
   const updataData = props.updataData
   let isLoading = props.loading
-  let page = { pageIndex: 1, pageSize: 2 }
   let itemData = []
-  useEffect(() => {
-    page = { pageIndex: 1, pageSize: 2 }
-  }, []);
   const isEditing = (record) => record.key === editingKey;
   const edit = (record) => {
     setEditingKey(record.key);
   };
 
   const pageChange = (e) => {
+    let page = props.PageInfo;
+    page.current = e.current
     page.pageIndex = e.current;
     getData(page);
     setEditingKey('');
@@ -162,7 +160,7 @@ const GlobalTabel = (props) => {
           params.updateData = newObj
           itemData = []
           updataData(params)
-          getData(page);
+          getData();
           setEditingKey('')
           message.success('修改成功')
         },
@@ -189,7 +187,7 @@ const GlobalTabel = (props) => {
       cancelText: '取消',
       onOk() {
         del(params1)
-        getData(page)
+        getData()
         props.countObj(params2);
         setEditingKey('')
         message.success('删除成功')
