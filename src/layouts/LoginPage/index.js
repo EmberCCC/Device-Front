@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-01-24 16:24:19
- * @LastEditTime: 2022-04-09 18:43:19
+ * @LastEditTime: 2022-04-24 08:34:21
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage\src\layouts\LoginPage\index.js
@@ -22,9 +22,9 @@ class LoginPage extends React.Component {
     return <div className='login_container'>
       <div className='login_form'>
         <div className='basic_login'>
-          <div className='login_logo'>
+          {/* <div className='login_logo'>
             <img src='https://assets-boranet.oss-cn-hangzhou.aliyuncs.com/img/login_logo.png' alt='博拉科技' />
-          </div>
+          </div> */}
           <div>
             <div className='login_title' style={{ paddingTop: 27, paddingBottom: 5, color: '#161616', letterSpacing: 10 }}>设备协同管理</div>
           </div>
