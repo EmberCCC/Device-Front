@@ -9,7 +9,19 @@
   z-index: 4;
   font-size: 12px;
 }
-
+.dataInfo{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.updatenode__controls{
+  display: flex;
+  flex-direction: column;
+}
+.updatenode__controls div{
+  margin: 2px;
+  padding: 2px;
+}
 .save__controls button {
   margin-left: 5px;
 }

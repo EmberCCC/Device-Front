@@ -1,5 +1,5 @@
 import React, { useState, useRef, useCallback, useMemo, useEffect } from 'react';
-import { Layout, Button, Menu, Dropdown, Divider, Select } from 'antd';
+import { Layout, Button, Menu, Dropdown, Divider, Select, Checkbox, List } from 'antd';
 import ReactFlow, {
   ReactFlowProvider,
   addEdge,
@@ -25,7 +25,7 @@ const initialNodes = [
     "type": "input",
     "data": {
       "label": "开始流程",
-      'person':[]
+      'person': []
     },
     "position": {
       "x": 254,
@@ -41,8 +41,8 @@ const initialNodes = [
     "type": "output",
     "data": {
       "label": "结束流程",
-      'person':[]
-      
+      'person': []
+
     },
     "position": {
       "x": 198,
@@ -62,7 +62,7 @@ const initialNodes = [
     },
     "data": {
       "label": "FlowNode node",
-      'person':[]
+      'person': []
     },
     "positionAbsolute": {
       "x": 236.25,
@@ -107,9 +107,18 @@ function DnDFlow(props) {
   const [nodeId, setNodeId] = useState('');
 
   const children = [];
+  const field = [];
   for (let i = 10; i < 36; i++) {
     children.push(<Option key={i.toString(36) + i}>{i.toString(36) + i}</Option>);
   }
+  let obj = Object.assign({}, props.location.state.itemData)
+  Object.keys(obj).map((item) => {
+    if (obj[item].properties != undefined && obj[item].properties.length != 0) {
+      obj[item].properties.map((item) => {
+        field.push({ propertyId: item.propertyId, name: item.name })
+      })
+    }
+  })
   useEffect(() => {
     setNodes((nds) =>
       nds.map((node) => {
@@ -125,7 +134,7 @@ function DnDFlow(props) {
         return node;
       })
     );
-  }, [nodeName, setNodeName,perArr,setPerArr]);
+  }, [nodeName, setNodeName, perArr, setPerArr]);
 
   const onConnect = useCallback((params) => {
     let obj = {
@@ -186,7 +195,7 @@ function DnDFlow(props) {
       })
       console.log(params);
       // try {
-      //   // let res = services.putRequest(services.requestList.addFlow, params);
+      //   let res = services.putRequest(services.requestList.addFlow, params);
       //   if (isDataExist(res)) {
       //     return res;
       //   }
@@ -205,6 +214,11 @@ function DnDFlow(props) {
   const handleChange = (value) => {
     setPerArr(value);
     console.log(`selected ${value}`);
+  }
+
+  function checkChange(checkedValues,a) {
+    console.log(a);
+    console.log('checked = ', checkedValues);
   }
   return (
     <Layout>
@@ -245,21 +259,33 @@ function DnDFlow(props) {
             </Content>
           </Layout>
         </Content>
-        <Sider style={{ backgroundColor: 'white' }}>
+        <Sider style={{ backgroundColor: 'white' }} width='300'>
           <div className="updatenode__controls">
-            <label>label:</label>
-            <input value={nodeName} onChange={(evt) => setNodeName(evt.target.value)} />
-            <label>负责人：</label>
-            <Select
-              mode="multiple"
-              allowClear
-              style={{ width: '80%' ,marginTop:'10px' }}
-              placeholder="Please select"
-              value={perArr}
-              onChange={handleChange}
-            >
-              {children}
-            </Select>
+            <div>
+              <label>节点名:</label>
+              <input value={nodeName} onChange={(evt) => setNodeName(evt.target.value)} />
+            </div>
+            <div>
+              <label>负责人：</label>
+              <Select
+                mode="multiple"
+                allowClear
+                style={{ width: '80%', marginTop: '10px' }}
+                placeholder="Please select"
+                value={perArr}
+                onChange={handleChange}
+              >
+                {children}
+              </Select>
+            </div>
+            {
+              field.map((item) => {
+                return <div className='dataInfo'>
+                  <label>{item.name}:</label>
+                  <Checkbox.Group name={item.propertyId} options={[{ label: '可见', value: 'vis' }, { label: '可编辑', value: 'edit' }]} onChange={(checkedValues) => checkChange(checkedValues,item.propertyId)}></Checkbox.Group>
+                </div>
+              })
+            }
           </div>
         </Sider>
       </Layout>

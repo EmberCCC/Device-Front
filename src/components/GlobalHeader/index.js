@@ -30,7 +30,6 @@ class HeaderLayout extends Component {
     );
     const isMobile = this.props.mobile === 'true';
     const isShow = (isMobile ? false : this.props.sizetype === 'l_size');
-    const { selectedKeys, itemDataT, secondFormId } = this.props.HomeStore;
     return (
       <Header className='header_layout'>
         <div style={{ display: 'flex', flex: 1, alignItems: 'center' }}>

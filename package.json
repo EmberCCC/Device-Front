@@ -67,6 +67,7 @@
     "postcss-preset-env": "6.6.0",
     "postcss-safe-parser": "4.0.1",
     "prop-types": "^15.7.2",
+    "pubsub-js": "^1.9.4",
     "qrcode.react": "^0.9.3",
     "query-string": "^6.5.0",
     "rc-virtual-list": "^3.4.6",

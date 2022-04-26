@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-03-28 20:01:19
- * @LastEditTime: 2022-04-24 17:48:02
+ * @LastEditTime: 2022-04-26 18:06:44
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage-test\src\layouts\BasicManage\index.js
@@ -14,6 +14,7 @@ import { getCookie } from 'utils/dataTools';
 import NoticePanel from 'components/GlobalHeader/NoticePanel';
 import './index.css'
 import { inject } from 'mobx-react';
+import { toJS } from 'mobx';
 const { Header, Sider, Content } = Layout;
 
 @withRouter
@@ -33,7 +34,7 @@ class DesignManage extends React.Component {
                 </Menu.Item>
             </Menu>
         );
-        const {firstFormId} = this.props.HomeStore.firstFormId
+        const {firstFormId,itemDataT} = this.props.HomeStore
         const changeModel = ({ item, key, keyPath, domEvent }) => {
             const arr = {
                 1: '/design/edit',
@@ -41,15 +42,16 @@ class DesignManage extends React.Component {
                 3: '/design/flow',
                 4: '/design/flow',
             }
+            let itemData = {...toJS(itemDataT)}
             this.props.DesignStore.changeDesignId(key)
-            this.props.history.push({pathname:arr[key],state : { firstFormId : firstFormId }});
+            this.props.history.push({pathname:arr[key],state : { firstFormId,itemData}});
         }
         const {DesignId} = this.props.DesignStore;
         return (
             <Layout>
                 <Header className="header">
                     <NavLink to='/basic'><Button type='dashed' className='backButton'>Back</Button></NavLink>
-                    <Menu theme="light" mode="horizontal" defaultSelectedKeys={[DesignId]} justify='center' className='headerMenu' onClick={changeModel}>
+                    <Menu theme="light" mode="horizontal" SelectedKeys={[DesignId]} justify='center' className='headerMenu' onClick={changeModel}>
                         <Menu.Item key="1">表单设计</Menu.Item>
                         <Menu.Item key="2">扩展功能</Menu.Item>
                         <Menu.Item key="3">表单发布</Menu.Item>
@@ -71,15 +73,18 @@ class DesignManage extends React.Component {
         );
     }
 
-    componentWillMount(){
+    componentDidMount(){
         const arr = {
             1: '/design/edit',
             2: '/design/form',
             3: '/design/flow',
             4: '/design/flow',
         }
+        this.props.DesignStore.changeDesignId('1')
         const {DesignId} = this.props.DesignStore
-        this.props.history.push({pathname:arr[DesignId],state : { firstFormId : this.props.HomeStore.firstFormId }});
+        const {firstFormId} = this.props.HomeStore
+        console.log(this.props.HomeStore.firstFormId);
+        this.props.history.push({pathname:arr[DesignId],state : { firstFormId}});
     }
 }
 

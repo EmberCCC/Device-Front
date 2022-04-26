@@ -4,7 +4,6 @@ import { NavLink, withRouter } from 'react-router-dom';
 import classnames from 'classnames';
 import './index.less';
 import { FolderOutlined, HistoryOutlined } from '@ant-design/icons';
-import { AlertOutlined, RightCircleOutlined, CheckCircleOutlined, SendOutlined, CommentOutlined } from '@ant-design/icons';
 import { Menu, Layout, Badge } from 'antd';
 import { toJS } from 'mobx';
 const { Sider } = Layout;
@@ -21,7 +20,7 @@ class MenuLayout extends Component {
       collapsed: false,
       sizetype: '',
       pathname: '',
-      isPath: false,
+      isPath: false
     }
     this.store = this.props.HomeStore;
   }
@@ -43,7 +42,7 @@ class MenuLayout extends Component {
         }
         style={{
           overflowY: 'auto',
-          width:'35%',
+          width: '35%',
           height: this.props.sizetype === 's_size' && '100%'
         }}
       >
@@ -130,12 +129,14 @@ class MenuLayout extends Component {
   goBack = () => {
     this.props.history.push('/index');
   }
+
+  
   componentDidMount() {
     firstMount = false;
     // this.props.HomeStore.getMenuList(this.props.location.pathname).then(() => {
     //   this.props.HomeStore.initMenu(this.props.location.pathname);
     // });
-
+    
     /* 初始化判断是否显示 */
     if (this.props.sizetype !== 'l_size') {
       this.state.collapsed = true;

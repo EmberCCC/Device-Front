@@ -81,11 +81,8 @@ class LoginPage extends React.Component {
       client_id:'pc',
       client_secret:'secret',
     }, (result) => {
-      console.log(result);
       const { success, token } = result;
-      console.log(token);
       if (success) {
-        console.log(token);
         sessionStorage.setItem('selfToken', 'Bearer '+token); // 设置前局登陆token
         sessionStorage.setItem('username', values.username); // 设置登录用户名
         this.props.history.push({

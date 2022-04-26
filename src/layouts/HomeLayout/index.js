@@ -63,7 +63,7 @@ class HomeLayout extends Component {
           mobile={isMobile}
           ishome={isHome}
           dataSource={toJS(this.props.HomeStore.crumbsList)}
-          backToLogin={() => { this.props.history.push('/login') }}
+          backToLogin={this.backToLogin}
           visible={this.props.HomeStore.collapsed} toggle={this.toggle} />
         <Content
           style={{
@@ -92,6 +92,10 @@ class HomeLayout extends Component {
         
       </div>
     );
+  }
+  backToLogin = () => {
+    sessionStorage.clear();
+    this.props.history.push('/login')
   }
   getMediaQuery = (params) => {
     let current;
