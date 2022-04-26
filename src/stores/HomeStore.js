@@ -10,7 +10,7 @@ class Home {
   @observable collapsed = false;
   @observable menuObj = MenuObj.leafMenuModels;
   @observable openKeys = ['1']; // 菜单初始化默认打开的key数组
-  @observable selectedKeys = ['101']; // 菜单初始化默认选中的key数组
+  @observable selectedKeys = ['1']; // 菜单初始化默认选中的key数组
   @observable crumbsList = []; // 全局crumbs需求
   @observable size_class = '';
   @observable isClickCollapsed = false;
@@ -27,6 +27,8 @@ class Home {
   @observable itemDataT = []
   @observable uploadData = {}
   @observable PageInfo = { pageIndex: 1, pageSize: 2, total: 0 }
+  @observable viewModel = 'my1'
+  @observable viewVisiable = false
 
   /* 设置登陆信息 */
   @action async setLogin(params, finished) {
@@ -241,6 +243,16 @@ class Home {
   @action changeModel(value) {
     this.reSavePage();
     this.model = value;
+  }
+
+  //修改展示模式
+  @action changeViewModel(value) {
+    this.viewModel = value;
+  }
+
+  //修改展示模式
+  @action chnageViewVisiable(value) {
+    this.viewVisiable = value;
   }
 
   //修改二级表单

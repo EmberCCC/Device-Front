@@ -32,6 +32,15 @@ const GlobalComponent = {
 
 const formItemData = [
   {
+    name: 'Containers',
+    attr: {
+      style: {
+        border: '1px solid #40a9ff'
+      }
+    },
+    label: '容器'
+  },
+  {
     name: 'RangePicker',
     attr: {
       style: {

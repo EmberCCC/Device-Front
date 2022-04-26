@@ -1,0 +1,7 @@
+.tableEdit{
+    display: flex;
+    flex-direction: column;
+}
+.tableHeader{
+    margin-bottom: 20px;
+}

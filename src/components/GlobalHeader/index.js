@@ -101,13 +101,6 @@ class HeaderLayout extends Component {
             </span>
           </Dropdown>
         </div>
-        <Select value={this.props.HomeStore.getModel()} style={{ width: 180, float: 'left' }} onSelect={value => { this.props.HomeStore.changeModel(value)}}>
-          <Option value="submit">直接提交数据</Option>
-          <Option value="subitAndManage">提交并管理本人数据</Option>
-          <Option value="manage">管理全部数据</Option>
-          <Option value="look">查看全部数据</Option>
-        </Select>
-        <NavLink to={{ pathname: '/design', state: { selectedKeys: toJS(selectedKeys), item: toJS(itemDataT), secondFormId: toJS(secondFormId) } }} style={{ float: 'right' }}><Button type='primary'>编辑表单</Button></NavLink>
       </Header>
     );
   }

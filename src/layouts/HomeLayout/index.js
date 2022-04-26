@@ -16,6 +16,7 @@ import { Layout, Drawer,Select } from 'antd';
 import { judgeIsMobile } from 'utils/dataTools';
 import ErrorNotFound from './ErrorNotFound';
 import './index.less';
+import GlobalModal from 'components/GlobalModal';
 
 const { Content } = Layout;
 const { Option } = Select;
@@ -88,7 +89,7 @@ class HomeLayout extends Component {
             </Context.Provider>
           }}
         </ContainerQuery>
-
+        
       </div>
     );
   }

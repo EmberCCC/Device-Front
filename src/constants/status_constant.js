@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-03-26 12:43:21
- * @LastEditTime: 2022-04-08 22:16:47
+ * @LastEditTime: 2022-04-24 18:06:25
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage-test\src\constants\status_constant.js
@@ -49,7 +49,8 @@ export const typeId = {
 	CheckboxGroup:6,
 	Select:7,
 	Divider:8,
-	RangePicker:9
+	RangePicker:9,
+	Containers:14
 }
 
 export const typeName = {
@@ -61,5 +62,6 @@ export const typeName = {
 	6:'CheckboxGroup',
 	7:'Select',
 	8:'Divider',
-	9:'RangePicker'
+	9:'RangePicker',
+	14:'Containers'
 }

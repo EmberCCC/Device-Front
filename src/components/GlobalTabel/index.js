@@ -1,12 +1,12 @@
 /*
  * @Author: your name
  * @Date: 2022-04-07 11:58:39
- * @LastEditTime: 2022-04-24 00:44:18
+ * @LastEditTime: 2022-04-24 22:57:00
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage-test\src\components\GlobalTabel\index.js
  */
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Table, Popconfirm, Form, Select, Modal, message, Divider } from 'antd';
 import { toJS } from 'mobx';
 import { GlobalComponent } from 'layouts/TableEdit/config';
@@ -27,6 +27,7 @@ const EditableCell = ({
     let item = itemData[index];
     const ComponentInfo = GlobalComponent[item.name]
     let re = toJS(record)
+    console.log(re[item.propertyId]);
     return (
       <td>
         {editing ? (
@@ -54,7 +55,6 @@ const EditableCell = ({
 };
 const { Option } = Select;
 const renderDiffComponents = (item, indexs, ComponentInfo, value) => {
-  console.log(item);
   switch (item.name) {
     case 'Divider':
       return <ComponentInfo key={indexs} {...item.attr}></ComponentInfo>

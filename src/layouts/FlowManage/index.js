@@ -1,5 +1,5 @@
 import React, { useState, useRef, useCallback, useMemo, useEffect } from 'react';
-import { Layout, Button, Menu, Dropdown, Divider } from 'antd';
+import { Layout, Button, Menu, Dropdown, Divider, Select } from 'antd';
 import ReactFlow, {
   ReactFlowProvider,
   addEdge,
@@ -18,12 +18,14 @@ import './index.css';
 import { isDataExist } from 'utils/dataTools';
 
 const { Header, Sider, Content } = Layout;
+const { Option } = Select;
 const initialNodes = [
   {
     "id": "0",
     "type": "input",
     "data": {
-      "label": "开始流程"
+      "label": "开始流程",
+      'person':[]
     },
     "position": {
       "x": 254,
@@ -38,7 +40,9 @@ const initialNodes = [
     "id": "-1",
     "type": "output",
     "data": {
-      "label": "结束流程"
+      "label": "结束流程",
+      'person':[]
+      
     },
     "position": {
       "x": 198,
@@ -57,7 +61,8 @@ const initialNodes = [
       "y": 32.5
     },
     "data": {
-      "label": "FlowNode node"
+      "label": "FlowNode node",
+      'person':[]
     },
     "positionAbsolute": {
       "x": 236.25,
@@ -96,11 +101,15 @@ function DnDFlow(props) {
   const reactFlowWrapper = useRef(null);
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const [perArr, setPerArr] = useState([]);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
   const [nodeName, setNodeName] = useState('');
   const [nodeId, setNodeId] = useState('');
 
-
+  const children = [];
+  for (let i = 10; i < 36; i++) {
+    children.push(<Option key={i.toString(36) + i}>{i.toString(36) + i}</Option>);
+  }
   useEffect(() => {
     setNodes((nds) =>
       nds.map((node) => {
@@ -110,12 +119,13 @@ function DnDFlow(props) {
           node.data = {
             ...node.data,
             label: nodeName,
+            person: perArr
           };
         }
         return node;
       })
     );
-  }, [nodeName, setNodes]);
+  }, [nodeName, setNodeName,perArr,setPerArr]);
 
   const onConnect = useCallback((params) => {
     let obj = {
@@ -159,7 +169,6 @@ function DnDFlow(props) {
   );
 
   const onSave = useCallback(() => {
-    console.log(props);
     if (reactFlowInstance) {
       const flow = reactFlowInstance.toObject();
       let params = {}
@@ -176,24 +185,27 @@ function DnDFlow(props) {
         params.nodes.push(obj)
       })
       console.log(params);
-      try {
-        let res = services.putRequest(services.requestList.addFlow, params);
-        if (isDataExist(res)) {
-          return res;
-        }
-      } catch (error) {
-        console.log(error);
-      }
-      console.log(params);
+      // try {
+      //   // let res = services.putRequest(services.requestList.addFlow, params);
+      //   if (isDataExist(res)) {
+      //     return res;
+      //   }
+      // } catch (error) {
+      //   console.log(error);
+      // }
     }
   }, [reactFlowInstance]);
 
   const onNodeClick = useCallback((event, node) => {
     setNodeId(node.id)
+    setPerArr(node.data.person)
     setNodeName(node.data.label)
-
   }, [nodeName], [nodeId])
 
+  const handleChange = (value) => {
+    setPerArr(value);
+    console.log(`selected ${value}`);
+  }
   return (
     <Layout>
       <Header className='header'>
@@ -237,6 +249,17 @@ function DnDFlow(props) {
           <div className="updatenode__controls">
             <label>label:</label>
             <input value={nodeName} onChange={(evt) => setNodeName(evt.target.value)} />
+            <label>负责人：</label>
+            <Select
+              mode="multiple"
+              allowClear
+              style={{ width: '80%' ,marginTop:'10px' }}
+              placeholder="Please select"
+              value={perArr}
+              onChange={handleChange}
+            >
+              {children}
+            </Select>
           </div>
         </Sider>
       </Layout>

@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react';
-import { withRouter } from 'react-router-dom';
+import { NavLink, withRouter } from 'react-router-dom';
 import classnames from 'classnames';
 import './index.less';
-import { Icon as LegacyIcon } from '@ant-design/compatible';
-import { FolderOutlined } from '@ant-design/icons';
-import { AlertOutlined, RightCircleOutlined, CheckCircleOutlined ,SendOutlined, CommentOutlined} from '@ant-design/icons';
-import { Menu, Layout } from 'antd';
+import { FolderOutlined, HistoryOutlined } from '@ant-design/icons';
+import { AlertOutlined, RightCircleOutlined, CheckCircleOutlined, SendOutlined, CommentOutlined } from '@ant-design/icons';
+import { Menu, Layout, Badge } from 'antd';
 import { toJS } from 'mobx';
 const { Sider } = Layout;
 const SubMenu = Menu.SubMenu;
@@ -44,11 +43,41 @@ class MenuLayout extends Component {
         }
         style={{
           overflowY: 'auto',
+          width:'35%',
           height: this.props.sizetype === 's_size' && '100%'
         }}
       >
         <div id='manu_container'>
-          <Menu theme="dark"
+          <NavLink to='/message/todo'>
+            <div className='message_logo'>
+              <HistoryOutlined />
+              我的待办
+              <Badge count={1}></Badge>
+            </div>
+          </NavLink>
+          <NavLink to='/message/create'>
+            <div className='message_logo'>
+              <HistoryOutlined />
+              我发起的
+              <Badge count={1}></Badge>
+            </div>
+          </NavLink>
+          <NavLink to='/message/handle'>
+            <div className='message_logo'>
+              <HistoryOutlined />
+              我处理的
+              <Badge count={1}></Badge>
+            </div>
+          </NavLink>
+          <NavLink to='/message/copy'>
+            <div className='message_logo'>
+              <HistoryOutlined />
+              抄送我的
+              <Badge count={1}></Badge>
+            </div>
+          </NavLink>
+          <hr></hr>
+          <Menu theme="light"
             // defaultOpenKeys={toJS(this.store.openKeys)}
             selectedKeys={toJS(this.store.selectedKeys)}
             // openKeys={this.store.openKeys}
@@ -58,12 +87,6 @@ class MenuLayout extends Component {
             onSelect={this.onMenuSelect}
           // inlineCollapsed={this.state.collapsed}
           >
-            <SubMenu title={<span><CommentOutlined /><span style={{ display: this.state.collapsed && 'none' }}>我的消息</span></span>}>
-              <Menu.Item><AlertOutlined />我的待办</Menu.Item>
-              <Menu.Item><RightCircleOutlined />我发起的</Menu.Item>
-              <Menu.Item><CheckCircleOutlined />我处理的</Menu.Item>
-              <Menu.Item><SendOutlined />抄送我的</Menu.Item>
-            </SubMenu>
             {
               menuObj.map(leaf => !leaf.displayNone && <SubMenu
                 key={leaf.id}
@@ -88,13 +111,21 @@ class MenuLayout extends Component {
     this.store.openKeys = openKeys;
   }
   handleMenu = ({ item, key, }) => {
-    this.props.HomeStore.toggleMenu({ actionItem: item, actionId: key, from: 'menu-click' }, (url) => {
-      if (url) {
-        this.props.history.push(url);
-      } else {
-        alert('false');
-      }
-    });
+    if (key.startsWith('my')) {
+      this.props.HomeStore.changeViewModel(key)
+      console.log(toJS(this.props.HomeStore.viewModel));
+    } else {
+      this.props.HomeStore.toggleMenu({ actionItem: item, actionId: key, from: 'menu-click' }, (url) => {
+        if (url) {
+          this.props.history.push(url);
+        } else {
+          alert('false');
+        }
+      });
+    }
+  }
+  handleRe = (key) => {
+    console.log(key);
   }
   goBack = () => {
     this.props.history.push('/index');

@@ -1,6 +1,6 @@
 #root .ant-layout-content {
   border-radius: 10px;
-  background-color: transparent !important;
+  background-color: transparent;
 }
 .save__controls {
   position: absolute;

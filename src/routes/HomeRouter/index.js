@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-11-02 14:29:58
- * @LastEditTime: 2022-04-13 08:52:02
+ * @LastEditTime: 2022-04-24 12:30:27
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage\src\routes\HomeRouter\index.js
@@ -14,7 +14,8 @@ import HomeLayout from 'Layouts/HomeLayout';
 import {
   Route, Redirect,
 } from 'react-router-dom';
-import { BasicManager,DeviceManager,EquipmentManager,MaintenanceManager,SpareManager,ManagerManager } from './configs';
+import { BasicManager,DeviceManager,EquipmentManager,MaintenanceManager,SpareManager,ManagerManager, MessageManager } from './configs';
+import MessageManage from 'layouts/MessageManage';
 
 class HomeRouter extends PureComponent {
   state = {
@@ -35,6 +36,7 @@ class HomeRouter extends PureComponent {
         <Route path='/maintenance' component={MaintenanceManager} />
         <Route path='/spare' component={SpareManager} />
         <Route path='/manage' component={ManagerManager} />
+        <Route path='/message' component={MessageManager} />
       </React.Fragment>} />
     </div>;
   }
