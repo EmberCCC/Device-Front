@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-03-28 19:45:20
- * @LastEditTime: 2022-04-27 00:07:06
+ * @LastEditTime: 2022-04-27 11:24:26
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage-test\src\routes\BasicRouter\index.js
@@ -47,7 +47,7 @@ export default class BasicRouter extends PureComponent {
     console.log('ws获取：', message)
   }
   componentDidMount() {
-    let url = "ws://192.168.0.5:8003/websocket";//服务端连接的url
+    let url = "ws://device.misaki.center:8000/websocket";//服务端连接的url
     createWebSocket(url)
     this.setState({
       messageSocket: PubSub.subscribe('message', this.getMsg)

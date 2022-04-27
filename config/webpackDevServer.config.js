@@ -121,6 +121,15 @@ module.exports = function (proxy, allowedHost) {
         "changeOrigin": true,
         "pathRewrite": {}
       },
+      "/websocket": {
+        //"target": "http://zuultest.boranet.cn",
+        // "target": "http://misaki.center:8000",
+        // "target": "http://192.168.43.55:8000",
+        // "target": "http://192.168.0.5:8000",
+        "target": "http://device.misaki.center:8888",
+        "changeOrigin": true,
+        "pathRewrite": {}
+      },
       
       
 

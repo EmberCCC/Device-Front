@@ -108,6 +108,7 @@ function DnDFlow(props) {
 
   const children = [];
   const field = [];
+  let fieldProp = {};
   for (let i = 10; i < 36; i++) {
     children.push(<Option key={i.toString(36) + i}>{i.toString(36) + i}</Option>);
   }
@@ -119,7 +120,10 @@ function DnDFlow(props) {
       })
     }
   })
-  useEffect(() => {
+  field.map((item) => {
+    fieldProp[item.propertyId] = []
+  })
+  useEffect(() => { 
     setNodes((nds) =>
       nds.map((node) => {
         if (node.id === nodeId) {
@@ -217,8 +221,8 @@ function DnDFlow(props) {
   }
 
   function checkChange(checkedValues,a) {
-    console.log(a);
-    console.log('checked = ', checkedValues);
+    fieldProp[a] = checkedValues
+    console.log(fieldProp);
   }
   return (
     <Layout>
