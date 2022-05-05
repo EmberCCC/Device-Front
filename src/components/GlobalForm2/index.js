@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-04-05 11:02:45
- * @LastEditTime: 2022-05-06 03:39:57
+ * @LastEditTime: 2022-05-06 03:46:46
  * @LastEditors: EmberCCC 1810888456@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage-test\src\components\GlobalForm\index.js
@@ -120,12 +120,21 @@ class GlobalForm extends React.Component {
                     //     return <ComponentInfo key={indexs} {...item.attr} format={dateFormat} />
                     // }
                 case "DatePicker":
+                    console.log(item.attr.value);
+                    if (item.attr.value != undefined && item.attr.value.length != 0) {
+                        return (
+                            <div>
+                                <p>{item.label}</p>
+                                <p>{item.attr.value[0] || ''}</p>
+                            </div>
+                        )
+                    }else{
                     return (
                         <div>
                             <p>{item.label}</p>
-                            <p>{item.attr.value[0]}</p>
+                            <p>{''}</p>
                         </div>
-                    )
+                    )}
                     // console.log(item.attr);
                     // let value = item.attr.value[0]
                     // console.log(value);
