@@ -13,9 +13,11 @@ import * as services from '../../services/design';
 import Sidebar from './Sidebar';
 import FlowNode from './Node/FlowNode'
 import CopyNode from './Node/CopyNode'
+import EndNode from './Node/EndNode'
 
 import './index.css';
 import { isDataExist } from 'utils/dataTools';
+import { observable } from 'mobx';
 
 const { Header, Sider, Content } = Layout;
 const { Option } = Select;
@@ -38,7 +40,7 @@ const initialNodes = [
   },
   {
     "id": "-1",
-    "type": "output",
+    "type": "end",
     "data": {
       "label": "结束流程",
       'person': []
@@ -92,10 +94,11 @@ const initialEdges = [
     "id": "reactflow__edge-node_1bottom--1"
   }
 ]
-const nodeTypes = { FlowNode: FlowNode, CopyNode: CopyNode };
+const nodeTypes = { FlowNode: FlowNode, CopyNode: CopyNode, end:EndNode };
 
 let id = 0;
 const getId = () => `node_${++id}`;
+const store = observable({})
 
 function DnDFlow(props) {
   const reactFlowWrapper = useRef(null);
@@ -105,24 +108,37 @@ function DnDFlow(props) {
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
   const [nodeName, setNodeName] = useState('');
   const [nodeId, setNodeId] = useState('');
+  const [person,setPerson] = useState({});
+  const [children,setChildren] = useState([])
 
-  const children = [];
+  // const children = [];
   const field = [];
   let fieldProp = {};
-  for (let i = 10; i < 36; i++) {
-    children.push(<Option key={i.toString(36) + i}>{i.toString(36) + i}</Option>);
-  }
-  let obj = Object.assign({}, props.location.state.itemData)
-  Object.keys(obj).map((item) => {
-    if (obj[item].properties != undefined && obj[item].properties.length != 0) {
-      obj[item].properties.map((item) => {
-        field.push({ propertyId: item.propertyId, name: item.name })
-      })
-    }
-  })
+  // Object.keys(person).map((item) => {
+  //   if (personList[item] != undefined) {
+  //     children.push(<Option key={personList[item].id}>{personList[item].nickName}</Option>)
+  //   }
+  // })
+  // for (let i = 10; i < 36; i++) {
+  //   children.push(<Option key={i.toString(36) + i}>{i.toString(36) + i}</Option>);
+  // }
   field.map((item) => {
     fieldProp[item.propertyId] = []
   })
+  useEffect(() => {
+    let personList = Object.assign({},props.location.state.PersonListT)
+    // console.log(personList);
+    // setPerson(personList);
+    console.log(person);
+    let newC = []
+    Object.keys(personList).map((item) => {
+      if (personList[item] != undefined) {
+        newC.push(<Option key={personList[item].id}>{personList[item].nickName}</Option>)
+      }
+    })
+    setPerson(personList);
+    setChildren(newC);
+  },[])
   useEffect(() => { 
     setNodes((nds) =>
       nds.map((node) => {
@@ -184,6 +200,7 @@ function DnDFlow(props) {
   const onSave = useCallback(() => {
     if (reactFlowInstance) {
       const flow = reactFlowInstance.toObject();
+      // personList = Object.assign({},props.location.state.PersonListT)
       let params = {}
       params.firstFormId = 1;
       params.edges = flow.edges
@@ -193,19 +210,27 @@ function DnDFlow(props) {
         obj.id = item.id
         obj.type = item.type
         obj.position = item.position
-        obj.data = item.data
         obj.positionAbsolute = item.positionAbsolute
+        console.log(item.data.person);
+        if (item.data.person != undefined && item.data.person.length != 0) {
+          console.log(Number(item.data.person));
+          console.log(person);
+          let person1 = person[Number(item.data.person) - 1]
+          item.data.principal = person1['username'];
+          item.data.userId = person1['id'];
+        }
+        obj.data = item.data
         params.nodes.push(obj)
       })
       console.log(params);
-      // try {
-      //   let res = services.putRequest(services.requestList.addFlow, params);
-      //   if (isDataExist(res)) {
-      //     return res;
-      //   }
-      // } catch (error) {
-      //   console.log(error);
-      // }
+      try {
+        let res = services.putRequest(services.requestList.addFlow, params);
+        if (isDataExist(res)) {
+          return res;
+        }
+      } catch (error) {
+        console.log(error);
+      }
     }
   }, [reactFlowInstance]);
 
@@ -222,7 +247,6 @@ function DnDFlow(props) {
 
   function checkChange(checkedValues,a) {
     fieldProp[a] = checkedValues
-    console.log(fieldProp);
   }
   return (
     <Layout>
@@ -272,7 +296,7 @@ function DnDFlow(props) {
             <div>
               <label>负责人：</label>
               <Select
-                mode="multiple"
+                // mode="multiple"
                 allowClear
                 style={{ width: '80%', marginTop: '10px' }}
                 placeholder="Please select"
@@ -298,5 +322,6 @@ function DnDFlow(props) {
 
   );
 };
+
 
 export default DnDFlow;

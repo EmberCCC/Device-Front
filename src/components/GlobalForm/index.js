@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2022-04-05 11:02:45
- * @LastEditTime: 2022-04-26 23:38:42
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2022-05-05 02:11:04
+ * @LastEditors: EmberCCC 1810888456@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage-test\src\components\GlobalForm\index.js
  */
@@ -14,19 +14,25 @@ import { GlobalComponent } from 'layouts/TableEdit/config';
 import { inject, observer } from 'mobx-react';
 import { typeName } from 'constants/status_constant';
 import { toJS } from 'mobx';
+import moment from 'moment';
 import '../../layouts/TableEdit/index.css'
 
 const { Option } = Select;
-@inject('HomeStore')
+@inject('HomeStore', 'TableStore')
 @observer
 class GlobalForm extends React.Component {
+    state = {
+        secondFormId: 0
+    };
     render() {
-        const { secondFormId, itemDataT } = this.props.HomeStore
+        const { itemDataT } = this.props.HomeStore
         const loading = this.props.loading
+        const secondFormId = this.state.secondFormId;
         const { TabPane } = Tabs;
         let itemData = []
         //转换为所需对象
         const changeField = () => {
+            let data = toJS(this.props.TableStore.modalEditData)
             let obj = []
             if (itemDataT.length != 0) {
                 let itemData1 = itemDataT.filter(function (txt) {
@@ -43,7 +49,9 @@ class GlobalForm extends React.Component {
                         let ele = {}
                         ele.label = element.name
                         ele.attr = element.others
-                        delete ele.attr.value
+                        if (this.props.type == true) {
+                            ele.attr.value = data[element.propertyId]
+                        }
                         ele.propertyId = element.propertyId
                         ele.name = typeName[element.typeId]
                         obj.push(ele)
@@ -62,10 +70,24 @@ class GlobalForm extends React.Component {
             const x = Object.keys(e);
             itemData.map(item => {
                 if (item.label == x[0]) {
-                    item.attr.value = e[x[0]];
+                    if (item.name == "RangePicker") {
+                        let time = []
+                        e[x[0]].map((item) => {
+                            time.push(moment(item).format('lll   '))
+                        })
+                        item.attr.value = time
+                    } else if (item.name == "DatePicker") {
+                        let time = []
+                        time.push(moment(e[x[0]]).format('lll'))
+                        item.attr.value = time
+                    } else {
+                        item.attr.value = e[x[0]];
+                    }
                 }
             })
         }
+
+        const dateFormat = 'lll';
 
         const renderDiffComponents = (item, indexs, ComponentInfo) => {
             switch (item.name) {
@@ -79,8 +101,22 @@ class GlobalForm extends React.Component {
                             }
                         </ComponentInfo>
                     )
+                case "RangePicker":
+                    if (item.attr.value != undefined) {
+                        return <ComponentInfo key={indexs} {...item.attr} defaultValue={[moment(item.attr.value[0], dateFormat), moment(item.attr.value[1], dateFormat)]} format={dateFormat} />
+                    } else {
+                        return <ComponentInfo key={indexs} {...item.attr} format={dateFormat} />
+                    }
+                case "DatePicker":
+                    if (item.attr.value != undefined) {
+                        return <ComponentInfo key={indexs} {...item.attr} defaultValue={moment(item.attr.value, dateFormat) || ''} format={dateFormat} />
+                    } else {
+                        return <ComponentInfo key={indexs} {...item.attr} format={dateFormat} />
+                    }
+                case 'InputNumber':
+                    return <ComponentInfo key={indexs} {...item.attr} defaultValue={Number(item.attr.value)} />
                 default:
-                    return <ComponentInfo key={indexs} {...item.attr} />
+                    return <ComponentInfo key={indexs} {...item.attr} defaultValue={item.attr.value} />
             }
         }
         // 递归函数
@@ -90,13 +126,6 @@ class GlobalForm extends React.Component {
                 arr.map((item, i) => {
                     const indexs = index === '' ? String(i) : `${index}-${i}`;
                     if (item) {
-                        if (item.children) {
-                            return (
-                                <div {...item.attr} data-id={indexs} key={indexs}>
-                                    {loop(item.children, indexs)}
-                                </div>
-                            )
-                        }
                         const ComponentInfo = GlobalComponent[item.name]
                         const text = item.attr.descripe || ''
                         return (
@@ -130,24 +159,46 @@ class GlobalForm extends React.Component {
                 }
             });
             let params = {};
-            params.data = uploadData
             params.firstFormId = firstFormId
-            this.props.HomeStore.countObj({firstFormId:firstFormId});
-            Modal.confirm({
-                title: '提示',
-                content: '是否添加此条数据？',
-                okText: '确认',
-                cancelText: '取消',
-                onOk: () => {
-                    addNew(params).then(res => {
-                        message.success('添加成功')
-                    })
-                },
-            });
+            params.secondFormId = 0;
+            this.props.HomeStore.countObj({ firstFormId: firstFormId });
+            if (this.props.type == true) {
+                Modal.confirm({
+                    title: '提示',
+                    content: '是否修改此条数据？',
+                    okText: '确认',
+                    cancelText: '取消',
+                    onOk: () => {
+                        params.updateData = toJS(uploadData)
+                        params.dataId = toJS(this.props.dataInfo).id
+                        console.log(params);
+                        console.log(this.props.dataInfo);
+                        this.props.HomeStore.updataObj(params).then(res => {
+                            message.success('修改成功')
+                        })
+                    },
+                });
+            } else {
+                Modal.confirm({
+                    title: '提示',
+                    content: '是否添加此条数据？',
+                    okText: '确认',
+                    cancelText: '取消',
+                    onOk: () => {
+                        params.data = toJS(uploadData)
+
+                        addNew(params).then(res => {
+                            message.success('添加成功')
+                        })
+                    },
+                });
+            }
         }
 
         const changeTabs = (e) => {
-            this.props.HomeStore.changeSecondFormId(Number(e))
+            this.setState({
+                secondFormId: Number(e)
+            })
             let itemObj = this.props.HomeStore.uploadData
             itemData.forEach(element => {
                 let key = element.propertyId
@@ -157,12 +208,14 @@ class GlobalForm extends React.Component {
             });
         }
         return <div>
-            <Tabs size='large' activeKey={this.props.HomeStore.secondFormId.toString()} onChange={changeTabs}>
-                {this.props.HomeStore.itemDataT.map((item, index) => {
-                    return <TabPane tab={<div><EditOutlined />{item.secondFormId + 1}</div>} key={(index).toString()} />
-                })}
-            </Tabs>
-            <Form layout={'vertical'} onFinish={sub} onValuesChange={handleLabelChange} loading={loading}>
+            {
+                this.props.HomeStore.itemDataT.length > 1 && <Tabs activeKey={this.state.secondFormId.toString()} onChange={changeTabs} type='card'>
+                    {this.props.HomeStore.itemDataT.map((item, index) => {
+                        return <TabPane tab={<div><EditOutlined />{item.secondFormId + 1}</div>} key={(index).toString()} />
+                    })}
+                </Tabs>
+            }
+            <Form layout={'vertical'} onFinish={sub} onValuesChange={handleLabelChange}>
                 {loop(itemData, '')}
                 <Form.Item>
                     <Button type="primary" onClick={sub}>Submit</Button>

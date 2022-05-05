@@ -44,23 +44,15 @@ export default class GlobalModal extends Component {
       }
       title={<div>
         {title}
-        {/*
-          maxmin && <span onClick={this.onFullScreen}>
-            {
-              this.state.isFullScreen ? <Icon className='icon' type="fullscreen-exit" />  :
-              <Icon className='icon' type="fullscreen" />
-            }
-          </span>
-          */}
       </div>}
       // getContainer={
       //   ()=>document.getElementById('home_content')
       // }
       {...otherProps}
-      style={{...wholeStyle}}
-      bodyStyle={{...curBodyStyle}}
+      style={{ ...wholeStyle }}
+      bodyStyle={{ ...curBodyStyle }}
       // maskStyle={{position: 'absolute',...maskStyle}}
-      width={this.state.isFullScreen ? this.state.rootWidth+'px' : (width || '520px')}
+      width={this.state.isFullScreen ? this.state.rootWidth + 'px' : (width || '520px')}
       destroyOnClose={true}
       okText={okText || '确定'}
       cancelText={cancelText || '取消'}

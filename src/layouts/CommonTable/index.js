@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-04-02 11:12:08
- * @LastEditTime: 2022-04-25 23:29:00
+ * @LastEditTime: 2022-04-28 19:18:43
  * @LastEditors: Please set LastEditors
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage-test\src\layouts\BasicManage\ComputerPage\index.js
@@ -15,6 +15,8 @@ import { toJS } from 'mobx';
 import GlobalTabel from 'components/GlobalTabel';
 import { NavLink } from 'react-router-dom';
 import './index.css'
+import TableLayout from 'components/TableLayout';
+import GlobalTabel2 from 'components/GlobalTabel2';
 const { Header, Content } = Layout;
 const { Option } = Select
 @inject('HomeStore')
@@ -38,15 +40,14 @@ class CommonTable extends Component {
         <div>
           {
             model == 'look' ?
-              <Table columns={columns} dataSource={dataSource} pagination={PageInfo} onChange={this.onChange} loading={isLoading}></Table> :
+              <TableLayout columns={columns} dataSource={dataSource} pagination={PageInfo} onChange={this.onChange} loading={isLoading}></TableLayout> :
               model == 'submit' ?
-                <GlobalForm loading={isLoading} /> :
+                <GlobalForm loading={isLoading} type={false}/> :
                 model == 'manage' ?
                   <GlobalTabel columns={columns} dataSource={dataSource} PageInfo={PageInfo} firstFormId={firstFormId} loading={isLoading} itemDataT={this.props.HomeStore.itemDataT} countObj={(params) => this.props.HomeStore.countObj(params)}
                     secondFormId={secondFormId} del={(params) => this.props.HomeStore.deleteObj(params)} getData={(page) => { this.getData(page) }} updataData={(params) => { this.props.HomeStore.updataObj(params) }} />
                   :
-                  <GlobalTabel columns={columns} dataSource={dataSource} PageInfo={PageInfo} firstFormId={firstFormId} loading={isLoading} itemDataT={this.props.HomeStore.itemDataT} countObj={(params) => this.props.HomeStore.countObj(params)}
-                    secondFormId={secondFormId} del={(params) => this.props.HomeStore.deleteObj(params)} getData={(page) => { this.getData(page) }} updataData={(params) => { this.props.HomeStore.updataObj(params) }} />
+                  <GlobalTabel2 />
           }
         </div>
       </div>
@@ -83,7 +84,7 @@ class CommonTable extends Component {
   getField = () => {
     const { firstFormId } = this.props.HomeStore
     let params = {};
-    this.props.HomeStore.PageInfo.pageSize = 2;
+    this.props.HomeStore.PageInfo.pageSize = 10;
     this.props.HomeStore.PageInfo.pageIndex = 1
     params.firstFormId = firstFormId;
     this.props.HomeStore.queryField(params)

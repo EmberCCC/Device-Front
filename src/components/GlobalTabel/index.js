@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2022-04-07 11:58:39
- * @LastEditTime: 2022-04-24 22:57:00
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2022-05-05 11:04:32
+ * @LastEditors: EmberCCC 1810888456@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage-test\src\components\GlobalTabel\index.js
  */
@@ -11,6 +11,7 @@ import { Table, Popconfirm, Form, Select, Modal, message, Divider } from 'antd';
 import { toJS } from 'mobx';
 import { GlobalComponent } from 'layouts/TableEdit/config';
 import { typeName } from 'constants/status_constant';
+import TableLayout from 'components/TableLayout';
 
 const EditableCell = ({
   editing,
@@ -178,7 +179,7 @@ const GlobalTabel = (props) => {
     let params2 = {}
     params1.firstFormId = firstFormId
     params2.firstFormId = firstFormId
-    params1.secondFormId = secondFormId
+    // params1.secondFormId = secondFormId
     params1.dataId = (txt.id).toString()
     Modal.confirm({
       title: '提示',
@@ -270,12 +271,7 @@ const GlobalTabel = (props) => {
   });
   return (
     <Form form={form} component={false} onValuesChange={handleLabelChange}>
-      <Table
-        components={{
-          body: {
-            cell: EditableCell,
-          },
-        }}
+      <TableLayout
         bordered
         dataSource={data}
         columns={mergedColumns}

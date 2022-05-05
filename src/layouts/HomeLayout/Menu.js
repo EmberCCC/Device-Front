@@ -3,7 +3,7 @@ import { inject, observer } from 'mobx-react';
 import { NavLink, withRouter } from 'react-router-dom';
 import classnames from 'classnames';
 import './index.less';
-import { FolderOutlined, HistoryOutlined } from '@ant-design/icons';
+import { BellOutlined, BellTwoTone, CarryOutFilled, CarryOutOutlined, CarryOutTwoTone, CheckCircleTwoTone, FolderOutlined, HistoryOutlined, PlayCircleFilled, PlayCircleTwoTone, SendOutlined, SoundTwoTone } from '@ant-design/icons';
 import { Menu, Layout, Badge } from 'antd';
 import { toJS } from 'mobx';
 const { Sider } = Layout;
@@ -11,7 +11,7 @@ const SubMenu = Menu.SubMenu;
 
 let firstMount = false;
 @withRouter
-@inject('HomeStore')
+@inject('HomeStore', 'MessageStore')
 @observer
 class MenuLayout extends Component {
   constructor(props) {
@@ -27,9 +27,11 @@ class MenuLayout extends Component {
   render() {
     const isMobile = this.props.mobile === 'true';
     const { menuObj } = toJS(this.store);
+    const { todoCount, createCount, handleCount, copyCount, todoList, createList, handleList, copytList } = this.props.MessageStore;
     return (
       <Sider
         trigger={null}
+        theme='light'
         collapsible
         collapsed={
           this.props.sizetype === 's_size' ? false : this.state.collapsed
@@ -47,32 +49,40 @@ class MenuLayout extends Component {
         }}
       >
         <div id='manu_container'>
-          <NavLink to='/message/todo'>
+          <NavLink to={{ pathname: "/message/todo" }}>
             <div className='message_logo'>
-              <HistoryOutlined />
-              我的待办
-              <Badge count={1}></Badge>
+              <div>
+                <BellTwoTone />
+                我的待办
+              </div>
+              <Badge count={todoCount} style={{ float: 'right' }} offset={[1,5]}></Badge>
             </div>
           </NavLink>
-          <NavLink to='/message/create'>
+          <NavLink to={{ pathname: "/message/create" }}>
             <div className='message_logo'>
-              <HistoryOutlined />
-              我发起的
-              <Badge count={1}></Badge>
+              <div>
+                <PlayCircleTwoTone />
+                我发起的
+              </div>
+              <Badge count={createCount} style={{ float: 'right' }} offset={[1,5]}></Badge>
             </div>
           </NavLink>
-          <NavLink to='/message/handle'>
+          <NavLink to={{ pathname: "/message/handle" }}>
             <div className='message_logo'>
-              <HistoryOutlined />
-              我处理的
-              <Badge count={1}></Badge>
+              <div>
+                <CarryOutTwoTone />
+                我处理的
+              </div>
+              <Badge count={handleCount} style={{ float: 'right' }} offset={[1,5]}></Badge>
             </div>
           </NavLink>
-          <NavLink to='/message/copy'>
+          <NavLink to={{ pathname: "/message/copy" }}>
             <div className='message_logo'>
-              <HistoryOutlined />
-              抄送我的
-              <Badge count={1}></Badge>
+              <div>
+                <SoundTwoTone />
+                抄送我的
+              </div>
+              <Badge count={copyCount} style={{ float: 'right' }} offset={[1,5]}></Badge>
             </div>
           </NavLink>
           <hr></hr>
@@ -110,10 +120,12 @@ class MenuLayout extends Component {
     this.store.openKeys = openKeys;
   }
   handleMenu = ({ item, key, }) => {
+    let lo = this.props.location.pathname
+    console.log(lo);
     if (key.startsWith('my')) {
       this.props.HomeStore.changeViewModel(key)
       console.log(toJS(this.props.HomeStore.viewModel));
-    } else {
+    } else if(lo != '/manage/todo' && lo != '/manage/create' && lo != '/manage/handle' && lo != '/manage/copy' ){
       this.props.HomeStore.toggleMenu({ actionItem: item, actionId: key, from: 'menu-click' }, (url) => {
         if (url) {
           this.props.history.push(url);
@@ -130,13 +142,13 @@ class MenuLayout extends Component {
     this.props.history.push('/index');
   }
 
-  
+
   componentDidMount() {
     firstMount = false;
     // this.props.HomeStore.getMenuList(this.props.location.pathname).then(() => {
     //   this.props.HomeStore.initMenu(this.props.location.pathname);
     // });
-    
+
     /* 初始化判断是否显示 */
     if (this.props.sizetype !== 'l_size') {
       this.state.collapsed = true;
@@ -195,7 +207,7 @@ class MenuLayout extends Component {
     return newState;
   }
   componentDidUpdate() {
-    if (this.state.isPath) {
+    if (this.state.isPath )  {
       this.props.HomeStore.initMenu(this.state.pathname)
     }
   }

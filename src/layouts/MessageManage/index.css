@@ -1,0 +1,9 @@
+.detail{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.LogPage{
+    width: 50%;
+}

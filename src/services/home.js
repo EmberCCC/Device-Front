@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2021-11-02 14:29:58
- * @LastEditTime: 2022-04-24 09:21:20
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2022-05-05 13:51:04
+ * @LastEditors: EmberCCC 1810888456@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage\src\services\home.js
  */
@@ -24,7 +24,12 @@ export const requestList = {
   deleteForm:'/mongo/base/delete/form',
   updataField:'/mysql/field/field/user/update/form',
   updataObj:'/mongo/base/update/form',
-  countObj:'/mongo/base/count'
+  countObj:'/mongo/base/count',
+  deleteForms:'/mongo/base/delete/forms',
+
+  /* 人员信息 */
+  queryPerson:'/uaa/user/users/getAll',
+  querySelf:'/uaa/user/get/Self'
 
 }
 

@@ -5,6 +5,8 @@ import { isEmpty } from 'lodash';
 import { ContainerQuery } from 'react-container-query';
 import classnames from 'classnames';
 import { withRouter } from 'react-router-dom';
+import { PubSub } from 'pubsub-js';
+
 import Menu from './Menu';
 import GlobalHeader from 'components/GlobalHeader';
 import GlobalCrumbs from 'components/GlobalCrumbs';
@@ -17,16 +19,18 @@ import { judgeIsMobile } from 'utils/dataTools';
 import ErrorNotFound from './ErrorNotFound';
 import './index.less';
 import GlobalModal from 'components/GlobalModal';
+import { closeWebSocket } from 'routes/BasicRouter/webSocket';
 
 const { Content } = Layout;
 const { Option } = Select;
 @withRouter
-@inject('HomeStore')
+@inject('HomeStore','MessageStore')
 @observer
 class HomeLayout extends Component {
   state = {
     collapsed: false,
-    firstMount: false
+    firstMount: false,
+    messageSocket: null
   };
 
   render() {
@@ -71,7 +75,7 @@ class HomeLayout extends Component {
             overflowY: 'auto', position: 'relative'
           }}
           id='home_content'
-          mobile={isMobile}
+          mobile={'false'}
         >
           {(isAuth ? this.props.children : <ErrorNotFound />)}
         </Content>
@@ -94,6 +98,8 @@ class HomeLayout extends Component {
     );
   }
   backToLogin = () => {
+    this.props.MessageStore.clearList();
+    closeWebSocket();
     sessionStorage.clear();
     this.props.history.push('/login')
   }

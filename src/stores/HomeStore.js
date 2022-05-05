@@ -4,6 +4,8 @@ import * as services from '../services/home';
 import { isEmpty, uniqBy, } from 'lodash';
 import { checkCurrentMenu } from 'utils/dataTools';
 import { MenuObj } from '../constants/configs';
+import moment from 'moment';
+import { createWebSocket } from 'routes/BasicRouter/webSocket';
 
 class Home {
   @observable contentScrollHeight = 0; //当前content滚动高度
@@ -26,9 +28,10 @@ class Home {
   @observable dataSource = [];
   @observable itemDataT = []
   @observable uploadData = {}
-  @observable PageInfo = { pageIndex: 1, pageSize: 2, total: 0 }
+  @observable PageInfo = { pageIndex: 1, pageSize: 10, total: 0 }
   @observable viewModel = 'my1'
   @observable viewVisiable = false
+  @observable myInfo = {}
 
   /* 设置登陆信息 */
   @action async setLogin(params, finished) {
@@ -153,6 +156,7 @@ class Home {
 
           if (lv2.path === pathname) {
             this.selectedKeys = [`${lv2.id}`];
+            this.firstFormId = lv2.id;
             this.openKeys = [`${lv2.parentId}`];
             crumbsList.push({
               id: lv2.id, name: lv2.name, path: lv2.path
@@ -304,8 +308,8 @@ class Home {
             obj = dataDataSource[i].data;
           }
           obj.lastModifyPeopleNickName = dataDataSource[i].lastModifyPeopleNickName
-          obj.createTime = dataDataSource[i].createTime
-          obj.updateTime = dataDataSource[i].updateTime
+          obj.createTime = moment(dataDataSource[i].createTime).format('MMMM Do YYYY, h:mm:ss a')
+          obj.updateTime = moment(dataDataSource[i].updateTime).format('MMMM Do YYYY, h:mm:ss a')
           obj.id = dataDataSource[i].dataId
           obj.key = (i + 1).toString()
           dataSource.push(obj)
@@ -337,7 +341,7 @@ class Home {
     params.pageIndex = this.PageInfo.pageIndex
     params.pageSize = this.PageInfo.pageSize
     this.PageInfo.pageIndex = 1;
-    this.PageInfo.pageSize = 2;
+    this.PageInfo.pageSize = 10;
     this.PageInfo.current = 1;
     this.queryAll(params)
   }
@@ -362,6 +366,20 @@ class Home {
     this.isLoading = true;
     try {
       let res = await services.putRequest(services.requestList.deleteForm, params);
+      this.isLoading = false
+      if (isDataExist(res)) {
+        return res
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  //删除一个数据
+  @action.bound async deleteObjs(params) {
+    this.isLoading = true;
+    try {
+      let res = await services.putRequest(services.requestList.deleteForms, params);
       this.isLoading = false
       if (isDataExist(res)) {
         return res
@@ -408,6 +426,25 @@ class Home {
       this.isLoading = false
       if (isDataExist(res)) {
         this.PageInfo.total = res.data.data
+        return res
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  @action.bound async querySelf(params) {
+    try {
+      let res = await services.getRequest(services.requestList.querySelf, params);
+      if (isDataExist(res)) {
+        this.myInfo = res.data.data;
+        // console.log(this.myInfo);
+        let url = "ws://device.misaki.center:8000/websocket";//服务端连接的url
+        sessionStorage.setItem('id', this.myInfo.id);
+        sessionStorage.setItem('tenementId', this.myInfo.tenementId);
+        sessionStorage.setItem('username', this.myInfo.username);
+        createWebSocket(url)
+        
         return res
       }
     } catch (error) {

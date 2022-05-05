@@ -46,7 +46,7 @@ const formItemData = [
       style: {
         width: '60%'
       },
-      value: undefined
+      
     },
     label: '区间选择框'
   },
@@ -56,7 +56,7 @@ const formItemData = [
       style: {
         width: '60%'
       },
-      value: undefined
+      
     },
     label: '日选择框'
   },
@@ -66,7 +66,7 @@ const formItemData = [
       style: {
         width: '60%'
       },
-      value: '',
+      
       placeholder: '请输入'
     },
     label: '文本框'
@@ -85,7 +85,7 @@ const formItemData = [
   {
     name: 'InputNumber',
     attr: {
-      value: undefined,
+      
     },
     label: '数字框'
   },
@@ -103,7 +103,7 @@ const formItemData = [
     name: 'CheckboxGroup',
     attr: {
       options: options,
-      value: []
+      
     },
     label: '多选框'
   },
@@ -111,7 +111,7 @@ const formItemData = [
     name: 'RadioGroup',
     attr: {
       options: options,
-      value: options[0].value
+      
     },
     label: '单选框'
   },
@@ -119,7 +119,7 @@ const formItemData = [
     name: 'Select',
     attr: {
       options: options,
-      value: options[0].value
+      
     },
     label: '下拉框'
   },

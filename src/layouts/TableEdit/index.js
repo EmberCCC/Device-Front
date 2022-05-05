@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2022-03-22 09:57:59
- * @LastEditTime: 2022-04-23 14:17:27
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2022-05-05 01:54:53
+ * @LastEditors: EmberCCC 1810888456@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage\src\layouts\TableEdit\index.js
  */
@@ -96,7 +96,7 @@ class EditPage extends Component {
         curItemKey: '',
         curItemName: '',
         curItemType: '',
-        curDescripe:''
+        curDescripe: ''
       })
       this.setState({
         newObj: newTreeData
@@ -345,6 +345,14 @@ class EditPage extends Component {
       })
       this.props.HomeStore.changeSecondFormId(Number(e))
     }
+
+    const addForm = () => {
+      let newForm = {}
+      newForm.secondFormId = this.props.HomeStore.itemDataT.length;
+      this.props.HomeStore.itemDataT.push(newForm);
+      console.log(this.props.HomeStore.itemDataT);
+      console.log(this.state.totalObj);
+    }
     return (
       <Layout>
         <Header className="header">
@@ -386,11 +394,14 @@ class EditPage extends Component {
                 minHeight: 300,
               }}
             >
-              <Tabs size='large' activeKey={this.props.HomeStore.secondFormId.toString()} onChange={changeTabs}>
-                {this.props.HomeStore.itemDataT.map((item, index) => {
-                  return <TabPane tab={<div><EditOutlined />{item.secondFormId + 1}</div>} key={(index).toString()} />
-                })}
-              </Tabs>
+              {
+                this.props.HomeStore.itemDataT.length > 1 && <Tabs activeKey={this.props.HomeStore.secondFormId.toString()} onChange={changeTabs} type='card'>
+                  {this.props.HomeStore.itemDataT.map((item, index) => {
+                    return <TabPane tab={<div><EditOutlined />{item.secondFormId + 1}</div>} key={(index).toString()} />
+                  })}
+                </Tabs>
+              }
+
               <Sortable
                 className='formContent'
                 ref={c => c && c.sortable}
@@ -438,12 +449,15 @@ class EditPage extends Component {
                   />
                 }
               </Form>
-              <Button className='delBtn' onClick={handleDel} disabled={!this.state.isChoose}>删除</Button>
+              <Button onClick={handleDel} disabled={!this.state.isChoose}>删除</Button>
+              <br />
+              <Button onClick={addForm} style={{ margin: '5px' }}>添加子表单</Button>
             </Sider>
           </Layout>
         </Layout>
       </Layout>
     );
+
   }
 
   componentWillMount() {

@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2022-01-24 16:24:19
- * @LastEditTime: 2022-04-24 08:34:21
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2022-05-05 18:34:46
+ * @LastEditors: EmberCCC 1810888456@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage\src\layouts\LoginPage\index.js
  */
@@ -12,6 +12,7 @@ import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { withRouter } from 'react-router-dom';
 import { inject, observer } from 'mobx-react';
 import { setCookie, getCookie, clearCookie } from 'utils/dataTools';
+import { toJS } from 'mobx';
 import './index.less';
 
 @withRouter
@@ -63,7 +64,6 @@ class LoginPage extends React.Component {
     </div>;
   }
   handleSubmit = values => {
-    console.log(values);
     if (values.remember) {
       for (let name in values) {
         setCookie(name, values[name]);
@@ -84,7 +84,8 @@ class LoginPage extends React.Component {
       const { success, token } = result;
       if (success) {
         sessionStorage.setItem('selfToken', 'Bearer '+token); // 设置前局登陆token
-        sessionStorage.setItem('username', values.username); // 设置登录用户名
+        // sessionStorage.setItem('username', values.username); // 设置登录用户名
+        // this.props.HomeStore.querySelf({})
         this.props.history.push({
           pathname: '/basic',
           state: { username: values.username, password: values.password, selfToken: token }

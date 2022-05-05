@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2022-04-26 22:13:06
- * @LastEditTime: 2022-04-26 23:45:39
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2022-05-05 14:11:02
+ * @LastEditors: EmberCCC 1810888456@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage-test\src\layouts\HomeLayout\WebSocket.js
  */
@@ -10,7 +10,11 @@ import { PubSub } from 'pubsub-js';
 let websocket,
     lockReconnect = false;
 let createWebSocket = (url) => {
-    websocket = new WebSocket(url+"/1/admin/1");
+    let id = sessionStorage.getItem('id');
+    let username = sessionStorage.getItem('username');
+    let tenementId = sessionStorage.getItem('tenementId');
+    console.log(id,username,tenementId);
+    websocket = new WebSocket(url + "/" + id.toString() + "/" + username + "/" + tenementId.toString());
     console.log('ws connect')
     websocket.onopen = function () {
         console.log('ws open')
@@ -20,7 +24,7 @@ let createWebSocket = (url) => {
         reconnect(url);
     };
     websocket.onclose = function (e) {
-        heartCheck.reset()
+        heartCheck.reset();
         console.log('ws closed: ' + e.code + ' ' + e.reason + ' ' + e.wasClean);
     };
     websocket.onmessage = function (event) {

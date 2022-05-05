@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2022-03-28 20:01:19
- * @LastEditTime: 2022-04-26 18:06:44
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2022-05-04 22:01:10
+ * @LastEditors: EmberCCC 1810888456@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage-test\src\layouts\BasicManage\index.js
  */
@@ -34,7 +34,8 @@ class DesignManage extends React.Component {
                 </Menu.Item>
             </Menu>
         );
-        const {firstFormId,itemDataT} = this.props.HomeStore
+        const { firstFormId, itemDataT } = this.props.HomeStore
+        const { PersonList } = this.props.DesignStore
         const changeModel = ({ item, key, keyPath, domEvent }) => {
             const arr = {
                 1: '/design/edit',
@@ -42,11 +43,12 @@ class DesignManage extends React.Component {
                 3: '/design/flow',
                 4: '/design/flow',
             }
-            let itemData = {...toJS(itemDataT)}
+            let itemData = { ...toJS(itemDataT) }
+            let PersonListT = { ...toJS(PersonList) };
             this.props.DesignStore.changeDesignId(key)
-            this.props.history.push({pathname:arr[key],state : { firstFormId,itemData}});
+            this.props.history.push({ pathname: arr[key], state: { firstFormId, itemData, PersonListT } });
         }
-        const {DesignId} = this.props.DesignStore;
+        const { DesignId } = this.props.DesignStore;
         return (
             <Layout>
                 <Header className="header">
@@ -73,7 +75,7 @@ class DesignManage extends React.Component {
         );
     }
 
-    componentDidMount(){
+    componentDidMount() {
         const arr = {
             1: '/design/edit',
             2: '/design/form',
@@ -81,10 +83,13 @@ class DesignManage extends React.Component {
             4: '/design/flow',
         }
         this.props.DesignStore.changeDesignId('1')
-        const {DesignId} = this.props.DesignStore
-        const {firstFormId} = this.props.HomeStore
-        console.log(this.props.HomeStore.firstFormId);
-        this.props.history.push({pathname:arr[DesignId],state : { firstFormId}});
+        this.props.DesignStore.queryPerson();
+        const { DesignId, PersonList } = this.props.DesignStore
+        const { firstFormId, itemDataT } = this.props.HomeStore
+        let itemData = { ...toJS(itemDataT) }
+        let PersonListT = { ...toJS(PersonList) };
+        this.props.history.push({ pathname: arr[DesignId], state: { firstFormId, itemData, PersonListT } });
+        // this.props.history.push({ pathname: arr[DesignId], state: { firstFormId } });
     }
 }
 
