@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-11-02 14:29:58
- * @LastEditTime: 2022-05-06 02:19:07
+ * @LastEditTime: 2022-05-06 02:51:55
  * @LastEditors: EmberCCC 1810888456@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage\src\routes\HomeRouter\index.js
@@ -85,34 +85,36 @@ class HomeRouter extends PureComponent {
   }
   componentDidMount() {
     console.log(this.state.messageSocket);
+    this.props.MessageStore.clearList();
     if (this.state.messageSocket == null) {
       this.props.HomeStore.querySelf({})
       this.setState({
         messageSocket: PubSub.subscribe('message', this.getMsg)
       })
     }
+    window.onbeforeunload = () => {
+      PubSub.unsubscribe(this.state.messageSocket);
+      this.props.MessageStore.clearList();
+      closeWebSocket();
+      this.setState({
+        messageSocket: null
+      })
+
+    }
     window.addEventListener('resize', this.handleResize.bind(this));
   }
   componentWillUnmount() {
     window.onbeforeunload = () => {
       PubSub.unsubscribe(this.state.messageSocket);
-      // this.props.MessageStore.clearList();
+      this.props.MessageStore.clearList();
       closeWebSocket();
       this.setState({
         messageSocket: null
       })
-      // if (event.clientX > document.body.clientWidth && event.clientY < 0 || event.altKey) {
-      //   window.event.returnValue = "确定要退出本页吗？";
-      // }
 
     }
+    this.props.MessageStore.clearList();
     PubSub.unsubscribe(this.state.messageSocket);
-    //在组件卸载的时候，关闭连接
-    // PubSub.unsubscribe(this.state.messageSocket);
-    // closeWebSocket();
-    // this.setState({
-    //   messageSocket: null
-    // })
   }
   handleResize = (e) => {
     this.setState({

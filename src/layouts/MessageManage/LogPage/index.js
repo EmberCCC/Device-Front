@@ -16,7 +16,8 @@ class LoginPage extends Component {
         console.log(log);
         return (
             <div className='LogPage'>
-                <p style={{textAlign:'center'}}>日志记录：</p>
+                <p>日志记录：</p>
+                <p style={{marginLeft:'10px'}}>发起人：{itemLog.subPersonNickname}</p>
                 {log.map((element) => {
                     return <Card style={{margin:'5px',borderRadius:'5px'}}>
                         <p>解决人：{element.solvePeopleNickname}</p>
