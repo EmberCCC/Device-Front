@@ -1,5 +1,5 @@
 import React, { useState, useRef, useCallback, useMemo, useEffect } from 'react';
-import { Layout, Button, Menu, Dropdown, Divider, Select, Checkbox, List } from 'antd';
+import { Layout, Button, Menu, Dropdown, Divider, Select, Checkbox, List, message } from 'antd';
 import ReactFlow, {
   ReactFlowProvider,
   addEdge,
@@ -202,7 +202,7 @@ function DnDFlow(props) {
       const flow = reactFlowInstance.toObject();
       // personList = Object.assign({},props.location.state.PersonListT)
       let params = {}
-      params.firstFormId = 1;
+      params.firstFormId = props.location.state.firstFormId;
       params.edges = flow.edges
       params.nodes = []
       flow.nodes.map((item) => {
