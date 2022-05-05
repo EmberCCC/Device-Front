@@ -21,7 +21,7 @@ class Home {
   @observable isLoading = false;
   @observable toggledActionId = 0;
   @observable isAuth = false;
-  @observable model = "submit"; //模式控制;
+  @observable model = "look"; //模式控制;
   @observable firstFormId = 1
   @observable secondFormId = 0
   @observable columns = [];

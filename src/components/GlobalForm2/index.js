@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-04-05 11:02:45
- * @LastEditTime: 2022-05-06 03:47:50
+ * @LastEditTime: 2022-05-06 04:30:49
  * @LastEditors: EmberCCC 1810888456@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage-test\src\components\GlobalForm\index.js
@@ -31,7 +31,6 @@ class GlobalForm extends React.Component {
         let itemData = []
         //转换为所需对象
         const changeField = () => {
-            console.log(itemInfo);
             let obj = []
             if (field.length != 0) {
                 let itemData1 = field.filter(function (txt) {
@@ -97,77 +96,28 @@ class GlobalForm extends React.Component {
                     return <ComponentInfo key={indexs} {...item.attr}></ComponentInfo>
                 case 'Select':
                     return (
-                        <div>
-                            <p>{item.label}</p>
-                            <p>{item.attr.value}</p>
-                        </div>
-                        // <ComponentInfo key={indexs} defaultValue={item.attr.value}>
-                        //     {
-                        //         item.attr.options.map(subItem => <Option key={subItem.key} value={subItem.value + ''}>{subItem.label}</Option>)
-                        //     }
-                        // </ComponentInfo>
+                        <ComponentInfo key={indexs} defaultValue={item.attr.value}>
+                            {
+                                item.attr.options.map(subItem => <Option key={subItem.key} value={subItem.value + ''}>{subItem.label}</Option>)
+                            }
+                        </ComponentInfo>
                     )
                 case "RangePicker":
-                    if (item.attr.value != undefined && item.attr.value.length != 0) {
-                        return (
-                            <div>
-                                <p>{item.label}</p>
-                                <p>{item.attr.value[0] || ''}--{item.attr.value[1] || ''}</p>
-                            </div>
-                        )
+                    if (item.attr.value != undefined) {
+                        return <ComponentInfo key={indexs} {...item.attr} defaultValue={[moment(item.attr.value[0], dateFormat), moment(item.attr.value[1], dateFormat)]} format={dateFormat} />
                     } else {
-                        return (
-                            <div>
-                                <p>{item.label}</p>
-                                <p>{''}</p>
-                            </div>
-                        )
+                        return <ComponentInfo key={indexs} {...item.attr} format={dateFormat} />
                     }
-                // if (item.attr.value != undefined) {
-                //     return <ComponentInfo key={indexs} {...item.attr} defaultValue={[moment(item.attr.value[0], dateFormat), moment(item.attr.value[1], dateFormat)]} format={dateFormat} />
-                // } else {
-                //     return <ComponentInfo key={indexs} {...item.attr} format={dateFormat} />
-                // }
                 case "DatePicker":
-                    if (item.attr.value != undefined && item.attr.value.length != 0) {
-                        return (
-                            <div>
-                                <p>{item.label}</p>
-                                <p>{item.attr.value[0] || ''}</p>
-                            </div>
-                        )
+                    if (item.attr.value != undefined) {
+                        return <ComponentInfo key={indexs} {...item.attr} defaultValue={moment(item.attr.value, dateFormat) || ''} format={dateFormat} />
                     } else {
-                        return (
-                            <div>
-                                <p>{item.label}</p>
-                                <p>{''}</p>
-                            </div>
-                        )
+                        return <ComponentInfo key={indexs} {...item.attr} format={dateFormat} />
                     }
-                // console.log(item.attr);
-                // let value = item.attr.value[0]
-                // console.log(value);
-                // if (item.attr.value != undefined) {
-                //     return <ComponentInfo key={indexs} {...item.attr} defaultValue={moment(value, dateFormat) || ''} format={dateFormat} />
-                // } else {
-                //     return <ComponentInfo key={indexs} {...item.attr} format={dateFormat} />
-                // }
                 case 'InputNumber':
-                    return (
-                        <div>
-                            <p>{item.label}</p>
-                            <p>{Number(item.attr.value)}</p>
-                        </div>
-                    )
-                // return <ComponentInfo key={indexs} {...item.attr} defaultValue={Number(item.attr.value)} />
+                    return <ComponentInfo key={indexs} {...item.attr} defaultValue={Number(item.attr.value)} />
                 default:
-                    return (
-                        <div>
-                            <p>{item.label}</p>
-                            <p>{item.attr.value}</p>
-                        </div>
-                    )
-                // return <ComponentInfo key={indexs} {...item.attr} defaultValue={item.attr.value} />
+                    return <ComponentInfo key={indexs} {...item.attr} defaultValue={item.attr.value} />
             }
         }
         // 递归函数
@@ -182,8 +132,8 @@ class GlobalForm extends React.Component {
                         return (
                             <Form.Item
                                 key={indexs}
-                                // label={item.label}
-                                // name={item.label}
+                                label={item.label}
+                                name={item.label}
                                 className='formItemStyle'
                                 extra={text}
                             >

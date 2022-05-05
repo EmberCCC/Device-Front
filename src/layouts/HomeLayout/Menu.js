@@ -114,6 +114,7 @@ class MenuLayout extends Component {
     );
   }
   onMenuSelect = ({ selectedKeys }) => {
+    this.store.model = 'look'
     this.store.selectedKeys = selectedKeys;
   }
   onOpenChange = (openKeys) => {
@@ -121,7 +122,7 @@ class MenuLayout extends Component {
   }
   handleMenu = ({ item, key, }) => {
     let lo = this.props.location.pathname
-    console.log(lo);
+    this.props.HomeStore.model = 'look'
     if (key.startsWith('my')) {
       this.props.HomeStore.changeViewModel(key)
       console.log(toJS(this.props.HomeStore.viewModel));

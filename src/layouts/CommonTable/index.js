@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2022-04-02 11:12:08
- * @LastEditTime: 2022-04-28 19:18:43
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2022-05-06 05:04:38
+ * @LastEditors: EmberCCC 1810888456@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage-test\src\layouts\BasicManage\ComputerPage\index.js
  */
@@ -24,7 +24,7 @@ const { Option } = Select
 class CommonTable extends Component {
 
   render() {
-    const { dataSource, PageInfo, firstFormId, secondFormId, isLoading, model, selectedKeys, itemDataT } = this.props.HomeStore;
+    const { dataSource, PageInfo, secondFormId, isLoading, model, selectedKeys, itemDataT } = this.props.HomeStore;
     let columns = toJS(this.props.HomeStore.columns)
     return (
       <div className='tableEdit'>
@@ -40,12 +40,11 @@ class CommonTable extends Component {
         <div>
           {
             model == 'look' ?
-              <TableLayout columns={columns} dataSource={dataSource} pagination={PageInfo} onChange={this.onChange} loading={isLoading}></TableLayout> :
+              <TableLayout columns={columns} dataSource={dataSource} pagination={PageInfo} onChange={this.onChange} loading={isLoading} scroll={{ x: 1300 }}></TableLayout> :
               model == 'submit' ?
                 <GlobalForm loading={isLoading} type={false}/> :
                 model == 'manage' ?
-                  <GlobalTabel columns={columns} dataSource={dataSource} PageInfo={PageInfo} firstFormId={firstFormId} loading={isLoading} itemDataT={this.props.HomeStore.itemDataT} countObj={(params) => this.props.HomeStore.countObj(params)}
-                    secondFormId={secondFormId} del={(params) => this.props.HomeStore.deleteObj(params)} getData={(page) => { this.getData(page) }} updataData={(params) => { this.props.HomeStore.updataObj(params) }} />
+                  <GlobalTabel2/>
                   :
                   <GlobalTabel2 />
           }
@@ -89,7 +88,7 @@ class CommonTable extends Component {
     params.firstFormId = firstFormId;
     this.props.HomeStore.queryField(params)
   }
-  componentDidMount() {
+  componentWillMount() {
     const { firstFormId } = this.props.HomeStore
     let params = {};
     params.firstFormId = firstFormId;

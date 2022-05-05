@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-04-05 11:02:45
- * @LastEditTime: 2022-05-05 02:11:04
+ * @LastEditTime: 2022-05-06 05:00:58
  * @LastEditors: EmberCCC 1810888456@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage-test\src\components\GlobalForm\index.js
@@ -18,24 +18,38 @@ import moment from 'moment';
 import '../../layouts/TableEdit/index.css'
 
 const { Option } = Select;
-@inject('HomeStore', 'TableStore')
+
 @observer
+@inject('HomeStore', 'TableStore','MessageStore')
 class GlobalForm extends React.Component {
     state = {
         secondFormId: 0
     };
     render() {
         const { itemDataT } = this.props.HomeStore
-        const loading = this.props.loading
+        // const loading = this.props.loading
         const secondFormId = this.state.secondFormId;
+        const {  field, lookData } = this.props.MessageStore;
         const { TabPane } = Tabs;
         let itemData = []
         //转换为所需对象
         const changeField = () => {
-            let data = toJS(this.props.TableStore.modalEditData)
+            let data = []
+            let Nfield = []
+            if (this.props.type == 2) {
+                Nfield = field
+                data = toJS(lookData)
+                console.log(this.props.MessageStore.itemField);
+                console.log(data);
+            }else{
+                Nfield = itemDataT
+                data = toJS(this.props.TableStore.modalEditData)
+                console.log(111);
+            }
+            // let data = toJS(this.props.TableStore.modalEditData) //数据
             let obj = []
-            if (itemDataT.length != 0) {
-                let itemData1 = itemDataT.filter(function (txt) {
+            if (Nfield.length != 0) {
+                let itemData1 = Nfield.filter(function (txt) {
                     return txt.secondFormId == secondFormId
                 })
                 if (itemData1.length == 0) {
@@ -49,7 +63,7 @@ class GlobalForm extends React.Component {
                         let ele = {}
                         ele.label = element.name
                         ele.attr = element.others
-                        if (this.props.type == true) {
+                        if (this.props.type == true || this.props.type == 2) {
                             ele.attr.value = data[element.propertyId]
                         }
                         ele.propertyId = element.propertyId
@@ -151,6 +165,7 @@ class GlobalForm extends React.Component {
 
         const sub = (values) => {
             const { firstFormId, addNew, uploadData } = this.props.HomeStore
+            const {itemInfo} = this.props.MessageStore;
             let itemObj = uploadData
             itemData.forEach(element => {
                 let key = element.propertyId
@@ -159,10 +174,15 @@ class GlobalForm extends React.Component {
                 }
             });
             let params = {};
-            params.firstFormId = firstFormId
+            if (this.props.type == 2) {
+                params.firstFormId = itemInfo.firstFormId
+            }else{
+                params.firstFormId = firstFormId
+            }
+            
             params.secondFormId = 0;
             this.props.HomeStore.countObj({ firstFormId: firstFormId });
-            if (this.props.type == true) {
+            if (this.props.type == true || this.props.type == 2) {
                 Modal.confirm({
                     title: '提示',
                     content: '是否修改此条数据？',
@@ -170,7 +190,12 @@ class GlobalForm extends React.Component {
                     cancelText: '取消',
                     onOk: () => {
                         params.updateData = toJS(uploadData)
-                        params.dataId = toJS(this.props.dataInfo).id
+                        if (this.props.type == true) {
+                            params.dataId = toJS(this.props.dataInfo).id
+                        }else{
+                            params.dataId = toJS(this.props.MessageStore.itemField).dataId
+                        }
+                       
                         console.log(params);
                         console.log(this.props.dataInfo);
                         this.props.HomeStore.updataObj(params).then(res => {
