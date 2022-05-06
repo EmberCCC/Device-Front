@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-04-02 11:12:08
- * @LastEditTime: 2022-05-06 05:04:38
+ * @LastEditTime: 2022-05-06 11:36:30
  * @LastEditors: EmberCCC 1810888456@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage-test\src\layouts\BasicManage\ComputerPage\index.js
@@ -89,6 +89,7 @@ class CommonTable extends Component {
     this.props.HomeStore.queryField(params)
   }
   componentWillMount() {
+    this.props.HomeStore.model = 'look'
     const { firstFormId } = this.props.HomeStore
     let params = {};
     params.firstFormId = firstFormId;

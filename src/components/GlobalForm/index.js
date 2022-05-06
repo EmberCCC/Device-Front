@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-04-05 11:02:45
- * @LastEditTime: 2022-05-06 05:00:58
+ * @LastEditTime: 2022-05-06 11:49:18
  * @LastEditors: EmberCCC 1810888456@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage-test\src\components\GlobalForm\index.js
@@ -182,7 +182,7 @@ class GlobalForm extends React.Component {
             
             params.secondFormId = 0;
             this.props.HomeStore.countObj({ firstFormId: firstFormId });
-            if (this.props.type == true || this.props.type == 2) {
+            if (this.props.type == true || this.props.type == 2 && this.props.MessageStore.subFlag ) {
                 Modal.confirm({
                     title: '提示',
                     content: '是否修改此条数据？',
@@ -196,14 +196,12 @@ class GlobalForm extends React.Component {
                             params.dataId = toJS(this.props.MessageStore.itemField).dataId
                         }
                        
-                        console.log(params);
-                        console.log(this.props.dataInfo);
                         this.props.HomeStore.updataObj(params).then(res => {
                             message.success('修改成功')
                         })
                     },
                 });
-            } else {
+            } else if(this.props.type == false){
                 Modal.confirm({
                     title: '提示',
                     content: '是否添加此条数据？',
@@ -211,7 +209,6 @@ class GlobalForm extends React.Component {
                     cancelText: '取消',
                     onOk: () => {
                         params.data = toJS(uploadData)
-
                         addNew(params).then(res => {
                             message.success('添加成功')
                         })
