@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-11-02 14:29:58
- * @LastEditTime: 2022-05-06 02:51:55
+ * @LastEditTime: 2022-05-06 11:25:11
  * @LastEditors: EmberCCC 1810888456@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage\src\routes\HomeRouter\index.js
@@ -20,12 +20,13 @@ import MessageManage from 'layouts/MessageManage';
 import { closeWebSocket, websocket } from 'routes/BasicRouter/webSocket';
 import { inject, observer } from 'mobx-react';
 
-@inject('HomeStore','MessageStore')
+let id = 1;
+@inject('HomeStore', 'MessageStore')
 @observer
 class HomeRouter extends PureComponent {
   state = {
     innerHeight: window.innerHeight,
-    messageSocket: null
+    messageSocket: null,
   };
   render() {
     const isMobile = navigator.userAgent.toLowerCase().indexOf('mobile') > -1 ? 'mobile' : 'pc';
@@ -57,56 +58,50 @@ class HomeRouter extends PureComponent {
     // console.log('ws获取：', message)
     let data = JSON.parse(message).result.data
     console.log(data);
-    if (data.id == 'end') {
-      this.props.MessageStore.changeList('handleList',data.flowLogId,2);
-      this.props.MessageStore.changeList('createList',data.flowLogId,2);
-    }
     if (data instanceof Array) {
       data.map((item) => {
-        if (item.state == 0 && data.nodeId != 0) {
+        if (item.state == 0) {
           this.props.MessageStore.addList('todoList', item);
-        } else if (item.state == 1 || data.nodeId == 0) {
+        } else if (item.state == 1) {
           this.props.MessageStore.addList('createList', item);
         } else if (item.state == 2) {
           this.props.MessageStore.addList('handleList', item);
         }
       })
     } else {
-      if (data.state == 0 && data.nodeId != 0) {
+      if (data.state == 0) {
         this.props.MessageStore.addList('todoList', data);
-      } else if (data.state == 1 || data.nodeId == 0) {
+      } else if (data.state == 1) {
         this.props.MessageStore.addList('createList', data);
       } else if (data.state == 2) {
         this.props.MessageStore.addList('handleList', data);
       }
     }
 
-    // console.log(data);
+  }
+  toWebsocket = () => {
+    console.log(id);
+    console.log(sessionStorage.getItem('username'));  
+      if (this.state.messageSocket == null && sessionStorage.getItem('username') != undefined) {
+        clearInterval(id)
+        this.props.HomeStore.querySelf({}).then(() => {
+          this.setState({
+            messageSocket: PubSub.subscribe('message', this.getMsg)
+          })
+        })
+
+      }
   }
   componentDidMount() {
-    console.log(this.state.messageSocket);
-    this.props.MessageStore.clearList();
-    if (this.state.messageSocket == null) {
-      this.props.HomeStore.querySelf({})
-      this.setState({
-        messageSocket: PubSub.subscribe('message', this.getMsg)
-      })
-    }
-    window.onbeforeunload = () => {
-      PubSub.unsubscribe(this.state.messageSocket);
-      this.props.MessageStore.clearList();
-      closeWebSocket();
-      this.setState({
-        messageSocket: null
-      })
-
-    }
+    clearInterval(id);
+    id = setInterval(this.toWebsocket,1000);
     window.addEventListener('resize', this.handleResize.bind(this));
   }
+
   componentWillUnmount() {
-    window.onbeforeunload = () => {
+    window.onbeforeunload = () =>
+    {
       PubSub.unsubscribe(this.state.messageSocket);
-      this.props.MessageStore.clearList();
       closeWebSocket();
       this.setState({
         messageSocket: null
@@ -115,6 +110,7 @@ class HomeRouter extends PureComponent {
     }
     this.props.MessageStore.clearList();
     PubSub.unsubscribe(this.state.messageSocket);
+
   }
   handleResize = (e) => {
     this.setState({

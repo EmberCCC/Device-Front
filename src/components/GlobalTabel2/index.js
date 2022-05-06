@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-04-07 11:58:39
- * @LastEditTime: 2022-05-06 05:05:42
+ * @LastEditTime: 2022-05-06 10:12:42
  * @LastEditors: EmberCCC 1810888456@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage-test\src\components\GlobalTabel\index.js
@@ -28,6 +28,7 @@ class GlobalTabel2 extends React.Component {
                     {/* 添加 */}
                     <Button type="primary" icon={<PlusOutlined />}
                         style={{ margin: '0 10px 10px 0', padding: '0 20px', verticalAlign: 'middle' }}
+                        onClick={this.addObj}
                     >
                         添加
                     </Button>
@@ -73,7 +74,7 @@ class GlobalTabel2 extends React.Component {
                     onRow={(key, record) => {
                         return {
                             onClick: event => {
-                                this.props.TableStore.setIsModalEdit(true);
+                                // this.props.TableStore.setIsModalEdit(true);
                                 this.props.TableStore.setModalEditData(key, record);
                                 this.props.TableStore.setDataPageModalVis(true);
                             }, // 点击行
@@ -83,17 +84,28 @@ class GlobalTabel2 extends React.Component {
                 {
                     this.props.TableStore.dataPageModalVis && <GlobalModal
                         visible={this.props.TableStore.dataPageModalVis}
-                        onOk={e => this.props.TableStore.setDataPageModalVis(false)}
+                        onOk={e => {this.props.TableStore.setDataPageModalVis(false)}}
                         onCancel={e => { this.props.TableStore.setDataPageModalVis(false); this.props.TableStore.setIsModalEdit(false); }}
                         children={
                             <GlobalForm type={true} dataInfo={this.props.TableStore.modalEditData} />
+                        } />
+                }
+                {
+                    this.props.TableStore.isModalEdit && <GlobalModal
+                        visible={this.props.TableStore.isModalEdit}
+                        onOk={e => this.props.TableStore.setIsModalEdit(false)}
+                        onCancel={e => { this.props.TableStore.setDataPageModalVis(false); this.props.TableStore.setIsModalEdit(false); }}
+                        children={
+                            <GlobalForm/>
                         } />
                 }
             </div>
 
         );
     }
-
+    addObj = () => {
+        this.props.TableStore.setIsModalEdit(true);
+    }
     onChange = (e) => {
         this.props.HomeStore.PageInfo = e;
         this.props.HomeStore.PageInfo.pageIndex = e.current

@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-03-31 23:08:16
- * @LastEditTime: 2022-05-06 04:42:19
+ * @LastEditTime: 2022-05-06 10:55:25
  * @LastEditors: EmberCCC 1810888456@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage-test\src\stores\SpareStore
@@ -62,6 +62,11 @@ class Message {
 
     @action.bound addList(value, list) {
         // console.log(this[value]);
+        // this[value].map((item) =>{
+        //     if (item.flowLogId == list.flowLogId) {
+        //         return;
+        //     }
+        // })
         if (list.nodeId == 0) {
             this['createList'].push(list)
             this['createCount'] = this['createList'].length

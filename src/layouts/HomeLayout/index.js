@@ -5,24 +5,19 @@ import { isEmpty } from 'lodash';
 import { ContainerQuery } from 'react-container-query';
 import classnames from 'classnames';
 import { withRouter } from 'react-router-dom';
-import { PubSub } from 'pubsub-js';
 
 import Menu from './Menu';
 import GlobalHeader from 'components/GlobalHeader';
-import GlobalCrumbs from 'components/GlobalCrumbs';
 import Context from './AllContext';
 import { Media_Query, s_size, m_size, l_size } from 'constants/configs';
 import { Layout, Drawer,Select } from 'antd';
 
 
-import { judgeIsMobile } from 'utils/dataTools';
 import ErrorNotFound from './ErrorNotFound';
 import './index.less';
-import GlobalModal from 'components/GlobalModal';
 import { closeWebSocket } from 'routes/BasicRouter/webSocket';
 
 const { Content } = Layout;
-const { Option } = Select;
 @withRouter
 @inject('HomeStore','MessageStore')
 @observer

@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-03-28 19:45:20
- * @LastEditTime: 2022-05-05 21:22:45
+ * @LastEditTime: 2022-05-06 11:18:28
  * @LastEditors: EmberCCC 1810888456@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage-test\src\routes\BasicRouter\index.js
@@ -71,44 +71,30 @@ class BasicRouter extends PureComponent {
   //     }
   //   }
 
-  //   // console.log(data);
   // }
   // componentDidMount() {
-  //   console.log(this.state.messageSocket);
   //   if (this.state.messageSocket == null) {
-  //     this.props.HomeStore.querySelf({})
-  //     this.setState({
-  //       messageSocket: PubSub.subscribe('message', this.getMsg)
+  //     this.props.HomeStore.querySelf({}).then(() =>{
+  //       this.setState({
+  //         messageSocket: PubSub.subscribe('message', this.getMsg)
+  //       })
   //     })
+      
   //   }
-
-  //   // this.setState({
-  //   //   messageSocket: PubSub.subscribe('message', this.getMsg)
-  //   // })
-
-  //   // this.setState({});
   // }
   // componentWillUnmount() {
   //   window.onbeforeunload = () =>
   //   {
   //     PubSub.unsubscribe(this.state.messageSocket);
-  //     // this.props.MessageStore.clearList();
   //     closeWebSocket();
   //     this.setState({
   //       messageSocket: null
   //     })
-  //     // if (event.clientX > document.body.clientWidth && event.clientY < 0 || event.altKey) {
-  //     //   window.event.returnValue = "确定要退出本页吗？";
-  //     // }
 
   //   }
+  //   this.props.MessageStore.clearList();
   //   PubSub.unsubscribe(this.state.messageSocket);
-  //   //在组件卸载的时候，关闭连接
-  //   // PubSub.unsubscribe(this.state.messageSocket);
-  //   // closeWebSocket();
-  //   // this.setState({
-  //   //   messageSocket: null
-  //   // })
+
   // }
 }
 
