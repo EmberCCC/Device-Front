@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-04-25 22:05:14
- * @LastEditTime: 2022-05-06 04:16:22
+ * @LastEditTime: 2022-05-07 21:09:15
  * @LastEditors: EmberCCC 1810888456@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage-test\src\layouts\MessageManage\DetailPage\index.js
@@ -15,8 +15,9 @@ import React, { Component } from 'react'
 
 import '../index.css'
 import { toJS } from 'mobx'
+import { firstFormName } from 'constants/status_constant'
 
-@inject('MessageStore')
+@inject('MessageStore', 'HomeStore')
 @observer
 class DetailPage extends Component {
     constructor(props) {
@@ -27,18 +28,17 @@ class DetailPage extends Component {
         }
     }
     render() {
-        const { modalVisible ,itemInfo} = this.props.MessageStore
+        const { modalVisible, itemInfo } = this.props.MessageStore
         let ok = this.props.MessageStore.subFlag ? '同意' : "了解"
         let cancel = this.props.MessageStore.subFlag ? '拒绝' : "关闭"
         return (
             <div>{modalVisible && <GlobalModal
                 width={1000}
                 height={'100%'}
-                title={'工单详情'}
+                title={firstFormName[this.props.HomeStore.firstFormId]}
                 visible={modalVisible}
                 onOk={e => {
                     if (this.props.MessageStore.subFlag) {
-                        // console.log(itemInfo);
                         let params = {}
                         params.message = '同意'
                         params.messageDto = toJS(itemInfo)
@@ -49,7 +49,6 @@ class DetailPage extends Component {
                 }}
                 onCancel={e => {
                     if (this.props.MessageStore.subFlag) {
-                        // console.log(itemInfo);
                         let params = {}
                         params.message = '拒绝'
                         params.messageDto = toJS(itemInfo)
@@ -61,10 +60,15 @@ class DetailPage extends Component {
                 okText={ok}
                 cancelText={cancel}
                 children={
-                    <div className='detail'>
-                        <GlobalForm btnVis={false} type={2}/>
-                        <LogPage />
-                    </div>
+                    this.props.MessageStore.subFlag ?
+                        <div className='detail'>
+                            <GlobalForm btnVis={false} type={true} dataVis={true} />
+                            <LogPage />
+                        </div> :
+                        <div className='detail'>
+                            <GlobalForm btnVis={false} type={false} dataVis={true} />
+                            <LogPage />
+                        </div>
                 }
             />}
                 <Modal
