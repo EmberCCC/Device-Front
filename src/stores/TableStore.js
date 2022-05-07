@@ -3,8 +3,8 @@
  * @version: 
  * @Author: zhihao
  * @Date: 2022-04-17 15:22:43
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2022-04-28 18:28:14
+ * @LastEditors: EmberCCC 1810888456@qq.com
+ * @LastEditTime: 2022-05-07 09:46:57
  */
 
 import { observable, action, toJS, runInAction } from 'mobx';
@@ -39,6 +39,7 @@ class Table {
 	@observable selectedDate = '';//日历选中的日期
 	@observable chosenDateRow = [];//选中日期的保养数据
 	@observable chosenDateRowName = [];
+	@observable selectedRowKeys = []
 
 	//是否展示对话框
 	@action.bound setDataPageModalVis(visible) {
@@ -52,6 +53,10 @@ class Table {
 	//是否编辑对话框
 	@action.bound setIsModalEdit(editble){
 		this.isModalEdit = editble;
+	}
+
+	@action.bound setSelectedRowKeys(keys){
+		this.selectedRowKeys = keys;
 	}
 
 

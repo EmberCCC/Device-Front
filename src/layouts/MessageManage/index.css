@@ -7,3 +7,21 @@
 .LogPage{
     width: 50%;
 }
+.title{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    height: 50px;
+}
+.title *{
+    margin-left: 10px;
+    margin-right: 10px;
+}
+.selectList{
+    background-color: white;
+    width: 250px;
+    
+}
+.selectList *{
+
+}

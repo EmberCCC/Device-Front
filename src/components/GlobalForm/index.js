@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-04-05 11:02:45
- * @LastEditTime: 2022-05-06 11:49:18
+ * @LastEditTime: 2022-05-07 21:04:56
  * @LastEditors: EmberCCC 1810888456@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage-test\src\components\GlobalForm\index.js
@@ -20,7 +20,7 @@ import '../../layouts/TableEdit/index.css'
 const { Option } = Select;
 
 @observer
-@inject('HomeStore', 'TableStore','MessageStore')
+@inject('HomeStore', 'TableStore', 'MessageStore')
 class GlobalForm extends React.Component {
     state = {
         secondFormId: 0
@@ -29,7 +29,7 @@ class GlobalForm extends React.Component {
         const { itemDataT } = this.props.HomeStore
         // const loading = this.props.loading
         const secondFormId = this.state.secondFormId;
-        const {  field, lookData } = this.props.MessageStore;
+        const { field, lookData } = this.props.MessageStore;
         const { TabPane } = Tabs;
         let itemData = []
         //转换为所需对象
@@ -40,11 +40,9 @@ class GlobalForm extends React.Component {
                 Nfield = field
                 data = toJS(lookData)
                 console.log(this.props.MessageStore.itemField);
-                console.log(data);
-            }else{
+            } else {
                 Nfield = itemDataT
                 data = toJS(this.props.TableStore.modalEditData)
-                console.log(111);
             }
             // let data = toJS(this.props.TableStore.modalEditData) //数据
             let obj = []
@@ -63,7 +61,7 @@ class GlobalForm extends React.Component {
                         let ele = {}
                         ele.label = element.name
                         ele.attr = element.others
-                        if (this.props.type == true || this.props.type == 2) {
+                        if ( this.props.dataVis == true) {
                             ele.attr.value = data[element.propertyId]
                         }
                         ele.propertyId = element.propertyId
@@ -165,7 +163,7 @@ class GlobalForm extends React.Component {
 
         const sub = (values) => {
             const { firstFormId, addNew, uploadData } = this.props.HomeStore
-            const {itemInfo} = this.props.MessageStore;
+            const { itemInfo } = this.props.MessageStore;
             let itemObj = uploadData
             itemData.forEach(element => {
                 let key = element.propertyId
@@ -176,13 +174,13 @@ class GlobalForm extends React.Component {
             let params = {};
             if (this.props.type == 2) {
                 params.firstFormId = itemInfo.firstFormId
-            }else{
+            } else {
                 params.firstFormId = firstFormId
             }
-            
+
             params.secondFormId = 0;
             this.props.HomeStore.countObj({ firstFormId: firstFormId });
-            if (this.props.type == true || this.props.type == 2 && this.props.MessageStore.subFlag ) {
+            if (this.props.type == true ) {
                 Modal.confirm({
                     title: '提示',
                     content: '是否修改此条数据？',
@@ -192,16 +190,16 @@ class GlobalForm extends React.Component {
                         params.updateData = toJS(uploadData)
                         if (this.props.type == true) {
                             params.dataId = toJS(this.props.dataInfo).id
-                        }else{
+                        } else {
                             params.dataId = toJS(this.props.MessageStore.itemField).dataId
                         }
-                       
+
                         this.props.HomeStore.updataObj(params).then(res => {
                             message.success('修改成功')
                         })
                     },
                 });
-            } else if(this.props.type == false){
+            } else if (this.props.type == false) {
                 Modal.confirm({
                     title: '提示',
                     content: '是否添加此条数据？',
@@ -239,9 +237,11 @@ class GlobalForm extends React.Component {
             }
             <Form layout={'vertical'} onFinish={sub} onValuesChange={handleLabelChange}>
                 {loop(itemData, '')}
-                <Form.Item>
-                    <Button type="primary" onClick={sub}>Submit</Button>
-                </Form.Item>
+                {
+                    this.props.type == true &&< Form.Item>
+                        <Button type="primary" onClick={sub}>提交数据</Button>
+                    </Form.Item>
+                }
             </Form>
         </div>
     }

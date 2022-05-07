@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-04-07 11:58:39
- * @LastEditTime: 2022-05-06 10:12:42
+ * @LastEditTime: 2022-05-07 21:05:39
  * @LastEditors: EmberCCC 1810888456@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage-test\src\components\GlobalTabel\index.js
@@ -14,13 +14,24 @@ import GlobalModal from 'components/GlobalModal';
 import GlobalForm from 'components/GlobalForm';
 import TableLayout from 'components/TableLayout';
 import { toJS } from 'mobx';
+import { firstFormName } from 'constants/status_constant';
+import moment from 'moment';
 
-
+const ExportJsonExcel = require("js-export-excel");
 @inject('HomeStore', 'TableStore')
 @observer
 class GlobalTabel2 extends React.Component {
     render() {
         const { dataSource, columns, PageInfo, isLoading } = this.props.HomeStore
+        const {selectedRowKeys} = this.props.TableStore;
+        /* 表格第一列选择框事件 */
+        const rowSelection = {
+            selectedRowKeys,
+            onChange: (selectedRowKeys, selectedRows) => {
+                this.props.TableStore.setSelectedRowKeys(selectedRowKeys);
+                this.props.TableStore.selectedIdsList = toJS(selectedRows)
+            },
+        };
         return (
             <div>
                 <div className='search_bar'>
@@ -61,7 +72,7 @@ class GlobalTabel2 extends React.Component {
                 <TableLayout
                     rowSelection={{
                         type: 'checkbox',
-                        ...this.rowSelection,
+                        ...rowSelection,
                     }}
                     bordered
                     dataSource={dataSource}
@@ -75,6 +86,7 @@ class GlobalTabel2 extends React.Component {
                         return {
                             onClick: event => {
                                 // this.props.TableStore.setIsModalEdit(true);
+
                                 this.props.TableStore.setModalEditData(key, record);
                                 this.props.TableStore.setDataPageModalVis(true);
                             }, // 点击行
@@ -84,10 +96,10 @@ class GlobalTabel2 extends React.Component {
                 {
                     this.props.TableStore.dataPageModalVis && <GlobalModal
                         visible={this.props.TableStore.dataPageModalVis}
-                        onOk={e => {this.props.TableStore.setDataPageModalVis(false)}}
+                        onOk={e => { this.props.TableStore.setDataPageModalVis(false) }}
                         onCancel={e => { this.props.TableStore.setDataPageModalVis(false); this.props.TableStore.setIsModalEdit(false); }}
                         children={
-                            <GlobalForm type={true} dataInfo={this.props.TableStore.modalEditData} />
+                            <GlobalForm type={true} dataVis={true} dataInfo={this.props.TableStore.modalEditData} />
                         } />
                 }
                 {
@@ -96,7 +108,7 @@ class GlobalTabel2 extends React.Component {
                         onOk={e => this.props.TableStore.setIsModalEdit(false)}
                         onCancel={e => { this.props.TableStore.setDataPageModalVis(false); this.props.TableStore.setIsModalEdit(false); }}
                         children={
-                            <GlobalForm/>
+                            <GlobalForm type={true} dataVis={false}/>
                         } />
                 }
             </div>
@@ -107,15 +119,67 @@ class GlobalTabel2 extends React.Component {
         this.props.TableStore.setIsModalEdit(true);
     }
     onChange = (e) => {
+        this.props.TableStore.setSelectedRowKeys([]);
+        console.log(this.props.TableStore.selectedRowKeys);
         this.props.HomeStore.PageInfo = e;
         this.props.HomeStore.PageInfo.pageIndex = e.current
         let params = {};
         params.firstFormId = this.props.HomeStore.firstFormId;
         this.props.HomeStore.countObj(params)
+        params.pageIndex = e.current;
+        params.pageSize = this.props.HomeStore.PageInfo.pageSize
+        this.props.HomeStore.queryAll(params)
+    }
+
+    commDele = (data) => {
+        let params = []
+        data.map((item) => {
+            let idOne = {}
+            idOne.firstFormId = this.props.HomeStore.firstFormId
+            idOne.dataId = item.id
+            params.push(idOne);
+        })
+        return params
+    }
+
+    commExport = (data) => {
+        let option = {}
+        option.fileName = moment(new Date()).format('L') + '  ' + moment(new Date()).format('LTS')
+        let sheetFilter = []
+        let sheetHeader = []
+        let columnWidths = []
+        let sheetData = []
+        let sheetName = firstFormName[this.props.HomeStore.firstFormId]
+        this.props.HomeStore.columns.map((item) => {
+            sheetFilter.push(item.dataIndex)
+            sheetHeader.push(item.title)
+            columnWidths.push('10');
+        })
+        data.map((item) => {
+            let obj = {}
+            for (const key in item) {
+                if (key != 'id' && key != 'key') {
+                    obj[key] = item[key]
+                }
+            }
+            sheetData.push(obj);
+        })
+        option.datas = [
+            {
+                sheetData: sheetData,
+                sheetFilter: sheetFilter,
+                sheetHeader: sheetHeader,
+                sheetName: sheetName,
+                columnWidths:columnWidths
+            },
+            {
+                sheetData: sheetData
+            }
+        ]
+        return option;
     }
     /* 删除方法 */
     onDelete = () => {
-        console.log(11);
         if (this.props.TableStore.selectedIdsList.length > 0) {
             Modal.confirm({
                 title: '筛选删除',
@@ -123,22 +187,17 @@ class GlobalTabel2 extends React.Component {
                 okText: '确定',
                 cancelText: '取消',
                 onOk: () => {
-                    let idArr = toJS(this.props.TableStore.selectedIdsList)
-                    let params = []
-                    idArr.map((item) => {
-                        let idOne = {}
-                        idOne.firstFormId = this.props.HomeStore.firstFormId
-                        idOne.dataId = item.id
-                        params.push(idOne);
-                    })
+                    let params = this.commDele(toJS(this.props.TableStore.selectedIdsList))
                     console.log(params);
                     this.props.HomeStore.deleteObjs(params);
                     let params1 = {};
                     params1.firstFormId = this.props.HomeStore.firstFormId;
                     params1.pageIndex = this.props.HomeStore.PageInfo.pageIndex;
                     params1.pageSize = this.props.HomeStore.PageInfo.pageSize
+                    this.props.HomeStore.countObj({ firstFormId: this.props.HomeStore.firstFormId })
                     this.props.HomeStore.queryAll(params1);
                     // 删除->数据库恢复->翻页->原来选中删除的标记不出现
+                    this.props.TableStore.setSelectedRowKeys([]);
                     this.props.TableStore.selectedIdsList = [];
                 }
             })
@@ -150,13 +209,89 @@ class GlobalTabel2 extends React.Component {
             });
         }
     };
+
+    /* 导出方法 */
+    onExport = () => {
+        if (this.props.TableStore.selectedIdsList.length > 0) {
+            Modal.confirm({
+                title: '筛选导出',
+                content: '确定要导出选中的记录？',
+                okText: '确定',
+                cancelText: '取消',
+                onOk: () => {
+                    let option = this.commExport(toJS(this.props.TableStore.selectedIdsList));
+                    let toExcel = new ExportJsonExcel(option)
+                    toExcel.saveExcel();
+                }
+            })
+        }
+        else {
+            Modal.warning({
+                title: '筛选导出',
+                content: '请选择需要导出的记录！',
+            });
+        }
+    };
+
+    onExportAll = () => {
+        if (this.props.HomeStore.dataSource.length > 0) {
+            Modal.confirm({
+                title: '全部导出',
+                content: '确定要导出全部记录？',
+                okText: '确定',
+                cancelText: '取消',
+                onOk: () => {
+                    let option = this.commExport(toJS(this.props.HomeStore.dataSource));
+                    let toExcel = new ExportJsonExcel(option)
+                    toExcel.saveExcel();
+                }
+            })
+        }
+        else {
+            Modal.warning({
+                title: '全部导出',
+                content: '无记录可导出！',
+            });
+        }
+    }
+
+    onDeleteAll = () => {
+        if (this.props.HomeStore.dataSource.length > 0) {
+            Modal.confirm({
+                title: '全部删除',
+                content: '确定要删除全部记录？',
+                okText: '确定',
+                cancelText: '取消',
+                onOk: () => {
+                    let params = this.commDele(toJS(this.props.HomeStore.dataSource))
+                    console.log(params);
+                    this.props.HomeStore.deleteObjs(params);
+                    let params1 = {};
+                    params1.firstFormId = this.props.HomeStore.firstFormId;
+                    params1.pageIndex = this.props.HomeStore.PageInfo.pageIndex;
+                    params1.pageSize = this.props.HomeStore.PageInfo.pageSize
+                    this.props.HomeStore.queryAll(params1);
+                    this.props.HomeStore.countObj({ firstFormId: this.props.HomeStore.firstFormId })
+                    // 删除->数据库恢复->翻页->原来选中删除的标记不出现
+                    this.props.TableStore.setSelectedRowKeys([]);
+                    this.props.TableStore.selectedIdsList = [];
+                }
+            })
+        }
+        else {
+            Modal.warning({
+                title: '全部删除',
+                content: '无记录可删除！',
+            });
+        }
+    }
     /* "导出"下拉框菜单 */
     exportMenu = (
         <Menu>
-            <Menu.Item key="1">
+            <Menu.Item key="1" onClick={this.onExport}>
                 筛选后的数据
             </Menu.Item>
-            <Menu.Item key="2">
+            <Menu.Item key="2" onClick={this.onExportAll}>
                 全部数据
             </Menu.Item>
         </Menu>
@@ -174,13 +309,6 @@ class GlobalTabel2 extends React.Component {
         </Menu>
     );
 
-    /* 表格第一列选择框事件 */
-    rowSelection = {
-        onChange: (selectedRowKeys, selectedRows) => {
-            console.log(selectedRows);
-            this.props.TableStore.selectedIdsList = toJS(selectedRows)
-        },
-    };
 
 
 };
