@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-04-24 12:36:43
- * @LastEditTime: 2022-05-06 19:37:55
+ * @LastEditTime: 2022-05-07 22:21:21
  * @LastEditors: EmberCCC 1810888456@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage-test\src\layouts\MessageManage\ListPage\index.js
@@ -19,6 +19,9 @@ import { messageName } from '../constants';
 @observer
 // @withRouter
 class index extends Component {
+    state =  {
+        isLoading:false
+    }
     render() {
         const ContainerHeight = 800;
         const { modalVisible, data } = this.props.MessageStore
@@ -32,15 +35,24 @@ class index extends Component {
             const nowL = location.split('/')[2];
             let params = {}
             params.firstFormId = data.firstFormId
-            this.props.MessageStore.getLog(data)
-            this.props.MessageStore.getField(params)
-            this.props.MessageStore.setItemInfo(data);
-            this.props.MessageStore.getOne(data).then(() => {
-                this.props.MessageStore.changeModal()
-                if (nowL == 'todo') {
-                    this.props.MessageStore.changeSubFlag(true);
-                }
+            this.setState({
+                isLoading:true
             })
+            this.props.MessageStore.getLog(data)
+            this.props.MessageStore.setItemInfo(data);
+            this.props.MessageStore.getField(params).then(() => {
+                this.props.MessageStore.getOne(data).then(() => {
+                    this.setState({
+                        isLoading:false
+                    })
+                    this.props.MessageStore.changeModal()
+                    if (nowL == 'todo') {
+                        this.props.MessageStore.changeSubFlag(true);
+                    }
+                })
+            })
+
+
 
         }
         // const {data} = this.props.MessageStore
@@ -57,7 +69,7 @@ class index extends Component {
                     </div>
                 </div>
                 <hr />
-                <List>
+                <List loading={this.state.isLoading}>
                     <VirtualList
                         data={data}
                         height={ContainerHeight}
@@ -94,7 +106,7 @@ class index extends Component {
                 name="subPeople"
             >
                 <div>发起人</div>
-                <Select style={{width:'100px'}}></Select>
+                <Select style={{ width: '100px' }}></Select>
             </div>
             <div
                 label="发起时间"
@@ -108,26 +120,24 @@ class index extends Component {
                 name="flowForm"
             >
                 <div>流程表单</div>
-                <Select style={{width:'100px'}}></Select>
+                <Select style={{ width: '100px' }}></Select>
             </div>
             <div
                 label="当前节点"
                 name="atNode"
             >
                 <div>当前节点</div>
-                <Select style={{width:'100px'}}></Select>
+                <Select style={{ width: '100px' }}></Select>
             </div>
             <Button type="primary" htmlType="submit">
                 筛选
             </Button>
         </div>
     )
-    componentDidMount() {
+    componentWillMount() {
         const location = this.props.location.pathname
         const nowL = location.split('/')[2];
-        // console.log(nowL);
         this.props.MessageStore.setData(nowL);
-        // console.log(this.props.MessageStore.handleList);
     }
 }
 

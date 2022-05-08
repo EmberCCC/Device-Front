@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-11-02 14:29:58
- * @LastEditTime: 2022-05-06 11:25:11
+ * @LastEditTime: 2022-05-07 22:22:51
  * @LastEditors: EmberCCC 1810888456@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage\src\routes\HomeRouter\index.js
@@ -16,7 +16,6 @@ import {
 } from 'react-router-dom';
 import { BasicManager, DeviceManager, EquipmentManager, MaintenanceManager, SpareManager, ManagerManager, MessageManager } from './configs';
 import { PubSub } from 'pubsub-js';
-import MessageManage from 'layouts/MessageManage';
 import { closeWebSocket, websocket } from 'routes/BasicRouter/webSocket';
 import { inject, observer } from 'mobx-react';
 
@@ -77,30 +76,32 @@ class HomeRouter extends PureComponent {
         this.props.MessageStore.addList('handleList', data);
       }
     }
-
+    const location = this.props.location.pathname
+    const nowL = location.split('/')[2];
+    this.props.MessageStore.setData(nowL);
+    console.log(this.props.MessageStore.data);
   }
   toWebsocket = () => {
     console.log(id);
-    console.log(sessionStorage.getItem('username'));  
-      if (this.state.messageSocket == null && sessionStorage.getItem('username') != undefined) {
-        clearInterval(id)
-        this.props.HomeStore.querySelf({}).then(() => {
-          this.setState({
-            messageSocket: PubSub.subscribe('message', this.getMsg)
-          })
+    console.log(sessionStorage.getItem('username'));
+    if (this.state.messageSocket == null && sessionStorage.getItem('username') != undefined) {
+      clearInterval(id)
+      this.props.HomeStore.querySelf({}).then(() => {
+        this.setState({
+          messageSocket: PubSub.subscribe('message', this.getMsg)
         })
+      })
 
-      }
+    }
   }
   componentDidMount() {
     clearInterval(id);
-    id = setInterval(this.toWebsocket,1000);
+    id = setInterval(this.toWebsocket, 1000);
     window.addEventListener('resize', this.handleResize.bind(this));
   }
 
   componentWillUnmount() {
-    window.onbeforeunload = () =>
-    {
+    window.onbeforeunload = () => {
       PubSub.unsubscribe(this.state.messageSocket);
       closeWebSocket();
       this.setState({

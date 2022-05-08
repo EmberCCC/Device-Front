@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-03-31 23:08:16
- * @LastEditTime: 2022-05-06 10:55:25
+ * @LastEditTime: 2022-05-07 22:21:44
  * @LastEditors: EmberCCC 1810888456@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage-test\src\stores\SpareStore
@@ -38,6 +38,7 @@ class Message {
         this['subFlag'] = value;
     }
     @action.bound setData(count) {
+        console.log(11);
         switch (count) {
             case 'todo':
                 this.data = this.todoList
@@ -93,7 +94,6 @@ class Message {
     }
 
     @action.bound delList(value, flowLogId) {
-        console.log(flowLogId);
         let newArr = []
         this[value].map((item) => {
             if (item.flowLogId != flowLogId) {
@@ -181,7 +181,6 @@ class Message {
             if (isDataExist(res)) {
                 this.itemField = res.data.data
                 this.lookData = this.itemField.data
-                console.log(this.lookData);
             }
         } catch (error) {
             console.log(error);
@@ -195,7 +194,6 @@ class Message {
             this.isLoading = false
             if (isDataExist(res)) {
                 this.field = res.data.data
-                console.log(toJS(this.field));
             }
         } catch (error) {
             console.log(error);

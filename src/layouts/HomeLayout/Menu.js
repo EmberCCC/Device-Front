@@ -49,13 +49,13 @@ class MenuLayout extends Component {
         }}
       >
         <div id='manu_container'>
-          <NavLink to={{ pathname: "/message/todo" }}>
+          <NavLink to={{ pathname: "/message/todo" }} onClick={this.loadData}>
             <div className='message_logo'>
               <div>
                 <BellTwoTone />
                 我的待办
               </div>
-              <Badge count={todoCount} style={{ float: 'right' }} offset={[1,5]}></Badge>
+              <Badge count={todoCount} style={{ float: 'right' }} offset={[1, 5]}></Badge>
             </div>
           </NavLink>
           <NavLink to={{ pathname: "/message/create" }}>
@@ -64,7 +64,7 @@ class MenuLayout extends Component {
                 <PlayCircleTwoTone />
                 我发起的
               </div>
-              <Badge count={createCount} style={{ float: 'right' }} offset={[1,5]}></Badge>
+              <Badge count={createCount} style={{ float: 'right' }} offset={[1, 5]}></Badge>
             </div>
           </NavLink>
           <NavLink to={{ pathname: "/message/handle" }}>
@@ -73,7 +73,7 @@ class MenuLayout extends Component {
                 <CarryOutTwoTone />
                 我处理的
               </div>
-              <Badge count={handleCount} style={{ float: 'right' }} offset={[1,5]}></Badge>
+              <Badge count={handleCount} style={{ float: 'right' }} offset={[1, 5]}></Badge>
             </div>
           </NavLink>
           <NavLink to={{ pathname: "/message/copy" }}>
@@ -82,7 +82,7 @@ class MenuLayout extends Component {
                 <SoundTwoTone />
                 抄送我的
               </div>
-              <Badge count={copyCount} style={{ float: 'right' }} offset={[1,5]}></Badge>
+              <Badge count={copyCount} style={{ float: 'right' }} offset={[1, 5]}></Badge>
             </div>
           </NavLink>
           <hr></hr>
@@ -126,7 +126,7 @@ class MenuLayout extends Component {
     if (key.startsWith('my')) {
       this.props.HomeStore.changeViewModel(key)
       console.log(toJS(this.props.HomeStore.viewModel));
-    } else if(lo != '/manage/todo' && lo != '/manage/create' && lo != '/manage/handle' && lo != '/manage/copy' ){
+    } else if (lo != '/manage/todo' && lo != '/manage/create' && lo != '/manage/handle' && lo != '/manage/copy') {
       this.props.HomeStore.toggleMenu({ actionItem: item, actionId: key, from: 'menu-click' }, (url) => {
         if (url) {
           this.props.history.push(url);
@@ -143,7 +143,11 @@ class MenuLayout extends Component {
     this.props.history.push('/index');
   }
 
-
+  loadData = () => {
+    const location = this.props.location.pathname
+    const nowL = location.split('/')[2];
+    this.props.MessageStore.setData(nowL);
+  }
   componentDidMount() {
     firstMount = false;
     // this.props.HomeStore.getMenuList(this.props.location.pathname).then(() => {
@@ -208,7 +212,7 @@ class MenuLayout extends Component {
     return newState;
   }
   componentDidUpdate() {
-    if (this.state.isPath )  {
+    if (this.state.isPath) {
       this.props.HomeStore.initMenu(this.state.pathname)
     }
   }

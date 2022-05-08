@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-04-05 11:02:45
- * @LastEditTime: 2022-05-07 21:04:56
+ * @LastEditTime: 2022-05-07 21:20:43
  * @LastEditors: EmberCCC 1810888456@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage-test\src\components\GlobalForm\index.js
@@ -36,10 +36,9 @@ class GlobalForm extends React.Component {
         const changeField = () => {
             let data = []
             let Nfield = []
-            if (this.props.type == 2) {
+            if (this.props.dataType == 1) {
                 Nfield = field
                 data = toJS(lookData)
-                console.log(this.props.MessageStore.itemField);
             } else {
                 Nfield = itemDataT
                 data = toJS(this.props.TableStore.modalEditData)

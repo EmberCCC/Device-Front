@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-04-25 22:05:14
- * @LastEditTime: 2022-05-07 21:09:15
+ * @LastEditTime: 2022-05-07 21:19:57
  * @LastEditors: EmberCCC 1810888456@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage-test\src\layouts\MessageManage\DetailPage\index.js
@@ -22,10 +22,6 @@ import { firstFormName } from 'constants/status_constant'
 class DetailPage extends Component {
     constructor(props) {
         super(props)
-        this.state = {
-            val: 1,
-            visible: false
-        }
     }
     render() {
         const { modalVisible, itemInfo } = this.props.MessageStore
@@ -62,36 +58,15 @@ class DetailPage extends Component {
                 children={
                     this.props.MessageStore.subFlag ?
                         <div className='detail'>
-                            <GlobalForm btnVis={false} type={true} dataVis={true} />
+                            <GlobalForm btnVis={false} type={true} dataVis={true} dataType = {1}/>
                             <LogPage />
                         </div> :
                         <div className='detail'>
-                            <GlobalForm btnVis={false} type={false} dataVis={true} />
+                            <GlobalForm btnVis={false} type={false} dataVis={true} dataType = {1}/>
                             <LogPage />
                         </div>
                 }
             />}
-                <Modal
-                    title="详情"
-                    visible={this.state.visible}
-                    width='80%'
-                    onCancel={e => this.setState({
-                        visible: !this.state.visible
-                    })}
-                    footer={[
-                        <Button key="submit" type="primary" onClick={e => this.setState({
-                            visible: !this.state.visible
-                        })}>
-                            确定
-                        </Button>
-                    ]}
-                >
-                    <div className='table-content-bk'>
-                        <div className='breaken-table'>
-                            <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
-                        </div>
-                    </div>
-                </Modal>
             </div>
         )
     }

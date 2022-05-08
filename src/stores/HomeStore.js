@@ -206,7 +206,7 @@ class Home {
       this.toggledActionId = currentMenu[0].id;
       this.selectedKeys = [`${currentMenu[0].id}`];
       this.openKeys = [`${currentMenu[0].parentId}`];
-      this.model = 'submit'
+      this.model = 'look'
       this.firstFormId = currentMenu[0].id;
       this.secondFormId = 0
     } catch (error) {
