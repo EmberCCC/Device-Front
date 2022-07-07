@@ -83,12 +83,6 @@ class HomeLayout extends Component {
       </div>
     );
   }
-  backToLogin = () => {
-    this.props.MessageStore.clearList();
-    closeWebSocket();
-    sessionStorage.clear();
-    this.props.history.push('/login')
-  }
   getMediaQuery = (params) => {
     let current;
     for (let key in params) {

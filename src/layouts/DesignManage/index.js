@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-03-28 20:01:19
- * @LastEditTime: 2022-07-05 10:41:52
+ * @LastEditTime: 2022-07-07 19:26:01
  * @LastEditors: EmberCCC 1810888456@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage-test\src\layouts\BasicManage\index.js
@@ -18,13 +18,17 @@ import { toJS } from 'mobx';
 const { Header, Sider, Content } = Layout;
 
 @withRouter
-@inject('DesignStore')
-@inject('HomeStore')
+@inject('DesignStore', 'HomeStore')
 class DesignManage extends React.Component {
-
     render() {
+        const backToLogin = (e) => {
+            if (e.key === "logout") {
+                sessionStorage.clear();
+                this.props.history.push('/login')
+            }
+        }
         const menu = (
-            <Menu selectedKeys={[]} style={{ marginTop: '-12px' }} onClick={this.backToLogin}>
+            <Menu selectedKeys={[]} style={{ marginTop: '-12px' }} onClick={backToLogin}>
                 <div style={{ textAlign: "center" }}>
                     {getCookie('username')}
                 </div>
@@ -34,6 +38,7 @@ class DesignManage extends React.Component {
                 </Menu.Item>
             </Menu>
         );
+
         const { firstFormId, itemDataT } = this.props.HomeStore
         const { PersonList } = this.props.DesignStore
         const changeModel = ({ item, key, keyPath, domEvent }) => {
@@ -50,22 +55,22 @@ class DesignManage extends React.Component {
         }
         const { DesignId } = this.props.DesignStore;
         const item = [
-            {label:'表单设计',key:'1'},
-            {label:'扩展功能',key:'2'},
-            {label:'表单发布',key:'3'},
-            {label:'流程设计',key:'4'}
+            { label: '表单设计', key: '1' },
+            { label: '扩展功能', key: '2' },
+            { label: '表单发布', key: '3' },
+            { label: '流程设计', key: '4' }
         ]
         return (
             <Layout>
                 <Header className="header">
                     <NavLink to='/basic'>
                         <span className='form_title'>{firstFormName[firstFormId]}</span>
-                        </NavLink>
-                    <Menu theme="light" mode="horizontal" selectedKeys={[DesignId]} justify='center' className='headerMenu' onClick={changeModel} items={item}/>
-                    <div style={{ display: 'flex', alignItems: 'center',justifyContent:'space-between', paddingRight: 10 }}>
-                        <BulbOutlined className='d_icon' style={{marginRight:'15px'}}/>
-                        <QuestionCircleTwoTone className='d_icon' style={{marginRight:'15px'}}/>
-                        <ToolTwoTone className='d_icon'/>
+                    </NavLink>
+                    <Menu theme="light" mode="horizontal" selectedKeys={[DesignId]} justify='center' className='headerMenu' onClick={changeModel} items={item} />
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingRight: 10 }}>
+                        <BulbOutlined className='d_icon' style={{ marginRight: '15px' }} />
+                        <QuestionCircleTwoTone className='d_icon' style={{ marginRight: '15px' }} />
+                        <ToolTwoTone className='d_icon' />
                     </div>
                 </Header>
                 {this.props.children}

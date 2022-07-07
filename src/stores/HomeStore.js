@@ -19,7 +19,7 @@ class Home {
   @observable isLoading = false;
   @observable toggledActionId = 0;
   @observable isAuth = false;
-  @observable firstFormId = 16
+  @observable firstFormId = 1
   @observable secondFormId = 0
   @observable columns = [];
   @observable dataSource = [];

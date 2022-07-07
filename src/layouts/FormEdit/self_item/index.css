@@ -1,9 +1,32 @@
-.title_left{
+.title_left {
     color: #1F2D3D;
     margin-right: 20px;
 }
-.title_right{
+
+.title_right {
     font-weight: 100;
     font-size: 12px;
     color: #91A1B7;
+}
+
+.check_item {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    padding-right: 45px;
+    line-height: 24px;
+    height: 24px;
+    width: 80%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
+    position: relative;
+}
+
+.check_item_one {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
