@@ -7,5 +7,5 @@ export interface CardMetaProps {
     title?: React.ReactNode;
     description?: React.ReactNode;
 }
-declare const Meta: React.SFC<CardMetaProps>;
+declare const Meta: React.FC<CardMetaProps>;
 export default Meta;

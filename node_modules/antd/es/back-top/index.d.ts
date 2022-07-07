@@ -1,24 +1,14 @@
 import * as React from 'react';
-import { ConfigConsumerProps } from '../config-provider';
 export interface BackTopProps {
     visibilityHeight?: number;
     onClick?: React.MouseEventHandler<HTMLElement>;
-    target?: () => HTMLElement | Window;
+    target?: () => HTMLElement | Window | Document;
     prefixCls?: string;
+    children?: React.ReactNode;
     className?: string;
     style?: React.CSSProperties;
+    duration?: number;
     visible?: boolean;
 }
-export default class BackTop extends React.Component<BackTopProps, any> {
-    static defaultProps: {
-        visibilityHeight: number;
-    };
-    scrollEvent: any;
-    constructor(props: BackTopProps);
-    componentDidMount(): void;
-    componentWillUnmount(): void;
-    scrollToTop: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
-    handleScroll: () => void;
-    renderBackTop: ({ getPrefixCls, direction }: ConfigConsumerProps) => JSX.Element;
-    render(): JSX.Element;
-}
+declare const _default: React.NamedExoticComponent<BackTopProps>;
+export default _default;

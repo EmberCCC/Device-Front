@@ -11,5 +11,5 @@ export interface GroupProps {
     prefixCls?: string;
     compact?: boolean;
 }
-declare const Group: React.StatelessComponent<GroupProps>;
+declare const Group: React.FC<GroupProps>;
 export default Group;

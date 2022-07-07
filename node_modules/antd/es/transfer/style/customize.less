@@ -1,37 +1,16 @@
-@import './index.less';
+@import '../../style/themes/index';
+
+@transfer-prefix-cls: ~'@{ant-prefix}-transfer';
 
 @table-prefix-cls: ~'@{ant-prefix}-table';
 @input-prefix-cls: ~'@{ant-prefix}-input';
 
 .@{transfer-prefix-cls}-customize-list {
-  display: flex;
-
-  .@{transfer-prefix-cls}-operation {
-    flex: none;
-    align-self: center;
-  }
-
   .@{transfer-prefix-cls}-list {
-    flex: auto;
+    flex: 1 1 50%;
     width: auto;
     height: auto;
     min-height: @transfer-list-height;
-
-    &-body {
-      &-with-search {
-        padding-top: 0;
-      }
-
-      // Search box in customize mode do not need fix top
-      &-search-wrapper {
-        position: relative;
-        padding-bottom: 0;
-      }
-
-      &-customize-wrapper {
-        padding: 12px;
-      }
-    }
   }
 
   // =================== Hook Components ===================
@@ -39,6 +18,11 @@
     .@{table-prefix-cls}-small {
       border: 0;
       border-radius: 0;
+
+      .@{table-prefix-cls}-selection-column {
+        width: 40px;
+        min-width: 40px;
+      }
 
       > .@{table-prefix-cls}-content {
         // Header background color

@@ -1,6 +1,6 @@
 interface ScrollToOptions {
     /** Scroll container, default as window */
-    getContainer?: () => HTMLElement | Window;
+    getContainer?: () => HTMLElement | Window | Document;
     /** Scroll end callback */
     callback?: () => any;
     /** Animation duration, default as 450 */

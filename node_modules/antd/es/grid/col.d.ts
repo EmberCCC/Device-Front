@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { ConfigConsumerProps } from '../config-provider';
 declare type ColSpanType = number | string;
 declare type FlexType = number | 'none' | 'auto' | string;
 export interface ColSize {
+    flex?: FlexType;
     span?: ColSpanType;
     order?: ColSpanType;
     offset?: ColSpanType;
@@ -10,6 +10,7 @@ export interface ColSize {
     pull?: ColSpanType;
 }
 export interface ColProps extends React.HTMLAttributes<HTMLDivElement> {
+    flex?: FlexType;
     span?: ColSpanType;
     order?: ColSpanType;
     offset?: ColSpanType;
@@ -22,10 +23,6 @@ export interface ColProps extends React.HTMLAttributes<HTMLDivElement> {
     xl?: ColSpanType | ColSize;
     xxl?: ColSpanType | ColSize;
     prefixCls?: string;
-    flex?: FlexType;
 }
-export default class Col extends React.Component<ColProps, {}> {
-    renderCol: ({ getPrefixCls, direction }: ConfigConsumerProps) => JSX.Element;
-    render(): JSX.Element;
-}
-export {};
+declare const Col: React.ForwardRefExoticComponent<ColProps & React.RefAttributes<HTMLDivElement>>;
+export default Col;
