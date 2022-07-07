@@ -11,3 +11,12 @@
     border-radius: 0;
     width: 40%;
 }
+.form_title{
+    font-size: 14px;
+    height: 10px;
+    border-bottom: 1px dashed rgb(168, 168, 168);
+}
+.d_icon{
+    font-size: 20px;
+    height: 20px;
+}

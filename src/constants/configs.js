@@ -16,7 +16,7 @@ export const MenuObj = {
         {
           id: 16,
           parentId: 1,
-          name: '备件台账',
+          name: '巡检方案',
           path: '/spare/standing',
           action: false,
           displayNone: false

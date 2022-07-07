@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-04-26 22:13:06
- * @LastEditTime: 2022-05-05 14:11:02
+ * @LastEditTime: 2022-06-28 18:48:56
  * @LastEditors: EmberCCC 1810888456@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage-test\src\layouts\HomeLayout\WebSocket.js
@@ -13,11 +13,8 @@ let createWebSocket = (url) => {
     let id = sessionStorage.getItem('id');
     let username = sessionStorage.getItem('username');
     let tenementId = sessionStorage.getItem('tenementId');
-    console.log(id,username,tenementId);
     websocket = new WebSocket(url + "/" + id.toString() + "/" + username + "/" + tenementId.toString());
-    console.log('ws connect')
     websocket.onopen = function () {
-        console.log('ws open')
         heartCheck.reset().start();
     };
     websocket.onerror = function () {
@@ -25,13 +22,11 @@ let createWebSocket = (url) => {
     };
     websocket.onclose = function (e) {
         heartCheck.reset();
-        console.log('ws closed: ' + e.code + ' ' + e.reason + ' ' + e.wasClean);
     };
     websocket.onmessage = function (event) {
         lockReconnect = true;
         //event 为服务端传输的消息，在这里可以处理
         let data = event.data;//把获取到的消息处理成字典，方便后期使用
-        console.log(data);
         PubSub.publish('message', data); //发布接收到的消息 'message' 为发布消息的名称，data 为发布的消息
 
     };

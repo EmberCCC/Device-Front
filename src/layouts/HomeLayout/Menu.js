@@ -3,7 +3,7 @@ import { inject, observer } from 'mobx-react';
 import { NavLink, withRouter } from 'react-router-dom';
 import classnames from 'classnames';
 import './index.less';
-import { BellOutlined, BellTwoTone, CarryOutFilled, CarryOutOutlined, CarryOutTwoTone, CheckCircleTwoTone, FolderOutlined, HistoryOutlined, PlayCircleFilled, PlayCircleTwoTone, SendOutlined, SoundTwoTone } from '@ant-design/icons';
+import {  BellTwoTone,CarryOutTwoTone,  FolderOutlined, PlayCircleTwoTone,SoundTwoTone } from '@ant-design/icons';
 import { Menu, Layout, Badge } from 'antd';
 import { toJS } from 'mobx';
 const { Sider } = Layout;
@@ -25,28 +25,12 @@ class MenuLayout extends Component {
     this.store = this.props.HomeStore;
   }
   render() {
-    const isMobile = this.props.mobile === 'true';
+    const isMobile = this.props.mobile === 'false';
     const { menuObj } = toJS(this.store);
-    const { todoCount, createCount, handleCount, copyCount, todoList, createList, handleList, copytList } = this.props.MessageStore;
+    const { todoCount, createCount, handleCount, copyCount } = this.props.MessageStore;
     return (
       <Sider
-        trigger={null}
-        theme='light'
-        collapsible
-        collapsed={
-          this.props.sizetype === 's_size' ? false : this.state.collapsed
-        }
-        className={
-          classnames({
-            'ant-sider-menu-content': true,
-            'ant-sider-menu-none': isMobile
-          })
-        }
-        style={{
-          overflowY: 'auto',
-          width: '35%',
-          height: this.props.sizetype === 's_size' && '100%'
-        }}
+      theme='light'
       >
         <div id='manu_container'>
           <NavLink to={{ pathname: "/message/todo" }} onClick={this.loadData}>
@@ -98,8 +82,9 @@ class MenuLayout extends Component {
           >
             {
               menuObj.map(leaf => !leaf.displayNone && <SubMenu
+                theme='light'
                 key={leaf.id}
-                title={<span><FolderOutlined /><span style={{ display: this.state.collapsed && 'none' }}>{leaf.name}</span></span>}
+                title={<span><FolderOutlined /><span >{leaf.name}</span></span>}
               >
                 {
                   leaf.leafMenuModels.length > 0 && leaf.leafMenuModels.map(ele =>
@@ -125,7 +110,6 @@ class MenuLayout extends Component {
     this.props.HomeStore.model = 'look'
     if (key.startsWith('my')) {
       this.props.HomeStore.changeViewModel(key)
-      console.log(toJS(this.props.HomeStore.viewModel));
     } else if (lo != '/manage/todo' && lo != '/manage/create' && lo != '/manage/handle' && lo != '/manage/copy') {
       this.props.HomeStore.toggleMenu({ actionItem: item, actionId: key, from: 'menu-click' }, (url) => {
         if (url) {

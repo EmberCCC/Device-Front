@@ -1,13 +1,11 @@
 /*
  * @Author: your name
  * @Date: 2022-04-25 22:05:14
- * @LastEditTime: 2022-05-07 21:19:57
+ * @LastEditTime: 2022-07-07 09:07:45
  * @LastEditors: EmberCCC 1810888456@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage-test\src\layouts\MessageManage\DetailPage\index.js
  */
-import { Button, Empty, Modal } from 'antd'
-import GlobalForm from 'components/GlobalForm'
 import GlobalModal from 'components/GlobalModal'
 import LogPage from '../LogPage'
 import { inject, observer } from 'mobx-react'
@@ -58,12 +56,10 @@ class DetailPage extends Component {
                 children={
                     this.props.MessageStore.subFlag ?
                         <div className='detail'>
-                            <GlobalForm btnVis={false} type={true} dataVis={true} dataType = {1}/>
-                            <LogPage />
+                            1
                         </div> :
                         <div className='detail'>
-                            <GlobalForm btnVis={false} type={false} dataVis={true} dataType = {1}/>
-                            <LogPage />
+                            1
                         </div>
                 }
             />}

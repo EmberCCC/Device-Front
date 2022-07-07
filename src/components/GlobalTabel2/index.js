@@ -1,37 +1,70 @@
 /*
  * @Author: your name
  * @Date: 2022-04-07 11:58:39
- * @LastEditTime: 2022-05-07 21:05:39
+ * @LastEditTime: 2022-07-07 18:24:42
  * @LastEditors: EmberCCC 1810888456@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage-test\src\components\GlobalTabel\index.js
  */
 import React from 'react';
 import { inject, observer } from 'mobx-react';
-import { Button, Dropdown, Menu, Modal, Table } from 'antd';
-import { DeleteOutlined, DownOutlined, EyeOutlined, FilterOutlined, FullscreenExitOutlined, PlusOutlined, SortDescendingOutlined, UploadOutlined } from '@ant-design/icons';
+import { Button, Checkbox, Dropdown, Menu, message, Modal, Popover, Table } from 'antd';
+import { ClockCircleOutlined, DeleteOutlined, DownOutlined, FilterOutlined, FullscreenExitOutlined, PlusOutlined, SortDescendingOutlined, UploadOutlined, FunnelPlotOutlined } from '@ant-design/icons';
 import GlobalModal from 'components/GlobalModal';
-import GlobalForm from 'components/GlobalForm';
-import TableLayout from 'components/TableLayout';
 import { toJS } from 'mobx';
 import { firstFormName } from 'constants/status_constant';
 import moment from 'moment';
+import DataModal from './dataModal';
+import { injectSelfToken } from 'utils/request';
+import FormLayout from 'layouts/FormLayout';
+import MulChange from './mulChange';
 
 const ExportJsonExcel = require("js-export-excel");
 @inject('HomeStore', 'TableStore')
 @observer
 class GlobalTabel2 extends React.Component {
     render() {
-        const { dataSource, columns, PageInfo, isLoading } = this.props.HomeStore
-        const {selectedRowKeys} = this.props.TableStore;
+        const { isLoading } = this.props.HomeStore
+        const { selectedRowKeys, dataSource, columns, lastColumns, PageInfo } = this.props.TableStore;
         /* 表格第一列选择框事件 */
         const rowSelection = {
             selectedRowKeys,
+            columnWidth: 2,
             onChange: (selectedRowKeys, selectedRows) => {
                 this.props.TableStore.setSelectedRowKeys(selectedRowKeys);
-                this.props.TableStore.selectedIdsList = toJS(selectedRows)
+                this.props.TableStore.selectedIdsList = toJS(selectedRows);
+                this.props.TableStore.setDataPageModalVis(false);
             },
         };
+        const checkChange = (value) => {
+            this.props.TableStore.setFieldValue(value);
+        }
+        const visibleChange = (visible) => {
+            if (visible == false) {
+                this.props.TableStore.setLastColumns();
+            }
+        }
+
+        const fieldChoose = (
+            <Checkbox.Group onChange={checkChange} defaultValue={this.props.TableStore.fieldValue}>
+                {columns.map((item, index) => {
+                    return <>
+                        <Checkbox value={item.key} key={index} style={{ width: '300px' }}>{item.title}</Checkbox>
+                        <br />
+                    </>
+                })}
+            </Checkbox.Group>
+        )
+        const closeMul = () => {
+            this.setState({
+                mulVis: false
+            })
+        }
+        const fieldSort = (
+            <>
+
+            </>
+        )
         return (
             <div>
                 <div className='search_bar'>
@@ -39,7 +72,7 @@ class GlobalTabel2 extends React.Component {
                     {/* 添加 */}
                     <Button type="primary" icon={<PlusOutlined />}
                         style={{ margin: '0 10px 10px 0', padding: '0 20px', verticalAlign: 'middle' }}
-                        onClick={this.addObj}
+                        onClick={() => this.props.TableStore.setIsModalEdit(true)}
                     >
                         添加
                     </Button>
@@ -57,89 +90,147 @@ class GlobalTabel2 extends React.Component {
                             删除<DownOutlined />
                         </Button>
                     </Dropdown>
+                    {/* 操作记录 */}
+                    <Dropdown overlay={this.mulChangeMenu} placement="bottomLeft" >
+                        <Button icon={<ClockCircleOutlined />}
+                            style={{ margin: '0 10px 10px 0', padding: '0 20px', verticalAlign: 'middle', border: 'none' }}
+                        >
+                            操作记录
+                        </Button>
+                    </Dropdown>
+
 
                     {/* 全屏 */}
                     <Button icon={<FullscreenExitOutlined />} style={{ border: 'none', margin: '0 10px 10px 10px', verticalAlign: 'middle', float: 'right' }} />
                     {/* 显示字段 */}
-                    <Button icon={<EyeOutlined />} style={{ border: 'none', margin: '0 10px 10px 0', verticalAlign: 'middle', float: 'right' }} />
+                    <div style={{ border: 'none', margin: '0 10px 10px 10px', verticalAlign: 'middle', float: 'right' }}>
+                        <Popover placement="bottomRight" content={fieldChoose} trigger="click"
+                            onVisibleChange={visibleChange}
+                        >
+                            <Button icon={<FunnelPlotOutlined />} style={{ border: 'none', margin: '0 10px 10px 0', verticalAlign: 'middle', float: 'right' }} />
+                        </Popover>
+                    </div>
+
+
                     {/* 排序 */}
-                    <Button icon={<SortDescendingOutlined />} style={{ border: 'none', margin: '0 10px 10px 0', verticalAlign: 'middle', float: 'right' }} />
+                    <div style={{ border: 'none', margin: '0 10px 10px 0', verticalAlign: 'middle', float: 'right' }}>
+                        <Popover placement="bottomRight" content={fieldChoose} trigger="click"
+                            onVisibleChange={visibleChange}
+                        >
+                            <Button icon={<SortDescendingOutlined />} style={{ border: 'none', margin: '0 10px 10px 0', verticalAlign: 'middle', float: 'right' }} />
+                        </Popover>
+                    </div>
                     {/* 筛选条件 */}
+
                     <Button icon={<FilterOutlined />} style={{ border: 'none', margin: '0 10px 10px 0', verticalAlign: 'middle', float: 'right' }}>
                         筛选条件
                     </Button>
                 </div>
-                <TableLayout
+                <Table
                     rowSelection={{
                         type: 'checkbox',
                         ...rowSelection,
                     }}
                     bordered
+                    rowKey={record => record.key}
                     dataSource={dataSource}
-                    columns={columns}
+                    columns={lastColumns}
                     pagination={PageInfo}
-                    onChange={this.onChange}
+                    // onChange={this.onChange}
                     loading={isLoading}
-                    scroll={{ x: 1300 }}
-                    // scroll={{ x: 200 ,y:420}}
                     onRow={(key, record) => {
                         return {
                             onClick: event => {
-                                // this.props.TableStore.setIsModalEdit(true);
-
-                                this.props.TableStore.setModalEditData(key, record);
+                                this.props.TableStore.getOneData({ 'formId': this.props.HomeStore.firstFormId, 'dataId': key.key })
                                 this.props.TableStore.setDataPageModalVis(true);
+                                this.props.TableStore.setValue('itemIndex', record)
                             }, // 点击行
                         };
                     }}
                 />
                 {
                     this.props.TableStore.dataPageModalVis && <GlobalModal
+                        title={firstFormName[this.props.HomeStore.firstFormId]}
+                        width={1300}
                         visible={this.props.TableStore.dataPageModalVis}
                         onOk={e => { this.props.TableStore.setDataPageModalVis(false) }}
                         onCancel={e => { this.props.TableStore.setDataPageModalVis(false); this.props.TableStore.setIsModalEdit(false); }}
+                        footer={null}
                         children={
-                            <GlobalForm type={true} dataVis={true} dataInfo={this.props.TableStore.modalEditData} />
+                            <DataModal />
                         } />
                 }
                 {
                     this.props.TableStore.isModalEdit && <GlobalModal
+                        title={firstFormName[this.props.HomeStore.firstFormId]}
+                        width={800}
                         visible={this.props.TableStore.isModalEdit}
                         onOk={e => this.props.TableStore.setIsModalEdit(false)}
                         onCancel={e => { this.props.TableStore.setDataPageModalVis(false); this.props.TableStore.setIsModalEdit(false); }}
+                        footer={null}
                         children={
-                            <GlobalForm type={true} dataVis={false}/>
+                            <div className='modal_content'>
+                                <FormLayout />
+                            </div>
                         } />
+                }
+                {
+                    this.props.TableStore.mulVis && <Modal
+                        title={<>
+                            <span className='mul_title'>批量修改</span>{this.props.TableStore.mulType == '1' && <span className='mul_header_line'>本次操作将修改{this.props.TableStore.selectedRowKeys.length}条数据</span>}
+                        </>}
+                        visible={this.props.TableStore.mulVis}
+                        footer={null}
+                        onCancel={() => this.props.TableStore.setValue('mulVis', false)}
+                        children={
+                            <MulChange />
+                        }
+                    />
                 }
             </div>
 
         );
     }
-    addObj = () => {
-        this.props.TableStore.setIsModalEdit(true);
-    }
-    onChange = (e) => {
-        this.props.TableStore.setSelectedRowKeys([]);
-        console.log(this.props.TableStore.selectedRowKeys);
-        this.props.HomeStore.PageInfo = e;
-        this.props.HomeStore.PageInfo.pageIndex = e.current
-        let params = {};
-        params.firstFormId = this.props.HomeStore.firstFormId;
-        this.props.HomeStore.countObj(params)
-        params.pageIndex = e.current;
-        params.pageSize = this.props.HomeStore.PageInfo.pageSize
-        this.props.HomeStore.queryAll(params)
-    }
+
 
     commDele = (data) => {
-        let params = []
+        let flag = true;
         data.map((item) => {
-            let idOne = {}
-            idOne.firstFormId = this.props.HomeStore.firstFormId
-            idOne.dataId = item.id
-            params.push(idOne);
+            var formdata = new FormData();
+            formdata.append('formId', parseInt(toJS(this.props.HomeStore.firstFormId)))
+            formdata.append('dataId', parseInt(item.key))
+
+            var requestOptions = {
+                method: 'POST',
+                headers: {
+                    'Authorization': injectSelfToken()
+                },
+                body: formdata
+            };
+
+            fetch("/data/delete", requestOptions)
+                .then(response => response.text())
+                .then(result => console.log(result))
+                .catch(error => {
+                    console.log('error', error)
+                    flag = false
+                });
         })
-        return params
+        console.log(flag);
+        if (flag == true) {
+            Modal.success({
+                content: '数据删除成功'
+            })
+        } else {
+            Modal.error({
+                content: '数据删除失败'
+            })
+        }
+        if (this.props.TableStore.model == 'subitAndManage') {
+            this.props.TableStore.getAllData({ formId: this.props.HomeStore.firstFormId }, 'myself')
+        } else {
+            this.props.TableStore.getAllData({ formId: this.props.HomeStore.firstFormId }, 'all')
+        }
     }
 
     commExport = (data) => {
@@ -170,7 +261,7 @@ class GlobalTabel2 extends React.Component {
                 sheetFilter: sheetFilter,
                 sheetHeader: sheetHeader,
                 sheetName: sheetName,
-                columnWidths:columnWidths
+                columnWidths: columnWidths
             },
             {
                 sheetData: sheetData
@@ -187,15 +278,25 @@ class GlobalTabel2 extends React.Component {
                 okText: '确定',
                 cancelText: '取消',
                 onOk: () => {
-                    let params = this.commDele(toJS(this.props.TableStore.selectedIdsList))
-                    console.log(params);
-                    this.props.HomeStore.deleteObjs(params);
-                    let params1 = {};
-                    params1.firstFormId = this.props.HomeStore.firstFormId;
-                    params1.pageIndex = this.props.HomeStore.PageInfo.pageIndex;
-                    params1.pageSize = this.props.HomeStore.PageInfo.pageSize
-                    this.props.HomeStore.countObj({ firstFormId: this.props.HomeStore.firstFormId })
-                    this.props.HomeStore.queryAll(params1);
+                    // this.commDele(toJS(this.props.TableStore.selectedIdsList))
+                    if (this.props.TableStore.selectedRowKeys.length == 1) {
+                        this.props.TableStore.delOneData({ 'formId': this.props.HomeStore.firstFormId, 'dataId': toJS(this.props.TableStore.selectedRowKeys)[0] }).then(() => {
+                            if (this.props.TableStore.model == 'subitAndManage') {
+                                this.props.TableStore.getAllData({ formId: this.props.HomeStore.firstFormId }, 'myself')
+                            } else {
+                                this.props.TableStore.getAllData({ formId: this.props.HomeStore.firstFormId }, 'all')
+                            }
+                        })
+                    } else {
+                        this.props.TableStore.delMulData({ 'formId': this.props.HomeStore.firstFormId, 'dataIds': toJS(this.props.TableStore.selectedRowKeys) }).then(() => {
+                            if (this.props.TableStore.model == 'subitAndManage') {
+                                this.props.TableStore.getAllData({ formId: this.props.HomeStore.firstFormId }, 'myself')
+                            } else {
+                                this.props.TableStore.getAllData({ formId: this.props.HomeStore.firstFormId }, 'all')
+                            }
+                        })
+                    }
+                    // this.props.HomeStore.deleteObjs(params);
                     // 删除->数据库恢复->翻页->原来选中删除的标记不出现
                     this.props.TableStore.setSelectedRowKeys([]);
                     this.props.TableStore.selectedIdsList = [];
@@ -227,6 +328,7 @@ class GlobalTabel2 extends React.Component {
         }
         else {
             Modal.warning({
+                style: { height: '200px' },
                 title: '筛选导出',
                 content: '请选择需要导出的记录！',
             });
@@ -256,23 +358,21 @@ class GlobalTabel2 extends React.Component {
     }
 
     onDeleteAll = () => {
-        if (this.props.HomeStore.dataSource.length > 0) {
+        console.log(toJS(this.props.TableStore.dataSource));
+        if (this.props.TableStore.dataSource.length > 0) {
             Modal.confirm({
                 title: '全部删除',
                 content: '确定要删除全部记录？',
                 okText: '确定',
                 cancelText: '取消',
                 onOk: () => {
-                    let params = this.commDele(toJS(this.props.HomeStore.dataSource))
-                    console.log(params);
-                    this.props.HomeStore.deleteObjs(params);
-                    let params1 = {};
-                    params1.firstFormId = this.props.HomeStore.firstFormId;
-                    params1.pageIndex = this.props.HomeStore.PageInfo.pageIndex;
-                    params1.pageSize = this.props.HomeStore.PageInfo.pageSize
-                    this.props.HomeStore.queryAll(params1);
-                    this.props.HomeStore.countObj({ firstFormId: this.props.HomeStore.firstFormId })
-                    // 删除->数据库恢复->翻页->原来选中删除的标记不出现
+                    this.props.TableStore.delMulData({ 'formId': this.props.HomeStore.firstFormId, 'dataIds': toJS(this.props.TableStore.selectedRowKeys) }).then(() => {
+                        if (this.props.TableStore.model == 'subitAndManage') {
+                            this.props.TableStore.getAllData({ formId: this.props.HomeStore.firstFormId }, 'myself')
+                        } else {
+                            this.props.TableStore.getAllData({ formId: this.props.HomeStore.firstFormId }, 'all')
+                        }
+                    })
                     this.props.TableStore.setSelectedRowKeys([]);
                     this.props.TableStore.selectedIdsList = [];
                 }
@@ -303,12 +403,43 @@ class GlobalTabel2 extends React.Component {
             <Menu.Item key="1" onClick={this.onDelete}>
                 筛选后的数据
             </Menu.Item>
-            <Menu.Item key="2">
+            <Menu.Item key="2" onClick={this.onDeleteAll}>
                 全部数据
             </Menu.Item>
         </Menu>
     );
-
+    onMulChange = () => {
+        if (this.props.TableStore.selectedIdsList.length > 0) {
+            this.props.TableStore.setValue('mulType', '1')
+            this.props.TableStore.setValue('mulVis', true);
+        }
+        else {
+            Modal.warning({
+                style: { height: '200px' },
+                title: '批量修改',
+                content: '请选择需要批量修改的记录！',
+            });
+        }
+    }
+    onMulLog = () => {
+        this.props.TableStore.getBatchLog({ 'formId': toJS(this.props.HomeStore.firstFormId) })
+        this.props.TableStore.setValue('mulType', '3')
+        this.props.TableStore.setValue('mulVis', true);
+    }
+    /* "批量修改"下拉框菜单 */
+    mulChangeMenu = (
+        <Menu>
+            <Menu.Item key="1" onClick={this.onMulChange}>
+                批量修改
+            </Menu.Item>
+            <Menu.Item key="2" onClick={this.onMulLog}>
+                批量修改记录
+            </Menu.Item>
+            <Menu.Item key="3" onClick={this.onMulPrint} disabled='false'>
+                批量打印模板记录
+            </Menu.Item>
+        </Menu>
+    )
 
 
 };

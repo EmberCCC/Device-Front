@@ -38,9 +38,6 @@ class HeaderLayout extends Component {
                 type={this.props.visible ? 'menu-unfold' : 'menu-fold'}
                 onClick={() => this.props.toggle()}
               />
-              <GlobalCrumbs sizetype={this.props.sizetype}
-                mobile={this.props.mobile}
-                dataSource={this.props.dataSource} toIndex={e => this.props.history.push('/index')} />
             </div>
           }
           {

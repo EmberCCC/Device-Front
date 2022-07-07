@@ -10,7 +10,7 @@ import React, { Component } from 'react';
 import { Modal, } from 'antd';
 import classnames from 'classnames';
 import { isEmpty } from 'lodash';
-import './index.less';
+// import './index.less';
 
 export default class GlobalModal extends Component {
   state = {
@@ -18,7 +18,7 @@ export default class GlobalModal extends Component {
     isMouseMove: false,
     rootWidth: 0,
     rootHeight: 0,
-    top: 100,
+    top: 0,
     left: 0,
   };
   render() {

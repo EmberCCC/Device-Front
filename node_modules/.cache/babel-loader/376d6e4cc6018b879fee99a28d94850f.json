@@ -1,0 +1,1 @@
+{"ast":null,"code":"export var INIT_COORDS = 'dnd-core/INIT_COORDS';\nexport var BEGIN_DRAG = 'dnd-core/BEGIN_DRAG';\nexport var PUBLISH_DRAG_SOURCE = 'dnd-core/PUBLISH_DRAG_SOURCE';\nexport var HOVER = 'dnd-core/HOVER';\nexport var DROP = 'dnd-core/DROP';\nexport var END_DRAG = 'dnd-core/END_DRAG';","map":null,"metadata":{},"sourceType":"module"}

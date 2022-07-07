@@ -30,9 +30,9 @@
 #root .ant-layout-sider-collapsed {
   min-width: 80px !important;
 }
-#root .right_layout {
+/* #root .right_layout {
   margin: 20px 13px 20px 13px !important;
-}
+} */
 #root .right_layout .header_layout {
   height: auto;
 }
@@ -88,13 +88,13 @@
   border: 2px solid #DEDEDE;
   color: #9D9D9D;
 }
-#root .ant-table table {
+/* #root .ant-table table {
   border-color: #E2E2E2;
   border-radius: 4px 4px 4px 4px;
-}
-#root .ant-table-thead > tr > th {
+} */
+/* #root .ant-table-thead > tr > th {
   background-color: #E2E2E2;
-}
+} */
 #root .ant-table-column-title {
   font-size: 12px;
   color: #161616;
@@ -154,8 +154,7 @@
 }
 #root .ant-tabs-tab-active {
   background-color: #fff;
-  border-top: 3px solid #6236FF;
-  border-radius: 3px;
+  border-bottom: 3px solid #6236FF;
 }
 #root .ant-tabs-bar {
   border: none;

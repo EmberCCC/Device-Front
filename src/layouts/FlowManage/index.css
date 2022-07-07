@@ -2,6 +2,7 @@
   border-radius: 10px;
   background-color: transparent;
 }
+
 .save__controls {
   position: absolute;
   right: 10px;
@@ -9,19 +10,23 @@
   z-index: 4;
   font-size: 12px;
 }
-.dataInfo{
+
+.dataInfo {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
 }
-.updatenode__controls{
+
+.updatenode__controls {
   display: flex;
   flex-direction: column;
 }
-.updatenode__controls div{
+
+.updatenode__controls div {
   margin: 2px;
   padding: 2px;
 }
+
 .save__controls button {
   margin-left: 5px;
 }
@@ -30,11 +35,13 @@
   flex-direction: column;
   display: flex;
   flex-grow: 1;
-  height:80vh;
+  height: 80vh;
 }
-.react-flow__attribution{
+
+.react-flow__attribution {
   display: none;
 }
+
 /* a{
   display: none;
 } */
@@ -50,16 +57,18 @@
 }
 
 .dndflow .dndnode {
+  font-size: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 80px;
   height: 20px;
-  padding: 4px;
-  border: 1px solid #1a192b;
-  border-radius: 2px;
+  border: 1px solid #E1E3E5;
   display: flex;
-  justify-content: center;
+  /* justify-content: center; */
   align-items: center;
   cursor: grab;
 }
-
 .dndflow .dndnode.input {
   border-color: #0041d0;
 }
@@ -76,11 +85,13 @@
 .dndflow .selectall {
   margin-top: 10px;
 }
-.header{
+
+.header {
   background-color: white;
   height: 80%;
 }
-.title{
+
+.title {
   background-color: #f4f6fc;
 }
 

@@ -5,3 +5,28 @@
 .tableHeader{
     margin-bottom: 20px;
 }
+.ant-modal-header{
+    color: white;
+}
+.ant-btn-primary{
+    width: 100px;
+    color: #fff;
+    background: #0db3a6;
+    border-color: #0db3a6;
+}
+.ant-btn-primary:hover{
+    opacity: 80%;
+    background: #0db3a6;
+    border-color: #0db3a6;
+}
+.ant-btn-primary:focus{
+    background: #0db3a6;
+    border-color: #0db3a6;
+}
+.ant-btn-primary:active{
+    background: #0db3a6;
+    border-color: #0db3a6;
+}
+.table_content{
+    height: 100%;
+}

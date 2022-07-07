@@ -1,11 +1,9 @@
-import { observable, action, toJS } from 'mobx';
+import { observable, action, toJS, makeObservable } from 'mobx';
 import { isDataExist } from 'Utils/dataTools';
 import * as services from '../services/home';
 import { isEmpty, uniqBy, } from 'lodash';
 import { checkCurrentMenu } from 'utils/dataTools';
 import { MenuObj } from '../constants/configs';
-import moment from 'moment';
-import { createWebSocket } from 'routes/BasicRouter/webSocket';
 
 class Home {
   @observable contentScrollHeight = 0; //当前content滚动高度
@@ -21,18 +19,31 @@ class Home {
   @observable isLoading = false;
   @observable toggledActionId = 0;
   @observable isAuth = false;
-  @observable model = "look"; //模式控制;
-  @observable firstFormId = 1
+  @observable firstFormId = 16
   @observable secondFormId = 0
   @observable columns = [];
   @observable dataSource = [];
   @observable itemDataT = []
   @observable uploadData = {}
-  @observable PageInfo = { pageIndex: 1, pageSize: 10, total: 0 }
   @observable viewModel = 'my1'
   @observable viewVisiable = false
   @observable myInfo = {}
+  @observable showColumns = [];
+  @observable lastColumns = [];
+  @observable fieldValue = [];
 
+  @action.bound setFieldValue(value){
+    this.fieldValue = value
+  }
+
+  @action.bound setLastColumns(){
+    this.lastColumns = []
+    this.columns.forEach((item) => {
+      if (this.fieldValue.indexOf(item.key) > -1) {
+        this.lastColumns.push(item);
+      }
+    })
+  }
   /* 设置登陆信息 */
   @action async setLogin(params, finished) {
     this.isLoading = true;
@@ -206,9 +217,8 @@ class Home {
       this.toggledActionId = currentMenu[0].id;
       this.selectedKeys = [`${currentMenu[0].id}`];
       this.openKeys = [`${currentMenu[0].parentId}`];
-      this.model = 'look'
+      this.model = 'submit'
       this.firstFormId = currentMenu[0].id;
-      this.secondFormId = 0
     } catch (error) {
       console.log(error)
     }
@@ -232,9 +242,7 @@ class Home {
     history = uniqBy(history, 'id');
     sessionStorage.setItem('menu', JSON.stringify(history));
   }
-  @action getModel() {
-    return this.model;
-  }
+  
   @action.bound addCrumbs(obj) {
     this.crumbsList.push(obj);
   }
@@ -243,11 +251,7 @@ class Home {
     this[key] = value;
   }
 
-  //修改展示模式
-  @action changeModel(value) {
-    this.reSavePage();
-    this.model = value;
-  }
+  
 
   //修改展示模式
   @action changeViewModel(value) {
@@ -264,62 +268,22 @@ class Home {
     this.secondFormId = value;
   }
 
-  //获取所有数据以及字段
-  @action.bound async queryAll(params) {
-    this.isLoading = true;
-    this.dataSource = []
-    this.columns = []
-    params.pageIndex = params.pageIndex - 1;
-    try {
-      let res = await services.getRequest(services.requestList.getFieldNameAndType, params);
-      this.isLoading = false;
-      if (isDataExist(res)) {
-        const dataColumns = res.data.data.columns
-        const dataDataSource = res.data.data.dataSource
-        const columns = [];
-        const dataSource = [];
-        for (var i = 0; i < dataColumns.length; i++) {
-          var obj = {}
-          obj.title = dataColumns[i].name || ''
-          obj.dataIndex = dataColumns[i].propertyId || ''
-          obj.key = dataColumns[i].propertyId || ''
-          obj.type = dataColumns[i].typeId
-          columns.push(obj)
-        }
-        columns.push({
-          title: '提交人',
-          dataIndex: 'lastModifyPeopleNickName',
-          key: 'lastModifyPeopleNickName'
-        })
-        columns.push({
-          title: '提交时间',
-          dataIndex: 'createTime',
-          key: 'createTime'
-        })
-        columns.push({
-          title: '更新时间',
-          dataIndex: 'updateTime',
-          key: 'updateTime'
-        })
-        this.columns = columns
-        for (var i = 0; i < dataDataSource.length; i++) {
-          var obj = {}
-          if (dataDataSource[i].data != null) {
-            obj = dataDataSource[i].data;
-          }
-          obj.lastModifyPeopleNickName = dataDataSource[i].lastModifyPeopleNickName
-          obj.createTime = moment(dataDataSource[i].createTime).format('MMMM Do YYYY, h:mm:ss a')
-          obj.updateTime = moment(dataDataSource[i].updateTime).format('MMMM Do YYYY, h:mm:ss a')
-          obj.id = dataDataSource[i].dataId
-          obj.key = (i + 1).toString()
-          dataSource.push(obj)
-        }
-        this.dataSource = dataSource;
-      }
-    } catch (error) {
-      console.log(error);
-    }
+  @action.bound changeShowColumns(value) {
+    this.showColumns = value;
   }
+
+  @action.bound initColumns(){
+    this.showColumns = [];
+    this.itemDataT[0].properties.map((item) => {
+      this.showColumns.push(item.propertyId);
+    })
+    this.showColumns.push('lastModifyPeopleNickName')
+    this.showColumns.push('createTime')
+    this.showColumns.push('updateTime')
+    this.fieldValue = this.showColumns;
+    console.log(this.showColumns);
+  }
+
 
   //添加一条新的数据
   @action.bound async addNew(params) {
@@ -355,6 +319,8 @@ class Home {
       this.isLoading = false
       if (isDataExist(res)) {
         this.itemDataT = res.data.data;
+        this.initColumns();
+        console.log(toJS(this.itemDataT));
       }
     } catch (error) {
       console.log(error);
@@ -433,24 +399,6 @@ class Home {
     }
   }
 
-  @action.bound async querySelf(params) {
-    try {
-      let res = await services.getRequest(services.requestList.querySelf, params);
-      if (isDataExist(res)) {
-        this.myInfo = res.data.data;
-        // console.log(this.myInfo);
-        let url = "ws://device.misaki.center:8000/websocket";//服务端连接的url
-        sessionStorage.setItem('id', this.myInfo.id);
-        sessionStorage.setItem('tenementId', this.myInfo.tenementId);
-        sessionStorage.setItem('username', this.myInfo.username);
-        createWebSocket(url)
-        
-        return res
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }
 }
 let HomeStore = new Home();
 export default HomeStore;

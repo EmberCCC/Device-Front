@@ -29,13 +29,10 @@ class HomeLayout extends Component {
   };
 
   render() {
-    const isHome = window.location.pathname === '/index';
     // const isMobile = judgeIsMobile(this.props.type).toString();
-    const isMobile = false;
-    const { size_class, } = toJS(this.props.HomeStore);
     const isAuth = true;
     const layout = <Layout className='home_layout'>
-      {
+      {/* {
         isAuth && !isHome && (size_class === 's_size' ?
           <Drawer
             visible={this.state.firstMount ? false : !this.props.HomeStore.collapsed}
@@ -54,20 +51,14 @@ class HomeLayout extends Component {
             <Menu sizetype={size_class} mobile={isMobile} />
           </Drawer>
           : <Menu sizetype={size_class} mobile={isMobile} />)
-      }
+      } */}
+      <GlobalHeader />
       <Layout className='right_layout'>
-        <GlobalHeader
-          isAuth={isAuth}
-          sizetype={size_class}
-          mobile={isMobile}
-          ishome={isHome}
-          dataSource={toJS(this.props.HomeStore.crumbsList)}
-          backToLogin={this.backToLogin}
-          visible={this.props.HomeStore.collapsed} toggle={this.toggle} />
+        <Menu />
         <Content
           style={{
-            margin: '8px', padding: 15, background: '#fff', minHeight: 280,
-            overflowY: 'auto', position: 'relative'
+             padding: 15, background: '#fff', minHeight: 280,
+            overflowY: 'auto', position: 'relative',borderLeft:'1px solid #c4c2c2'
           }}
           id='home_content'
           mobile={'false'}

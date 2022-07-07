@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-03-26 12:43:21
- * @LastEditTime: 2022-05-05 21:42:08
+ * @LastEditTime: 2022-07-01 17:05:39
  * @LastEditors: EmberCCC 1810888456@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage-test\src\constants\status_constant.js
@@ -41,28 +41,28 @@ export const workLevel = {
 
 //组件类型
 export const typeId = {
-	Input:1,
-	TextArea:2,
-	InputNumber:3,
-	DatePicker:4,
-	RadioGroup:5,
-	CheckboxGroup:6,
-	Select:7,
-	Divider:8,
-	RangePicker:9,
-	Containers:14
+	Input:0,
+	TextArea:1,
+	InputNumber:2,
+	DatePicker:3,
+	RadioGroup:4,
+	CheckboxGroup:5,
+	Select:6,
+	Divider:7,
+	RangePicker:8,
+	Containers:13
 }
 
 export const typeName = {
-	1:'Input',
-	2:'TextArea',
-	3:'InputNumber',
-	4:'DatePicker',
-	5:'RadioGroup',
-	6:'CheckboxGroup',
-	7:'Select',
-	8:'Divider',
-	9:'RangePicker',
+	0:'Input',
+	1:'TextArea',
+	2:'InputNumber',
+	3:'DatePicker',
+	4:'RadioGroup',
+	5:'CheckboxGroup',
+	6:'Select',
+	7:'Divider',
+	8:'RangePicker',
 	14:'Containers'
 }
 

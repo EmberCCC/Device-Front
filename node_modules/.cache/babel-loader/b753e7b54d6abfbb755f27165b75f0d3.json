@@ -1,0 +1,1 @@
+{"ast":null,"code":"export default function contains(root, n) {\n  if (!root) {\n    return false;\n  }\n\n  return root.contains(n);\n}","map":null,"metadata":{},"sourceType":"module"}

@@ -94,13 +94,12 @@ const initialEdges = [
     "id": "reactflow__edge-node_1bottom--1"
   }
 ]
-const nodeTypes = { FlowNode: FlowNode, CopyNode: CopyNode, end:EndNode };
+const nodeTypes = { FlowNode: FlowNode, CopyNode: CopyNode, end: EndNode };
 
 let id = 0;
 const getId = () => `node_${++id}`;
-const store = observable({})
 
-function DnDFlow(props) {
+const DnDFlow = (props) => {
   const reactFlowWrapper = useRef(null);
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
@@ -108,38 +107,27 @@ function DnDFlow(props) {
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
   const [nodeName, setNodeName] = useState('');
   const [nodeId, setNodeId] = useState('');
-  const [person,setPerson] = useState({});
-  const [children,setChildren] = useState([])
+  const [person, setPerson] = useState({});
+  const [children, setChildren] = useState([])
 
-  // const children = [];
   const field = [];
   let fieldProp = {};
-  // Object.keys(person).map((item) => {
-  //   if (personList[item] != undefined) {
-  //     children.push(<Option key={personList[item].id}>{personList[item].nickName}</Option>)
-  //   }
-  // })
-  // for (let i = 10; i < 36; i++) {
-  //   children.push(<Option key={i.toString(36) + i}>{i.toString(36) + i}</Option>);
-  // }
   field.map((item) => {
     fieldProp[item.propertyId] = []
   })
   useEffect(() => {
-    let personList = Object.assign({},props.location.state.PersonListT)
-    // console.log(personList);
+    // let personList = Object.assign({}, props.location.state.PersonListT)
+    // console.log(person);
+    // let newC = []
+    // Object.keys(personList).map((item) => {
+    //   if (personList[item] != undefined) {
+    //     newC.push(<Option key={personList[item].id}>{personList[item].nickName}</Option>)
+    //   }
+    // })
     // setPerson(personList);
-    console.log(person);
-    let newC = []
-    Object.keys(personList).map((item) => {
-      if (personList[item] != undefined) {
-        newC.push(<Option key={personList[item].id}>{personList[item].nickName}</Option>)
-      }
-    })
-    setPerson(personList);
-    setChildren(newC);
-  },[])
-  useEffect(() => { 
+    // setChildren(newC);
+  }, [])
+  useEffect(() => {
     setNodes((nds) =>
       nds.map((node) => {
         if (node.id === nodeId) {
@@ -211,10 +199,7 @@ function DnDFlow(props) {
         obj.type = item.type
         obj.position = item.position
         obj.positionAbsolute = item.positionAbsolute
-        console.log(item.data.person);
         if (item.data.person != undefined && item.data.person.length != 0) {
-          console.log(Number(item.data.person));
-          console.log(person);
           let person1 = person[Number(item.data.person) - 1]
           item.data.principal = person1['username'];
           item.data.userId = person1['id'];
@@ -245,7 +230,7 @@ function DnDFlow(props) {
     console.log(`selected ${value}`);
   }
 
-  function checkChange(checkedValues,a) {
+  function checkChange(checkedValues, a) {
     fieldProp[a] = checkedValues
   }
   return (
@@ -310,7 +295,7 @@ function DnDFlow(props) {
               field.map((item) => {
                 return <div className='dataInfo'>
                   <label>{item.name}:</label>
-                  <Checkbox.Group name={item.propertyId} options={[{ label: '可见', value: 'vis' }, { label: '可编辑', value: 'edit' }]} onChange={(checkedValues) => checkChange(checkedValues,item.propertyId)}></Checkbox.Group>
+                  <Checkbox.Group name={item.propertyId} options={[{ label: '可见', value: 'vis' }, { label: '可编辑', value: 'edit' }]} onChange={(checkedValues) => checkChange(checkedValues, item.propertyId)}></Checkbox.Group>
                 </div>
               })
             }

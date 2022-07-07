@@ -40,8 +40,6 @@ export function request(url, options) {
     ...defaultOptions,
     ...options
   };
-  console.log(url);
-  console.log(options);
   return (
     fetch(url, options)
       .then(checkStatus)
@@ -145,8 +143,6 @@ export function get(url, data = {}, options) {
   //   url = '/api' + url;
   // }
   // data = data;
-  console.log(`${url}?${stringify(data)}`)
-  console.log(injectSelfToken());
   return request(`${url}?${stringify(data)}`, {
     method: 'GET',
     credentials: 'same-origin',
@@ -334,7 +330,7 @@ function handleError(err, options) {
 /*
  * 引入验证token
  */
-function injectSelfToken() {
+export function injectSelfToken() {
   let selfToken = sessionStorage.getItem('selfToken');
   return selfToken
 

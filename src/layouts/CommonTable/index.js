@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-04-02 11:12:08
- * @LastEditTime: 2022-05-07 21:05:23
+ * @LastEditTime: 2022-07-07 10:14:54
  * @LastEditors: EmberCCC 1810888456@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage-test\src\layouts\BasicManage\ComputerPage\index.js
@@ -9,44 +9,48 @@
 
 import { inject, observer } from 'mobx-react'
 import React, { Component } from 'react'
-import { Button, Layout, Select, Table } from 'antd'
-import GlobalForm from 'components/GlobalForm';
+import { Button, Select, Table } from 'antd'
 import { toJS } from 'mobx';
-import GlobalTabel from 'components/GlobalTabel';
 import { NavLink } from 'react-router-dom';
 import './index.css'
-import TableLayout from 'components/TableLayout';
 import GlobalTabel2 from 'components/GlobalTabel2';
-const { Header, Content } = Layout;
+import { InsertRowBelowOutlined } from '@ant-design/icons';
+import FormLayout from 'layouts/FormLayout';
 const { Option } = Select
-@inject('HomeStore')
+@inject('HomeStore', 'TableStore')
 @observer
 class CommonTable extends Component {
 
   render() {
-    const { dataSource, PageInfo, secondFormId, isLoading, model, selectedKeys, itemDataT } = this.props.HomeStore;
-    let columns = toJS(this.props.HomeStore.columns)
+    const { secondFormId, selectedKeys, itemDataT, firstFormId } = this.props.HomeStore;
+    const { dataSource, columns, PageInfo, model,isLoading } = this.props.TableStore;
+    const handleSelect = (value) => {
+      if (value == 'subitAndManage') {
+        this.props.TableStore.getAllData({ formId: firstFormId }, 'myself')
+      } else {
+        this.props.TableStore.getAllData({ formId: firstFormId }, 'all')
+      }
+      this.props.TableStore.setSelectedRowKeys([])
+      this.props.TableStore.changeModel(value);
+    }
     return (
       <div className='tableEdit'>
         <div className='tableHeader'>
-          <Select value={this.props.HomeStore.getModel()} style={{ width: 180, float: 'left' }} onSelect={value => { this.props.HomeStore.changeModel(value) }}>
-            <Option value="submit">直接提交数据</Option>
-            <Option value="subitAndManage">提交并管理本人数据</Option>
-            <Option value="manage">管理全部数据</Option>
-            <Option value="look">查看全部数据</Option>
+          <Select value={this.props.TableStore.getModel()} style={{ width: 180, float: 'left', backgroundColor: 'gray', fontWeight: '1000' }} onSelect={handleSelect}>
+            <Option value="submit"><InsertRowBelowOutlined /> 直接提交数据</Option>
+            <Option value="subitAndManage"><InsertRowBelowOutlined /> 提交并管理本人数据</Option>
+            <Option value="manage"><InsertRowBelowOutlined /> 管理全部数据</Option>
+            <Option value="look"><InsertRowBelowOutlined /> 查看全部数据</Option>
           </Select>
-          <NavLink to={{ pathname: '/design', state: { selectedKeys: toJS(selectedKeys), item: toJS(itemDataT), secondFormId: toJS(secondFormId) } }} style={{ float: 'right' }}><Button type='primary'>编辑表单</Button></NavLink>
+          <NavLink to={{ pathname: '/design', state: { selectedKeys: toJS(selectedKeys), item: toJS(itemDataT), secondFormId: toJS(secondFormId) } }} style={{ float: 'right' }}><Button>编辑表单</Button></NavLink>
         </div>
-        <div>
+        <div className='table_content'>
           {
             model == 'look' ?
-              <TableLayout columns={columns} dataSource={dataSource} pagination={PageInfo} onChange={this.onChange} loading={isLoading} scroll={{ x: 1300 }}></TableLayout> :
+              <Table columns={columns} dataSource={dataSource} pagination={PageInfo} loading={isLoading} scroll={{x:true}}/> :
               model == 'submit' ?
-                <GlobalForm loading={isLoading} type={true} dataVis={false}/> :
-                model == 'manage' ?
-                  <GlobalTabel2/>
-                  :
-                  <GlobalTabel2 />
+                <FormLayout loading={isLoading}/> :
+                <GlobalTabel2 loading={isLoading} scroll={{x:true}}/>
           }
         </div>
       </div>
@@ -54,48 +58,16 @@ class CommonTable extends Component {
   }
 
   onChange = (e) => {
-    this.props.HomeStore.PageInfo = e;
-    this.props.HomeStore.PageInfo.pageIndex = e.current
-    let params = {};
-    params.firstFormId = this.props.HomeStore.firstFormId;
-    this.props.HomeStore.countObj(params)
-    this.getData()
   }
 
-  edit = (txt) => {
-    console.log(txt);
-  }
-
-  getData = (page) => {
-    const { PageInfo, firstFormId } = this.props.HomeStore;
-    let params = {};
-    params.firstFormId = firstFormId
-    if (page != undefined) {
-      params.pageIndex = page.pageIndex
-      params.pageSize = page.pageSize
+  componentDidMount() {
+    const { firstFormId } = this.props.HomeStore
+    if (this.props.TableStore.model == 'subitAndManage') {
+      this.props.TableStore.getAllData({ formId: firstFormId }, 'myself')
     } else {
-      params.pageIndex = PageInfo.pageIndex
-      params.pageSize = PageInfo.pageSize
+      this.props.TableStore.getAllData({ formId: firstFormId }, 'all')
     }
-    this.props.HomeStore.queryAll(params);
-  }
 
-  getField = () => {
-    const { firstFormId } = this.props.HomeStore
-    let params = {};
-    this.props.HomeStore.PageInfo.pageSize = 10;
-    this.props.HomeStore.PageInfo.pageIndex = 1
-    params.firstFormId = firstFormId;
-    this.props.HomeStore.queryField(params)
-  }
-  componentWillMount() {
-    this.props.HomeStore.model = 'look'
-    const { firstFormId } = this.props.HomeStore
-    let params = {};
-    params.firstFormId = firstFormId;
-    this.getField();
-    this.getData();
-    this.props.HomeStore.countObj(params)
   }
 
 }
