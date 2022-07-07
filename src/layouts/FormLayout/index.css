@@ -1,0 +1,25 @@
+.form_content{
+    height: 94vh;
+}
+.flex-none{
+    padding: 5px 0;
+    color: #1f2d3d;
+    font-weight: 600;
+    line-height: 20px;
+    word-wrap: break-word;
+    word-break: break-all;
+}
+.form_footer{
+    display: flex;
+    align-items: flex-start;
+    padding: 10px 24px;
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    border-top: 1px dashed #e0e0e0;
+}
+.form_main{
+    overflow-y: auto;
+    height: 100%;
+    padding: 15px;
+}

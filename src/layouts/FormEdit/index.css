@@ -1,0 +1,105 @@
+.point{
+    color: black !important;
+}
+.point{
+    padding: 0 !important;
+}
+.frg-options-list .flex-wrap{
+    display: flex;
+    flex-direction: row !important;
+}
+.frg-options-list .fr-field-inline{
+    height: 30px;
+    max-width: 80px !important;
+}
+.left-layout{
+    background-color: white !important;
+}
+.left-layout div p{
+    font-weight: 900;
+    margin: 0;
+    padding-left: 4px;
+}
+.left-layout div ul{
+    padding: 5px;
+}
+.left-layout div ul div{
+    width: 50%;
+}
+.left-layout div ul div li{
+    background-color: white;
+    border: 1px solid #D9D9D9;
+    border-radius: 5px;
+    font-size: 12px;
+    height: 30px;
+    width: 100px;
+}
+.edit_header{
+    border-top: 1px solid rgba(209, 207, 207, 0.336);
+    border-bottom: 1px solid rgba(209, 207, 207, 0.336);
+    background-color: white;
+    padding: 10px 20px 10px 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.edit_right{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.edit_look{
+    margin-right: 10px;
+}
+.icon_edit{
+    margin-right: 10px;
+}
+.mid-layout{
+    background-color: white;
+}
+.field-wrapper{
+    background-color: white !important;
+    
+}
+.right-layout{
+    background-color: white;
+}
+
+.edit_right button{
+    border: 1px solid;
+    border-color: #0DB3A6;
+    width: 68px;
+    height: 30px;
+    line-height: 28px;
+}
+.edit_right button :hover{
+    opacity: 50%;
+}
+.edit_look{
+    background-color: white;
+    color: #0DB3A6;
+}
+.edit_save{
+    background-color: #0DB3A6;
+    color: white;
+}
+.edit_left a{
+    color: #0DB3A6;
+}
+.ant-tabs-tab-active{
+    border-top: none !important;
+    border-bottom:3px solid #0DB3A6;
+    border-radius: 0 !important;
+    padding-bottom: 9px;
+    color: black;
+}
+.ant-tabs-tab-btn{
+    color: black !important;
+}
+/* .edit_look{
+    ma
+}
+
+.edit_right button{
+
+} */

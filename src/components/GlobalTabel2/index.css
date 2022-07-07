@@ -1,0 +1,226 @@
+.main_modal{
+    height: 100vh;
+    display: flex;
+    flex-direction: row;
+}
+.ant-modal{
+    height: 100vh;
+    /* width: 1200px !important; */
+}
+.ant-modal-content{
+    width: 100%;
+}
+.left_main{
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+}
+.left_header_right{
+    display: flex;
+    flex-direction: row;
+    justify-self: center;
+}
+.left_header_right span{
+    margin-left: 5px;
+    margin-right: 5px;
+}
+.left_content{
+    border-top:1px solid rgba(0, 0, 0, 0.055);
+    overflow-y: auto;
+}
+.left_header_left {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    padding-left: 5px;
+    width: 80%;
+}
+.left_modal{
+    height: 40px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.right_header{
+    height: 40px;
+    padding-top: 2px;
+    border-bottom:1px solid rgba(0, 0, 0, 0.055);
+}
+.right_modal{
+    background-color: #f4f6f9;
+    width: 30%;
+    border-left: 1px solid rgba(0, 0, 0, 0.055);
+}
+.ant-modal-body{
+    padding: 0;
+}
+.item_content{
+    color: #768191;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 10px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.055);
+}
+.item_title{
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 22px;
+    word-wrap: break-word;
+    word-break: break-all;
+}
+
+.header_btn{
+    background-color: white;
+    border: none;
+    align-items: center;
+}
+.header_btn:hover{
+    background-color: aliceblue;
+}
+.header_split{
+    width: 1px;
+    height: 20px;
+    margin: 10px 12px;
+    background: #e0e0e0;
+}
+.info_content{
+    padding-left: 10px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+.info_item{
+    display: flex;
+    flex-direction: row;
+    margin-top: 5px;
+    width: 50%;
+}
+.info_title{
+    display: inline-block;
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 auto;
+    flex: 0 0 auto;
+    width: 80px;
+    color: #91a1b7;
+    font-weight: 400;
+    font-size: 12px;
+    vertical-align: middle;
+    width: 80px;
+}
+.info_article{
+    min-height: auto;
+    padding: 0;
+    font-size: 12px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.modal_content{
+    height: 97vh;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 20px;
+}
+.mul_title{
+    margin-right: 12px;
+    color: #1f2d3d;
+    font-weight: 700;
+    font-size: 16px;
+
+}
+.mul_total{
+    padding: 20px;
+}
+.mul_header_line{
+    margin: 5px 0;
+    color: #91a1b7;
+    font-size: 12px;
+}
+.mul_header{
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+}
+.mul_footer{
+    border-top: 1px solid #e9e9e9;
+    padding-top: 20px;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.mul_cancel{
+    color: #1f2d3d;
+    background: #fff;
+    width: 60px;
+    border: 1px solid gray;
+    border-color: #d9d9d9;
+    border-radius: 3px;
+    margin-right: 10px;
+}
+.mul_sure{
+    width: 60px;
+    border: 1px solid gray;
+    border-radius: 3px;
+    color: #fff;
+    background: #0db3a6;
+    border-color: #0db3a6;
+}
+.log_main{
+    height: 400px;
+    margin: 0 auto;
+    margin-top: 10px;
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+.log_one{
+    color: #5e6d82;
+    background: #f4f6fc;
+}
+.log_detail{
+    display: flex;
+    flex-direction: column;
+}
+.log_info{
+    padding: 5px 10px;
+    color: #5e6d82;
+    background: #f4f6fc;
+}
+.detail_data div{
+    padding: 5px 10px;
+
+    color: #5e6d82;
+    background: #f4f6fc;
+}
+.detail_data{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.log_title{
+    padding-bottom: 10px;
+    color: #1f2d3d;
+    font-weight: 700;
+}
+.log_title span{
+    margin-right: 200px;
+    font-size: 15px;
+    cursor: pointer;
+}
+.log_one{
+    margin-bottom: 20px;
+}
+.item_article{
+    min-height: 30px;
+    padding: 4px 0 8px;
+    color: #1f2d3d;
+    font-size: 14px;
+    line-height: 20px;
+    word-wrap: break-word;
+    word-break: break-word
+}
