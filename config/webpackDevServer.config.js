@@ -103,7 +103,7 @@ module.exports = function (proxy, allowedHost) {
         "changeOrigin": true,
         "pathRewrite": {}
       },
-      "/mongo": {
+      "/data": {
         //"target": "http://zuultest.boranet.cn",
         // "target": "http://misaki.center:8000",
         // "target": "http://192.168.43.55:8000",
