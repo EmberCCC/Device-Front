@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-05 10:16:45
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-07-07 23:22:57
+ * @LastEditTime: 2022-07-08 18:27:24
  * @FilePath: \bl-device-manage-test\src\layouts\FormEdit\changeTool.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -60,30 +60,36 @@ function getOneForm(fields, fieldIds) {
 }
 export function restore(obj) {
   let formArr = {}
-  const fieldInfo = JSON.parse(obj['form']['formFields']);
-  const properties = JSON.parse(obj['form']['properties']);
-  const fields = obj['fields'];
-  for (let index = 0; index < fieldInfo.length; index++) {
-    let formItem = {}
-    const element = fieldInfo[index];
-    formItem['properties'] = getOneForm(fields, element['fieldsId'])
-    for (const key in properties) {
-      if (Object.hasOwnProperty.call(properties, key)) {
-        const element = properties[key];
-        formItem[key] = element
+  let fieldInfo;
+  let properties;
+  if (obj.hasOwnProperty('form') && obj['form'].hasOwnProperty('formFields')) {
+    fieldInfo = JSON.parse(obj['form']['formFields']);
+    properties = JSON.parse(obj['form']['properties']);
+    const fields = obj['fields'];
+    for (let index = 0; index < fieldInfo.length; index++) {
+      let formItem = {}
+      const element = fieldInfo[index];
+      formItem['properties'] = getOneForm(fields, element['fieldsId'])
+      for (const key in properties) {
+        if (Object.hasOwnProperty.call(properties, key)) {
+          const element = properties[key];
+          formItem[key] = element
+        }
       }
+      formArr[fieldInfo[index]['name']] = formItem;
     }
-    formArr[fieldInfo[index]['name']] = formItem;
   }
+
+
   return formArr;
 }
 
-export function getSchema(columnsArr){
+export function getSchema(columnsArr) {
   let schema = {}
   schema['type'] = 'object'
   let properties = {}
   columnsArr.map((item) => {
-    if(!['createPerson','createTime','updateTime'].includes(item['key'])){
+    if (!['createPerson', 'createTime', 'updateTime'].includes(item['key'])) {
       properties[item['key']] = item['detailJson']
     }
   })
