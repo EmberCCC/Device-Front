@@ -11,7 +11,7 @@ const SubMenu = Menu.SubMenu;
 
 let firstMount = false;
 @withRouter
-@inject('HomeStore', 'MessageStore')
+@inject('HomeStore', 'MessageStore','TableStore')
 @observer
 class MenuLayout extends Component {
   constructor(props) {

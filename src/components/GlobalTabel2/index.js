@@ -1,14 +1,14 @@
 /*
  * @Author: your name
  * @Date: 2022-04-07 11:58:39
- * @LastEditTime: 2022-07-07 18:24:42
+ * @LastEditTime: 2022-07-08 12:20:20
  * @LastEditors: EmberCCC 1810888456@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage-test\src\components\GlobalTabel\index.js
  */
 import React from 'react';
 import { inject, observer } from 'mobx-react';
-import { Button, Checkbox, Dropdown, Menu, message, Modal, Popover, Table } from 'antd';
+import { Button, Checkbox, Dropdown, Menu, message, Modal, Popover, Table, Tooltip } from 'antd';
 import { ClockCircleOutlined, DeleteOutlined, DownOutlined, FilterOutlined, FullscreenExitOutlined, PlusOutlined, SortDescendingOutlined, UploadOutlined, FunnelPlotOutlined } from '@ant-design/icons';
 import GlobalModal from 'components/GlobalModal';
 import { toJS } from 'mobx';
@@ -18,6 +18,7 @@ import DataModal from './dataModal';
 import { injectSelfToken } from 'utils/request';
 import FormLayout from 'layouts/FormLayout';
 import MulChange from './mulChange';
+import SortLayout from './sortLayout';
 
 const ExportJsonExcel = require("js-export-excel");
 @inject('HomeStore', 'TableStore')
@@ -46,80 +47,79 @@ class GlobalTabel2 extends React.Component {
         }
 
         const fieldChoose = (
-            <Checkbox.Group onChange={checkChange} defaultValue={this.props.TableStore.fieldValue}>
-                {columns.map((item, index) => {
-                    return <>
-                        <Checkbox value={item.key} key={index} style={{ width: '300px' }}>{item.title}</Checkbox>
-                        <br />
-                    </>
-                })}
-            </Checkbox.Group>
-        )
-        const closeMul = () => {
-            this.setState({
-                mulVis: false
-            })
-        }
-        const fieldSort = (
-            <>
-
-            </>
+            <div className='field_list'>
+                <Checkbox.Group onChange={checkChange} defaultValue={this.props.TableStore.fieldValue}>
+                    {columns.map((item, index) => {
+                        return <>
+                            <Checkbox value={item.key} key={index} style={{ width: '300px' }}>{item.title}</Checkbox>
+                            <br />
+                        </>
+                    })}
+                </Checkbox.Group>
+            </div>
         )
         return (
             <div>
                 <div className='search_bar'>
 
-                    {/* 添加 */}
-                    <Button type="primary" icon={<PlusOutlined />}
-                        style={{ margin: '0 10px 10px 0', padding: '0 20px', verticalAlign: 'middle' }}
-                        onClick={() => this.props.TableStore.setIsModalEdit(true)}
-                    >
-                        添加
-                    </Button>
+                    {
+                        this.props.TableStore.model != 'look' && <>
+                            {/* 添加 */}
+                            <Button type="primary" icon={<PlusOutlined />}
+                                style={{ margin: '0 10px 10px 0', padding: '0 20px', verticalAlign: 'middle' }}
+                                onClick={() => this.props.TableStore.setIsModalEdit(true)}
+                            >
+                                添加
+                            </Button>
 
-                    {/* 导出 */}
-                    <Dropdown overlay={this.exportMenu} placement="bottomLeft" >
-                        <Button icon={<UploadOutlined />} style={{ border: 'none', margin: '0 10px 10px 0', verticalAlign: 'middle' }}>
-                            导出<DownOutlined />
-                        </Button>
-                    </Dropdown>
+                            {/* 导出 */}
+                            <Dropdown overlay={this.exportMenu} placement="bottomLeft" >
+                                <Button icon={<UploadOutlined />} style={{ border: 'none', margin: '0 10px 10px 0', verticalAlign: 'middle' }}>
+                                    导出<DownOutlined />
+                                </Button>
+                            </Dropdown>
 
-                    {/* 删除 */}
-                    <Dropdown overlay={this.deleteMenu} placement="bottomLeft" >
-                        <Button icon={<DeleteOutlined />} style={{ border: 'none', margin: '0 10px 10px 0', verticalAlign: 'middle' }}>
-                            删除<DownOutlined />
-                        </Button>
-                    </Dropdown>
-                    {/* 操作记录 */}
-                    <Dropdown overlay={this.mulChangeMenu} placement="bottomLeft" >
-                        <Button icon={<ClockCircleOutlined />}
-                            style={{ margin: '0 10px 10px 0', padding: '0 20px', verticalAlign: 'middle', border: 'none' }}
-                        >
-                            操作记录
-                        </Button>
-                    </Dropdown>
+                            {/* 删除 */}
+                            <Dropdown overlay={this.deleteMenu} placement="bottomLeft" >
+                                <Button icon={<DeleteOutlined />} style={{ border: 'none', margin: '0 10px 10px 0', verticalAlign: 'middle' }}>
+                                    删除<DownOutlined />
+                                </Button>
+                            </Dropdown>
+                            {/* 操作记录 */}
+                            <Dropdown overlay={this.mulChangeMenu} placement="bottomLeft" >
+                                <Button icon={<ClockCircleOutlined />}
+                                    style={{ margin: '0 10px 10px 0', padding: '0 20px', verticalAlign: 'middle', border: 'none' }}
+                                >
+                                    操作记录
+                                </Button>
+                            </Dropdown>
+                        </>
+                    }
 
 
                     {/* 全屏 */}
                     <Button icon={<FullscreenExitOutlined />} style={{ border: 'none', margin: '0 10px 10px 10px', verticalAlign: 'middle', float: 'right' }} />
                     {/* 显示字段 */}
-                    <div style={{ border: 'none', margin: '0 10px 10px 10px', verticalAlign: 'middle', float: 'right' }}>
-                        <Popover placement="bottomRight" content={fieldChoose} trigger="click"
-                            onVisibleChange={visibleChange}
-                        >
-                            <Button icon={<FunnelPlotOutlined />} style={{ border: 'none', margin: '0 10px 10px 0', verticalAlign: 'middle', float: 'right' }} />
-                        </Popover>
-                    </div>
+                    <Tooltip title="显示字段" placement='bottom'>
+                        <div style={{ border: 'none', margin: '0 10px 10px 10px', verticalAlign: 'middle', float: 'right' }}>
+                            <Popover placement="bottomRight" content={fieldChoose} trigger="click"
+                                onVisibleChange={visibleChange}
+                            >
+                                <Button icon={<FunnelPlotOutlined />} style={{ border: 'none', margin: '0 10px 10px 0', verticalAlign: 'middle', float: 'right' }} />
+                            </Popover>
+                        </div>
+                    </Tooltip>
 
 
                     {/* 排序 */}
-                    <div style={{ border: 'none', margin: '0 10px 10px 0', verticalAlign: 'middle', float: 'right' }}>
-                        <Popover placement="bottomRight" content={fieldChoose} trigger="click"
-                            onVisibleChange={visibleChange}
-                        >
-                            <Button icon={<SortDescendingOutlined />} style={{ border: 'none', margin: '0 10px 10px 0', verticalAlign: 'middle', float: 'right' }} />
-                        </Popover>
-                    </div>
+                    <Tooltip title="排序" placement='bottom'>
+                        <div style={{ border: 'none', margin: '0 10px 10px 0', verticalAlign: 'middle', float: 'right' }}>
+                            <Popover placement="bottomRight" content={<SortLayout />} trigger="click" destroyTooltipOnHide="true"
+                            >
+                                <Button icon={<SortDescendingOutlined />} style={{ border: 'none', margin: '0 10px 10px 0', verticalAlign: 'middle', float: 'right' }} />
+                            </Popover>
+                        </div>
+                    </Tooltip>
                     {/* 筛选条件 */}
 
                     <Button icon={<FilterOutlined />} style={{ border: 'none', margin: '0 10px 10px 0', verticalAlign: 'middle', float: 'right' }}>

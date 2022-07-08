@@ -4,7 +4,7 @@
  * @Author: zhihao
  * @Date: 2022-04-17 15:22:43
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-07-07 18:25:24
+ * @LastEditTime: 2022-07-08 12:44:42
  */
 
 import { message, Modal } from 'antd';
@@ -48,6 +48,7 @@ class Table {
 	@observable formData = {};
 	@observable formEdit = false;
 	@observable schema = {};
+	@observable relSortList = [];
 
 
 
@@ -63,7 +64,41 @@ class Table {
 	@action.bound setFieldValue(value) {
 		this.fieldValue = value
 	}
+	@action.bound clearSort() {
+		this.relSortList = [];
+	}
+	sortFunction(objA, objB, id) {
+		let sortList = JSON.parse(sessionStorage.getItem('sort_' + id));
+		for (let index = 0; index < sortList.length; index++) {
+			const element = sortList[index];
+			if (objA[element['fieldInfo']['key']] === objB[element['fieldInfo']['key']]) {
+				continue
+			} else if (element['type'] == 'up') {
+				return objA[element['fieldInfo']['key']] > objB[element['fieldInfo']['key']] ? 1 : -1
+			} else if (element['type'] == 'down') {
+				return objA[element['fieldInfo']['key']] > objB[element['fieldInfo']['key']] ? -1 : 1
+			}
+			return 0
+		}
+	}
 
+	@action.bound getSortDataSource(id) {
+		let iDataSource = toJS([...this.dataSource]);
+		let sortList = JSON.parse(sessionStorage.getItem('sort_' + id));
+		console.log(sortList);
+		if (sortList.length == 0) {
+			iDataSource.sort(function (a, b) {
+				return a['key'] === b['key'] ? 0 : a['key'] > b['key'] ? 1 : -1
+			})
+		}
+		iDataSource.sort((a, b) => this.sortFunction(a, b, id))
+		this.setValue('dataSource', iDataSource)
+		console.log(toJS(iDataSource));
+	}
+	@action.bound changeSort(value) {
+		this.relSortList = value;
+		this.getSortDataSource();
+	}
 	@action.bound setLastColumns() {
 		let iColumns = []
 		this.columns.forEach((item) => {
@@ -94,68 +129,68 @@ class Table {
 		this[key] = value;
 	}
 
-	@action.bound async delOneData(params){
+	@action.bound async delOneData(params) {
 		console.log(params);
 		try {
-			var res = await services.putRequestFormData(services.requestList.delOneData,params);
-			if(isDataExist(res)){
+			var res = await services.putRequestFormData(services.requestList.delOneData, params);
+			if (isDataExist(res)) {
 				Modal.success({
-					content:res.data.msg
+					content: res.data.msg
 				})
-			}else{
+			} else {
 				Modal.error({
-					content:res.data.msg
+					content: res.data.msg
 				})
 			}
 		} catch (error) {
 			return error.code
 		}
 	}
-	@action.bound async delMulData(params){
+	@action.bound async delMulData(params) {
 		try {
-			var res = await services.putRequest(services.requestList.delBatchDel,params);
-			if(isDataExist(res)){
+			var res = await services.putRequest(services.requestList.delBatchDel, params);
+			if (isDataExist(res)) {
 				Modal.success({
-					content:res.data.msg
+					content: res.data.msg
 				})
-			}else{
+			} else {
 				Modal.error({
-					content:res.data.msg
+					content: res.data.msg
 				})
 			}
 		} catch (error) {
-			
+
 		}
-	} 
-	@action.bound async getBatchLog(params){
-		this.setValue('isLoading',true);
-		this.setValue('batchLog',[]);
+	}
+	@action.bound async getBatchLog(params) {
+		this.setValue('isLoading', true);
+		this.setValue('batchLog', []);
 		try {
-			let res = await services.getRequest(services.requestList.getBatchLog,params);
+			let res = await services.getRequest(services.requestList.getBatchLog, params);
 			if (isDataExist(res)) {
-				this.setValue('batchLog',res.data.data);
-				this.setValue('isLoading',false);
+				this.setValue('batchLog', res.data.data);
+				this.setValue('isLoading', false);
 			}
 		} catch (error) {
 			console.log(error);
 		}
 	}
-	@action.bound async getOneData(params){
-		this.setValue('detailData',{});
-		this.setValue('isLoading',true);
+	@action.bound async getOneData(params) {
+		this.setValue('detailData', {});
+		this.setValue('isLoading', true);
 		try {
-			let res = await services.getRequest(services.requestList.getOneData,params);
-			this.setValue('detailData',res.data.data);
+			let res = await services.getRequest(services.requestList.getOneData, params);
+			this.setValue('detailData', res.data.data);
 			let data = {};
 			let field = [];
 			let formObj = toJS(this.detailData['form']);
 			console.log(formObj);
 			let formObj2 = {
-				'formFields':JSON.stringify(formObj),
-				'properties':"{\"displayType\":\"column\",\"labelWidth\":120,\"type\":\"object\"}"
+				'formFields': JSON.stringify(formObj),
+				'properties': "{\"displayType\":\"column\",\"labelWidth\":120,\"type\":\"object\"}"
 			}
-			this.setValue('formArr',restore({'form':formObj2,'fields':toJS(this.detailData['fields'])}))
-			this.setValue('formData',this.detailData['data'])
+			this.setValue('formArr', restore({ 'form': formObj2, 'fields': toJS(this.detailData['fields']) }))
+			this.setValue('formData', this.detailData['data'])
 			data['createPerson'] = this.detailData['data']['createPerson'];
 			data['createTime'] = this.detailData['data']['createTime'];
 			data['updateTime'] = this.detailData['data']['updateTime'];
@@ -170,24 +205,24 @@ class Table {
 			toJS(this.detailData['fields']).forEach(element => {
 				field.push(element);
 			});
-			field.push({'name':'创建人','id':'createPerson'})
-			field.push({'name':'创建时间','id':'createTime'})
-			field.push({'name':'更新时间','id':'updateTime'})
-			this.setValue('modalField',field);
-			this.setValue('modalData',data);
-			this.setValue('isLoading',false);
+			field.push({ 'name': '创建人', 'id': 'createPerson' })
+			field.push({ 'name': '创建时间', 'id': 'createTime' })
+			field.push({ 'name': '更新时间', 'id': 'updateTime' })
+			this.setValue('modalField', field);
+			this.setValue('modalData', data);
+			this.setValue('isLoading', false);
 			console.log(data);
 			console.log(field);
 		} catch (error) {
 			console.log(error);
 		}
 	}
-	@action.bound async mulChange(params){
+	@action.bound async mulChange(params) {
 		try {
-			let res = await services.putRequest(services.requestList.mulChangeData,params);
-			if(isDataExist(res)){
+			let res = await services.putRequest(services.requestList.mulChangeData, params);
+			if (isDataExist(res)) {
 				Modal.success({
-					content:"批量修改数据成功"
+					content: "批量修改数据成功"
 				})
 			}
 		} catch (error) {
@@ -199,8 +234,8 @@ class Table {
 		this.setValue('columns', [])
 		this.setValue('dataSource', [])
 		this.setValue('fieldValue', [])
-		this.setValue('schema',{})
-		this.setValue('isLoading',true);
+		this.setValue('schema', {})
+		this.setValue('isLoading', true);
 		try {
 			if (type == 'myself') {
 				var res = await services.getRequest(services.requestList.getUserData, params);
@@ -226,26 +261,26 @@ class Table {
 			let iFieldValue = [];
 			data.fields.map((item) => {
 				const jsonItem = JSON.parse(item['detailJson']);
-				iColumns.push({ 'title': jsonItem.title, 'dataIndex': item.id, 'key': item.id ,'detailJson':jsonItem,'sorter':(a,b) => a[item['id']] > b[item['id']]});
+				iColumns.push({ 'title': jsonItem.title, 'dataIndex': item.id, 'key': item.id, 'detailJson': jsonItem });
 				iFieldValue.push(item.id)
 			})
 			iFieldValue.push('createPerson')
 			iFieldValue.push('createTime')
 			iFieldValue.push('updateTime')
-			iColumns.push({ 'title': '创建人', 'dataIndex': 'createPerson', 'key': 'createPerson','sorter':(a,b) => a['createPerson'] > b['createPerson']});
-			iColumns.push({ 'title': '创建时间', 'dataIndex': 'createTime', 'key': 'createTime','sorter':(a,b) => a['createTime'] > b['createTime']});
-			iColumns.push({ 'title': '更新时间', 'dataIndex': 'updateTime', 'key': 'updateTime','sorter':(a,b) => a['updateTime'] > b['updateTime']});
-			this.setValue('fieldValue',iFieldValue)
-			this.setValue('modalFieldValue',iFieldValue)
-			this.setValue('columns',iColumns)
-			this.setValue('showColumns',iColumns)
-			this.setValue('lastColumns',iColumns)
-			data.fields.push({'name':'创建人','id':'createPerson'})
-            data.fields.push({'name':'创建时间','id':'createTime'})
-            data.fields.push({'name':'更新时间','id':'updateTime'})
+			iColumns.push({ 'title': '创建人', 'dataIndex': 'createPerson', 'key': 'createPerson' });
+			iColumns.push({ 'title': '创建时间', 'dataIndex': 'createTime', 'key': 'createTime' });
+			iColumns.push({ 'title': '更新时间', 'dataIndex': 'updateTime', 'key': 'updateTime' });
+			this.setValue('fieldValue', iFieldValue)
+			this.setValue('modalFieldValue', iFieldValue)
+			this.setValue('columns', iColumns)
+			this.setValue('showColumns', iColumns)
+			this.setValue('lastColumns', iColumns)
+			data.fields.push({ 'name': '创建人', 'id': 'createPerson' })
+			data.fields.push({ 'name': '创建时间', 'id': 'createTime' })
+			data.fields.push({ 'name': '更新时间', 'id': 'updateTime' })
 			this.setValue('columnsList', data.fields)
-			this.setValue('isLoading',false);
-			this.setValue('schema',getSchema(iColumns,iDataSource));
+			this.setValue('isLoading', false);
+			this.setValue('schema', getSchema(iColumns, iDataSource));
 			console.log(iColumns);
 			console.log(iDataSource);
 		} catch (error) {

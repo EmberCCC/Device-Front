@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-05 10:16:45
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-07-06 22:39:45
+ * @LastEditTime: 2022-07-07 23:22:57
  * @FilePath: \bl-device-manage-test\src\layouts\FormEdit\changeTool.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -29,7 +29,10 @@ export function exChange(item, firstFormId) {
         if (iObj['detailJson'].hasOwnProperty('fieldId')) {
           iObj['fieldId'] = iObj['detailJson']['fieldId'];
         }
-        iObj['typeId'] = keyP.split('_')[0]
+        if (!iObj['detailJson'].hasOwnProperty('typeId')) {
+          iObj['detailJson']['typeId'] = keyP.split('_')[0];
+        }
+        iObj['typeId'] = iObj['detailJson']['typeId']
         iObj['name'] = iObj['detailJson']['title']
         field.push(iObj);
       }
