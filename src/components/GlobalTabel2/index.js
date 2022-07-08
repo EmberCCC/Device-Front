@@ -1,14 +1,14 @@
 /*
  * @Author: your name
  * @Date: 2022-04-07 11:58:39
- * @LastEditTime: 2022-07-08 12:20:20
+ * @LastEditTime: 2022-07-08 15:59:16
  * @LastEditors: EmberCCC 1810888456@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage-test\src\components\GlobalTabel\index.js
  */
-import React from 'react';
+import React, { createRef } from 'react';
 import { inject, observer } from 'mobx-react';
-import { Button, Checkbox, Dropdown, Menu, message, Modal, Popover, Table, Tooltip } from 'antd';
+import { Button, Checkbox, Dropdown, Menu, Modal, Popover, Table } from 'antd';
 import { ClockCircleOutlined, DeleteOutlined, DownOutlined, FilterOutlined, FullscreenExitOutlined, PlusOutlined, SortDescendingOutlined, UploadOutlined, FunnelPlotOutlined } from '@ant-design/icons';
 import GlobalModal from 'components/GlobalModal';
 import { toJS } from 'mobx';
@@ -25,6 +25,7 @@ const ExportJsonExcel = require("js-export-excel");
 @observer
 class GlobalTabel2 extends React.Component {
     render() {
+        const childrenRef = createRef()
         const { isLoading } = this.props.HomeStore
         const { selectedRowKeys, dataSource, columns, lastColumns, PageInfo } = this.props.TableStore;
         /* 表格第一列选择框事件 */
@@ -45,7 +46,11 @@ class GlobalTabel2 extends React.Component {
                 this.props.TableStore.setLastColumns();
             }
         }
-
+        const handleVis = (visible) => {
+            if (visible == false) {
+                childrenRef.current.setSort();
+            }
+        }
         const fieldChoose = (
             <div className='field_list'>
                 <Checkbox.Group onChange={checkChange} defaultValue={this.props.TableStore.fieldValue}>
@@ -100,26 +105,23 @@ class GlobalTabel2 extends React.Component {
                     {/* 全屏 */}
                     <Button icon={<FullscreenExitOutlined />} style={{ border: 'none', margin: '0 10px 10px 10px', verticalAlign: 'middle', float: 'right' }} />
                     {/* 显示字段 */}
-                    <Tooltip title="显示字段" placement='bottom'>
-                        <div style={{ border: 'none', margin: '0 10px 10px 10px', verticalAlign: 'middle', float: 'right' }}>
-                            <Popover placement="bottomRight" content={fieldChoose} trigger="click"
-                                onVisibleChange={visibleChange}
-                            >
-                                <Button icon={<FunnelPlotOutlined />} style={{ border: 'none', margin: '0 10px 10px 0', verticalAlign: 'middle', float: 'right' }} />
-                            </Popover>
-                        </div>
-                    </Tooltip>
+                    <div style={{ border: 'none', margin: '0 10px 10px 10px', verticalAlign: 'middle', float: 'right' }}>
+                        <Popover placement="bottomRight" content={fieldChoose} trigger="click"
+                            onVisibleChange={visibleChange}
+                        >
+                            <Button icon={<FunnelPlotOutlined />} style={{ border: 'none', margin: '0 10px 10px 0', verticalAlign: 'middle', float: 'right' }} />
+                        </Popover>
+                    </div>
 
 
                     {/* 排序 */}
-                    <Tooltip title="排序" placement='bottom'>
-                        <div style={{ border: 'none', margin: '0 10px 10px 0', verticalAlign: 'middle', float: 'right' }}>
-                            <Popover placement="bottomRight" content={<SortLayout />} trigger="click" destroyTooltipOnHide="true"
-                            >
-                                <Button icon={<SortDescendingOutlined />} style={{ border: 'none', margin: '0 10px 10px 0', verticalAlign: 'middle', float: 'right' }} />
-                            </Popover>
-                        </div>
-                    </Tooltip>
+                    <div style={{ border: 'none', margin: '0 10px 10px 0', verticalAlign: 'middle', float: 'right' }}>
+                        <Popover placement="bottomRight" content={<SortLayout cRef={childrenRef} />} trigger="click" destroyTooltipOnHide="true"
+                            onVisibleChange={handleVis}
+                        >
+                            <Button icon={<SortDescendingOutlined />} style={{ border: 'none', margin: '0 10px 10px 0', verticalAlign: 'middle', float: 'right' }} />
+                        </Popover>
+                    </div>
                     {/* 筛选条件 */}
 
                     <Button icon={<FilterOutlined />} style={{ border: 'none', margin: '0 10px 10px 0', verticalAlign: 'middle', float: 'right' }}>

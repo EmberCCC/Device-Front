@@ -4,7 +4,7 @@
  * @Author: zhihao
  * @Date: 2022-04-17 15:22:43
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-07-08 12:44:42
+ * @LastEditTime: 2022-07-08 15:54:51
  */
 
 import { message, Modal } from 'antd';
@@ -71,6 +71,11 @@ class Table {
 		let sortList = JSON.parse(sessionStorage.getItem('sort_' + id));
 		for (let index = 0; index < sortList.length; index++) {
 			const element = sortList[index];
+			if(!objA.hasOwnProperty(element['fieldInfo']['key'])){
+				return 1
+			}else if(!objB.hasOwnProperty(element['fieldInfo']['key'])){
+				return -1
+			}
 			if (objA[element['fieldInfo']['key']] === objB[element['fieldInfo']['key']]) {
 				continue
 			} else if (element['type'] == 'up') {
