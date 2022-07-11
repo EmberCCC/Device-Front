@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-02 03:21:54
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-07-08 06:50:57
+ * @LastEditTime: 2022-07-10 16:26:54
  * @FilePath: \bl-device-manage-test\src\layouts\FormLayout\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -13,6 +13,7 @@ import { inject, observer } from 'mobx-react';
 import { toJS } from 'mobx';
 import { restore } from 'layouts/FormEdit/changeTool';
 import { getCheckArr } from './formUtil';
+import { Self_divider } from 'layouts/FormEdit/self_item/self_divider';
 
 
 const FormLayout = observer(({ HomeStore, FormStore }) => {
@@ -42,7 +43,8 @@ const FormLayout = observer(({ HomeStore, FormStore }) => {
   return (
     <div>
       <div className='form_layout'>
-        <FormRender schema={schema['root']} form={form} onFinish={onFinish} style={{ overflowY: 'auto' }} debug='true' />
+        <FormRender schema={schema['root']} widgets={{self_divider:Self_divider}}
+          form={form} onFinish={onFinish} style={{ overflowY: 'auto' }} debug='true' />
       </div>
       <Button onClick={form.submit} type="primary">提交</Button>
     </div>

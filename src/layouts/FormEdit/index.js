@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-01 20:45:23
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-07-07 22:20:12
+ * @LastEditTime: 2022-07-10 16:05:01
  * @FilePath: \bl-device-manage-test\src\layouts\FormEdit\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -18,6 +18,8 @@ import { toJS } from 'mobx';
 import './index.css'
 import { exChange, restore } from './changeTool';
 import { Submit_check } from './self_item/submit_check';
+import { Self_divider } from './self_item/self_divider';
+
 
 
 
@@ -69,7 +71,8 @@ const FormEdit = observer(({ HomeStore, FormStore }) => {
           extraButtons={[false, false, false, false]}
           widgets={{
             link_item: Link_item,
-            submit_check: Submit_check
+            submit_check: Submit_check,
+            self_divider: Self_divider
           }}
         />
       </div>

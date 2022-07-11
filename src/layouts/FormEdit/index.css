@@ -56,11 +56,22 @@
 }
 .mid-layout{
     background-color: white;
+    margin-left: 20px;
+    margin-right: 20px;
 }
 .field-wrapper{
+    border: none !important;
     background-color: white !important;
     
 }
+.pl0 .field-wrapper:hover{
+    background-color: rgb(247, 247, 247) !important;
+}
+.selected-field-wrapper{
+    outline: none !important;
+    background-color: #ebf8fb !important
+}
+
 .right-layout{
     background-color: white;
 }
