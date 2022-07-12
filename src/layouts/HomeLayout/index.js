@@ -15,7 +15,6 @@ import { Layout, Drawer,Select } from 'antd';
 
 import ErrorNotFound from './ErrorNotFound';
 import './index.less';
-import { closeWebSocket } from 'routes/BasicRouter/webSocket';
 
 const { Content } = Layout;
 @withRouter
