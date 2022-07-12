@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-01-24 16:24:19
- * @LastEditTime: 2022-07-07 16:15:31
+ * @LastEditTime: 2022-07-13 06:23:50
  * @LastEditors: EmberCCC 1810888456@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage\src\layouts\LoginPage\index.js
@@ -12,7 +12,6 @@ import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { withRouter } from 'react-router-dom';
 import { inject, observer } from 'mobx-react';
 import { setCookie, clearCookie } from 'utils/dataTools';
-import './index.less';
 import LoginLayout from './loginLayout';
 
 @withRouter
@@ -89,7 +88,7 @@ class LoginPage extends React.Component {
             <div className='third_item'>
               <div className='t_img'></div>
               <div className='t_title'>手机扫码管理设备</div>
-              <div className='t_content'>手机扫设备上的二维码 > 更新设备状态 > 发现问题报修 > 报修消息实时通知</div>
+              <div className='t_content'>手机扫设备上的二维码 `{'>'}` 更新设备状态 `{'>'}` 发现问题报修 `{'>'}` 报修消息实时通知</div>
             </div>
             <div className='third_item'>
               <div className='t_img'></div>

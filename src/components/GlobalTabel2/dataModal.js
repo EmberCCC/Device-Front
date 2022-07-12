@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-06-30 09:07:55
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-07-07 18:27:10
+ * @LastEditTime: 2022-07-13 06:20:20
  * @FilePath: \bl-device-manage-test\src\components\GlobalTabel2\dataModal.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -119,13 +119,89 @@ class DataModal extends Component {
                 <Checkbox.Group onChange={checkChange} defaultValue={this.props.TableStore.modalFieldValue}>
                     {modalField.map((item, index) => {
                         return <>
-                            <Checkbox value={item.id} key={index} style={{ width: '300px' }}>{item.name}</Checkbox>
+                            <Checkbox value={item.id} key={index} style={{ width: '300px',paddingLeft:'20px' }}>{item.name}</Checkbox>
                             <br />
                         </>
                     })}
                 </Checkbox.Group>
             </>
         )
+        const getItemInfo = () => {
+            // console.log(toJS(this.props.TableStore.detailData['logs']));
+            if (this.props.TableStore.detailData['logs']) {
+                return (
+                    this.props.TableStore.detailData['logs'].map((item, index) => {
+                        console.log(toJS(this.props.TableStore.detailData['fields']));
+                        console.log(toJS(item['changeNum']));
+                        console.log(toJS(item['createPerson']));
+                        console.log(toJS(item['createTime']));
+                        const changeContent = JSON.parse(toJS(item['changeContent']))
+                        let dex = 0
+                        let infoItem = []
+                        for (const key in changeContent) {
+                            if (Object.hasOwnProperty.call(changeContent, key)) {
+                                const element = changeContent[key];
+                                infoItem[dex] = new Object()
+                                infoItem[dex].front = element[0]
+                                infoItem[dex].behind= element[1]
+                                toJS(this.props.TableStore.detailData['fields']).filter((info) => {
+                                    if (info['id'] == key) {
+                                        infoItem[dex].title = JSON.parse(info['detailJson'])['title'];
+                                    }
+                                })
+                            }
+                            dex = dex + 1;
+                        }
+                        return (
+                            <div className='right_content_item'>
+                                <div className='right_content_header'>
+                                    <div className='item_header_left'>
+                                        1
+                                    </div>
+                                    <div className='item_header_right'>
+                                        <div className='item_name'>
+                                            {item['createPerson']}
+                                        </div>
+                                        <div className='item_time'>
+                                            修改 {item['createTime']}
+                                        </div>
+                                        <div className='item_count'>
+                                            有{item['changeNum']}处更改
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className='right_content_content'>
+                                    {
+                                        infoItem.map((item, key) => {
+                                            return <>
+                                                <div className='item_title'>{item.title}:</div>
+                                                {
+                                                    item.front != '' && <div className='item_front'>
+                                                        <div className='tag'>{item.front}</div>
+                                                    </div>
+                                                }
+                                                <div className='item_behind'>
+                                                    <div className='tag'>{item.behind}</div>
+                                                </div>
+                                                {
+                                                    key != infoItem.length - 1 && <div className='item_line'></div>
+                                                }
+                                            </>
+                                        })
+                                    }
+
+                                </div>
+                            </div>
+                        )
+                        // console.log(JSON.parse(toJS(item['changeContent'])));
+                        // this.props.TableStore.detailData['fields'].filter((info) => {
+                        //     return info['id'] == item[]
+                        // })
+                    })
+                )
+            }
+
+        }
         return (
             <Spin spinning={this.props.TableStore.isLoading} size='large' tip='Loading..'>
                 <div className='main_modal'>
@@ -173,6 +249,10 @@ class DataModal extends Component {
                                 <Radio.Button value={'2'}>评论</Radio.Button>
                             </Radio.Group>
                         </div>
+                        <div className='right_content'>
+                            {getItemInfo()}
+                        </div>
+
                     </div>
                 </div>
                 {
