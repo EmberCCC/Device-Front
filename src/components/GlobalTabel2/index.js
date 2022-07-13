@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-04-07 11:58:39
- * @LastEditTime: 2022-07-13 15:49:04
+ * @LastEditTime: 2022-07-13 18:10:42
  * @LastEditors: EmberCCC 1810888456@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage-test\src\components\GlobalTabel\index.js
@@ -189,8 +189,22 @@ class GlobalTabel2 extends React.Component {
                         title={firstFormName[this.props.HomeStore.firstFormId]}
                         width={800}
                         visible={this.props.TableStore.isModalEdit}
-                        onOk={e => this.props.TableStore.setIsModalEdit(false)}
-                        onCancel={e => { this.props.TableStore.setDataPageModalVis(false); this.props.TableStore.setIsModalEdit(false); }}
+                        onOk={e => {
+                            this.props.TableStore.setIsModalEdit(false)
+                            if (this.props.TableStore.model == 'subitAndManage') {
+                                this.props.TableStore.getAllData({ formId: this.props.HomeStore.firstFormId }, 'myself')
+                            } else {
+                                this.props.TableStore.getAllData({ formId: this.props.HomeStore.firstFormId }, 'all')
+                            }
+                        }}
+                        onCancel={e => {
+                            this.props.TableStore.setDataPageModalVis(false); this.props.TableStore.setIsModalEdit(false);
+                            if (this.props.TableStore.model == 'subitAndManage') {
+                                this.props.TableStore.getAllData({ formId: this.props.HomeStore.firstFormId }, 'myself')
+                            } else {
+                                this.props.TableStore.getAllData({ formId: this.props.HomeStore.firstFormId }, 'all')
+                            }
+                        }}
                         footer={null}
                         children={
                             <div className='modal_content'>
@@ -216,46 +230,6 @@ class GlobalTabel2 extends React.Component {
         );
     }
 
-
-    commDele = (data) => {
-        let flag = true;
-        data.map((item) => {
-            var formdata = new FormData();
-            formdata.append('formId', parseInt(toJS(this.props.HomeStore.firstFormId)))
-            formdata.append('dataId', parseInt(item.key))
-
-            var requestOptions = {
-                method: 'POST',
-                headers: {
-                    'Authorization': injectSelfToken()
-                },
-                body: formdata
-            };
-
-            fetch("/data/delete", requestOptions)
-                .then(response => response.text())
-                .then(result => console.log(result))
-                .catch(error => {
-                    console.log('error', error)
-                    flag = false
-                });
-        })
-        console.log(flag);
-        if (flag == true) {
-            Modal.success({
-                content: '数据删除成功'
-            })
-        } else {
-            Modal.error({
-                content: '数据删除失败'
-            })
-        }
-        if (this.props.TableStore.model == 'subitAndManage') {
-            this.props.TableStore.getAllData({ formId: this.props.HomeStore.firstFormId }, 'myself')
-        } else {
-            this.props.TableStore.getAllData({ formId: this.props.HomeStore.firstFormId }, 'all')
-        }
-    }
 
     commExport = (data) => {
         let option = {}
@@ -302,7 +276,6 @@ class GlobalTabel2 extends React.Component {
                 okText: '确定',
                 cancelText: '取消',
                 onOk: () => {
-                    // this.commDele(toJS(this.props.TableStore.selectedIdsList))
                     if (this.props.TableStore.selectedRowKeys.length == 1) {
                         this.props.TableStore.delOneData({ 'formId': this.props.HomeStore.firstFormId, 'dataId': toJS(this.props.TableStore.selectedRowKeys)[0] }).then(() => {
                             if (this.props.TableStore.model == 'subitAndManage') {

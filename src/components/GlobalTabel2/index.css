@@ -166,6 +166,7 @@
     padding-left: 20px;
     padding-right: 20px;
     padding-top: 20px;
+    overflow-y: auto;
 }
 
 .mul_title {
@@ -514,7 +515,9 @@
 }
 
 .sel_title_left {
-    width: 40%;
+    width: 20%;
+    margin-right: 20px;
+    padding-left: 6px;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -527,10 +530,9 @@
 }
 
 .sel_title span {
-    margin-right: 20px;
-    text-align: center;
+
 }
 
 .sel_del {
-    margin-left: 100px;
+    margin-left: 50px;
 }

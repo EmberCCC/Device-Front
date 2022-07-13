@@ -3,7 +3,7 @@ import { inject, observer } from 'mobx-react';
 import { NavLink, withRouter } from 'react-router-dom';
 import classnames from 'classnames';
 import './index.less';
-import {  BellTwoTone,CarryOutTwoTone,  FolderOutlined, PlayCircleTwoTone,SoundTwoTone } from '@ant-design/icons';
+import { BellTwoTone, CarryOutTwoTone, FolderOutlined, PlayCircleTwoTone, SoundTwoTone } from '@ant-design/icons';
 import { Menu, Layout, Badge } from 'antd';
 import { toJS } from 'mobx';
 const { Sider } = Layout;
@@ -11,7 +11,7 @@ const SubMenu = Menu.SubMenu;
 
 let firstMount = false;
 @withRouter
-@inject('HomeStore', 'MessageStore','TableStore')
+@inject('HomeStore', 'MessageStore', 'TableStore')
 @observer
 class MenuLayout extends Component {
   constructor(props) {
@@ -30,7 +30,8 @@ class MenuLayout extends Component {
     const { todoCount, createCount, handleCount, copyCount } = this.props.MessageStore;
     return (
       <Sider
-      theme='light'
+        theme='light'
+        style={{overflow:'auto'}}
       >
         <div id='manu_container'>
           <NavLink to={{ pathname: "/message/todo" }} onClick={this.loadData}>

@@ -4,7 +4,7 @@
  * @Author: zhihao
  * @Date: 2022-04-17 15:22:43
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-07-13 15:58:40
+ * @LastEditTime: 2022-07-13 19:26:42
  */
 
 import { message, Modal } from 'antd';
@@ -246,6 +246,65 @@ class Table {
 				var res = await services.getRequest(services.requestList.getUserData, params);
 			} else {
 				var res = await services.getRequest(services.requestList.getAllData, params);
+			}
+			let data = res.data.data;
+			let iColumns = []
+			let iDataSource = [];
+			data.fieldsValue.map((item) => {
+				let obj = {}
+				obj.createPerson = item.createPerson;
+				obj.createTime = item.createTime;
+				obj.updateTime = item.updateTime;
+				obj.key = item.id;
+				let iObj = JSON.parse(toJS(item.formData))
+				for (const front in iObj) {
+					obj[front] = iObj[front]
+				}
+				iDataSource.push(obj)
+			})
+			this.setValue('dataSource', iDataSource)
+			let iFieldValue = [];
+			data.fields.map((item) => {
+				let jsonItem = JSON.parse(item['detailJson']);
+				jsonItem['fieldId'] = item['id'];
+				iColumns.push({ 'title': jsonItem.title, 'dataIndex': item.id, 'key': item.id, 'detailJson': jsonItem});
+				iFieldValue.push(item.id)
+			})
+			iFieldValue.push('createPerson')
+			iFieldValue.push('createTime')
+			iFieldValue.push('updateTime')
+			iColumns.push({ 'title': '创建人', 'dataIndex': 'createPerson', 'key': 'createPerson' });
+			iColumns.push({ 'title': '创建时间', 'dataIndex': 'createTime', 'key': 'createTime' });
+			iColumns.push({ 'title': '更新时间', 'dataIndex': 'updateTime', 'key': 'updateTime' });
+			this.setValue('fieldValue', iFieldValue)
+			this.setValue('modalFieldValue', iFieldValue)
+			this.setValue('columns', iColumns)
+			this.setValue('showColumns', iColumns)
+			this.setValue('lastColumns', iColumns)
+			data.fields.push({ 'name': '创建人', 'id': 'createPerson' })
+			data.fields.push({ 'name': '创建时间', 'id': 'createTime' })
+			data.fields.push({ 'name': '更新时间', 'id': 'updateTime' })
+			this.setValue('columnsList', data.fields)
+			this.setValue('isLoading', false);
+			this.setValue('schema', getSchema(iColumns, iDataSource));
+			console.log(iColumns);
+			console.log(iDataSource);
+		} catch (error) {
+			console.log(error);
+		}
+	}
+
+	@action.bound async getScreenData(params,type){
+		this.setValue('columns', [])
+		this.setValue('dataSource', [])
+		this.setValue('fieldValue', [])
+		this.setValue('schema', {})
+		this.setValue('isLoading', true);
+		try {
+			if (type == 'myself') {
+				var res = await services.putRequest(services.requestList.getScreenDataUser, params);
+			} else {
+				var res = await services.putRequest(services.requestList.getScreenData, params);
 			}
 			let data = res.data.data;
 			let iColumns = []
