@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-04-07 11:58:39
- * @LastEditTime: 2022-07-08 15:59:16
+ * @LastEditTime: 2022-07-13 15:49:04
  * @LastEditors: EmberCCC 1810888456@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage-test\src\components\GlobalTabel\index.js
@@ -19,6 +19,7 @@ import { injectSelfToken } from 'utils/request';
 import FormLayout from 'layouts/FormLayout';
 import MulChange from './mulChange';
 import SortLayout from './sortLayout';
+import SelectLayout from './selectLayout';
 
 const ExportJsonExcel = require("js-export-excel");
 @inject('HomeStore', 'TableStore')
@@ -63,6 +64,9 @@ class GlobalTabel2 extends React.Component {
                 </Checkbox.Group>
             </div>
         )
+        const handleSelVis = (visible) => {
+            console.log(visible);
+        }
         return (
             <div>
                 <div className='search_bar'>
@@ -124,32 +128,50 @@ class GlobalTabel2 extends React.Component {
                     </div>
                     {/* 筛选条件 */}
 
-                    <Button icon={<FilterOutlined />} style={{ border: 'none', margin: '0 10px 10px 0', verticalAlign: 'middle', float: 'right' }}>
-                        筛选条件
-                    </Button>
+                    <div style={{ border: 'none', margin: '0 10px 10px 0', verticalAlign: 'middle', float: 'right' }}>
+                        <Popover placement="bottomRight" content={<SelectLayout />} trigger="click" destroyTooltipOnHide="true"
+                            onVisibleChange={handleSelVis}
+                        >
+                            <Button icon={<FilterOutlined />} style={{ border: 'none', margin: '0 10px 10px 0', verticalAlign: 'middle', float: 'right' }} />
+                        </Popover>
+                    </div>
+
                 </div>
-                <Table
-                    rowSelection={{
-                        type: 'checkbox',
-                        ...rowSelection,
-                    }}
-                    bordered
-                    rowKey={record => record.key}
-                    dataSource={dataSource}
-                    columns={lastColumns}
-                    pagination={PageInfo}
-                    // onChange={this.onChange}
-                    loading={isLoading}
-                    onRow={(key, record) => {
-                        return {
-                            onClick: event => {
-                                this.props.TableStore.getOneData({ 'formId': this.props.HomeStore.firstFormId, 'dataId': key.key })
-                                this.props.TableStore.setDataPageModalVis(true);
-                                this.props.TableStore.setValue('itemIndex', record)
-                            }, // 点击行
-                        };
-                    }}
-                />
+                {
+                    this.props.TableStore.model != 'look' ? <Table
+                        rowSelection={{
+                            type: 'checkbox',
+                            ...rowSelection,
+                        }}
+                        // scroll={{x:1500}}
+                        bordered
+                        rowKey={record => record.key}
+                        dataSource={dataSource}
+                        columns={lastColumns}
+                        pagination={PageInfo}
+                        // onChange={this.onChange}
+                        loading={isLoading}
+                        onRow={(key, record) => {
+                            return {
+                                onClick: event => {
+                                    this.props.TableStore.getOneData({ 'formId': this.props.HomeStore.firstFormId, 'dataId': key.key })
+                                    this.props.TableStore.setDataPageModalVis(true);
+                                    this.props.TableStore.setValue('itemIndex', record)
+                                }, // 点击行
+                            };
+                        }}
+                    /> :
+                        <Table
+                            bordered
+                            rowKey={record => record.key}
+                            dataSource={dataSource}
+                            columns={lastColumns}
+                            pagination={PageInfo}
+                            // onChange={this.onChange}
+                            loading={isLoading}
+                        />
+                }
+
                 {
                     this.props.TableStore.dataPageModalVis && <GlobalModal
                         title={firstFormName[this.props.HomeStore.firstFormId]}

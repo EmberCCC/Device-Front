@@ -4,7 +4,7 @@
  * @Author: zhihao
  * @Date: 2022-04-17 15:22:43
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-07-08 15:54:51
+ * @LastEditTime: 2022-07-13 15:58:40
  */
 
 import { message, Modal } from 'antd';
@@ -265,8 +265,9 @@ class Table {
 			this.setValue('dataSource', iDataSource)
 			let iFieldValue = [];
 			data.fields.map((item) => {
-				const jsonItem = JSON.parse(item['detailJson']);
-				iColumns.push({ 'title': jsonItem.title, 'dataIndex': item.id, 'key': item.id, 'detailJson': jsonItem });
+				let jsonItem = JSON.parse(item['detailJson']);
+				jsonItem['fieldId'] = item['id'];
+				iColumns.push({ 'title': jsonItem.title, 'dataIndex': item.id, 'key': item.id, 'detailJson': jsonItem});
 				iFieldValue.push(item.id)
 			})
 			iFieldValue.push('createPerson')

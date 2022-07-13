@@ -292,6 +292,7 @@
 }
 
 .sort_layout {
+    position: relative;
     width: 380px;
 }
 
@@ -301,9 +302,9 @@
     background-color: white;
 }
 
-.sort_add {}
 
 .sort_list {
+    overflow-y: auto;
     max-height: 300px;
     margin: 0 5px 10px 20px;
 }
@@ -403,7 +404,8 @@
     line-height: 20px;
     font-size: 12px;
 }
-.item_header_right{
+
+.item_header_right {
     margin-left: 10px;
     display: flex;
     flex: row;
@@ -411,35 +413,42 @@
     width: 100%;
     flex-wrap: wrap;
 }
-.item_name{
+
+.item_name {
     width: 45%;
     font-weight: 700;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
 }
-.item_time{
+
+.item_time {
     color: #91a1b7;
     font-size: 12px;
     width: 45%;
 }
-.item_count{
+
+.item_count {
     width: 45%;
     color: #5e6d82;
 }
-.right_content_header{
+
+.right_content_header {
     display: flex;
     flex-direction: row;
 }
-.right_content_content{
+
+.right_content_content {
     display: flex;
     flex-direction: column;
 }
-.item_title{
+
+.item_title {
     color: #5e6d82;
     font-size: 12px;
 }
-.item_front{
+
+.item_front {
     border-radius: 10px;
     width: fit-content;
     padding-left: 5px;
@@ -450,7 +459,8 @@
     margin-bottom: 5px;
     cursor: pointer;
 }
-.item_behind{
+
+.item_behind {
     border-radius: 10px;
     cursor: pointer;
     padding-left: 5px;
@@ -461,9 +471,66 @@
     border-bottom: solid #4b4b4b;
     border-width: 1px 0 0;
 }
-.item_line{
+
+.item_line {
     width: 100%;
     margin: 24px 0;
     border: solid #e9e9e9;
     border-width: 1px 0 0;
+}
+
+.select_main {
+    width: 350px;
+    max-height: 200px;
+    font-size: 14px;
+    /* padding-left: 10px;
+    padding-bottom: 10px; */
+    overflow-y: auto;
+}
+
+.select_title {
+    height: 40px;
+    padding: 15px 20px 0;
+    color: #5e6d82;
+    vertical-align: middle;
+}
+
+.select_bottom {
+    height: 50px;
+    padding: 8px 20px;
+    border-top: 1px solid #e9e9e9;
+}
+
+.selbtn {
+    margin-right: 15px;
+}
+
+.sel_title {
+    padding: 8px 20px;
+    align-content: center;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.sel_title_left {
+    width: 40%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.select_content {
+    width: 100%;
+    overflow: auto;
+    max-height: 50vh;
+}
+
+.sel_title span {
+    margin-right: 20px;
+    text-align: center;
+}
+
+.sel_del {
+    margin-left: 100px;
 }

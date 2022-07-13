@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-06-30 09:07:55
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-07-13 06:20:20
+ * @LastEditTime: 2022-07-13 15:56:49
  * @FilePath: \bl-device-manage-test\src\components\GlobalTabel2\dataModal.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -25,9 +25,13 @@ class DataModal extends Component {
         const getExactData = (formName) => {
             if (typeof (formArr[formName]) != 'undefined') {
                 const element = formArr[formName]['properties'];
+                console.log(toJS(element));
+                console.log(toJS(modalField));
                 return (
                     modalField.map((item) => {
-                        if (modalFieldValue.includes(item['id']) && !(['createPerson', 'createTime', 'updateTime'].indexOf(item['id']) > -1)) {
+                        console.log(toJS(item));
+                        console.log(toJS(element[item['id']]));
+                        if (modalFieldValue.includes(item['id']) && !(['createPerson', 'createTime', 'updateTime'].indexOf(item['id']) > -1) && element.hasOwnProperty(item['id'])) {
                             return (
                                 <div className='item_content' key={item['fieldId']}>
                                     <div className='item_title'>
