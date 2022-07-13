@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-01 20:45:23
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-07-10 16:05:01
+ * @LastEditTime: 2022-07-13 20:19:21
  * @FilePath: \bl-device-manage-test\src\layouts\FormEdit\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -34,6 +34,7 @@ const FormEdit = observer(({ HomeStore, FormStore }) => {
       console.log(toJS(FormStore.formField));
       setSchema(restore(toJS(FormStore.formField)))
     });
+    console.log(111);
   }, []);
   const look = () => {
     setLookItem(ref.current.getValue())

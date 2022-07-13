@@ -290,14 +290,21 @@
     padding-left: 0;
     padding-right: 0;
     padding-bottom: 0;
+    padding-top: 0;
 }
-
+.sel_check{
+    width: 80%;
+    margin: 0 auto;
+    margin-bottom: 4px;
+}
 .sort_layout {
     position: relative;
     width: 380px;
 }
 
 .sort_add button {
+    margin-top: 5px;
+    margin-bottom: 5px;
     border: none;
     color: #0db3a6;
     background-color: white;
@@ -482,11 +489,10 @@
 
 .select_main {
     width: 350px;
-    max-height: 200px;
+    max-height: 300px;
     font-size: 14px;
     /* padding-left: 10px;
     padding-bottom: 10px; */
-    overflow-y: auto;
 }
 
 .select_title {
@@ -526,12 +532,9 @@
 .select_content {
     width: 100%;
     overflow: auto;
-    max-height: 50vh;
+    max-height: 150px
 }
 
-.sel_title span {
-
-}
 
 .sel_del {
     margin-left: 50px;

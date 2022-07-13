@@ -4,7 +4,7 @@
  * @Author: zhihao
  * @Date: 2022-04-17 15:22:43
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-07-13 19:26:42
+ * @LastEditTime: 2022-07-14 00:05:59
  */
 
 import { message, Modal } from 'antd';
@@ -49,6 +49,7 @@ class Table {
 	@observable formEdit = false;
 	@observable schema = {};
 	@observable relSortList = [];
+	@observable allData = [];
 
 
 
@@ -71,9 +72,9 @@ class Table {
 		let sortList = JSON.parse(sessionStorage.getItem('sort_' + id));
 		for (let index = 0; index < sortList.length; index++) {
 			const element = sortList[index];
-			if(!objA.hasOwnProperty(element['fieldInfo']['key'])){
+			if (!objA.hasOwnProperty(element['fieldInfo']['key'])) {
 				return 1
-			}else if(!objB.hasOwnProperty(element['fieldInfo']['key'])){
+			} else if (!objB.hasOwnProperty(element['fieldInfo']['key'])) {
 				return -1
 			}
 			if (objA[element['fieldInfo']['key']] === objB[element['fieldInfo']['key']]) {
@@ -216,8 +217,6 @@ class Table {
 			this.setValue('modalField', field);
 			this.setValue('modalData', data);
 			this.setValue('isLoading', false);
-			console.log(data);
-			console.log(field);
 		} catch (error) {
 			console.log(error);
 		}
@@ -241,6 +240,7 @@ class Table {
 		this.setValue('fieldValue', [])
 		this.setValue('schema', {})
 		this.setValue('isLoading', true);
+		this.setValue('allData', []);
 		try {
 			if (type == 'myself') {
 				var res = await services.getRequest(services.requestList.getUserData, params);
@@ -250,26 +250,47 @@ class Table {
 			let data = res.data.data;
 			let iColumns = []
 			let iDataSource = [];
+			let iFieldValue = [];
+			data.fields.map((item) => {
+				let jsonItem = JSON.parse(item['detailJson']);
+				jsonItem['fieldId'] = item['id'];
+				iColumns.push({ 'title': jsonItem.title, 'dataIndex': item.id, 'key': item.id, 'detailJson': jsonItem });
+				iFieldValue.push(item.id)
+			})
 			data.fieldsValue.map((item) => {
 				let obj = {}
 				obj.createPerson = item.createPerson;
 				obj.createTime = item.createTime;
 				obj.updateTime = item.updateTime;
 				obj.key = item.id;
+
 				let iObj = JSON.parse(toJS(item.formData))
 				for (const front in iObj) {
 					obj[front] = iObj[front]
+					iColumns.map((info) => {
+						if (info['key'] == front && ['4', '6'].indexOf(info['detailJson']['typeId']) > -1) {
+							let index = info['detailJson']['enum'].indexOf(iObj[front])
+							obj[front] = info['detailJson']['enumNames'][index];
+						} else if (info['key'] == front && ['5', '7'].indexOf(info['detailJson']['typeId']) > -1) {
+							obj[front] = ""
+							// console.log(typeof (iObj[front]));
+							let iArr = iObj[front].substring(1, iObj[front].length - 1).split(',')
+							iArr.map((one, index) => {
+								let oneIndex = info['detailJson']['enum'].findIndex(item => item.charCodeAt() == one.substring(1,one.length - 1).charCodeAt())
+								if (index == 0) {
+									obj[front] += info['detailJson']['enumNames'][oneIndex]
+								} else {
+									obj[front] += ","
+									obj[front] += info['detailJson']['enumNames'][oneIndex]
+								}
+							})
+						}
+					})
 				}
 				iDataSource.push(obj)
 			})
 			this.setValue('dataSource', iDataSource)
-			let iFieldValue = [];
-			data.fields.map((item) => {
-				let jsonItem = JSON.parse(item['detailJson']);
-				jsonItem['fieldId'] = item['id'];
-				iColumns.push({ 'title': jsonItem.title, 'dataIndex': item.id, 'key': item.id, 'detailJson': jsonItem});
-				iFieldValue.push(item.id)
-			})
+			this.setValue('allData', iDataSource)
 			iFieldValue.push('createPerson')
 			iFieldValue.push('createTime')
 			iFieldValue.push('updateTime')
@@ -294,7 +315,7 @@ class Table {
 		}
 	}
 
-	@action.bound async getScreenData(params,type){
+	@action.bound async getScreenData(params, type) {
 		this.setValue('columns', [])
 		this.setValue('dataSource', [])
 		this.setValue('fieldValue', [])
@@ -309,6 +330,19 @@ class Table {
 			let data = res.data.data;
 			let iColumns = []
 			let iDataSource = [];
+			let iFieldValue = [];
+			data.fields.map((item) => {
+				let jsonItem = JSON.parse(item['detailJson']);
+				jsonItem['fieldId'] = item['id'];
+				let obj = {}
+				if (['4', '5', '6', '7'].indexOf(jsonItem['typeId']) > -1) {
+					jsonItem['enum'].map((item, index) => {
+						obj[item] = jsonItem['enumNames'][index]
+					})
+				}
+				iColumns.push({ 'title': jsonItem.title, 'dataIndex': item.id, 'key': item.id, 'detailJson': jsonItem, 'exchange': obj });
+				iFieldValue.push(item.id)
+			})
 			data.fieldsValue.map((item) => {
 				let obj = {}
 				obj.createPerson = item.createPerson;
@@ -322,13 +356,6 @@ class Table {
 				iDataSource.push(obj)
 			})
 			this.setValue('dataSource', iDataSource)
-			let iFieldValue = [];
-			data.fields.map((item) => {
-				let jsonItem = JSON.parse(item['detailJson']);
-				jsonItem['fieldId'] = item['id'];
-				iColumns.push({ 'title': jsonItem.title, 'dataIndex': item.id, 'key': item.id, 'detailJson': jsonItem});
-				iFieldValue.push(item.id)
-			})
 			iFieldValue.push('createPerson')
 			iFieldValue.push('createTime')
 			iFieldValue.push('updateTime')
