@@ -2,19 +2,18 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-06-30 09:07:55
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-07-14 00:29:19
+ * @LastEditTime: 2022-07-19 15:51:41
  * @FilePath: \bl-device-manage-test\src\components\GlobalTabel2\dataModal.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 import { FunnelPlotOutlined } from '@ant-design/icons'
-import { Button, Checkbox, Modal, Popover, Spin } from 'antd'
+import { Button, Checkbox, Modal, Popover, Spin, Tabs } from 'antd'
 import { Radio } from 'components/BLComps'
 import { firstFormName } from 'constants/status_constant'
 import FormData from 'layouts/FormLayout/formData'
 import { toJS } from 'mobx'
 import { inject, observer } from 'mobx-react'
 import React, { Component } from 'react'
-import { injectSelfToken } from 'utils/request'
 import './index.css'
 
 @inject('TableStore', 'HomeStore', 'FormStore')
@@ -25,25 +24,24 @@ class DataModal extends Component {
         const getExactData = (formName) => {
             if (typeof (formArr[formName]) != 'undefined') {
                 const element = formArr[formName]['properties'];
+                console.log(toJS(element));
+                console.log(toJS(modalFieldValue));
+                console.log(toJS(modalField));
                 return (
-                    modalField.map((item) => {
+                    modalField.map((item, index) => {
                         if (modalFieldValue.includes(item['id']) && !(['createPerson', 'createTime', 'updateTime'].indexOf(item['id']) > -1) && element.hasOwnProperty(item['id'])) {
-                            console.log(toJS(element));
-                            console.log(toJS(modalData));
-                            console.log(toJS(item));
                             let showData = modalData[item['id']]
                             let jsonData = JSON.parse(item['detailJson'])
-                            console.log(jsonData);
-                            if(modalData.hasOwnProperty(item['id'])){
-                                if(jsonData['typeId'] == '4' || jsonData['typeId'] == '6'){
+                            if (modalData.hasOwnProperty(item['id'])) {
+                                if (jsonData['typeId'] == '4' || jsonData['typeId'] == '6') {
                                     let index = jsonData['enum'].indexOf(modalData[item['id']])
                                     showData = jsonData['enumNames'][index]
-                                }else if(jsonData['typeId'] == '5' || jsonData['typeId'] == '7'){
+                                } else if (jsonData['typeId'] == '5' || jsonData['typeId'] == '7') {
                                     showData = ""
                                     console.log(modalData[item['id']]);
-                                    let iData = modalData[item['id']].substring(1,modalData[item['id']].length).split(",");
-                                    iData.map((one,index) => {
-                                        let oneIndex = jsonData['enum'].findIndex(value => value.charCodeAt() == one.substring(1,one.length - 1).charCodeAt());
+                                    let iData = modalData[item['id']].substring(1, modalData[item['id']].length).split(",");
+                                    iData.map((one, index) => {
+                                        let oneIndex = jsonData['enum'].findIndex(value => value.charCodeAt() == one.substring(1, one.length - 1).charCodeAt());
                                         if (index == 0) {
                                             showData += jsonData['enumNames'][oneIndex]
                                         } else {
@@ -51,11 +49,10 @@ class DataModal extends Component {
                                             showData += jsonData['enumNames'][oneIndex]
                                         }
                                     })
-                                    console.log(showData);
                                 }
                             }
                             return (
-                                <div className='item_content' key={item['fieldId']}>
+                                <div className='item_content' key={index}>
                                     <div className='item_title'>
                                         {element[item['id']]['title']}
                                     </div>
@@ -145,7 +142,7 @@ class DataModal extends Component {
                 <Checkbox.Group onChange={checkChange} defaultValue={this.props.TableStore.modalFieldValue}>
                     {modalField.map((item, index) => {
                         return <>
-                            <Checkbox value={item.id} key={index} style={{ width: '300px',paddingLeft:'20px' }}>{item.name}</Checkbox>
+                            <Checkbox value={item.id} key={index} style={{ width: '300px', paddingLeft: '20px' }}>{item.name}</Checkbox>
                             <br />
                         </>
                     })}
@@ -157,10 +154,6 @@ class DataModal extends Component {
             if (this.props.TableStore.detailData['logs']) {
                 return (
                     this.props.TableStore.detailData['logs'].map((item, index) => {
-                        console.log(toJS(this.props.TableStore.detailData['fields']));
-                        console.log(toJS(item['changeNum']));
-                        console.log(toJS(item['createPerson']));
-                        console.log(toJS(item['createTime']));
                         const changeContent = JSON.parse(toJS(item['changeContent']))
                         let dex = 0
                         let infoItem = []
@@ -169,7 +162,7 @@ class DataModal extends Component {
                                 const element = changeContent[key];
                                 infoItem[dex] = new Object()
                                 infoItem[dex].front = element[0]
-                                infoItem[dex].behind= element[1]
+                                infoItem[dex].behind = element[1]
                                 toJS(this.props.TableStore.detailData['fields']).filter((info) => {
                                     if (info['id'] == key) {
                                         infoItem[dex].title = JSON.parse(info['detailJson'])['title'];
@@ -228,6 +221,26 @@ class DataModal extends Component {
             }
 
         }
+        const getData = () => {
+            console.log(toJS(formArr));
+            let newArr = []
+            for (const key in formArr) {
+                if (Object.hasOwnProperty.call(formArr, key)) {
+                    const element = formArr[key];
+                    if (key != 'root') {
+                        newArr.push(key);
+                    }
+                }
+            }
+            return newArr.map((item, index) => {
+                console.log(item);
+                return (
+                    <Tabs.TabPane tab={item} key={index}>
+                        {getExactData(item)}
+                    </Tabs.TabPane>
+                )
+            })
+        }
         return (
             <Spin spinning={this.props.TableStore.isLoading} size='large' tip='Loading..'>
                 <div className='main_modal'>
@@ -257,6 +270,9 @@ class DataModal extends Component {
                                 </div>
                                 <div className='left_content'>
                                     {getExactData('root')}
+                                    <Tabs type='card' style={{ paddingLeft: '5px' }}>
+                                        {getData()}
+                                    </Tabs>
                                     <div className='info_content'>
                                         {getInfo()}
                                     </div>

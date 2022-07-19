@@ -24,9 +24,41 @@
     cursor: pointer;
     position: relative;
 }
-
+.tags_title{
+    width: 224px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
 .check_item_one {
     display: flex;
     flex-direction: row;
     align-items: center;
+}
+.total_tags{
+    display: flex;
+    flex-direction: column;
+}
+.all_tags{
+    margin-top: 10px;
+}
+.one_tag{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 5px;
+}
+.one_title{
+    margin-right: 8px;
+}
+.add_tag{
+    color: #0DB3A6;
+    display: inline-block;
+    cursor: pointer;
+}
+.edit_main{
+    overflow-y: auto;
+}
+.myTabs{
+    margin: 0 !important;
 }

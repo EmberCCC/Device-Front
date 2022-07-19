@@ -153,7 +153,7 @@
   margin: 0;
 }
 #root .ant-tabs-tab-active {
-  background-color: #fff;
+  background-color: rgb(144, 255, 218);
   border-bottom: 3px solid #6236FF;
 }
 #root .ant-tabs-bar {

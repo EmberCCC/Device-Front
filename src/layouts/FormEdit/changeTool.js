@@ -2,13 +2,14 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-05 10:16:45
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-07-08 18:27:24
+ * @LastEditTime: 2022-07-19 06:53:07
  * @FilePath: \bl-device-manage-test\src\layouts\FormEdit\changeTool.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 import { firstFormName } from "constants/status_constant";
+import { nanoid } from "nanoid";
 
-export function exChange(item, firstFormId) {
+export function exChange(item, firstFormId, name) {
   let params = {};
   let pro = {};
   let subForms = [];
@@ -20,7 +21,7 @@ export function exChange(item, firstFormId) {
     } else {
       let field = [];
       let obj = {};
-      obj['name'] = 'root';
+      obj['name'] = name;
       for (const keyP in item[key]) {
         let iObj = {};
         iObj['name'] = keyP
@@ -40,25 +41,28 @@ export function exChange(item, firstFormId) {
       subForms.push(obj)
     }
   }
+  console.log(params);
   params['properties'] = pro
   params['subForms'] = subForms
   return params;
 }
 
-function getOneForm(fields, fieldIds) {
+function getOneForm(fields, fieldIds, type) {
   let result = {}
   fieldIds.forEach(item => {
     fields.forEach(field => {
       if (field['id'] == item) {
         const detailJson = JSON.parse(field['detailJson']);
-        result[item] = detailJson;
-        result[item]['fieldId'] = field['id'];
+        const name = type == 'submit' ? field['id'] : "".concat(detailJson['typeId'], "_").concat(nanoid(6))
+        result[name] = detailJson;
+        result[name]['fieldId'] = field['id'];
       }
     });
   });
+  console.log(result);
   return result
 }
-export function restore(obj) {
+export function restore(obj, type) {
   let formArr = {}
   let fieldInfo;
   let properties;
@@ -69,7 +73,7 @@ export function restore(obj) {
     for (let index = 0; index < fieldInfo.length; index++) {
       let formItem = {}
       const element = fieldInfo[index];
-      formItem['properties'] = getOneForm(fields, element['fieldsId'])
+      formItem['properties'] = getOneForm(fields, element['fieldsId'], type)
       for (const key in properties) {
         if (Object.hasOwnProperty.call(properties, key)) {
           const element = properties[key];

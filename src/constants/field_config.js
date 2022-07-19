@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-02 08:07:00
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-07-11 16:54:53
+ * @LastEditTime: 2022-07-19 01:05:56
  * @FilePath: \bl-device-manage-test\src\constants\field_config.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -703,6 +703,48 @@ export const defaultSettings = [{
     useCommon: true // TODO: 是否将common
 }]
 export const defaultGlobalSettings = {
+    type: 'object',
+    properties: {
+        submit_check: {
+            title: '表单提交校验',
+            type: 'any',
+            widget: 'submit_check'
+        },
+        mul_tag: {
+            type: 'any',
+            widget: "mul_tag",
+            dependencies: ['mul_tagVis']
+        },
+        column: {
+            title: '整体布局',
+            type: 'number',
+            enum: [1, 2, 3],
+            enumNames: ['一行一列', '一行二列', '一行三列'],
+            props: {
+                placeholder: '默认一行一列'
+            }
+        },
+        labelWidth: {
+            title: '标签宽度',
+            type: 'number',
+            widget: 'slider',
+            max: 300,
+            default: 120,
+            props: {
+                hideNumber: true
+            }
+        },
+        displayType: {
+            title: '标签展示模式',
+            type: 'string',
+            default: 'column',
+            enum: ['row', 'column'],
+            enumNames: ['同行', '单独一行'],
+            widget: 'radio'
+        }
+    }
+};
+export const defaultGlobalSettingsi = {
     type: 'object',
     properties: {
         submit_check: {

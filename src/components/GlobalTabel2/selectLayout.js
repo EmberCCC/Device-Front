@@ -2,14 +2,13 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-13 10:02:28
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-07-14 00:03:34
+ * @LastEditTime: 2022-07-19 07:37:08
  * @FilePath: \bl-device-manage-test\src\components\GlobalTabel2\selectLayout.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
-import { DeleteOutlined, DownOutlined } from "@ant-design/icons";
-import { Button, DatePicker, Input, InputNumber, message, Popover, Select, TimePicker } from "antd";
+import { DeleteOutlined } from "@ant-design/icons";
+import { Button, DatePicker, Input, InputNumber, message, Popover, Select } from "antd";
 import { select_arr, select_condtion } from "constants/select_config";
-import { indexOf } from "lodash";
 import { toJS } from "mobx";
 import { inject, observer } from "mobx-react";
 import moment from "moment";
@@ -98,6 +97,28 @@ const SelectLayout = observer(({ TableStore, HomeStore }) => {
         setSelectList(iSel);
         sessionStorage.setItem('select_' + HomeStore.firstFormId, JSON.stringify(iSel))
     }
+    const handleAsChange = (e, item, index) => {
+        console.log(e);
+        item['operand'] = [
+            [moment().startOf('day').format('YYYY-MM-DD HH:mm:ss'), moment().endOf('day').format('YYYY-MM-DD HH:mm:ss')],
+            [moment().add(-1, 'd').startOf('days').format('YYYY-MM-DD HH:mm:ss'), moment().add(-1, 'd').endOf('days').format('YYYY-MM-DD HH:mm:ss')],
+            [moment().add(1, 'd').startOf('days').format('YYYY-MM-DD HH:mm:ss'), moment().add(1, 'd').endOf('days').format('YYYY-MM-DD HH:mm:ss')],
+            [moment().week(moment().week()).startOf('week').format('YYYY-MM-DD HH:mm:ss'), moment().week(moment().week()).endOf('week').format('YYYY-MM-DD HH:mm:ss')],
+            [moment().week(moment().week() - 1).startOf('week').format('YYYY-MM-DD HH:mm:ss'), moment().week(moment().week() - 1).endOf('week').format('YYYY-MM-DD HH:mm:ss')],
+            [moment().week(moment().week() + 1).startOf('week').format('YYYY-MM-DD HH:mm:ss'), moment().week(moment().week() + 1).endOf('week').format('YYYY-MM-DD HH:mm:ss')],
+            [moment().month(moment().month()).startOf('month').format('YYYY-MM-DD HH:mm:ss'), moment().month(moment().month()).startOf('month').format('YYYY-MM-DD HH:mm:ss')],
+            [moment().month(moment().month() - 1).startOf('month').format('YYYY-MM-DD HH:mm:ss'), moment().month(moment().month() - 1).startOf('month').format('YYYY-MM-DD HH:mm:ss')],
+            [moment().month(moment().month() + 1).startOf('month').format('YYYY-MM-DD HH:mm:ss'), moment().month(moment().month() + 1).startOf('month').format('YYYY-MM-DD HH:mm:ss')],
+            [moment().quarter(moment().quarter()).startOf('quarter').format('YYYY-MM-DD HH:mm:ss'), moment().quarter(moment().quarter()).endOf('quarter').format('YYYY-MM-DD HH:mm:ss')],
+            [moment().quarter(moment().quarter() - 1).startOf('quarter').format('YYYY-MM-DD HH:mm:ss'), moment().quarter(moment().quarter() - 1).endOf('quarter').format('YYYY-MM-DD HH:mm:ss')],
+            [moment().year(moment().year()).startOf('year').format('YYYY-MM-DD HH:mm:ss'), moment().year(moment().year()).endOf('year').format('YYYY-MM-DD HH:mm:ss')],
+            [moment().year(moment().year() + 1).startOf('year').format('YYYY-MM-DD HH:mm:ss'), moment().year(moment().year() + 1).endOf('year').format('YYYY-MM-DD HH:mm:ss')],
+            [moment().year(moment().year() - 1).startOf('year').format('YYYY-MM-DD HH:mm:ss'), moment().year(moment().year() - 1).endOf('year').format('YYYY-MM-DD HH:mm:ss')]
+        ][e - 1]
+        let iSelectList = [...selectList]
+        iSelectList.splice(index, 1, item);
+        setSelectList(iSelectList);
+    }
     const getSelectItem = (item, index) => {
         let dataList = [];
         allData.map((info, index) => {
@@ -123,11 +144,12 @@ const SelectLayout = observer(({ TableStore, HomeStore }) => {
             }
         })
         let exchangeObj = {}
-        if(['4','5','6','7'].indexOf(item['fieldInfo']['typeId']) > -1){
-            item['fieldInfo']['enum'].map((infoE,index) => {
+        if (['4', '5', '6', '7'].indexOf(item['fieldInfo']['typeId']) > -1) {
+            item['fieldInfo']['enum'].map((infoE, index) => {
                 exchangeObj[infoE] = item['fieldInfo']['enumNames'][index]
             })
         }
+        console.log([moment().year(moment().year() - 1).startOf('year').format('YYYY-MM-DD HH:mm:ss'), moment().year(moment().year() - 1).endOf('year').format('YYYY-MM-DD HH:mm:ss')]);
         if (item) {
             if (item['fieldTypeId'] == '0' || item['fieldTypeId'] == select_arr.length - 3) {
                 return (
@@ -239,7 +261,7 @@ const SelectLayout = observer(({ TableStore, HomeStore }) => {
                                 })}
                             </Select>
                             <div className="sel_del">
-                                <DeleteOutlined style={{ float: 'right', alignItems: 'center' }} onClick={() => handleDel(index)}  />
+                                <DeleteOutlined style={{ float: 'right', alignItems: 'center' }} onClick={() => handleDel(index)} />
                             </div>
                         </div>
                         <div className="sel_check">
@@ -251,6 +273,26 @@ const SelectLayout = observer(({ TableStore, HomeStore }) => {
                             {
                                 ['~'].indexOf(item['operator']) > -1 && (
                                     <DatePicker.RangePicker format={iFormat} showNow={false} showTime={showTime} onChange={(e) => handleDateChange(e, item, index, iFormat, 2)} />
+                                )
+                            }
+                            {
+                                [','].indexOf(item['operator']) > -1 && (
+                                    <Select onChange={(e) => handleAsChange(e, item, index)} style={{ width: 120 }}>
+                                        <Select.Option value={1}>今天</Select.Option>
+                                        <Select.Option value={2}>昨天</Select.Option>
+                                        <Select.Option value={3}>明天</Select.Option>
+                                        <Select.Option value={4}>本周</Select.Option>
+                                        <Select.Option value={5}>上周</Select.Option>
+                                        <Select.Option value={6}>下周</Select.Option>
+                                        <Select.Option value={7}>本月</Select.Option>
+                                        <Select.Option value={8}>上月</Select.Option>
+                                        <Select.Option value={9}>下月</Select.Option>
+                                        <Select.Option value={10}>本季度</Select.Option>
+                                        <Select.Option value={11}>上季度</Select.Option>
+                                        <Select.Option value={12}>今年</Select.Option>
+                                        <Select.Option value={13}>明年</Select.Option>
+                                        <Select.Option value={14}>去年</Select.Option>
+                                    </Select>
                                 )
                             }
                         </div>
@@ -267,31 +309,31 @@ const SelectLayout = observer(({ TableStore, HomeStore }) => {
                                 })}
                             </Select>
                             <div className="sel_del">
-                                <DeleteOutlined style={{ float: 'right', alignItems: 'center' }} onClick={() => handleDel(index)}  />
+                                <DeleteOutlined style={{ float: 'right', alignItems: 'center' }} onClick={() => handleDel(index)} />
                             </div>
                         </div>
                         <div className="sel_check">
-                        {
-                                 ['='].indexOf(item['operator']) > -1 && (
-                                    <Select style={{ width: '100%' }}  defaultValue={item['operand']} onChange={(e) => handleMathChange(e,item,index)}>
+                            {
+                                ['='].indexOf(item['operator']) > -1 && (
+                                    <Select style={{ width: '100%' }} defaultValue={item['operand']} onChange={(e) => handleMathChange(e, item, index)}>
                                         {
-                                            item['fieldInfo']['enum'].map((infoE,index) => {
+                                            item['fieldInfo']['enum'].map((infoE, index) => {
                                                 return <Select.Option key={index} value={infoE}>{item['fieldInfo']['enumNames'][index]}</Select.Option>
                                             })
                                         }
                                     </Select>
-                                 )
+                                )
                             }
                             {
-                                ['(',')'].indexOf(item['operator']) > -1 && (
-                                    <Select style={{ width: '100%' }} mode='multiple' defaultValue={item['operand']} onChange={(e) => handleMathChange(e,item,index)}>
+                                ['(', ')'].indexOf(item['operator']) > -1 && (
+                                    <Select style={{ width: '100%' }} mode='multiple' defaultValue={item['operand']} onChange={(e) => handleMathChange(e, item, index)}>
                                         {
-                                            item['fieldInfo']['enum'].map((infoE,index) => {
+                                            item['fieldInfo']['enum'].map((infoE, index) => {
                                                 return <Select.Option key={index} value={infoE}>{item['fieldInfo']['enumNames'][index]}</Select.Option>
                                             })
                                         }
                                     </Select>
-                                 )
+                                )
                             }
                         </div>
                     </div>
@@ -312,15 +354,15 @@ const SelectLayout = observer(({ TableStore, HomeStore }) => {
                         </div>
                         <div className="sel_check">
                             {
-                                 ['=', '#', '$', '*'].indexOf(item['operator']) > -1 && (
-                                    <Select style={{ width: '100%' }}  defaultValue={item['operand']} onChange={(e) => handleMathChange(e,item,index)}>
+                                ['=', '#', '$', '*'].indexOf(item['operator']) > -1 && (
+                                    <Select style={{ width: '100%' }} defaultValue={item['operand']} onChange={(e) => handleMathChange(e, item, index)}>
                                         {
-                                            item['fieldInfo']['enum'].map((infoE,index) => {
+                                            item['fieldInfo']['enum'].map((infoE, index) => {
                                                 return <Select.Option key={index} value={infoE}>{item['fieldInfo']['enumNames'][index]}</Select.Option>
                                             })
                                         }
                                     </Select>
-                                 )
+                                )
                             }
                             {
                                 ['|', '-'].indexOf(item['operator']) > -1 && (
@@ -332,8 +374,6 @@ const SelectLayout = observer(({ TableStore, HomeStore }) => {
                 )
             }
         }
-
-
     }
     useEffect(() => {
         setMenu(

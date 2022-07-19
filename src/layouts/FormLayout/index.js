@@ -2,13 +2,13 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-02 03:21:54
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-07-13 10:12:04
+ * @LastEditTime: 2022-07-19 15:26:06
  * @FilePath: \bl-device-manage-test\src\layouts\FormLayout\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 import React, { useEffect, useState } from 'react';
 import FormRender, { useForm } from 'form-render';
-import { Button } from 'antd';
+import { Button, Tabs } from 'antd';
 import { inject, observer } from 'mobx-react';
 import { toJS } from 'mobx';
 import { restore } from 'layouts/FormEdit/changeTool';
@@ -18,33 +18,85 @@ import { Self_divider } from 'layouts/FormEdit/self_item/self_divider';
 
 const FormLayout = observer(({ HomeStore, FormStore }) => {
   const [schema, setSchema] = useState({});
+  const [data, setData] = useState({});
   const form = useForm();
+  const formList = useForm()
   const onFinish = (formData) => {
     const { firstFormId } = HomeStore;
     // FormStore.submitData({ 'formId': firstFormId, 'data': formData })
-    let checkArr = getCheckArr(form.schema)
-    console.log(form.schema.properties);
-    console.log(({'formId': firstFormId, 'data': formData, 'checkFieldIds': checkArr}));
+    // console.log(formList[0].getValues());
+    console.log(toJS(schema));
+    let checkArr = getCheckArr(schema)
+    let nData = formList.getValues()
+    console.log(data);
+    console.log(({ 'formId': firstFormId, 'data': { ...formData, ...nData, ...data }, 'checkFieldIds': checkArr }));
     if (checkArr.length > 0) {
-      FormStore.submitDataCheck({ 'formId': firstFormId, 'data': formData, 'checkFieldIds': checkArr });
+      FormStore.submitDataCheck({ 'formId': firstFormId, 'data': { ...formData, ...nData, ...data }, 'checkFieldIds': checkArr });
     } else {
       FormStore.submitData({ 'formId': firstFormId, 'data': formData })
     }
     console.log(checkArr);
     form.resetFields();
+    formList.resetFields();
   }
   useEffect(() => {
     const { firstFormId } = HomeStore
     FormStore.getFormField({ formId: firstFormId }).then(() => {
-      setSchema(restore(toJS(FormStore.formField)))
+      setSchema(restore(toJS(FormStore.formField), 'submit'))
+      console.log(restore(toJS(FormStore.formField)));
       console.log(schema);
     });
   }, [])
+  const getItem = () => {
+    let nArr = []
+    for (const key in schema) {
+      if (Object.hasOwnProperty.call(schema, key)) {
+        const element = schema[key];
+        if (key != 'root') {
+          let iObj = {}
+          iObj['name'] = key
+          iObj['schema'] = element
+          nArr.push(iObj);
+        }
+      }
+    }
+    return (
+      nArr.map((item, index) => {
+        return (
+          <Tabs.TabPane tab={item['name']} key={index}>
+            <FormRender schema={item['schema']} widgets={{ self_divider: Self_divider }}
+              form={formList} style={{ overflowY: 'auto' }} />
+          </Tabs.TabPane>
+        )
+      })
+    )
+  }
+  const handleChange = (activeKey) => {
+    let tdata = formList.getValues()
+    let nData = { ...data, ...tdata }
+    console.log(tdata);
+    setData(nData);
+    console.log(nData);
+    let iObj = {}
+    for (const key in nData) {
+      if (Object.hasOwnProperty.call(nData, key)) {
+        const element = nData[key];
+        iObj[key] = element
+        
+      }
+    }
+    formList.setValues(iObj)
+  }
   return (
     <div>
       <div className='form_layout'>
-        <FormRender schema={schema['root']} widgets={{self_divider:Self_divider}}
+        <FormRender schema={schema['root']} widgets={{ self_divider: Self_divider }}
           form={form} onFinish={onFinish} style={{ overflowY: 'auto' }} />
+        <Tabs onChange={handleChange} tabBarGutter={20} destroyInactiveTabPane={true}>
+          {
+            getItem()
+          }
+        </Tabs>
       </div>
       <Button onClick={form.submit} type="primary">提交</Button>
     </div>
