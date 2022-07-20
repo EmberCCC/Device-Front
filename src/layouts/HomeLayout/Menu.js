@@ -3,7 +3,7 @@ import { inject, observer } from 'mobx-react';
 import { NavLink, withRouter } from 'react-router-dom';
 import classnames from 'classnames';
 import './index.less';
-import { BellTwoTone, CarryOutTwoTone, FolderOutlined, PlayCircleTwoTone, SoundTwoTone } from '@ant-design/icons';
+import { BellTwoTone, CarryOutTwoTone, FolderFilled, FolderOutlined, PlayCircleTwoTone, SoundTwoTone } from '@ant-design/icons';
 import { Menu, Layout, Badge } from 'antd';
 import { toJS } from 'mobx';
 const { Sider } = Layout;
@@ -36,7 +36,7 @@ class MenuLayout extends Component {
         <div id='manu_container'>
           <NavLink to={{ pathname: "/message/todo" }} onClick={this.loadData}>
             <div className='message_logo'>
-              <div>
+              <div className='message_item'>
                 <BellTwoTone />
                 我的待办
               </div>
@@ -45,7 +45,7 @@ class MenuLayout extends Component {
           </NavLink>
           <NavLink to={{ pathname: "/message/create" }}>
             <div className='message_logo'>
-              <div>
+              <div className='message_item'>
                 <PlayCircleTwoTone />
                 我发起的
               </div>
@@ -54,7 +54,7 @@ class MenuLayout extends Component {
           </NavLink>
           <NavLink to={{ pathname: "/message/handle" }}>
             <div className='message_logo'>
-              <div>
+              <div className='message_item'>
                 <CarryOutTwoTone />
                 我处理的
               </div>
@@ -63,14 +63,14 @@ class MenuLayout extends Component {
           </NavLink>
           <NavLink to={{ pathname: "/message/copy" }}>
             <div className='message_logo'>
-              <div>
+              <div className='message_item'>
                 <SoundTwoTone />
                 抄送我的
               </div>
               <Badge count={copyCount} style={{ float: 'right' }} offset={[1, 5]}></Badge>
             </div>
           </NavLink>
-          <hr></hr>
+          <hr style={{border:'1px solid #e9e9e9'}}></hr>
           <Menu theme="light"
             // defaultOpenKeys={toJS(this.store.openKeys)}
             selectedKeys={toJS(this.store.selectedKeys)}
@@ -85,7 +85,7 @@ class MenuLayout extends Component {
               menuObj.map(leaf => !leaf.displayNone && <SubMenu
                 theme='light'
                 key={leaf.id}
-                title={<span><FolderOutlined /><span >{leaf.name}</span></span>}
+                title={<span><FolderFilled style={{color: "#0db3a6"}}/><span >{leaf.name}</span></span>}
               >
                 {
                   leaf.leafMenuModels.length > 0 && leaf.leafMenuModels.map(ele =>

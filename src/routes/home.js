@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-11-02 14:29:58
- * @LastEditTime: 2022-07-07 09:04:17
+ * @LastEditTime: 2022-07-19 23:05:14
  * @LastEditors: EmberCCC 1810888456@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage\src\routes\home.js
@@ -35,10 +35,16 @@ const MessageManage = Loadable({
   loading: LoadingComponent
 })
 
+const SocketManage = Loadable({
+  loader: () => import('./SocketRouter'),
+  loading:LoadingComponent
+})
+
 export {
   HomeRouter,
   LoginPage,
   FlowPage,
   DesignPage,
-  MessageManage
+  MessageManage,
+  SocketManage
 };

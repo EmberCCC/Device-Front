@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './index.less';
 import NoticePanel from './NoticePanel';
-import { ArrowRightOutlined, LogoutOutlined } from '@ant-design/icons';
+import { ArrowRightOutlined, LogoutOutlined, TeamOutlined } from '@ant-design/icons';
 import { Icon as LegacyIcon } from '@ant-design/compatible';
 import { Layout, Dropdown, Menu, Button, Modal, Divider, Select } from 'antd';
 import { inject, observer } from 'mobx-react';
@@ -28,6 +28,11 @@ class HeaderLayout extends Component {
     );
     const isMobile = this.props.mobile === 'true';
     const isShow = (isMobile ? false : this.props.sizetype === 'l_size');
+    const handleClick = (value) => {
+      if(value == 'socket'){
+        this.props.history.push('/socket')
+      }
+    }
     return (
       <Header className='header_layout'>
         <div style={{ display: 'flex', flex: 1, alignItems: 'center' }}>
@@ -68,10 +73,13 @@ class HeaderLayout extends Component {
           <Divider type="vertical" />
           <Dropdown
             // className={'noticePanel'}
+            onClick={() => handleClick('socket')}
             placement="bottomCenter"
-            overlay={<span style={{ background: "#fff", padding: 10, boxShadow: '0 1px 10px #ccc', borderRadius: 7 }}>400-880-5687</span>} trigger={['hover']}>
+            overlay={<span style={{ background: "#fff", padding: 10, boxShadow: '0 1px 10px #ccc', borderRadius: 7 }}>通讯录</span>} trigger={['hover']}>
             <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', cursor: 'pointer', border: '1px solid rgba(196,196,196,1)', width: 40, height: 40 }}>
-              <i className='iconfont icon-service' style={{ display: 'inline-block', color: '#9D9D9D' }}></i>
+              {/* <i className='iconfont icon-service' style={{ display: 'inline-block', color: '#9D9D9D' }}></i>
+              <TeamOutlined /> */}
+              <TeamOutlined />
             </span>
           </Dropdown>
           <Dropdown

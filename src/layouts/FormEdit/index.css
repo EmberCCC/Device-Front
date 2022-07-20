@@ -76,6 +76,7 @@
 
 .right-layout{
     background-color: white;
+    height: auto
 }
 
 .edit_right button{
@@ -101,7 +102,7 @@
 }
 .ant-tabs-tab-active{
     border-top: none !important;
-    /* border-bottom:3px solid #0DB3A6; */
+    border-bottom:3px solid #0DB3A6;
     border-radius: 0 !important;
     padding-bottom: 9px;
     color: black;
@@ -109,8 +110,8 @@
 .ant-tabs-tab-btn{
     color: black !important;
 }
-.edit_main{
-    
+.edit_main .mid-layout{
+    height: 100%;
 }
 .ant-tabs-nav{
     margin-bottom: 0 !important;
@@ -120,6 +121,12 @@
 }
 .myTabs .fr-generator-container{
     padding-right: 20px;
+}
+.fr-generator-container .ant-tabs.ant-tabs-top{
+    height: unset;
+}
+.myTabs .right-layout{
+    height: 100%;
 }
 /* .edit_look{
     ma
