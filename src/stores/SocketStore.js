@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-19 23:01:23
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-07-21 08:21:44
+ * @LastEditTime: 2022-07-21 08:49:00
  * @FilePath: \bl-device-manage-test\src\stores\SocketStore.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -351,6 +351,7 @@ class Socket {
                         <div>删除</div>
                     </div>
                 )
+                let preId = {}
                 res.data.data.map((item, index) => {
                     let iObj = {
                         'key': -item['groupId'], 'label': <div className='item_role'>
@@ -370,6 +371,7 @@ class Socket {
                     if (item.hasOwnProperty('roles') && JSON.stringify(item['roles']) != '{}') {
                         for (const key in item['roles']) {
                             if (Object.hasOwnProperty.call(item['roles'], key)) {
+                                preId[key] = item['groupId']
                                 const element = item['roles'][key];
                                 nameObj[key] = element
                                 iObj['children'].push({
@@ -394,6 +396,8 @@ class Socket {
                     iArr.push(iObj);
                 })
                 console.log(iArr);
+                console.log(preId);
+                this.setValue('fatherIds',preId)
                 this.setValue('itemRoles', iArr)
                 this.setValue('rolesName', nameObj)
                 console.log(nameObj);
