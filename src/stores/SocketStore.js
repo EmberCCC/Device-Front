@@ -2,13 +2,13 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-19 23:01:23
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-07-21 08:49:00
+ * @LastEditTime: 2022-07-21 18:43:08
  * @FilePath: \bl-device-manage-test\src\stores\SocketStore.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
-import { Button, message, Modal, Popconfirm, Popover } from 'antd';
-import React, { PureComponent } from 'react'
-import { observable, action, toJS, makeObservable } from 'mobx';
+import { message, Modal, Popover } from 'antd';
+import React from 'react'
+import { observable, action, makeObservable } from 'mobx';
 import { isDataExist } from 'utils/dataTools';
 import * as services from '../services/socket';
 import { GoldFilled, MoreOutlined } from '@ant-design/icons';
@@ -54,6 +54,11 @@ class Socket {
 
     @observable preId = null;
 
+    @observable addUserVis = false;
+    @observable addUserList = [];
+    @observable addUserIds = [];
+    @observable addUserObjs = {};
+
 
     @action.bound setValue(key, value) {
         this[key] = value;
@@ -73,12 +78,26 @@ class Socket {
     }
     @action.bound async getOneUser(params) {
         this.setValue('loading', true)
+        this.setValue('oneUserInfo', {})
         try {
             let res = await services.getRequest(services.requestList.getOneUser, params);
             this.setValue('loading', false)
+
             if (isDataExist(res)) {
-                console.log(res.data.data);
-                this.setValue('oneUserInfo', res.data.data)
+                let depaermentIds = []
+                let roleIds = []
+                for (const key in res.data.data['departments']) {
+                    if (Object.hasOwnProperty.call(res.data.data['departments'], key)) {
+                        depaermentIds.push(key)
+                    }
+                }
+                for (const key in res.data.data['roles']) {
+                    if (Object.hasOwnProperty.call(res.data.data['roles'], key)) {
+                        roleIds.push(key)
+                    }
+                }
+                this.setValue('oneUserInfo', { ...res.data.data, 'departmentsIds': depaermentIds, 'roleIds': roleIds ,'userId':params['userId']})
+                console.log({ ...res.data.data, 'departmentsIds': depaermentIds, 'roleIds': roleIds });
             }
         } catch (error) {
             console.log(error);
@@ -101,7 +120,7 @@ class Socket {
                     console.log(this.fatherIds['SelectKey']);
                     console.log(this.fatherIds);
                     console.log(this.SelectKey);
-                    this.setValue('preId',this.fatherIds[this.SelectKey])
+                    this.setValue('preId', this.fatherIds[this.SelectKey])
                     this.setValue('mulVisible', true)
                 }}>调整上级部门</div>
                 <div onClick={() => {
@@ -194,20 +213,20 @@ class Socket {
         return iArr
     }
 
-    getMul = (obj,arr) => {
+    getMul = (obj, arr) => {
         obj[arr['id']] = arr['preId'];
-        if(arr.hasOwnProperty('nodes')){
-            arr['nodes'].map((item,index) => {
-                this.getMul(obj,item);
+        if (arr.hasOwnProperty('nodes')) {
+            arr['nodes'].map((item, index) => {
+                this.getMul(obj, item);
             })
         }
         return obj
     }
-    getMulFather = (obj,arr) => {
+    getMulFather = (obj, arr) => {
         obj[arr['id']] = arr['preId'];
-        if(arr.hasOwnProperty('nodes')){
-            arr['nodes'].map((item,index) => {
-                this.getMul(obj,item);
+        if (arr.hasOwnProperty('nodes')) {
+            arr['nodes'].map((item, index) => {
+                this.getMul(obj, item);
             })
         }
         return obj;
@@ -263,12 +282,12 @@ class Socket {
                 jsonArr.push(this.exchangeMul(res.data.data))
                 console.log(jsonArr);
                 console.log(this.getNameObj(nameObj, res.data.data));
-                console.log(this.getMulFather({},res.data.data));
+                console.log(this.getMulFather({}, res.data.data));
                 arr.push(this.exchange(res.data.data))
                 iArr.push({ 'children': arr, 'type': 'group', 'label': '部门' })
                 this.setValue('items', iArr)
                 this.setValue('mulSelect', jsonArr)
-                this.setValue('fatherIds', this.getMulFather({},res.data.data))
+                this.setValue('fatherIds', this.getMulFather({}, res.data.data))
                 this.setValue('itemName', this.getNameObj(nameObj, res.data.data))
                 console.log(iArr);
             }
@@ -289,6 +308,17 @@ class Socket {
             console.log(error);
         } finally {
             this.setValue('loading', false)
+        }
+    }
+    @action.bound async getAddUserList(params) {
+        this.setValue('addUserList',[])
+        try {
+            let res = await services.getRequest(services.requestList.getOneDepartmentUser,params)
+            if(isDataExist(res)){
+                this.setValue('addUserList',res.data.data);
+            }
+        } catch (error) {
+            console.log(error);
         }
     }
     @action.bound async changeDeName(params) {
@@ -397,7 +427,7 @@ class Socket {
                 })
                 console.log(iArr);
                 console.log(preId);
-                this.setValue('fatherIds',preId)
+                this.setValue('fatherIds', preId)
                 this.setValue('itemRoles', iArr)
                 this.setValue('rolesName', nameObj)
                 console.log(nameObj);
@@ -473,10 +503,21 @@ class Socket {
     }
     @action.bound async changeDePre(params) {
         try {
-            let res = await services.putRequest(services.requestList.changeDePre,params);
+            let res = await services.putRequest(services.requestList.changeDePre, params);
+            if (isDataExist(res)) {
+                message.success('修改成功')
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    @action.bound async changeUserInfo(params){
+        try {
+            let res = await services.putRequest(services.requestList.changeUserInfo,params);
             if(isDataExist(res)){
                 message.success('修改成功')
             }
+            SocketStore.setValue('visible', false)
         } catch (error) {
             console.log(error);
         }

@@ -140,6 +140,8 @@
 }
 
 .add_btn {
+    padding-top: 20px;
+    border-top: 1px solid #e9e9e9;
     margin-top: 20px;
     display: flex;
     flex-direction: row;
@@ -195,6 +197,7 @@
 }
 
 .sel_item {
+    cursor: pointer;
     padding: 10px;
     display: flex;
     flex-direction: row;
@@ -266,4 +269,56 @@
 }
 .de_item:hover .de_more{
     display: unset;
+}
+.addUser_main{
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+}
+.addUser_top{
+    cursor: pointer;
+    margin-bottom: 20px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    border: 1px dashed #d9d9d9;
+    height: 80px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+.addUser_bottom{
+    display: flex;
+    flex-direction: row;
+}
+.addUser_one{
+    display: flex;
+    flex-direction: row;
+    height: 30px;
+    cursor: pointer;
+    margin: 5px 0 0 5px;
+    padding: 5px 10px;
+    background: #f3f6fc;
+    border-radius: 1px;
+}
+.one_name{
+    margin-right: 5px;
+    text-align: center;
+}
+.one_cross:hover{
+    color: #d84636;
+    background: #fff;
+}
+.addUser_left{
+    border: 1px solid #d9d9d9;
+    border-right: none;
+    padding: 5px;
+    height: 400px;
+    width: 50%;
+}
+.addUser_right{
+    border: 1px solid #d9d9d9;
+    padding: 5px;
+    height: 400px;
+    width: 50%;
 }

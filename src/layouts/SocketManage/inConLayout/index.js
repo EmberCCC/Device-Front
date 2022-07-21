@@ -2,12 +2,12 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-19 23:03:37
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-07-21 08:51:16
+ * @LastEditTime: 2022-07-21 19:10:20
  * @FilePath: \bl-device-manage-test\src\layouts\SocketManage\inConLayout\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 import { CheckCircleFilled, FolderFilled } from "@ant-design/icons";
-import { Button, Divider, Drawer, Form, Input, Menu, message, Modal, Popover, Radio, Spin, Switch, Table, TreeSelect } from "antd";
+import { Button, Checkbox, Divider, Drawer, Form, Input, Menu, message, Modal, Popover, Radio, Select, Space, Spin, Switch, Table, TreeSelect } from "antd";
 import { toJS } from "mobx";
 import { inject, observer } from "mobx-react";
 import React, { useEffect, useRef, useState } from "react";
@@ -16,7 +16,8 @@ import './index.css'
 const InConLayout = observer(({ SocketStore }) => {
     const { roleList, SelectKey, allUsers, selectRowKeys, visible, oneUserInfo, loading, departments,
         items, itemName, itemRoles, rolesName, changetype, changeVis, changeId,
-        changeName, changeGroupVis, fatherId, initRole, addVisible, mulSelect, mulVisible, fatherIds, preId } = SocketStore;
+        changeName, changeGroupVis, fatherId, initRole, addVisible, mulSelect, mulVisible, fatherIds,
+        preId, addUserVis, addUserList, addUserIds, addUserObjs } = SocketStore;
     const [form] = Form.useForm();
     const [mul, setMul] = useState(null);
     const [createVis, setCreateVis] = useState(false)
@@ -143,7 +144,18 @@ const InConLayout = observer(({ SocketStore }) => {
         SocketStore.setValue('visible', false)
     }
     const onFinish = (values) => {
-        console.log(values);
+        console.log({ ...values });
+        if (values['departmentIds'] == undefined) {
+            values['departmentIds'] = []
+        }
+        SocketStore.changeUserInfo({ ...values, 'userId': oneUserInfo['userId'], 'state': 1 }).then(() => {
+            if (SelectKey == '全部成员') {
+                SocketStore.getAllUsers();
+            } else {
+                SocketStore.getOneDepartment({ 'departmentId': SelectKey })
+            }
+            SocketStore.getAllDepartment()
+        })
     }
     const handlePop = (type, name) => {
         if (type == 'sure' && ref.current.input.value != '') {
@@ -248,6 +260,16 @@ const InConLayout = observer(({ SocketStore }) => {
         })
         SocketStore.setValue('mulVisible', false)
         console.log(toJS(preId));
+    }
+    const haneleAddUser = (value) => {
+        SocketStore.getAddUserList({ 'departmentId': value });
+        console.log(value);
+        console.log(toJS(addUserIds));
+    }
+    const handleAddRole = () => {
+        console.log(toJS(addUserIds));
+        console.log(toJS(SelectKey));
+        console.log(toJS(roleList));
     }
     const changeNameContent = (
         <div className="pop_change">
@@ -366,10 +388,11 @@ const InConLayout = observer(({ SocketStore }) => {
                                                     return {
                                                         onClick: event => {
                                                             SocketStore.getOneUser({ 'userId': key['userId'] }).then(() => {
+                                                                console.log(toJS(mulSelect));
+                                                                form.resetFields()
+                                                                SocketStore.getAllRoles();
                                                                 SocketStore.setValue('visible', true);
                                                             })
-                                                            console.log(toJS(key));
-                                                            console.log(record);
                                                         }
                                                     }
                                                 }}
@@ -390,14 +413,6 @@ const InConLayout = observer(({ SocketStore }) => {
                                 </div>
                                 <div className="inRF_R">
                                     {
-                                        SelectKey == '全部成员' && (
-                                            <>
-                                                <Switch onChange={handleSwitch} size='small' />
-                                                <div className="switch_des">允许成员修改姓名</div>
-                                            </>
-                                        )
-                                    }
-                                    {
                                         SelectKey != '全部成员' && SelectKey != '离职成员' && (
                                             <div className="inRF_R2">
                                                 <Popover content={changeRoleName} trigger='click' destroyTooltipOnHide={true}>
@@ -415,7 +430,14 @@ const InConLayout = observer(({ SocketStore }) => {
                             </div>
                             <div className="inR_Tool">
                                 <div>
-                                    <Button type="primary" style={{ marginRight: '10px' }}>邀请成员</Button>
+                                    <Button onClick={() => {
+                                        SocketStore.setValue('addUserVis', true)
+                                        SocketStore.setValue('addUserIds', [])
+                                        SocketStore.setValue('addUserObjs', {})
+                                        SocketStore.getAllDepartment();
+                                        SocketStore.getAllUsers();
+                                        SocketStore.getAddUserList({ 'departmentId': 1 });
+                                    }} type="primary" style={{ marginRight: '10px' }}>添加成员</Button>
                                 </div>
                                 <Input placeholder="搜索成员" style={{ width: '200px', marginRight: '20px' }} />
                             </div>
@@ -442,7 +464,7 @@ const InConLayout = observer(({ SocketStore }) => {
                     )
                 }
             </div>
-            <Drawer visible={visible} placement='right' onClose={handleClose}>
+            <Drawer visible={visible} placement='right' onClose={handleClose} destroyOnClose={true}>
                 <Spin spinning={loading} tip='Loading...'>
                     <div className="drawer_header">
 
@@ -460,11 +482,29 @@ const InConLayout = observer(({ SocketStore }) => {
                         <Form.Item label="邮箱" name='email' initialValue={oneUserInfo['email']}>
                             <Input placeholder="input placeholder" disabled />
                         </Form.Item>
-                        <Form.Item label="部门" name='departmentIds'>
-                            <Input placeholder="input placeholder" />
+                        <Form.Item label="部门" name='departmentIds' initialValue={oneUserInfo['departmentsIds']}>
+                            <TreeSelect multiple={true} treeData={mulSelect} style={{ width: '100%' }} />
                         </Form.Item>
-                        <Form.Item label="角色" name='roleIds'>
-                            <Input placeholder="input placeholder" />
+                        <Form.Item label="角色" name='roleIds' initialValue={oneUserInfo['roleIds']}>
+                            <Select style={{ width: '100%' }} mode='multiple'>
+                                {
+                                    initRole.map((item, index) => {
+                                        return (
+                                            <Select.OptGroup label={item['name']} key={-item['groupId']}>
+                                                {
+                                                    Object.keys(item['roles']).map((key, oneIndex) => {
+                                                        return (
+                                                            <Select.Option value={key} key={key}>
+                                                                {item['roles'][key]}
+                                                            </Select.Option>
+                                                        )
+                                                    })
+                                                }
+                                            </Select.OptGroup>
+                                        )
+                                    })
+                                }
+                            </Select>
                         </Form.Item>
                         <Form.Item>
                             <div className="btn_group">
@@ -541,6 +581,75 @@ const InConLayout = observer(({ SocketStore }) => {
                     <div className="add_btn">
                         <Button style={{ marginRight: '15px' }} onClick={() => SocketStore.setValue('mulVisible', false)}>取消</Button>
                         <Button type='primary' onClick={changeDePre}>确定</Button>
+                    </div>
+                </div>
+            </Modal>
+            <Modal title='添加成员' visible={addUserVis} onCancel={() => SocketStore.setValue('addUserVis', false)} footer={null} destroyOnClose={true}>
+                <div className="addUser_main">
+                    <div className="addUser_top">
+                        {
+                            Object.keys(addUserObjs).map((key,index) => {
+                                return (
+                                    <div className="addUser_one" key={index}>
+                                        <div className="one_name">{addUserObjs[key]}</div>
+                                        <div onClick={() => {
+                                            console.log(key);
+                                            let obj = {...addUserObjs}
+                                            let arr = [...addUserIds]
+                                            arr.splice(arr.indexOf(key),1)
+                                            delete obj[key]
+                                            SocketStore.setValue('addUserObjs',obj)
+                                            SocketStore.setValue('addUserIds',arr)
+                                        }} className="one_cross">X</div>
+                                    </div>
+                                )
+                            })
+                        }
+                    </div>
+                    <div className="addUser_bottom">
+                        <div className="addUser_left">
+                            <TreeSelect defaultValue={1} treeData={mulSelect} onChange={haneleAddUser} style={{ width: '100%' }} />
+                        </div>
+                        <div className="addUser_right">
+                            <Checkbox.Group value={addUserIds} style={{ width: '100%' }} >
+                                <Space direction='vertical'>
+                                    {
+                                        addUserList.length != 0 && (
+                                            allUsers.map((item, index) => {
+                                                if (addUserList.some((one) => one['userId'] == item['userId'])) {
+                                                    return (
+                                                        <Checkbox onClick={() => {
+                                                            console.log(item['userId'])
+                                                            let arr = [...addUserIds]
+                                                            let obj = { ...addUserObjs }
+                                                            let index = addUserIds.indexOf(item['userId'])
+                                                            if (index > -1) {
+                                                                arr.splice(index, 1)
+                                                                delete obj[item['userId']]
+                                                            } else {
+                                                                arr.push(item['userId'])
+                                                                obj[item['userId']] = item['name']
+                                                            }
+                                                            SocketStore.setValue('addUserIds', arr);
+                                                            SocketStore.setValue('addUserObjs', obj);
+                                                        }} value={item['userId']} key={index}>{item['name']}</Checkbox>
+                                                    )
+                                                }
+                                            })
+                                        )
+                                    }
+                                    {
+                                        addUserList.length == 0 && (
+                                            <div>没有可选成员</div>
+                                        )
+                                    }
+                                </Space>
+                            </Checkbox.Group>
+                        </div>
+                    </div>
+                    <div className="add_btn">
+                        <Button style={{ marginRight: '15px' }} onClick={() => SocketStore.setValue('addUserVis', false)}>取消</Button>
+                        <Button type='primary' onClick={handleAddRole}>确定</Button>
                     </div>
                 </div>
             </Modal>
