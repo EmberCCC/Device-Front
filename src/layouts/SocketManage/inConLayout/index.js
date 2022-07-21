@@ -2,23 +2,29 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-19 23:03:37
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-07-20 14:55:08
+ * @LastEditTime: 2022-07-21 08:35:51
  * @FilePath: \bl-device-manage-test\src\layouts\SocketManage\inConLayout\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
-import { Button, Divider, Drawer, Form, Input, Menu, message, Modal, Popover, Radio, Spin, Switch, Table } from "antd";
+import { CheckCircleFilled, FolderFilled } from "@ant-design/icons";
+import { Button, Divider, Drawer, Form, Input, Menu, message, Modal, Popover, Radio, Spin, Switch, Table, TreeSelect } from "antd";
 import { toJS } from "mobx";
 import { inject, observer } from "mobx-react";
 import React, { useEffect, useRef, useState } from "react";
 
 import './index.css'
 const InConLayout = observer(({ SocketStore }) => {
-    const { roleList, SelectKey, allUsers, selectRowKeys, visible, oneUserInfo, loading, departments, items, itemName, itemRoles, rolesName } = SocketStore;
+    const { roleList, SelectKey, allUsers, selectRowKeys, visible, oneUserInfo, loading, departments,
+        items, itemName, itemRoles, rolesName, changetype, changeVis, changeId,
+        changeName, changeGroupVis, fatherId, initRole, addVisible, mulSelect, mulVisible, fatherIds, preId } = SocketStore;
     const [form] = Form.useForm();
-    const [addVisible, setAddVisible] = useState(false)
+    const [mul, setMul] = useState(null);
+    const [createVis, setCreateVis] = useState(false)
     const [total, setTotal] = useState('department')
     const ref = useRef();
     const refAdd = useRef();
+    const refCreate = useRef()
+    const refChange = useRef()
     useEffect(() => {
         setTotal('department')
         SocketStore.setValue('SelectKey', '全部成员')
@@ -105,23 +111,18 @@ const InConLayout = observer(({ SocketStore }) => {
             SocketStore.getAllUsers();
             SocketStore.getAllDepartment()
         } else {
+            SocketStore.setValue('SelectKey', '1')
             SocketStore.getAllRoles();
+            SocketStore.getOneRoleUser({ 'roleId': 1 });
         }
         console.log(value.target.value);
     }
     const handleClick = ({ item, key, keyPath, domEvent }) => {
-        console.log({ item, key, keyPath, domEvent });
-        SocketStore.setValue('SelectKey', key)
-        SocketStore.setValue('selectRow', [])
-        SocketStore.setValue('selectRowKeys', [])
         if (key == '全部成员' || key == '离职成员') {
             SocketStore.getAllUsers()
-        } else {
-            SocketStore.getOneDepartment({ 'departmentId': SelectKey })
         }
     }
     const handleClickRole = ({ item, key, keyPath, domEvent }) => {
-        console.log({ item, key, keyPath, domEvent });
         SocketStore.setValue('SelectKey', key)
         SocketStore.getOneRoleUser({ 'roleId': key });
     }
@@ -164,7 +165,7 @@ const InConLayout = observer(({ SocketStore }) => {
         }
     }
     const handleOpenModal = () => {
-        setAddVisible(true)
+        SocketStore.setValue('addVisible', true)
     }
     const handleAdd = () => {
         console.log(refAdd.current.input.value);
@@ -174,11 +175,79 @@ const InConLayout = observer(({ SocketStore }) => {
             if (SocketStore.addDe({ 'preId': SelectKey, 'name': refAdd.current.input.value })) {
                 SocketStore.getOneDepartment({ 'departmentId': SelectKey })
                 SocketStore.getAllDepartment()
-                setAddVisible(false)
+                SocketStore.setValue('addVisible', false)
             }
         }
-        console.log(refAdd.current.input.value == "");
-        setAddVisible(false)
+        SocketStore.setValue('addVisible', false)
+    }
+    const handleCreate = (type) => {
+        if (type == 'group') {
+            setCreateVis(true)
+        } else {
+            console.log(type);
+        }
+    }
+    const handleRCreate = () => {
+        console.log(refCreate.current.input.value);
+        if (refCreate.current.input.value == "") {
+            message.info('请输入名称')
+        } else {
+            SocketStore.createRoleGroup({ 'name': refCreate.current.input.value }).then(() => {
+                SocketStore.getAllRoles();
+                SocketStore.getOneRoleUser({ 'roleId': SelectKey });
+            })
+            setCreateVis(false)
+        }
+
+    }
+    const handleNameChange = (type) => {
+        console.log(refChange.current.input.value);
+        console.log(type);
+        console.log(changeId);
+        if (refChange.current.input.value != '') {
+            if (type == 'roleg') {
+                SocketStore.changeRoleGroupName({ 'groupId': changeId, 'name': refChange.current.input.value }).then(() => {
+                    SocketStore.getOneRoleUser({ 'roleId': SelectKey })
+                    SocketStore.getAllRoles()
+                })
+            } else if (type == 'role') {
+                SocketStore.changeRoleName({ 'roleId': changeId, 'roleName': refChange.current.input.value }).then(() => {
+                    SocketStore.getOneRoleUser({ 'roleId': SelectKey })
+                    SocketStore.getAllRoles()
+                })
+            } else if (type == 'de') {
+                SocketStore.changeDeName({ 'departmentId': changeId, 'name': refChange.current.input.value }).then(() => {
+                    SocketStore.getOneDepartment({ 'departmentId': SelectKey })
+                    SocketStore.getAllDepartment()
+                })
+            }
+            SocketStore.setValue('changeVis', false);
+        } else {
+            message.info('请输入名称')
+        }
+
+    }
+    const handleSelect = (value) => {
+        SocketStore.setValue('fatherId', value)
+    }
+    const changeRoleGroup = () => {
+        SocketStore.changeRoleGroup({ 'roleId': changeId, 'groupId': fatherId }).then(() => {
+            SocketStore.getOneRoleUser({ 'roleId': SelectKey })
+            SocketStore.getAllRoles()
+        })
+        SocketStore.setValue('changeGroupVis', false)
+    }
+    const handleMulChange = (value, label, extra) => {
+        SocketStore.setValue('preId', value)
+        console.log(value, label, extra);
+    }
+    const changeDePre = () => {
+        SocketStore.changeDePre({ 'preId': preId, 'departmentId': SelectKey, 'name': null }).then(() => {
+            SocketStore.getOneDepartment({ 'departmentId': SelectKey })
+            SocketStore.getAllDepartment()
+        })
+        SocketStore.setValue('mulVisible', false)
+        console.log(toJS(preId));
     }
     const changeNameContent = (
         <div className="pop_change">
@@ -194,6 +263,13 @@ const InConLayout = observer(({ SocketStore }) => {
             <div className="change_btn">
                 <Button type="primary" onClick={() => handlePop('sure', 'role')}>确定</Button>
             </div>
+        </div>
+    )
+
+    const createContent = (
+        <div className="createRole">
+            <div onClick={() => handleCreate('group')} className="create_group">创建角色组</div>
+            <div onClick={() => handleCreate('role')} className="create_role">创建角色</div>
         </div>
     )
     return (
@@ -213,9 +289,11 @@ const InConLayout = observer(({ SocketStore }) => {
                     }{
                         total == 'role' && (
                             <div className="role_top">
-                                <div className="rt_F">
-                                    创建的角色 +
-                                </div>
+                                <Popover overlayClassName={'myPopover'} placement='bottom' content={createContent} trigger='click'>
+                                    <div className="rt_F">
+                                        创建的角色 +
+                                    </div>
+                                </Popover>
                                 <Menu selectable={!loading} items={itemRoles} onClick={(value) => handleClickRole(value)} mode='inline' theme='light' defaultSelectedKeys={[SelectKey]} />
 
                             </div>
@@ -244,6 +322,17 @@ const InConLayout = observer(({ SocketStore }) => {
                                                 <Popover content={changeNameContent} trigger='click' destroyTooltipOnHide={true}>
                                                     <div>修改名称</div>
                                                 </Popover>
+                                                {
+                                                    ['全部成员', '离职成员', 1].indexOf(SelectKey) <= -1 && (
+                                                        <>
+                                                            <Divider type="vertical" />
+                                                            <div onClick={() => {
+                                                                SocketStore.setValue('preId', fatherIds[SelectKey])
+                                                                SocketStore.setValue('mulVisible', true)
+                                                            }}>调整上级部门</div>
+                                                        </>
+                                                    )
+                                                }
                                                 <Divider type="vertical" />
                                                 <div>设置部门总管</div>
                                                 <Divider type="vertical" />
@@ -384,18 +473,77 @@ const InConLayout = observer(({ SocketStore }) => {
                     </Form>
                 </Spin>
             </Drawer>
-            <Modal width={400} visible={addVisible} onCancel={() => setAddVisible(false)} footer={null} destroyOnClose={true}>
+            <Modal title={'创建角色组'} visible={createVis} onCancel={() => setCreateVis(false)} footer={null} destroyOnClose={true}>
+                <div className="add_modal">
+                    <div className="add_title">名称</div>
+                    <Input placeholder="请输入角色组名称" ref={refCreate} />
+                    <div className="add_btn">
+                        <Button style={{ marginRight: '15px' }} onClick={() => setCreateVis(false)}>取消</Button>
+                        <Button type='primary' onClick={() => handleRCreate('group')}>确定</Button>
+                    </div>
+                </div>
+            </Modal>
+            <Modal width={400} visible={addVisible} onCancel={() => SocketStore.setValue('addVisible', false)} footer={null} destroyOnClose={true}>
                 <div className="add_modal">
                     <div className="add_title">添加部门</div>
                     <Input placeholder="请输入部门名称" ref={refAdd} />
                     <div className="add_btn">
-                        <Button style={{ marginRight: '15px' }} onClick={() => setAddVisible(false)}>取消</Button>
+                        <Button style={{ marginRight: '15px' }} onClick={() => SocketStore.setValue('addVisible', false)}>取消</Button>
                         <Button type='primary' onClick={() => handleAdd()}>确定</Button>
+                    </div>
+                </div>
+            </Modal>
+            <Modal title='修改名称' visible={changeVis} onCancel={() => SocketStore.setValue('changeVis', false)} footer={null} destroyOnClose={true}>
+                <div className="change_name">
+                    <Input placeholder="" ref={refChange} defaultValue={changeName} />
+                    <div className="add_btn">
+                        <Button style={{ marginRight: '15px' }} onClick={() => SocketStore.setValue('changeVis', false)}>取消</Button>
+                        <Button type='primary' onClick={() => handleNameChange(changetype)}>确定</Button>
+                    </div>
+                </div>
+            </Modal>
+            <Modal title={'调整分组'} visible={changeGroupVis} onCancel={() => SocketStore.setValue('changeGroupVis', false)} footer={null} destroyOnClose={true}>
+                <div className="changeG_main">
+                    <div className="changeG_title">
+                        请选择目标分组
+                    </div>
+                    <div className="changeG_select">
+                        {
+                            itemRoles.map((item, index) => {
+                                let checkClass = "false"
+                                if (-item['key'] == fatherId) checkClass = "true"
+                                return (
+                                    <div className={"sel_item " + checkClass} key={index} onClick={() => handleSelect(-item['key'])}>
+                                        <div className="item_l">
+                                            <div className="item_l"><FolderFilled style={{ color: '#248af9' }} /></div>
+                                            <div className="item_l">{initRole[index]['name']}</div>
+                                        </div>
+                                        <div className={"item_r" + checkClass}>
+                                            <CheckCircleFilled style={{ color: '#248af9' }} />
+                                        </div>
+                                    </div>
+                                )
+                            })
+                        }
+                    </div>
+                    <div className="add_btn">
+                        <Button style={{ marginRight: '15px' }} onClick={() => SocketStore.setValue('changeGroupVis', false)}>取消</Button>
+                        <Button type='primary' onClick={changeRoleGroup}>确定</Button>
+                    </div>
+                </div>
+            </Modal>
+            <Modal title='调整上级部门' visible={mulVisible} onCancel={() => SocketStore.setValue('mulVisible', false)} footer={null} destroyOnClose={true}>
+                <div className="changeG_main">
+                    <TreeSelect defaultValue={preId} treeData={mulSelect} onChange={handleMulChange} style={{ width: '100%' }} />
+                    <div className="add_btn">
+                        <Button style={{ marginRight: '15px' }} onClick={() => SocketStore.setValue('mulVisible', false)}>取消</Button>
+                        <Button type='primary' onClick={changeDePre}>确定</Button>
                     </div>
                 </div>
             </Modal>
         </div>
     )
+
 })
 
 export default inject((stores) => ({ SocketStore: stores.SocketStore }))(InConLayout)

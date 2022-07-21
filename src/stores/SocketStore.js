@@ -2,14 +2,16 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-19 23:01:23
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-07-20 14:45:19
+ * @LastEditTime: 2022-07-21 08:21:44
  * @FilePath: \bl-device-manage-test\src\stores\SocketStore.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
-import { message } from 'antd';
+import { Button, message, Modal, Popconfirm, Popover } from 'antd';
+import React, { PureComponent } from 'react'
 import { observable, action, toJS, makeObservable } from 'mobx';
 import { isDataExist } from 'utils/dataTools';
 import * as services from '../services/socket';
+import { GoldFilled, MoreOutlined } from '@ant-design/icons';
 
 
 class Socket {
@@ -32,6 +34,25 @@ class Socket {
     @observable rolesName = {};
     @observable roleList = [];
     @observable roles = []
+
+    @observable depaertmentTree = []
+
+    @observable initRole = []
+
+    @observable addVisible = false
+
+    @observable changetype = "";
+    @observable changeVis = false;
+    @observable changeId = null;
+    @observable changeName = null;
+    @observable changeGroupVis = false
+    @observable fatherId = null;
+
+    @observable mulSelect = []
+    @observable mulVisible = false;
+    @observable fatherIds = {}
+
+    @observable preId = null;
 
 
     @action.bound setValue(key, value) {
@@ -63,25 +84,59 @@ class Socket {
             console.log(error);
         }
     }
-    getItem(label, key, icon, children, type) {
-        return {
-            key,
-            icon,
-            children,
-            label,
-            type,
-        };
-    }
     handleClick = ({ key, domEvent }) => {
-        this.getOneDepartment({ 'departmentId': key })
         this.setValue('SelectKey', key);
+        this.getOneDepartment({ 'departmentId': key })
         this.setValue('selectRow', [])
         this.setValue('selectRowKeys', [])
     }
     getChidren = (arr) => {
+        let content = (
+            <div className='createRole'>
+                <div onClick={() => {
+                    this.setValue('changeVis', true)
+                    this.setValue('changetype', 'de')
+                }}>修改名称</div>
+                <div onClick={() => {
+                    console.log(this.fatherIds['SelectKey']);
+                    console.log(this.fatherIds);
+                    console.log(this.SelectKey);
+                    this.setValue('preId',this.fatherIds[this.SelectKey])
+                    this.setValue('mulVisible', true)
+                }}>调整上级部门</div>
+                <div onClick={() => {
+                    this.setValue('addVisible', true)
+                }}>添加子部门</div>
+                <div onClick={() => {
+                    Modal.warning({
+                        title: `您确定要删除${this.changeName}吗？`,
+                        cancelText: '取消',
+                        okText: '确定',
+                        onOk: () => {
+                            console.log(this.changeId);
+                            this.delDepartment({ 'departmentId': this.changeId });
+                        }
+                    })
+                }}>删除</div>
+            </div>
+        )
         let iArr = []
         arr.map((item) => {
-            let iObj = { 'label': item['name'], 'key': item['id'], 'onTitleClick': ({ key, domEvent }) => this.handleClick({ key, domEvent }) }
+            let iObj = {
+                'label': <div className='de_item' onClick={() => {
+                    this.setValue('SelectKey', item['id'])
+                    this.getOneDepartment({ 'departmentId': item['id'] })
+                }}>
+                    <div className='de_name'><GoldFilled /> {item['name']}</div>
+                    <Popover placement='right' trigger='hover' content={content} overlayClassName='myPopover' >
+                        <div className='de_more'><MoreOutlined onMouseEnter={() => {
+                            this.setValue('changeId', item['id'])
+                            this.setValue('changeName', item['name'])
+                        }} /></div>
+                    </Popover>
+                </div>
+                , 'key': item['id']
+            }
             if (item.hasOwnProperty('nodes')) {
                 iObj['children'] = this.getChidren(item['nodes'], iObj['children'])
             }
@@ -91,9 +146,81 @@ class Socket {
     }
 
     exchange = (obj) => {
-        let iObj = { 'label': obj['name'], 'key': obj['id'], 'onTitleClick': ({ key, domEvent }) => this.handleClick({ key, domEvent }) }
+        let item = (
+            <div className='createRole'>
+                <div onClick={() => {
+                    this.setValue('changeVis', true)
+                    this.setValue('changetype', 'de')
+                }}>修改名称</div>
+                <div onClick={() => {
+                    this.setValue('addVisible', true)
+                }}>添加子部门</div>
+            </div>
+        )
+        let iObj = {
+            'label': <div className='de_item' onClick={() => {
+                this.setValue('SelectKey', obj['id'])
+                this.getOneDepartment({ 'departmentId': obj['id'] })
+            }}>
+                <div className='de_name'><GoldFilled />  {obj['name']}</div>
+                <Popover placement='right' trigger='hover' content={item} overlayClassName='myPopover' >
+                    <div className='de_more'><MoreOutlined onMouseEnter={() => {
+                        this.setValue('changeId', obj['id'])
+                        this.setValue('changeName', obj['name'])
+                    }} /></div>
+                </Popover>
+            </div>, 'key': obj['id']
+        }
         if (obj.hasOwnProperty('nodes')) {
             iObj['children'] = this.getChidren(obj['nodes'], iObj['children'])
+        }
+        return iObj;
+    }
+
+    getChidrenMul = (arr) => {
+        let iArr = []
+        arr.map((item) => {
+            let iObj = {
+                'title': <div className='de_item'>
+                    <div className='de_name'><GoldFilled /> {item['name']}</div>
+                </div>
+                , 'value': item['id']
+            }
+            if (item.hasOwnProperty('nodes')) {
+                iObj['children'] = this.getChidrenMul(item['nodes'], iObj['children'])
+            }
+            iArr.push(iObj)
+        })
+        return iArr
+    }
+
+    getMul = (obj,arr) => {
+        obj[arr['id']] = arr['preId'];
+        if(arr.hasOwnProperty('nodes')){
+            arr['nodes'].map((item,index) => {
+                this.getMul(obj,item);
+            })
+        }
+        return obj
+    }
+    getMulFather = (obj,arr) => {
+        obj[arr['id']] = arr['preId'];
+        if(arr.hasOwnProperty('nodes')){
+            arr['nodes'].map((item,index) => {
+                this.getMul(obj,item);
+            })
+        }
+        return obj;
+    }
+
+    exchangeMul = (obj) => {
+        let iObj = {
+            'title': <div className='de_item'>
+                <div className='de_name'><GoldFilled />  {obj['name']}</div>
+            </div>, 'value': obj['id']
+        }
+        if (obj.hasOwnProperty('nodes')) {
+            iObj['children'] = this.getChidrenMul(obj['nodes'], iObj['children'])
         }
         return iObj;
     }
@@ -132,10 +259,16 @@ class Socket {
                 ]
                 let arr = []
                 let nameObj = { '全部成员': '全部成员', "离职成员": '离职成员' }
+                let jsonArr = []
+                jsonArr.push(this.exchangeMul(res.data.data))
+                console.log(jsonArr);
                 console.log(this.getNameObj(nameObj, res.data.data));
+                console.log(this.getMulFather({},res.data.data));
                 arr.push(this.exchange(res.data.data))
                 iArr.push({ 'children': arr, 'type': 'group', 'label': '部门' })
                 this.setValue('items', iArr)
+                this.setValue('mulSelect', jsonArr)
+                this.setValue('fatherIds', this.getMulFather({},res.data.data))
                 this.setValue('itemName', this.getNameObj(nameObj, res.data.data))
                 console.log(iArr);
             }
@@ -145,6 +278,7 @@ class Socket {
     }
     @action.bound async getOneDepartment(params) {
         this.setValue('loading', true);
+        this.setValue('allUsers', [])
         try {
             let res = await services.getRequest(services.requestList.getOneDepartmentUser, params)
             if (isDataExist(res)) {
@@ -184,21 +318,76 @@ class Socket {
             console.log(error);
         }
     }
+    handleRoleClick = (label) => {
+        console.log(label);
+    }
     @action.bound async getAllRoles(params) {
         try {
             let res = await services.getRequest(services.requestList.getAllRole, params);
             if (isDataExist(res)) {
                 console.log(res.data.data);
+                this.setValue('initRole', res.data.data)
                 let iArr = []
                 let nameObj = {}
+                const roleGroup = (
+                    <div className='createRole'>
+                        <div onClick={() => {
+                            this.setValue('changeVis', true)
+                            this.setValue('changetype', 'roleg')
+                        }}>修改名称</div>
+                        <div>添加角色</div>
+                        <div>删除</div>
+                    </div>
+                )
+                const roleItem = (
+                    <div className='createRole'>
+                        <div onClick={() => {
+                            this.setValue('changeVis', true)
+                            this.setValue('changetype', 'role')
+                        }}>修改名称</div>
+                        <div onClick={() => {
+                            this.setValue('changeGroupVis', true)
+                        }}>调整分组</div>
+                        <div>删除</div>
+                    </div>
+                )
                 res.data.data.map((item, index) => {
-                    let iObj = { 'key': -item['groupId'], 'label': item['name'], children: [] }
+                    let iObj = {
+                        'key': -item['groupId'], 'label': <div className='item_role'>
+                            <div className='role_name'>
+                                {item['name']}
+                            </div>
+                            <Popover placement='right' trigger='hover' content={roleGroup} overlayClassName='myPopover'>
+                                <div className='role_more'>
+                                    <MoreOutlined onMouseEnter={() => {
+                                        this.setValue('changeId', item['groupId'])
+                                        this.setValue('changeName', item['name'])
+                                    }} />
+                                </div>
+                            </Popover>
+                        </div>, children: []
+                    }
                     if (item.hasOwnProperty('roles') && JSON.stringify(item['roles']) != '{}') {
                         for (const key in item['roles']) {
                             if (Object.hasOwnProperty.call(item['roles'], key)) {
                                 const element = item['roles'][key];
                                 nameObj[key] = element
-                                iObj['children'].push({ 'key': key, 'label': element })
+                                iObj['children'].push({
+                                    'key': key, 'label': <div className='item_role'>
+                                        <div className='role_name'>
+                                            {element}
+                                        </div>
+                                        <Popover placement='right' trigger='hover' content={roleItem} overlayClassName='myPopover'>
+                                            <div className='role_more'>
+                                                <MoreOutlined onMouseEnter={() => {
+                                                    this.setValue('changeId', key)
+                                                    this.setValue('changeName', element)
+                                                    this.setValue('fatherId', item['groupId'])
+                                                }} />
+                                            </div>
+                                        </Popover>
+                                    </div>
+                                })
                             }
                         }
                     }
@@ -230,6 +419,59 @@ class Socket {
             if (isDataExist(res)) {
                 message.success('修改成功')
                 return true;
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    @action.bound async changeRoleGroupName(params) {
+        try {
+            let res = await services.putRequest(services.requestList.changeRoleGroupName, params);
+            if (isDataExist(res)) {
+                message.success('修改成功')
+                return true;
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    @action.bound async changeRoleGroup(params) {
+        try {
+            let res = await services.putRequest(services.requestList.changeRoleGroup, params);
+            if (isDataExist(res)) {
+                message.success('修改成功')
+                return true;
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    @action.bound async createRoleGroup(params) {
+        try {
+            let res = await services.putRequest(services.requestList.createRoleGroup, params);
+            if (isDataExist(res)) {
+                message.success('添加成功')
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    @action.bound async delDepartment(params) {
+        try {
+            let res = await services.putRequest(services.requestList.delDepartment, params);
+            if (isDataExist(res)) {
+                message.success('删除成功')
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    @action.bound async changeDePre(params) {
+        try {
+            let res = await services.putRequest(services.requestList.changeDePre,params);
+            if(isDataExist(res)){
+                message.success('修改成功')
             }
         } catch (error) {
             console.log(error);
