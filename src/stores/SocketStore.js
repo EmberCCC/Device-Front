@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-19 23:01:23
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-07-21 18:43:08
+ * @LastEditTime: 2022-07-21 19:39:30
  * @FilePath: \bl-device-manage-test\src\stores\SocketStore.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -117,10 +117,11 @@ class Socket {
                     this.setValue('changetype', 'de')
                 }}>修改名称</div>
                 <div onClick={() => {
-                    console.log(this.fatherIds['SelectKey']);
+
+                    // console.log(this.fatherIds['changeId']);
                     console.log(this.fatherIds);
                     console.log(this.SelectKey);
-                    this.setValue('preId', this.fatherIds[this.SelectKey])
+                    this.setValue('preId', this.fatherIds[this.changeId])
                     this.setValue('mulVisible', true)
                 }}>调整上级部门</div>
                 <div onClick={() => {
