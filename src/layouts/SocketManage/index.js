@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-19 23:02:26
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-07-20 14:56:20
+ * @LastEditTime: 2022-07-22 16:04:29
  * @FilePath: \bl-device-manage-test\src\layouts\SocketManage\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -14,6 +14,7 @@ import { NavLink } from "react-router-dom";
 import InConLayout from "./inConLayout";
 
 import './index.css'
+import MaLayout from "./MaLayout";
 const SocketManage = observer(({ SocketStore,props }) => {
     const {SocketId} = SocketStore;
     const item = [
@@ -24,11 +25,12 @@ const SocketManage = observer(({ SocketStore,props }) => {
     const changeModel = (key) => {
         console.log(key);
         SocketStore.setValue('SocketId',key.key)
+        SocketStore.setValue('maSelectKey',-1)
     }
     return (
         <div className="socket_all">
             <div className="socket_header">
-                <NavLink to='/baisc'>
+                <NavLink to='/basic'>
                     <div className="socket_header_left"><LeftOutlined style={{color:'#0db3a6'}}/>通讯录</div>
                 </NavLink>
                 <Menu theme="light" mode='horizontal' selectedKeys={[SocketId]} justify='center' onClick={changeModel} items={item} />
@@ -41,6 +43,11 @@ const SocketManage = observer(({ SocketStore,props }) => {
             {
                 SocketId == '1' && (
                     <InConLayout />
+                )
+            }
+            {
+                SocketId == '3' && (
+                    <MaLayout />
                 )
             }
         </div>

@@ -76,11 +76,6 @@ export function post(url, data, options) {
 }
 
 export function put(url, data, options) {
-  // 开发环境使用mock数据
-  // if (config.env === 'dev') {
-  //   url = '/api' + url;
-  // }
-  // data = injectSelfToken(data);
   console.log(JSON.stringify(data));
   if(url === '/uaa/login/token'){
     console.log(`${url}?${stringify(data)}`)
@@ -99,6 +94,21 @@ export function put(url, data, options) {
     });
   }
   return request(url, {
+    method: 'POST',
+    credentials: 'same-origin',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json;charset=utf-8',
+      'Authorization': injectSelfToken()
+    },
+    body: JSON.stringify(data),
+    ...options
+  });
+}
+
+export function putUrl(url,urlData, data, options) {
+  console.log(JSON.stringify(data));
+  return request(`${url}?${stringify(urlData)}`, {
     method: 'POST',
     credentials: 'same-origin',
     headers: {

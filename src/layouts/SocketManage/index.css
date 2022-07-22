@@ -26,3 +26,327 @@
     font-size: 20px;
     height: 20px;
 }
+.in_all {
+    height: 800px;
+    overflow: auto;
+    padding: 10px 20px;
+    display: flex;
+    flex-direction: row;
+    justify-items: center;
+    margin: 0 auto;
+    min-width: 1280px;
+    max-width: 1600px;
+    /* width: 80%; */
+    /* margin: 0 auto; */
+}
+
+.in_left {
+    background: #fafcfe;
+    width: 15%;
+}
+
+.inL_first {
+    -webkit-box-flex: 0;
+    -ms-flex: none;
+    flex: none;
+    /* width: 220px; */
+    transform: translate(50%, 0);
+    margin: 9px auto;
+    justify-self: center;
+    background: #fff;
+    display: inline-block
+}
+
+.all {
+    position: absolute;
+    top: 50px;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    overflow: auto;
+    background-color: #f4f5f5;
+}
+
+.inR_first {
+    padding-left: 10px;
+    display: flex;
+    height: 40px;
+    line-height: 40px;
+    flex-direction: row;
+    justify-content: space-between;
+    border-bottom: 1px solid #e9e9e9;
+}
+
+.inRF_L {
+    font-weight: 700;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.in_right {
+    background-color: white;
+    width: 80%;
+}
+
+.inRF_R {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+}
+
+.inR_Tool {
+    margin-top: 20px;
+    padding-left: 20px;
+    justify-content: space-between;
+    display: flex;
+    flex-direction: row;
+}
+
+.role_item {
+    display: flex;
+    flex-direction: row;
+}
+
+.role_one {
+    max-width: 100%;
+    margin-right: 5px;
+    padding: 0 8px;
+    line-height: 25px;
+    background: #f3f6fc;
+    border-radius: 2px;
+}
+
+.socket_table {
+    padding-top: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.drawer_header {
+    height: 50px;
+    width: 100%;
+    /* padding: 0 20px; */
+    border-bottom: 1px solid #e9e9e9;
+}
+
+.btn_group {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+
+.inRF_R2 {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding-right: 20px;
+}
+
+.inRF_R2 div {
+    color: #0db3a6;
+    cursor: pointer;
+}
+
+.pop_change {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.change_btn {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.switch_des {
+    padding-right: 20px;
+}
+
+.add_btn {
+    padding-top: 20px;
+    border-top: 1px solid #e9e9e9;
+    margin-top: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+.add_modal {
+    display: flex;
+    flex-direction: column;
+    padding: 20px
+}
+
+.role_top {
+    height: 40px;
+    padding: 0 15px;
+    color: #91a1b7;
+}
+
+.rt_F {
+    padding-left: 20px;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+.createRole div {
+    height: 40px;
+    padding: 0 15px;
+    font-size: 14px;
+    line-height: 40px;
+    cursor: pointer;
+}
+
+.createRole div:hover {
+    background-color: rgba(13, 179, 166, .1);
+}
+
+.myPopover .ant-popover-inner-content {
+    padding: 0 !important
+}
+
+.item_role {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.role_more {
+    display: none;
+}
+
+.item_role:hover .role_more {
+    display: unset;
+}
+
+.sel_item {
+    cursor: pointer;
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.sel_item:hover {
+    background-color: rgba(13, 179, 166, .1);
+}
+
+.true {
+    background-color: rgba(13, 179, 166, .1);
+}
+
+.item_l {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.item_rfalse {
+    display: none;
+}
+
+.item_rtrue {
+    display: unset;
+}
+
+.role_name {
+    width: 80%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.changeG_main {
+    padding: 20px;
+}
+
+.change_name {
+    padding: 20px
+}
+
+.changeG_title {
+    margin: 0 auto;
+    padding-top: 20px;
+    margin-bottom: 10px;
+}
+.de_name{
+    width: 60%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.changeG_select {
+    height: 340px;
+    padding-top: 5px;
+    overflow: auto;
+    border: 1px solid #d9d9d9;
+    margin: 0 auto;
+    border-radius: 3px;
+}
+.de_item{
+    display: flex;
+    flex-direction: row;
+}
+.de_more{
+    display: none;
+}
+.de_item:hover .de_more{
+    display: unset;
+}
+.addUser_main{
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+}
+.addUser_top{
+    cursor: pointer;
+    margin-bottom: 20px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    border: 1px dashed #d9d9d9;
+    height: 80px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+.addUser_bottom{
+    display: flex;
+    flex-direction: row;
+}
+.addUser_one{
+    display: flex;
+    flex-direction: row;
+    height: 30px;
+    cursor: pointer;
+    margin: 5px 0 0 5px;
+    padding: 5px 10px;
+    background: #f3f6fc;
+    border-radius: 1px;
+}
+.one_name{
+    margin-right: 5px;
+    text-align: center;
+}
+.one_cross:hover{
+    color: #d84636;
+    background: #fff;
+}
+.addUser_left{
+    border: 1px solid #d9d9d9;
+    border-right: none;
+    padding: 5px;
+    height: 400px;
+    width: 50%;
+}
+.addUser_right{
+    border: 1px solid #d9d9d9;
+    padding: 5px;
+    height: 400px;
+    width: 50%;
+}

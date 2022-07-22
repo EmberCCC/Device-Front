@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-13 10:02:28
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-07-19 07:37:08
+ * @LastEditTime: 2022-07-22 18:22:34
  * @FilePath: \bl-device-manage-test\src\components\GlobalTabel2\selectLayout.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -75,15 +75,15 @@ const SelectLayout = observer(({ TableStore, HomeStore }) => {
     const handleDateChange = (e, item, index, format, type) => {
         console.log(e);
         if (type == 1) {
-            item['operand'] = moment(e).format(format)
+            item['operand'] = moment(e).format('YYYY-MM-DD HH:mm:ss')
             let iSelectList = [...selectList]
             iSelectList.splice(index, 1, item);
             setSelectList(iSelectList);
             console.log(selectList);
         } else if (type == 2) {
             item['operand'] = []
-            item['operand'].push(moment(e[0]).format(format))
-            item['operand'].push(moment(e[1]).format(format))
+            item['operand'].push(moment(e[0]).format('YYYY-MM-DD HH:mm:ss'))
+            item['operand'].push(moment(e[1]).format('YYYY-MM-DD HH:mm:ss'))
             let iSelectList = [...selectList]
             iSelectList.splice(index, 1, item);
             setSelectList(iSelectList);
@@ -153,7 +153,7 @@ const SelectLayout = observer(({ TableStore, HomeStore }) => {
         if (item) {
             if (item['fieldTypeId'] == '0' || item['fieldTypeId'] == select_arr.length - 3) {
                 return (
-                    <div className="sel_item" key={index}>
+                    <div key={index}>
                         <div className="sel_title" key={index}>
                             <div className="sel_title_left">{item['fieldTypeId'] == select_arr.length - 3 ? '创建人' : item['fieldInfo']['title']}</div>
                             <Select style={{ width: 120 }} defaultValue={item['operator']} bordered={false} onChange={(e) => handleModelChange(e, item, index)}>
@@ -200,7 +200,7 @@ const SelectLayout = observer(({ TableStore, HomeStore }) => {
                 )
             } else if (item['fieldTypeId'] == '1') {
                 return (
-                    <div className="sel_item" key={index}>
+                    <div key={index}>
                         <div className="sel_title" key={index}>
                             <div className="sel_title_left">{item['fieldInfo']['title']}</div>
                             <Select style={{ width: 120 }} defaultValue={item['operator']} bordered={false} onChange={(e) => handleModelChange(e, item, index)}>
@@ -223,7 +223,7 @@ const SelectLayout = observer(({ TableStore, HomeStore }) => {
                 )
             } else if (item['fieldTypeId'] == '2') {
                 return (
-                    <div className="sel_item" key={index}>
+                    <div key={index}>
                         <div className="sel_title" key={index}>
                             <div className="sel_title_left">{item['fieldInfo']['title']}</div>
                             <Select style={{ width: 120 }} defaultValue={item['operator']} bordered={false} onChange={(e) => handleModelChange(e, item, index)}>
@@ -252,7 +252,7 @@ const SelectLayout = observer(({ TableStore, HomeStore }) => {
                     iFormat = 'YYYY-MM-DD HH:mm:ss'
                 }
                 return (
-                    <div className="sel_item" key={index}>
+                    <div key={index}>
                         <div className="sel_title" key={index}>
                             <div className="sel_title_left">{item['fieldTypeId'] == select_arr.length - 2 ? '创建时间' : item['fieldTypeId'] == select_arr.length - 1 ? '更新时间' : item['fieldInfo']['title']}</div>
                             <Select style={{ width: 120 }} bordered={false} onChange={(e) => handleModelChange(e, item, index)}>
@@ -300,7 +300,7 @@ const SelectLayout = observer(({ TableStore, HomeStore }) => {
                 )
             } else if (item['fieldTypeId'] == '5' || item['fieldTypeId'] == '7') {
                 return (
-                    <div className="sel_item" key={index}>
+                    <div key={index}>
                         <div className="sel_title" key={index}>
                             <div className="sel_title_left">{item['fieldInfo']['title']}</div>
                             <Select style={{ width: 120 }} defaultValue={item['operator']} bordered={false} onChange={(e) => handleModelChange(e, item, index)}>
@@ -340,7 +340,7 @@ const SelectLayout = observer(({ TableStore, HomeStore }) => {
                 )
             } else if (item['fieldTypeId'] == '4' || item['fieldTypeId'] == '6') {
                 return (
-                    <div className="sel_item" key={index}>
+                    <div key={index}>
                         <div className="sel_title" key={index}>
                             <div className="sel_title_left">{item['fieldTypeId'] == select_arr.length - 3 ? '创建人' : item['fieldInfo']['title']}</div>
                             <Select style={{ width: 120 }} defaultValue={item['operator']} bordered={false} onChange={(e) => handleModelChange(e, item, index)}>

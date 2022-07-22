@@ -1,0 +1,84 @@
+.ma_title {
+    margin: 16px 16px 6px;
+    height: 28px;
+    color: #91a1b7;
+    font-size: 14px;
+    line-height: 28px;
+}
+.ma_add{
+    margin: 16px 16px 6px;
+    color: #0db3a6;
+    font-size: 16px;
+    cursor: pointer;
+}
+.ma_normal{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.ma_left_menu{
+    cursor: pointer;
+    line-height: 40px;
+    height: 40px;
+    padding-left: 15px;
+}
+.ma_left_menu:hover{
+    background-color: #e6f6f4;
+}
+.ma_left_menu:hover .one_menu_right{
+    display: unset;
+}
+.one_menu{
+    padding-right: 16px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.one_menu_right{
+    display: none;
+}
+.checked{
+    border-left: 2px solid #0db3a6;
+    background-color: #e6f6f4;
+}
+.ma_right_title{
+    height: 50px;
+    padding: 10px 20px 0;
+    font-weight: 700;
+    line-height: 40px;
+    border-bottom: 1px solid #eeecec;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.ma_right_content{
+    margin: 0 20px;
+}
+.ma_right_m{
+    display: flex;
+    flex-direction: row;
+    border-bottom: 1px solid #eeecec;
+    padding: 20px 0;
+}
+.mar_l{
+    width: 180px;
+    color: #1f2d3d;
+    font-size: 14px
+}
+.addM{
+    cursor: pointer;
+    color: #0db3a6;
+}
+.de_list{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+.de_one{
+    margin: 3px 5px 3px 0;
+    display: inline-block;
+    margin: 5px 0 0 5px;
+    padding: 5px 10px;
+    background: #f3f6fc;
+    border-radius: 1px;
+}

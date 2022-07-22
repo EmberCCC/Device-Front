@@ -1,21 +1,21 @@
 /*
  * @Author: your name
  * @Date: 2022-03-28 20:01:19
- * @LastEditTime: 2022-07-07 19:26:01
+ * @LastEditTime: 2022-07-22 15:43:36
  * @LastEditors: EmberCCC 1810888456@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage-test\src\layouts\BasicManage\index.js
  */
 import React from 'react'
-import { Layout, Button, Menu, Dropdown, Divider, Modal } from 'antd';
-import { LogoutOutlined, ExclamationCircleOutlined, BulbOutlined, QuestionCircleTwoTone, ToolTwoTone } from '@ant-design/icons';
+import { Layout, Menu } from 'antd';
+import { LogoutOutlined, BulbOutlined, QuestionCircleTwoTone, ToolTwoTone } from '@ant-design/icons';
 import { NavLink, withRouter } from 'react-router-dom';
 import { getCookie } from 'utils/dataTools';
 import { firstFormName } from '../../constants/status_constant'
 import './index.css'
 import { inject } from 'mobx-react';
 import { toJS } from 'mobx';
-const { Header, Sider, Content } = Layout;
+const { Header } = Layout;
 
 @withRouter
 @inject('DesignStore', 'HomeStore')

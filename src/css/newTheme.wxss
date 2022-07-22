@@ -100,9 +100,6 @@
   color: #161616;
   font-weight: normal;
 }
-#root .ant-table-tbody {
-  background: #FAFAFA;
-}
 #root .ant-table-row {
   color: #9D9D9D;
   font-size: 12px;

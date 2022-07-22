@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-19 23:01:23
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-07-21 19:39:30
+ * @LastEditTime: 2022-07-23 00:49:20
  * @FilePath: \bl-device-manage-test\src\stores\SocketStore.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -19,7 +19,10 @@ class Socket {
     constructor() {
         makeObservable(this)
     }
-    @observable SocketId = '1'
+
+    @observable userAuth = {}
+
+    @observable SocketId = '3'
     @observable SelectKey = '全部成员';
     @observable allUsers = [];
     @observable selectRowKeys = [];
@@ -59,50 +62,9 @@ class Socket {
     @observable addUserIds = [];
     @observable addUserObjs = {};
 
+    @observable sysList = {};
 
-    @action.bound setValue(key, value) {
-        this[key] = value;
-    }
-    @action.bound async getAllUsers(params) {
-        this.setValue('loading', true)
-        try {
-            let res = await services.getRequest(services.requestList.getAllUsers, params);
-            this.setValue('loading', false)
-            if (isDataExist(res)) {
-                console.log(res.data);
-                this.setValue('allUsers', res.data.data)
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    }
-    @action.bound async getOneUser(params) {
-        this.setValue('loading', true)
-        this.setValue('oneUserInfo', {})
-        try {
-            let res = await services.getRequest(services.requestList.getOneUser, params);
-            this.setValue('loading', false)
-
-            if (isDataExist(res)) {
-                let depaermentIds = []
-                let roleIds = []
-                for (const key in res.data.data['departments']) {
-                    if (Object.hasOwnProperty.call(res.data.data['departments'], key)) {
-                        depaermentIds.push(key)
-                    }
-                }
-                for (const key in res.data.data['roles']) {
-                    if (Object.hasOwnProperty.call(res.data.data['roles'], key)) {
-                        roleIds.push(key)
-                    }
-                }
-                this.setValue('oneUserInfo', { ...res.data.data, 'departmentsIds': depaermentIds, 'roleIds': roleIds ,'userId':params['userId']})
-                console.log({ ...res.data.data, 'departmentsIds': depaermentIds, 'roleIds': roleIds });
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    }
+    @observable createRoleVis = false
     handleClick = ({ key, domEvent }) => {
         this.setValue('SelectKey', key);
         this.getOneDepartment({ 'departmentId': key })
@@ -128,14 +90,22 @@ class Socket {
                     this.setValue('addVisible', true)
                 }}>添加子部门</div>
                 <div onClick={() => {
-                    Modal.warning({
+                    Modal.confirm({
                         title: `您确定要删除${this.changeName}吗？`,
-                        cancelText: '取消',
+                        cancelText:'取消',
                         okText: '确定',
                         onOk: () => {
                             console.log(this.changeId);
-                            this.delDepartment({ 'departmentId': this.changeId });
+                            this.delDepartment({ 'departmentId': this.changeId }).then(() => {
+                                this.getAllDepartment();
+                                this.setValue('SelectKey', 1)
+                                this.getOneDepartment({ 'departmentId': 1 })
+                            })
+                        },
+                        onCancel: () => {
+                            Modal.destroyAll();
                         }
+                        
                     })
                 }}>删除</div>
             </div>
@@ -253,11 +223,57 @@ class Socket {
         }
         return nameObj;
     }
+    handleRoleClick = (label) => {
+        console.log(label);
+    }
+    @action.bound setValue(key, value) {
+        this[key] = value;
+    }
+    @action.bound async getAllUsers(params) {
+        this.setValue('loading', true)
+        try {
+            let res = await services.getRequest(services.requestList.getAllUsers, params);
+            this.setValue('loading', false)
+            if (isDataExist(res)) {
+                console.log(res.data);
+                this.setValue('allUsers', res.data.data)
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    @action.bound async getOneUser(params) {
+        this.setValue('loading', true)
+        this.setValue('oneUserInfo', {})
+        try {
+            let res = await services.getRequest(services.requestList.getOneUser, params);
+            this.setValue('loading', false)
+
+            if (isDataExist(res)) {
+                let depaermentIds = []
+                let roleIds = []
+                for (const key in res.data.data['departments']) {
+                    if (Object.hasOwnProperty.call(res.data.data['departments'], key)) {
+                        depaermentIds.push(key)
+                    }
+                }
+                for (const key in res.data.data['roles']) {
+                    if (Object.hasOwnProperty.call(res.data.data['roles'], key)) {
+                        roleIds.push(key)
+                    }
+                }
+                this.setValue('oneUserInfo', { ...res.data.data, 'departmentsIds': depaermentIds, 'roleIds': roleIds, 'userId': params['userId'] })
+                console.log({ ...res.data.data, 'departmentsIds': depaermentIds, 'roleIds': roleIds });
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     @action.bound async getAllDepartment(params) {
         try {
             let res = await services.getRequest(services.requestList.getAllDepartment, params);
             if (isDataExist(res)) {
-                console.log(res.data.data);
                 this.setValue('departments', res.data.data)
                 let iArr = [
                     {
@@ -281,16 +297,12 @@ class Socket {
                 let nameObj = { '全部成员': '全部成员', "离职成员": '离职成员' }
                 let jsonArr = []
                 jsonArr.push(this.exchangeMul(res.data.data))
-                console.log(jsonArr);
-                console.log(this.getNameObj(nameObj, res.data.data));
-                console.log(this.getMulFather({}, res.data.data));
                 arr.push(this.exchange(res.data.data))
                 iArr.push({ 'children': arr, 'type': 'group', 'label': '部门' })
                 this.setValue('items', iArr)
                 this.setValue('mulSelect', jsonArr)
                 this.setValue('fatherIds', this.getMulFather({}, res.data.data))
                 this.setValue('itemName', this.getNameObj(nameObj, res.data.data))
-                console.log(iArr);
             }
         } catch (error) {
             console.log(error);
@@ -312,11 +324,11 @@ class Socket {
         }
     }
     @action.bound async getAddUserList(params) {
-        this.setValue('addUserList',[])
+        this.setValue('addUserList', [])
         try {
-            let res = await services.getRequest(services.requestList.getOneDepartmentUser,params)
-            if(isDataExist(res)){
-                this.setValue('addUserList',res.data.data);
+            let res = await services.getRequest(services.requestList.getOneDepartmentUser, params)
+            if (isDataExist(res)) {
+                this.setValue('addUserList', res.data.data);
             }
         } catch (error) {
             console.log(error);
@@ -349,9 +361,7 @@ class Socket {
             console.log(error);
         }
     }
-    handleRoleClick = (label) => {
-        console.log(label);
-    }
+
     @action.bound async getAllRoles(params) {
         try {
             let res = await services.getRequest(services.requestList.getAllRole, params);
@@ -366,8 +376,25 @@ class Socket {
                             this.setValue('changeVis', true)
                             this.setValue('changetype', 'roleg')
                         }}>修改名称</div>
-                        <div>添加角色</div>
-                        <div>删除</div>
+                        <div onClick={() => {
+                            this.setValue('createRoleVis', true);
+                        }}>添加角色</div>
+                        <div onClick={() => {
+                            Modal.confirm({
+                                title: '您确定删除',
+                                cancelText:"取消",
+                                onCancel:() => {
+                                    Modal.destroyAll()
+                                },
+                                onOk: () => {
+                                    this.delRoleGroup({ 'groupId': this.changeId }).then(() => {
+                                        this.getAllRoles();
+                                        this.setValue('SelectKey', this.initRole[0]['groupId'])
+                                        this.getOneRoleUser({ 'roleId': this.SelectKey })
+                                    })
+                                }
+                            })
+                        }}>删除</div>
                     </div>
                 )
                 const roleItem = (
@@ -379,7 +406,20 @@ class Socket {
                         <div onClick={() => {
                             this.setValue('changeGroupVis', true)
                         }}>调整分组</div>
-                        <div>删除</div>
+                        <div onClick={() => {
+                            Modal.confirm({
+                                title: '您确定删除',
+                                content: "删除角色同时会删除权限",
+                                cancelText:'取消',
+                                onOk: () => {
+                                    this.delRole({ 'roleId': this.changeId }).then(() => {
+                                        this.getAllRoles();
+                                        this.setValue('SelectKey', this.initRole[0]['groupId'])
+                                        this.getOneRoleUser({ 'roleId': this.SelectKey })
+                                    })
+                                }
+                            })
+                        }}>删除</div>
                     </div>
                 )
                 let preId = {}
@@ -494,7 +534,7 @@ class Socket {
     }
     @action.bound async delDepartment(params) {
         try {
-            let res = await services.putRequest(services.requestList.delDepartment, params);
+            let res = await services.putUrlRequest(services.requestList.delDepartment, params);
             if (isDataExist(res)) {
                 message.success('删除成功')
             }
@@ -512,10 +552,10 @@ class Socket {
             console.log(error);
         }
     }
-    @action.bound async changeUserInfo(params){
+    @action.bound async changeUserInfo(params) {
         try {
-            let res = await services.putRequest(services.requestList.changeUserInfo,params);
-            if(isDataExist(res)){
+            let res = await services.putRequest(services.requestList.changeUserInfo, params);
+            if (isDataExist(res)) {
                 message.success('修改成功')
             }
             SocketStore.setValue('visible', false)
@@ -523,6 +563,135 @@ class Socket {
             console.log(error);
         }
     }
+    @action.bound async saveRoleUser(urlData, params) {
+        try {
+            let res = await services.putUrlRequest(services.requestList.saveRoleUser, urlData, params);
+            if (isDataExist(res)) {
+                message.success('保存成功')
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    @action.bound async addRole(params) {
+        try {
+            let res = await services.putRequest(services.requestList.addRole, params);
+            if (isDataExist(res)) {
+                message.success('创建成功')
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    @action.bound async delRole(params) {
+        try {
+            let res = await services.putUrlRequest(services.requestList.delRole, params)
+            if (isDataExist(res)) {
+                message.success('删除成功');
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    @action.bound async delRoleGroup(params) {
+        try {
+            let res = await services.putUrlRequest(services.requestList.delRoleGroup, params)
+            if (isDataExist(res)) {
+                message.success('删除成功');
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+
+    @observable normalList = []
+    @observable maSelectObj = {}
+    @observable maSelectKey = '-1'
+    @observable canClick = true
+
+    @observable deValue = 'all'
+    @observable roValue = 'all'
+    @observable inDCheck = false
+    @observable inRLCheck = false
+    @observable inRMCheck = false
+    @observable maId = null;
+    @observable norName = {}
+
+    @observable groupUserIdObj = {}
+
+    @action.bound async getNormalList(params) {
+        this.setValue('canClick', false)
+        try {
+            let res = await services.getRequest(services.requestList.getAllNorList, params);
+            if (isDataExist(res)) {
+                console.log(res.data.data);
+                let obj = {}
+                let gObj = {}
+                res.data.data.map((item,index) => {
+                    obj[item['id']] = item['name']
+                    item['admins'].map((one,oIndex) => {
+                        gObj[one['userId']] = item['id'];
+                    })
+                })
+                this.setValue('norName',obj)
+                this.setValue('groupUserIdObj',gObj)
+                console.log(obj);
+                console.log(gObj);
+                this.setValue('canClick', true)
+                this.setValue('normalList', res.data.data)
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    @action.bound async delNormalGroup(params) {
+        try {
+            let res = await services.putUrlRequest(services.requestList.delNormalGroup, params);
+            if (isDataExist(res)) {
+                console.log(res.data.data);
+                message.success('删除成功')
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    @action.bound async creNormalGroup(params) {
+        try {
+            let res = await services.putRequest(services.requestList.createNormalGroup, params);
+            if (isDataExist(res)) {
+                console.log(res.data.data);
+                message.success('创建成功')
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    @action.bound async getAllSys(params) {
+        try {
+            let res = await services.getRequest(services.requestList.getAllSys, params);
+            if (isDataExist(res)) {
+                this.setValue('sysList',res.data.data)
+                let arr = []
+                Object.keys(res.data.data).map((item,index) => {
+                    arr.push(item)
+                })
+                this.setValue('addUserIds',arr)
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    // @action.bound async createSys(params) {
+    //     try {
+    //         let res = await services.putUrlRequest(services.requestList.getAllSys, params);
+    //         if (isDataExist(res)) {
+    //             message.success('创建成功')
+    //         }
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // }
 }
 
 let SocketStore = new Socket()

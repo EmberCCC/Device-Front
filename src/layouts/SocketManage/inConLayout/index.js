@@ -2,26 +2,26 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-19 23:03:37
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-07-21 19:10:20
+ * @LastEditTime: 2022-07-22 15:00:22
  * @FilePath: \bl-device-manage-test\src\layouts\SocketManage\inConLayout\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
-import { CheckCircleFilled, FolderFilled } from "@ant-design/icons";
+import { CheckCircleFilled, DeleteOutlined, FolderFilled } from "@ant-design/icons";
 import { Button, Checkbox, Divider, Drawer, Form, Input, Menu, message, Modal, Popover, Radio, Select, Space, Spin, Switch, Table, TreeSelect } from "antd";
 import { toJS } from "mobx";
 import { inject, observer } from "mobx-react";
 import React, { useEffect, useRef, useState } from "react";
 
-import './index.css'
+import '../index.css'
 const InConLayout = observer(({ SocketStore }) => {
     const { roleList, SelectKey, allUsers, selectRowKeys, visible, oneUserInfo, loading, departments,
         items, itemName, itemRoles, rolesName, changetype, changeVis, changeId,
         changeName, changeGroupVis, fatherId, initRole, addVisible, mulSelect, mulVisible, fatherIds,
-        preId, addUserVis, addUserList, addUserIds, addUserObjs } = SocketStore;
+        preId, addUserVis, addUserList, addUserIds, addUserObjs, createRoleVis } = SocketStore;
     const [form] = Form.useForm();
-    const [mul, setMul] = useState(null);
     const [createVis, setCreateVis] = useState(false)
     const [total, setTotal] = useState('department')
+    const [createRole, setCreateRole] = useState(null);
     const ref = useRef();
     const refAdd = useRef();
     const refCreate = useRef()
@@ -99,7 +99,23 @@ const InConLayout = observer(({ SocketStore }) => {
                     </div>
                 )
             }
-        },
+        },{
+            key: 'operation',
+            fixed: 'right',
+            width: 100,
+            render: (text, record, index) => <DeleteOutlined onClick={() => {
+                let arr = []
+                roleList.map((item) => {
+                    if(item['userId'] != text['userId']){
+                        arr.push(item['userId'])
+                    }
+                })
+                SocketStore.saveRoleUser({ 'roleId': SelectKey }, arr).then(() => {
+                    SocketStore.getOneRoleUser({ 'roleId': SelectKey })
+                    SocketStore.getAllRoles()
+                })
+            }} style={{cursor:'pointer'}}/>,
+          },
     ]
     const handleChange = (value) => {
         setTotal(value.target.value)
@@ -196,7 +212,7 @@ const InConLayout = observer(({ SocketStore }) => {
         if (type == 'group') {
             setCreateVis(true)
         } else {
-            console.log(type);
+            SocketStore.setValue('createRoleVis', true)
         }
     }
     const handleRCreate = () => {
@@ -263,13 +279,37 @@ const InConLayout = observer(({ SocketStore }) => {
     }
     const haneleAddUser = (value) => {
         SocketStore.getAddUserList({ 'departmentId': value });
-        console.log(value);
-        console.log(toJS(addUserIds));
     }
     const handleAddRole = () => {
-        console.log(toJS(addUserIds));
-        console.log(toJS(SelectKey));
-        console.log(toJS(roleList));
+        roleList.map((item, index) => {
+            if (addUserIds.indexOf(item['userId']) <= -1) {
+                addUserIds.push(toJS(item['userId']))
+            }
+        })
+        SocketStore.saveRoleUser({ 'roleId': SelectKey }, addUserIds).then(() => {
+            SocketStore.getOneRoleUser({ 'roleId': SelectKey })
+            SocketStore.getAllRoles()
+        })
+        SocketStore.setValue('addUserVis', false)
+    }
+    const handleCreateRole = () => {
+        if (ref.current.input.value == '' || createRole == null) {
+            message.info('请输入相应的信息')
+        } else {
+            console.log(ref.current.input.value);
+            console.log(createRole);
+            SocketStore.setValue('createRoleVis', false)
+            SocketStore.addRole({ 'groupId': createRole, 'roleName': ref.current.input.value }).then(() => {
+                SocketStore.getOneRoleUser({ 'roleId': SelectKey })
+                SocketStore.getAllRoles()
+            })
+
+        }
+
+    }
+    const handleCreateChange = (value) => {
+        console.log(value);
+        setCreateRole(value)
     }
     const changeNameContent = (
         <div className="pop_change">
@@ -383,7 +423,6 @@ const InConLayout = observer(({ SocketStore }) => {
                                                     type: 'checkbox',
                                                     ...rowSelection,
                                                 }}
-                                                bordered
                                                 onRow={(key, record) => {
                                                     return {
                                                         onClick: event => {
@@ -453,7 +492,6 @@ const InConLayout = observer(({ SocketStore }) => {
                                                     type: 'checkbox',
                                                     ...rowSelection,
                                                 }}
-                                                bordered
                                             />
                                         )
                                     }
@@ -555,17 +593,20 @@ const InConLayout = observer(({ SocketStore }) => {
                             itemRoles.map((item, index) => {
                                 let checkClass = "false"
                                 if (-item['key'] == fatherId) checkClass = "true"
-                                return (
-                                    <div className={"sel_item " + checkClass} key={index} onClick={() => handleSelect(-item['key'])}>
-                                        <div className="item_l">
-                                            <div className="item_l"><FolderFilled style={{ color: '#248af9' }} /></div>
-                                            <div className="item_l">{initRole[index]['name']}</div>
+                                if(index < initRole.length && initRole[index].hasOwnProperty('name')){
+                                    return (
+                                        <div className={"sel_item " + checkClass} key={index} onClick={() => handleSelect(-item['key'])}>
+                                            <div className="item_l">
+                                                <div className="item_l"><FolderFilled style={{ color: '#248af9' }} /></div>
+                                                <div className="item_l">{initRole[index]['name']}</div>
+                                            </div>
+                                            <div className={"item_r" + checkClass}>
+                                                <CheckCircleFilled style={{ color: '#248af9' }} />
+                                            </div>
                                         </div>
-                                        <div className={"item_r" + checkClass}>
-                                            <CheckCircleFilled style={{ color: '#248af9' }} />
-                                        </div>
-                                    </div>
-                                )
+                                    )
+                                }
+                                
                             })
                         }
                     </div>
@@ -588,18 +629,18 @@ const InConLayout = observer(({ SocketStore }) => {
                 <div className="addUser_main">
                     <div className="addUser_top">
                         {
-                            Object.keys(addUserObjs).map((key,index) => {
+                            Object.keys(addUserObjs).map((key, index) => {
                                 return (
                                     <div className="addUser_one" key={index}>
                                         <div className="one_name">{addUserObjs[key]}</div>
                                         <div onClick={() => {
                                             console.log(key);
-                                            let obj = {...addUserObjs}
+                                            let obj = { ...addUserObjs }
                                             let arr = [...addUserIds]
-                                            arr.splice(arr.indexOf(key),1)
+                                            arr.splice(arr.indexOf(key), 1)
                                             delete obj[key]
-                                            SocketStore.setValue('addUserObjs',obj)
-                                            SocketStore.setValue('addUserIds',arr)
+                                            SocketStore.setValue('addUserObjs', obj)
+                                            SocketStore.setValue('addUserIds', arr)
                                         }} className="one_cross">X</div>
                                     </div>
                                 )
@@ -650,6 +691,34 @@ const InConLayout = observer(({ SocketStore }) => {
                     <div className="add_btn">
                         <Button style={{ marginRight: '15px' }} onClick={() => SocketStore.setValue('addUserVis', false)}>取消</Button>
                         <Button type='primary' onClick={handleAddRole}>确定</Button>
+                    </div>
+                </div>
+            </Modal>
+            <Modal title='创建角色' visible={createRoleVis} onCancel={() => SocketStore.setValue('createRoleVis', false)} footer={null} destroyOnClose={true}>
+                <div className="addUser_main">
+                    <div style={{ marginBottom: '20px' }}>
+                        <div>
+                            名称
+                        </div>
+                        <Input ref={ref} />
+                    </div>
+                    <div style={{ marginBottom: '20px' }}>
+                        <div>
+                            目标分组
+                        </div>
+                        <Select style={{ width: '100%' }} onChange={handleCreateChange}>
+                            {
+                                initRole.map((item, index) => {
+                                    return (
+                                        <Select.Option value={item['groupId']} key={index}>{item['name']}</Select.Option>
+                                    )
+                                })
+                            }
+                        </Select>
+                    </div>
+                    <div className="add_btn">
+                        <Button style={{ marginRight: '15px' }} onClick={() => SocketStore.setValue('createRoleVis', false)}>取消</Button>
+                        <Button type='primary' onClick={handleCreateRole}>确定</Button>
                     </div>
                 </div>
             </Modal>
