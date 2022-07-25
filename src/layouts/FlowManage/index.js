@@ -1,312 +1,455 @@
-import React, { useState, useRef, useCallback, useMemo, useEffect } from 'react';
-import { Layout, Button, Menu, Dropdown, Divider, Select, Checkbox, List, message } from 'antd';
-import ReactFlow, {
-  ReactFlowProvider,
-  addEdge,
-  useNodesState,
-  useEdgesState,
-  Controls,
-  MiniMap,
-  MarkerType
-} from 'react-flow-renderer';
-import * as services from '../../services/design';
-import Sidebar from './Sidebar';
-import FlowNode from './Node/FlowNode'
-import CopyNode from './Node/CopyNode'
-import EndNode from './Node/EndNode'
+/*
+ * @Author: EmberCCC 1810888456@qq.com
+ * @Date: 2022-04-11 16:11:20
+ * @LastEditors: EmberCCC 1810888456@qq.com
+ * @LastEditTime: 2022-07-25 19:50:00
+ * @FilePath: \bl-device-manage-test\src\layouts\FlowManage\index.js
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 
-import './index.css';
-import { isDataExist } from 'utils/dataTools';
-import { observable } from 'mobx';
 
-const { Header, Sider, Content } = Layout;
-const { Option } = Select;
-const initialNodes = [
-  {
-    "id": "0",
-    "type": "input",
-    "data": {
-      "label": "开始流程",
-      'person': []
+/*
+ * @Author: EmberCCC 1810888456@qq.com
+ * @Date: 2022-04-11 16:11:20
+ * @LastEditors: EmberCCC 1810888456@qq.com
+ * @LastEditTime: 2022-07-25 16:20:11
+ * @FilePath: \bl-device-manage-test\src\layouts\FlowManage\index.js
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
+import { BulbOutlined, CopyOutlined, FormOutlined, NodeExpandOutlined, PlayCircleOutlined, PoweroffOutlined } from "@ant-design/icons";
+import { CanvasToolbar, createGraphConfig, XFlow, XFlowNodeCommands, CanvasScaleToolbar, CanvasSnapline, JsonSchemaForm, NsJsonSchemaForm, CanvasNodePortTooltip, FlowchartCanvas, FlowchartExtension, useXFlowApp, XFlowGraphCommands, MODELS, XFlowEdgeCommands } from "@antv/xflow";
+import { inject, observer } from "mobx-react";
+import AuthShape from './Self_Form/field_auth';
+import React, { useEffect, useState } from "react";
+import './index.less'
+import '@antv/xflow/dist/index.css'
+import { useToolbarConfig } from "./tool_bar";
+import { controlMapService } from './Self_Form'
+import { set } from "lodash";
+import Node_name from "./Self_Form/node_name";
+import Node_copy from "./Self_Form/node_copy";
+import Node_charge from "./Self_Form/node_charge";
+import Flow_Config from "./flowConfig";
+import getPorts from "./getports";
+import { changeFlow } from "./changeTool";
+import { message } from "antd";
+import Flow_head from "./flow_head";
+import { toJS } from "mobx";
+export const useGraphConfig = createGraphConfig(graphConfig => {
+  graphConfig.setX6Config({
+    grid: false,
+    mousewheel: {
+      enabled: true,
+      minScale: 0.5,
+      maxScale: 3,
     },
-    "position": {
-      "x": 254,
-      "y": -76
+    // 节点是否可旋转
+    rotating: false,
+    // 节点是否可调整大小
+    resizing: false,
+    selecting: {
+      enabled: false,
+      multiple: false,
+      selectCellOnMoved: false,
+      showNodeSelectionBox: false,
+      movable: false,
     },
-    "positionAbsolute": {
-      "x": 254,
-      "y": -76
-    }
-  },
-  {
-    "id": "-1",
-    "type": "end",
-    "data": {
-      "label": "结束流程",
-      'person': []
-
+    connecting: {
+      router: {
+        name: 'manhattan',
+        args: {
+          padding: 0,
+        },
+      },
+      connector: {
+        name: 'rounded',
+        args: {
+          radius: 2,
+        },
+      },
+      anchor: 'center',
+      connectionPoint: 'anchor',
+      allowBlank: false,
+      snap: {
+        radius: 20,
+      },
+      validateConnection({ targetMagnet }) {
+        return !!targetMagnet
+      },
     },
-    "position": {
-      "x": 198,
-      "y": 112
-    },
-    "positionAbsolute": {
-      "x": 198,
-      "y": 112
-    }
-  },
-  {
-    "id": "node_1",
-    "type": "FlowNode",
-    "position": {
-      "x": 236.25,
-      "y": 32.5
-    },
-    "data": {
-      "label": "FlowNode node",
-      'person': []
-    },
-    "positionAbsolute": {
-      "x": 236.25,
-      "y": 32.5
-    }
-  }
-];
-const initialEdges = [
-  {
-    "source": "0",
-    "sourceHandle": null,
-    "target": "node_1",
-    "targetHandle": "top",
-    "markerEnd": {
-      "type": "arrow"
-    },
-    "id": "reactflow__edge-0-node_1top"
-  },
-  {
-    "source": "node_1",
-    "sourceHandle": "bottom",
-    "target": "-1",
-    "targetHandle": null,
-    "markerEnd": {
-      "type": "arrow"
-    },
-    "id": "reactflow__edge-node_1bottom--1"
-  }
-]
-const nodeTypes = { FlowNode: FlowNode, CopyNode: CopyNode, end: EndNode };
-
-let id = 0;
-const getId = () => `node_${++id}`;
-
-const DnDFlow = (props) => {
-  const reactFlowWrapper = useRef(null);
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-  const [perArr, setPerArr] = useState([]);
-  const [reactFlowInstance, setReactFlowInstance] = useState(null);
-  const [nodeName, setNodeName] = useState('');
-  const [nodeId, setNodeId] = useState('');
-  const [person, setPerson] = useState({});
-  const [children, setChildren] = useState([])
-
-  const field = [];
-  let fieldProp = {};
-  field.map((item) => {
-    fieldProp[item.propertyId] = []
   })
-  useEffect(() => {
-    // let personList = Object.assign({}, props.location.state.PersonListT)
-    // console.log(person);
-    // let newC = []
-    // Object.keys(personList).map((item) => {
-    //   if (personList[item] != undefined) {
-    //     newC.push(<Option key={personList[item].id}>{personList[item].nickName}</Option>)
-    //   }
-    // })
-    // setPerson(personList);
-    // setChildren(newC);
-  }, [])
-  useEffect(() => {
-    setNodes((nds) =>
-      nds.map((node) => {
-        if (node.id === nodeId) {
-          // it's important that you create a new object here
-          // in order to notify react flow about the change
-          node.data = {
-            ...node.data,
-            label: nodeName,
-            person: perArr
-          };
-        }
-        return node;
-      })
-    );
-  }, [nodeName, setNodeName, perArr, setPerArr]);
-
-  const onConnect = useCallback((params) => {
-    let obj = {
-      type: MarkerType.Arrow,
+  graphConfig.setDefaultEdgeRender(props => {
+    console.log(props);
+  })
+  graphConfig.setDefaultNodeRender(props => {
+    if (props.data.typeId == '1') {
+      return <div className="react-node"><FormOutlined /> {props.data.label} </div>;
+    } else if (props.data.typeId == '2') {
+      return <div className="react-node"><CopyOutlined /> {props.data.label} </div>;
+    } else if (props.data.typeId == '3') {
+      return <div className="react-node"><NodeExpandOutlined /> {props.data.label} </div>;
+    } else if (props.data.typeId == '-2') {
+      return <div className="react-node"><PoweroffOutlined /> {props.data.label} </div>;
+    } else if (props.data.typeId == '-1') {
+      return <div className="react-node"><PlayCircleOutlined /> {props.data.label} </div>;
     }
-    params.markerEnd = obj
-    setEdges((eds) => addEdge(params, eds))
-  }, []);
-
-  const onDragOver = useCallback((event) => {
-    event.preventDefault();
-    event.dataTransfer.dropEffect = 'move';
-  }, []);
-
-  const onDrop = useCallback(
-    (event) => {
-      event.preventDefault();
-
-      const reactFlowBounds = reactFlowWrapper.current.getBoundingClientRect();
-      const type = event.dataTransfer.getData('application/reactflow');
-
-      // check if the dropped element is valid
-      if (typeof type === 'undefined' || !type) {
-        return;
-      }
-
-      const position = reactFlowInstance.project({
-        x: event.clientX - reactFlowBounds.left,
-        y: event.clientY - reactFlowBounds.top,
-      });
-      const newNode = {
-        id: getId(),
-        type,
-        position,
-        data: { label: `${type} node` },
-      };
-
-      setNodes((nds) => nds.concat(newNode));
+  });
+});
+const configCanvas = {
+  setDefaultNodeRender: (props) => {
+    if (props.data.typeId == '1') {
+      return <div className="react-node"><FormOutlined /> {props.data.label} </div>;
+    } else if (props.data.typeId == '2') {
+      return <div className="react-node"><CopyOutlined /> {props.data.label} </div>;
+    } else if (props.data.typeId == '3') {
+      return <div className="react-node"><NodeExpandOutlined /> {props.data.label} </div>;
+    } else if (props.data.typeId == '-2') {
+      return <div className="react-node"><PoweroffOutlined /> {props.data.label} </div>;
+    } else if (props.data.typeId == '-1') {
+      return <div className="react-node"><PlayCircleOutlined /> {props.data.label} </div>;
+    }
+  },
+  grid: false,
+  mousewheel: {
+    enabled: true,
+    minScale: 0.5,
+    maxScale: 3,
+  },
+  // 节点是否可旋转
+  rotating: false,
+  // 节点是否可调整大小
+  resizing: false,
+  selecting: {
+    enabled: true,
+    multiple: false,
+    selectCellOnMoved: true,
+    showNodeSelectionBox: true,
+    movable: false,
+  },
+  connecting: {
+    router: {
+      name: 'manhattan',
+      args: {
+        padding: 0,
+      },
     },
-    [reactFlowInstance]
-  );
+    connector: {
+      name: 'rounded',
+      args: {
+        radius: 2,
+      },
+    },
+    anchor: 'center',
+    connectionPoint: 'anchor',
+    allowBlank: false,
+    allowMulti: false,
+    allowEdge: false,
+    allowLoop: false,
+    allowNode: false,
+    snap: {
+      radius: 20,
+    },
+    validateConnection({ sourceView, targetView, sourceMagnet, targetMagnet }) {
+      let sourceId = sourceView.cell.data.typeId
+      let targetId = targetView.cell.data.typeId
+      if (targetId == '-1') return false
+      if (sourceId == '2' || sourceId == '-2') return false
+      return !!targetMagnet
+    },
 
-  const onSave = useCallback(() => {
-    if (reactFlowInstance) {
-      const flow = reactFlowInstance.toObject();
-      // personList = Object.assign({},props.location.state.PersonListT)
-      let params = {}
-      params.firstFormId = props.location.state.firstFormId;
-      params.edges = flow.edges
-      params.nodes = []
-      flow.nodes.map((item) => {
-        let obj = {}
-        obj.id = item.id
-        obj.type = item.type
-        obj.position = item.position
-        obj.positionAbsolute = item.positionAbsolute
-        if (item.data.person != undefined && item.data.person.length != 0) {
-          let person1 = person[Number(item.data.person) - 1]
-          item.data.principal = person1['username'];
-          item.data.userId = person1['id'];
-        }
-        obj.data = item.data
-        params.nodes.push(obj)
-      })
-      console.log(params);
-      try {
-        let res = services.putRequest(services.requestList.addFlow, params);
-        if (isDataExist(res)) {
-          return res;
-        }
-      } catch (error) {
-        console.log(error);
+  },
+}
+
+
+
+
+const FlowManage = observer(({ FlowStore, HomeStore, TableStore, SocketStore, props }) => {
+  // const { commandService, modelService } = useXFlowApp();
+  const { flowProperty } = FlowStore
+  const { firstFormId } = HomeStore
+  const [app, setApp] = useState(null)
+  const toolbarConfig = useToolbarConfig(props)
+  const graphConfig = useGraphConfig(props);
+  var NsJsonForm;
+  (function (NsJsonForm) {
+    /** ControlShape的Enum */
+    const { ControlShape } = NsJsonSchemaForm;
+    /** 保存form的values */
+    NsJsonForm.formValueUpdateService = async (args) => {
+      const { values, commandService, targetData } = args;
+      const updateNode = (node) => {
+        return commandService.executeCommand(XFlowNodeCommands.UPDATE_NODE.id, { nodeConfig: node });
+      };
+      console.log('formValueUpdateService  values:', values, args);
+      const nodeConfig = Object.assign({}, targetData);
+      values.forEach(val => {
+        set(nodeConfig, val.name, val.value);
+      });
+      updateNode(nodeConfig);
+    };
+
+    NsJsonForm.getCustomRenderComponent = (
+      targetType,
+      targetData
+    ) => {
+      if (targetData != null && !targetData.hasOwnProperty('auth_info')) {
+        targetData['auth_info'] = {}
       }
-    }
-  }, [reactFlowInstance]);
-
-  const onNodeClick = useCallback((event, node) => {
-    setNodeId(node.id)
-    setPerArr(node.data.person)
-    setNodeName(node.data.label)
-  }, [nodeName], [nodeId])
-
-  const handleChange = (value) => {
-    setPerArr(value);
-    console.log(`selected ${value}`);
-  }
-
-  function checkChange(checkedValues, a) {
-    fieldProp[a] = checkedValues
-  }
-  return (
-    <Layout>
-      <Header className='header'>
-        <Button type="primary" className='save' onClick={onSave}>保存</Button>
-      </Header>
-      <Layout>
-        <Content>
-          <Layout>
-            <Header className='title'>
-              <Sidebar />
-            </Header>
-            <Content>
-              <div className="dndflow">
-                <ReactFlowProvider>
-                  <Content>
-                    <div className="reactflow-wrapper" ref={reactFlowWrapper}>
-                      <ReactFlow
-                        nodes={nodes}
-                        edges={edges}
-                        onNodesChange={onNodesChange}
-                        onEdgesChange={onEdgesChange}
-                        onConnect={onConnect}
-                        onInit={setReactFlowInstance}
-                        onDrop={onDrop}
-                        onDragOver={onDragOver}
-                        nodeTypes={nodeTypes}
-                        onNodeClick={onNodeClick}
-                        fitView
-                      >
-                        <Controls />
-                        <MiniMap />
-                      </ReactFlow>
-                    </div>
-                  </Content>
-                </ReactFlowProvider>
-              </div>
-            </Content>
-          </Layout>
-        </Content>
-        <Sider style={{ backgroundColor: 'white' }} width='300'>
-          <div className="updatenode__controls">
+      if (targetData != null && !targetData.hasOwnProperty('charge_person')) {
+        let person = {
+          'department': [],
+          'role': [],
+          'user': []
+        }
+        targetData['charge_person'] = person
+      }
+      if (targetData != null && !targetData.hasOwnProperty('wx')) {
+        targetData['wx'] = false
+      }
+      if (targetData != null && !targetData.hasOwnProperty('email')) {
+        targetData['email'] = false
+      }
+      if (targetType === 'node') {
+        if (targetData.typeId == '1') {
+          return () => (
             <div>
-              <label>节点名:</label>
-              <input value={nodeName} onChange={(evt) => setNodeName(evt.target.value)} />
-            </div>
-            <div>
-              <label>负责人：</label>
-              <Select
-                // mode="multiple"
-                allowClear
-                style={{ width: '80%', marginTop: '10px' }}
-                placeholder="Please select"
-                value={perArr}
-                onChange={handleChange}
-              >
-                {children}
-              </Select>
-            </div>
-            {
-              field.map((item) => {
-                return <div className='dataInfo'>
-                  <label>{item.name}:</label>
-                  <Checkbox.Group name={item.propertyId} options={[{ label: '可见', value: 'vis' }, { label: '可编辑', value: 'edit' }]} onChange={(checkedValues) => checkChange(checkedValues, item.propertyId)}></Checkbox.Group>
+              <div className="form_self">
+                <div className="formItem_title">
+                  <div className="formItem_name">节点名称</div>
+                  <Node_name initData={targetData} name={targetData.label} />
                 </div>
-              })
-            }
+                <div className="formItem_chargePerson">
+                  <div className="formItem_name">负责人</div>
+                  <Node_charge initData={targetData} charge_person={targetData.charge_person} />
+                </div>
+                <div className="formItem_copy">
+                  <Node_copy initData={targetData} checked={targetData.copy} />
+                  <div className="formItem_name">启用抄送</div>
+                </div>
+                <div className="formItem_auth">
+                  <div className="formItem_name">字段权限</div>
+                  <AuthShape data={targetData.auth_info} initData={targetData} typeId={1} />
+                </div>
+              </div>
+            </div>
+          )
+        } else if (targetData.typeId == '2') {
+          return () => (
+            <div className="form_self">
+              <div className="formItem_title">
+                <div className="formItem_name">节点名称</div>
+                <Node_name initData={targetData} name={targetData.label} />
+              </div>
+              <div className="formItem_chargePerson">
+                <div className="formItem_name">抄送人</div>
+                <Node_charge initData={targetData} charge_person={targetData.charge_person} />
+              </div>
+              <div className="formItem_copy">
+                <div className="formItem_name copyself">打印</div>
+                <Node_copy initData={targetData} checked={targetData.copy} />
+              </div>
+              <div className="formItem_auth">
+                <div className="formItem_name">字段权限</div>
+                <AuthShape data={targetData.auth_info} initData={targetData} typeId={2} />
+              </div>
+            </div>
+          )
+        } else if (targetData.typeId == '3') {
+          return () => (
+            <div className="form_self">
+              <div className="formItem_title">
+                <div className="formItem_name">节点名称</div>
+                <Node_name initData={targetData} name={targetData.label} />
+              </div>
+              <div className="formItem_chargePerson">
+                <div className="formItem_name">子流程发起人</div>
+                <Node_charge initData={targetData} charge_person={targetData.charge_person} />
+              </div>
+              <div className="formItem_auth">
+                <div className="formItem_name">数据传递</div>
+                {/* <AuthShape data={targetData.auth_info} initData={targetData} typeId={2} /> */}
+              </div>
+            </div>
+          )
+        } else if (targetData.typeId == '-1') {
+          return () => (
+            <div className="form_self">
+              <div className="formItem_title">
+                <div className="formItem_name">节点名称</div>
+                <Node_name initData={targetData} name={targetData.label} />
+              </div>
+              <div className="formItem_auth">
+                <div className="formItem_name">字段权限</div>
+                <AuthShape data={targetData.auth_info} initData={targetData} typeId={2} />
+              </div>
+            </div>
+          )
+        } else if (targetData.typeId == '-2') {
+          return () => (
+            <div className="end_node">
+              <div className="end_sketch">没有下级节点的节点会自动连接至流程结束；如果您需要在中途结束流程，请将需要结束流程的节点，连接到流程结束，并设置相应的流转条件。</div>
+            </div>
+          )
+        }
+
+      }
+      if (targetType === 'canvas') {
+        return () => (
+          <div className="form_self">
+            <Flow_Config />
           </div>
-        </Sider>
-      </Layout>
+        )
+      }
+      if (targetType === 'edge') {
+        return null
+      }
 
-    </Layout>
+      return null
+    }
+    /** 根据选中的节点更新formSchema */
+    NsJsonForm.formSchemaService = async (args) => {
+      const { targetData } = args;
+      if (!targetData) {
+        return {
+          tabs: [
+            {
+              /** Tab的title */
+              name: '流程属性',
+              groups: [],
+            },
+          ],
+        };
+      } else {
 
-  );
-};
+      }
 
+    };
+  })(NsJsonForm || (NsJsonForm = {}));
+  const onLoad = async app => {
+    setApp(app)
+    FlowStore.getShowFlow({ 'formId': firstFormId }).then((res) => {
+      console.log(res);
+      flowProperty.nodes.map((item) => {
+        app.executeCommand(XFlowNodeCommands.ADD_NODE.id, {
+          nodeConfig: item,
+        })
+      })
+      flowProperty.edges.map((item) => {
+        app.executeCommand(XFlowEdgeCommands.ADD_EDGE.id, {
+          edgeConfig: item
+        })
+      })
+    }
+    );
+    console.log(toJS(flowProperty['nodes']))
 
-export default DnDFlow;
+    // app.executeCommand(XFlowNodeCommands.ADD_NODE.id, {
+    //   nodeConfig: {
+    //     id: -1,
+    //     label: `开始节点`,
+    //     typeId: '-1',
+    //     charge_person: {
+    //       'department': [],
+    //       'role': [],
+    //       'user': []
+    //     },
+    //     x: 600,
+    //     y: 100,
+    //     width: 180,
+    //     height: 38,
+    //     ports: getPorts()
+    //   },
+    // })
+    // app.executeCommand(XFlowNodeCommands.ADD_NODE.id, {
+    //   nodeConfig: {
+    //     id: -2,
+    //     label: `结束节点`,
+    //     typeId: '-2',
+    //     x: 600,
+    //     y: 500,
+    //     width: 180,
+    //     height: 38,
+    //     ports: getPorts()
+    //   },
+    // })
+  }
+  useEffect(() => {
+    FlowStore.getShowFlow({ 'formId': firstFormId })
+    console.log(firstFormId);
+  }, [])
+  return (
+    <div className="flow_all">
+      <div className="edit_header">
+        <div className='edit_left'>
+          <BulbOutlined className='icon_edit' />
+          <a>查看新手引导</a>
+        </div>
+        <div className='edit_right'>
+          <button className='edit_look' onClick={() => console.log(1)}>版本</button>
+          <button className='edit_save' onClick={() => {
+            app.commandService.executeCommand(
+              XFlowGraphCommands.SAVE_GRAPH_DATA.id,
+              {
+                saveGraphDataService: async (meta, data) => {
+                  console.log(meta);
+                  console.log(changeFlow(data, firstFormId, flowProperty['flowProperty']))
+                  FlowStore.createFlow(changeFlow(data, firstFormId, flowProperty['flowProperty']))
+                  // message.success('nodes count:' + data.nodes.length)
+                },
+              },
+            )
+          }}>保存</button>
+        </div>
+      </div>
+      <div className="flow_main">
+        <XFlow
+          onLoad={onLoad}
+          config={graphConfig}
+          className="xflow-workspace"
+          meta={flowProperty}
+        >
+
+          <CanvasToolbar
+            config={toolbarConfig}
+            position={{ left: 200 }}
+            style={{ zIndex: 100 }}
+          />
+          <CanvasScaleToolbar
+            layout='horizontal'
+            position={{ right: 500 }} />
+          <FlowchartCanvas
+            config={configCanvas}
+            useConfig={(config) => {
+              config.setDefaultNodeRender(props => {
+                if (props.data.typeId == '1') {
+                  return <div className="react-node"><FormOutlined style={{ marginRight: '10px' }} /> {props.data.label} </div>;
+                } else if (props.data.typeId == '2') {
+                  return <div className="react-node"><CopyOutlined style={{ marginRight: '10px' }} /> {props.data.label} </div>;
+                } else if (props.data.typeId == '3') {
+                  return <div className="react-node"><NodeExpandOutlined style={{ marginRight: '10px' }} /> {props.data.label} </div>;
+                } else if (props.data.typeId == '-2') {
+                  return <div className="react-node"><PoweroffOutlined style={{ marginRight: '10px' }} /> {props.data.label} </div>;
+                } else if (props.data.typeId == '-1') {
+                  return <div className="react-node"><PlayCircleOutlined style={{ marginRight: '10px' }} /> {props.data.label} </div>;
+                }
+              });
+            }}
+            position={{ top: 0, left: 0, height: 800 }}
+          >
+            <FlowchartExtension />
+            <CanvasSnapline />
+            <CanvasNodePortTooltip />
+            <JsonSchemaForm
+              getCustomRenderComponent={NsJsonForm.getCustomRenderComponent}
+              controlMapService={controlMapService}
+              formSchemaService={NsJsonForm.formSchemaService}
+              formValueUpdateService={NsJsonForm.formValueUpdateService}
+              position={{ top: 0, bottom: 0, right: 0, width: 290 }} />
+          </FlowchartCanvas>
+        </XFlow>
+      </div>
+    </div >
+  )
+})
+
+export default inject((stores) => ({ FlowStore: stores.FlowStore, HomeStore: stores.HomeStore, TableStore: stores.TableStore, SocketStore: stores.SocketStore }))(FlowManage)

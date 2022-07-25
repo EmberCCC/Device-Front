@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-19 23:01:23
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-07-23 00:49:20
+ * @LastEditTime: 2022-07-24 23:24:12
  * @FilePath: \bl-device-manage-test\src\stores\SocketStore.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -63,6 +63,8 @@ class Socket {
     @observable addUserObjs = {};
 
     @observable sysList = {};
+
+    @observable userName = {};
 
     @observable createRoleVis = false
     handleClick = ({ key, domEvent }) => {
@@ -237,6 +239,11 @@ class Socket {
             if (isDataExist(res)) {
                 console.log(res.data);
                 this.setValue('allUsers', res.data.data)
+                let obj = {}
+                res.data.data.map((item,index) => {
+                    obj[item['userId']] = item['name'];
+                })
+                this.setValue('userName',obj)
             }
         } catch (error) {
             console.log(error);
@@ -368,6 +375,7 @@ class Socket {
             if (isDataExist(res)) {
                 console.log(res.data.data);
                 this.setValue('initRole', res.data.data)
+                console.log(res.data.data);
                 let iArr = []
                 let nameObj = {}
                 const roleGroup = (

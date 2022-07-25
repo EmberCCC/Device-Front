@@ -51,6 +51,9 @@
 .edit_look{
     margin-right: 10px;
 }
+.edit_right button{
+    cursor: pointer;
+}
 .icon_edit{
     margin-right: 10px;
 }

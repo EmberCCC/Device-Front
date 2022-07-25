@@ -1,0 +1,141 @@
+.all_auth {
+    width: 100%;
+}
+
+.auth_title {
+    width: 100%;
+    height: 30px;
+    padding: 0 8px;
+    line-height: 30px;
+    background-color: #f4f4f4;
+}
+
+.auth_one {
+    min-height: 40px;
+    padding: 8px;
+}
+
+/* .auth_title{
+    display: flex;
+    flex-direction: row;
+} */
+.select_person {
+    padding: 10px;
+}
+
+.select_display {
+    cursor: pointer;
+    overflow-x: hidden;
+    overflow-y: auto;
+    border: 1px dashed #d9d9d9;
+    height: 80px;
+}
+
+.select_menu_head {
+    display: flex;
+    flex-direction: row;
+    height: 40px;
+    border-bottom: 1px solid #d9d9d9;
+}
+.select_menu{
+    margin-top: 20px;
+    border: 1px solid #d9d9d9;
+
+}
+
+.select_menu_head div {
+    cursor: pointer;
+    padding-top: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.select_menu_head div:hover {
+    color: #0db3a6;
+}
+
+.select_menu_head .checked {
+    color: #0db3a6;
+    border-bottom: 3px solid #0db3a6;
+}
+
+.select_show {
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    -ms-flex-line-pack: start;
+    align-content: flex-start;
+    -webkit-box-align: start;
+    -ms-flex-align: start;
+    align-items: flex-start;
+    height: 80px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    cursor: pointer;
+    border: 1px dashed #d9d9d9;
+    border-radius: 3px;
+}
+.select_choice{
+    padding: 5px;
+    height: 360px;
+    overflow-y: auto;
+    overflow-x: auto;
+}
+.select_display_item{
+    display: inline-block;
+    margin: 5px 0 0 5px;
+    padding: 5px 10px;
+    background: #f3f6fc;
+    border-radius: 1px;
+}
+.select_role{
+    height: 30px;
+    padding: 0 10px;
+    font-size: 14px;
+    line-height: 30px;
+    color: #5e6d82;
+}
+.select_role_oneItem{
+    padding: 0 10px
+}
+.select_role_father{
+    height: 34px;
+    margin-right: 5px;
+    padding: 7px 0;
+    line-height: 20px;
+    cursor: pointer;
+}
+.select_role_father:hover{
+    background-color: #e6f7f6;
+}
+.select_role_child{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    height: 34px;
+    padding: 7px 7px;
+    padding-left: 20px;
+    line-height: 20px;
+    cursor: pointer;
+}
+.select_role_child:hover{
+    background-color: #e6f7f6;
+}
+.select_user{
+    display: flex;
+    flex-direction: row;
+}
+.select_user_left{
+    width: 50%;
+}
+.select_user_right{
+    padding-left: 20px;
+    width: 50%;
+}
+.select_cancel{
+    margin-left: 5px;
+}
+.select_cancel:hover{
+    color: red;
+    background-color: white;
+}

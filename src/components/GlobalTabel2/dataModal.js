@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-06-30 09:07:55
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-07-19 15:51:41
+ * @LastEditTime: 2022-07-23 17:37:31
  * @FilePath: \bl-device-manage-test\src\components\GlobalTabel2\dataModal.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -157,6 +157,7 @@ class DataModal extends Component {
                         const changeContent = JSON.parse(toJS(item['changeContent']))
                         let dex = 0
                         let infoItem = []
+                        let flag = false;
                         for (const key in changeContent) {
                             if (Object.hasOwnProperty.call(changeContent, key)) {
                                 const element = changeContent[key];
@@ -166,12 +167,13 @@ class DataModal extends Component {
                                 toJS(this.props.TableStore.detailData['fields']).filter((info) => {
                                     if (info['id'] == key) {
                                         infoItem[dex].title = JSON.parse(info['detailJson'])['title'];
+                                        flag = true;
                                     }
                                 })
                             }
                             dex = dex + 1;
                         }
-                        return (
+                        if (flag) return (
                             <div className='right_content_item'>
                                 <div className='right_content_header'>
                                     <div className='item_header_left'>

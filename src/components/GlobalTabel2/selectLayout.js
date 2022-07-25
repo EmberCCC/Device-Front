@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-13 10:02:28
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-07-22 18:22:34
+ * @LastEditTime: 2022-07-23 10:02:00
  * @FilePath: \bl-device-manage-test\src\components\GlobalTabel2\selectLayout.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -14,14 +14,18 @@ import { inject, observer } from "mobx-react";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 
-const SelectLayout = observer(({ TableStore, HomeStore }) => {
+const SelectLayout = observer(({ TableStore, HomeStore,type }) => {
     const [select_type, setSelect_type] = useState('and');
     const [selectList, setSelectList] = useState(JSON.parse(sessionStorage.getItem('select_' + HomeStore.firstFormId)) || [])
     const [menu, setMenu] = useState(null)
-    const { allData, columns } = TableStore
+    const { allData, columns, model } = TableStore
     useEffect(() => {
         console.log(toJS(columns));
+        console.log(type);
     }, [])
+    useEffect(() => {
+        console.log(selectList);
+    },[selectList])
     const handleAdd = (item) => {
         let iList = []
         if (['createPerson', 'updateTime', 'createTime'].indexOf(item['dataIndex']) <= -1) {
@@ -149,7 +153,6 @@ const SelectLayout = observer(({ TableStore, HomeStore }) => {
                 exchangeObj[infoE] = item['fieldInfo']['enumNames'][index]
             })
         }
-        console.log([moment().year(moment().year() - 1).startOf('year').format('YYYY-MM-DD HH:mm:ss'), moment().year(moment().year() - 1).endOf('year').format('YYYY-MM-DD HH:mm:ss')]);
         if (item) {
             if (item['fieldTypeId'] == '0' || item['fieldTypeId'] == select_arr.length - 3) {
                 return (
@@ -380,7 +383,7 @@ const SelectLayout = observer(({ TableStore, HomeStore }) => {
             (
                 <div className='columns_list'>
                     {
-                        TableStore.columns.map((item, index) => {
+                        columns.map((item, index) => {
                             if (selectList.some(sort_item => sort_item['fieldInfo']['fieldId'] == item['key'])) {
                                 return (
                                     <div className="columns_item" key={index}>
@@ -419,7 +422,7 @@ const SelectLayout = observer(({ TableStore, HomeStore }) => {
                     params['conditions'].push(iObj);
                 }
             })
-            if (TableStore.model == 'subitAndManage') {
+            if (model == 'subitAndManage') {
                 TableStore.getScreenData(params, 'myself')
             } else {
                 TableStore.getScreenData(params, 'all')
@@ -429,7 +432,7 @@ const SelectLayout = observer(({ TableStore, HomeStore }) => {
         }
     }
     const handleClear = () => {
-        if (TableStore.model == 'subitAndManage') {
+        if (model == 'subitAndManage') {
             TableStore.getAllData({ 'formId': HomeStore.firstFormId }, 'myself')
         } else {
             TableStore.getAllData({ 'formId': HomeStore.firstFormId }, 'all')

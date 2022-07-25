@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-02 03:21:54
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-07-19 19:55:20
+ * @LastEditTime: 2022-07-23 16:34:03
  * @FilePath: \bl-device-manage-test\src\layouts\FormLayout\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -72,7 +72,9 @@ const FormLayout = observer(({ HomeStore, FormStore }) => {
     )
   }
   const handleChange = (activeKey) => {
+
     let tdata = formList.getValues()
+
     let nData = { ...data, ...tdata }
     console.log(tdata);
     setData(nData);
@@ -82,10 +84,12 @@ const FormLayout = observer(({ HomeStore, FormStore }) => {
       if (Object.hasOwnProperty.call(nData, key)) {
         const element = nData[key];
         iObj[key] = element
-        
+
       }
     }
+
     formList.setValues(iObj)
+    formList.resetFields();
   }
   return (
     <div>
