@@ -13,32 +13,37 @@
 // }
 
 /* menu */
-// .manu_container {
-//     position: relative;
-// }
-.ant-layout-sider-light{
+#manu_container {
+    height: 100%;
+}
+.ant-layout-sider-light {
     max-width: 250px !important;
     min-width: 250px !important;
     width: 250px !important;
 }
-.ant-btn-primary{
+
+.ant-btn-primary {
     width: 100px;
     color: #fff;
     background: #0db3a6;
     border-color: #0db3a6;
 }
-.ant-btn-primary:hover{
+
+.ant-btn-primary:hover {
     background: #0db3a6;
     border-color: #0db3a6;
 }
-.ant-btn-primary:focus{
+
+.ant-btn-primary:focus {
     background: #0db3a6;
     border-color: #0db3a6;
 }
-.ant-btn-primary:active{
+
+.ant-btn-primary:active {
     background: #0db3a6;
     border-color: #0db3a6;
 }
+
 .menu_bg {
     position: absolute;
     bottom: 0;
@@ -49,16 +54,48 @@
         width: 100%;
     }
 }
-.message_logo{
-    color: black;
-    font-size: larger;
-    padding: 1px;
+.message_list{
+    padding: 10px 0;
+    overflow: hidden;
+    border-bottom: 1px solid #e9e9e9;
+}
+.message_logo {
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    height: 40px;
+    padding: 0 20px;
+    cursor: pointer;
+
+    &:hover {
+        background: #ebeef2;
+    }
+}
+.manu_top{
+    height: 95%;
+    overflow: auto;
+}
+.bottom_name{
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
-    margin: 15px;
+    align-items: center;
+    vertical-align: middle;
+    width: 100%;
+    height: 5%;
+    // height: 100%;
+    // line-height: 100%;
+    // margin: 0 14px;
+    padding: 0 21px;
+    color: #1f2d3d;
+    cursor: pointer;
+    &:hover{
+        background-color: #ebeef2;
+    }
 }
-
 .menu_logo {
     width: 100%;
     height: 55px;
@@ -140,21 +177,83 @@
     }
 }
 
-/*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
-::-webkit-scrollbar {
-    width: 0px;
-    /*滚动条宽度*/
-    height: 0px
-        /*滚动条高度*/
+.left_menu_all {
+    margin-top: 20px;
 }
+
+.left_menu_father {
+    align-items: center;
+    cursor: pointer;
+
+    div {
+        padding: 0 12px 0 20px;
+    }
+
+    .undisplay {
+        display: none;
+    }
+
+
+}
+
+.node_icon {
+    margin-right: 3px;
+}
+
+.node_name {
+    padding-left: 10px;
+}
+
+.left_menu_f1 {
+    line-height: 40px;
+    height: 40px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+
+    &:hover {
+        background: #ebeef2;
+    }
+}
+
+.left_menu_child {
+    line-height: 40px;
+    height: 40px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    padding-left: 50px !important;
+
+    &:hover {
+        background: #ebeef2;
+    }
+}
+
+.message_item {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+}
+
+.message_name {
+    padding-left: 12px;
+}
+
+// /*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
+// ::-webkit-scrollbar {
+//     width: 0px;
+//     /*滚动条宽度*/
+//     height: 0px
+//         /*滚动条高度*/
+// }
 
 /*定义滚动条轨道 内阴影+圆角*/
 ::-webkit-scrollbar-track {
     /*滚动条的背景区域的内阴影*/
-    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.3) inset;
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.3) inset;
 
     /*滚动条的背景区域的圆角*/
-    border-radius: 0px;
+    border-radius: 1px;
 
     /*滚动条的背景颜色*/
     background-color: #ddd;
@@ -163,10 +262,10 @@
 /*定义滑块 内阴影+圆角*/
 ::-webkit-scrollbar-thumb {
     /*滚动条的内阴影*/
-    box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.3) inset;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3) inset;
 
     /*滚动条的圆角*/
-    border-radius: 0px;
+    border-radius: 1px;
 
     /*滚动条的背景颜色*/
     background-color: #aaa;

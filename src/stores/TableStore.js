@@ -4,7 +4,7 @@
  * @Author: zhihao
  * @Date: 2022-04-17 15:22:43
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-07-19 15:12:01
+ * @LastEditTime: 2022-07-27 04:52:43
  */
 
 import { message, Modal } from 'antd';
@@ -35,7 +35,7 @@ class Table {
 	@observable modalFieldValue = [];
 	@observable sortList = [];
 	@observable model = "submit"; //模式控制;
-	@observable PageInfo = { pageSize: 5, pageIndex: 1 }
+	@observable PageInfo = { pageSize: 20, pageIndex: 1 }
 	@observable itemIndex = 1;
 	@observable detailData = {};
 	@observable modalField = [];
@@ -195,7 +195,7 @@ class Table {
 				'formFields': JSON.stringify(formObj),
 				'properties': "{\"displayType\":\"column\",\"labelWidth\":120,\"type\":\"object\"}"
 			}
-			this.setValue('formArr', restore({ 'form': formObj2, 'fields': toJS(this.detailData['fields']) },'submit'))
+			this.setValue('formArr', restore({ 'form': formObj2, 'fields': toJS(this.detailData['fields']) }, 'submit'))
 			this.setValue('formData', this.detailData['data'])
 			data['createPerson'] = this.detailData['data']['createPerson'];
 			data['createTime'] = this.detailData['data']['createTime'];
@@ -254,7 +254,7 @@ class Table {
 			data.fields.map((item) => {
 				let jsonItem = JSON.parse(item['detailJson']);
 				jsonItem['fieldId'] = item['id'];
-				iColumns.push({ 'title': jsonItem.title, 'dataIndex': item.id, 'key': item.id, 'detailJson': jsonItem, 'width': 400 });
+				iColumns.push({ 'title': jsonItem.title, 'dataIndex': item.id, 'key': item.id, 'detailJson': jsonItem, 'width': 200, 'ellipsis': true });
 				iFieldValue.push(item.id)
 			})
 			data.fieldsValue.map((item) => {
@@ -294,9 +294,9 @@ class Table {
 			iFieldValue.push('createPerson')
 			iFieldValue.push('createTime')
 			iFieldValue.push('updateTime')
-			iColumns.push({ 'title': '创建人', 'dataIndex': 'createPerson', 'key': 'createPerson', 'width': 400 });
-			iColumns.push({ 'title': '创建时间', 'dataIndex': 'createTime', 'key': 'createTime', 'width': 400 });
-			iColumns.push({ 'title': '更新时间', 'dataIndex': 'updateTime', 'key': 'updateTime', 'width': 400 });
+			iColumns.push({ 'title': '创建人', 'dataIndex': 'createPerson', 'key': 'createPerson', 'width': 200, 'ellipsis': true });
+			iColumns.push({ 'title': '创建时间', 'dataIndex': 'createTime', 'key': 'createTime', 'width': 200, 'ellipsis': true });
+			iColumns.push({ 'title': '更新时间', 'dataIndex': 'updateTime', 'key': 'updateTime', 'width': 200, 'ellipsis': true });
 			this.setValue('fieldValue', iFieldValue)
 			this.setValue('modalFieldValue', iFieldValue)
 			this.setValue('columns', iColumns)

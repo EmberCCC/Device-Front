@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-25 14:57:26
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-07-25 19:37:17
+ * @LastEditTime: 2022-07-26 11:11:05
  * @FilePath: \bl-device-manage-test\src\stores\FlowStore.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -18,17 +18,22 @@ class Flow {
     }
     @observable loading = true;
     @observable flowProperty = {
-        'nodes':[],
-        'edges':[],
-        "flowProperty":{
-        "wx":false,
-        "mail":false,
-         "withdraw":false,
-        "cuiBan":false,
-        "see":false,
-        "rule":0,
-    }}
+        'nodes': [],
+        'edges': [],
+        "flowProperty": {
+            "wx": false,
+            "mail": false,
+            "withdraw": false,
+            "cuiBan": false,
+            "see": false,
+            "rule": 0,
+        }
+    }
     @observable type = 1
+    @observable canOb = false;
+    @observable allFlowList = []
+    @observable flowversion = 0 /** 0:未启用 -1:没有流程 */
+    @observable ableversion = 0
     @action.bound setValue(key, value) {
         this[key] = value
     }
@@ -37,8 +42,22 @@ class Flow {
             let res = await services.getRequest(services.requestList.getOneFlow, params)
             if (isDataExist(res)) {
                 console.log(res.data.data);
-                this.setValue('flowProperty', res.data.data)
-                return res.data.data
+                this.setValue('allFlowList', res.data.data)
+                if (res.data.data.length == 0) {
+                    this.setValue('flowversion', -1)
+                } else {
+                    res.data.data.forEach(element => {
+                        if (element['enable'] == true) {
+                            this.setValue('flowversion', element['id'])
+                            this.setValue('ableversion', element['id'])
+                            this.setValue('flowProperty',JSON.parse(element['origin']))
+                            return;
+                        }
+                    });
+                }
+                if(this.flowversion == 0){
+                    this.setValue('flowversion',this.allFlowList[this.allFlowList.length - 1])
+                }
             }
         } catch (error) {
             console.log(error);
@@ -61,6 +80,16 @@ class Flow {
             let res = await services.putRequest(services.requestList.createFlow, params)
             if (isDataExist(res)) {
                 message.success('创建成功')
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    @action.bound async openFlow(params) {
+        try {
+            let res = await services.putUrlRequest(services.requestList.openFlow, params)
+            if (isDataExist(res)) {
+                message.success('启用成功')
             }
         } catch (error) {
             console.log(error);

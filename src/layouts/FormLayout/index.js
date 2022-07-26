@@ -2,13 +2,13 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-02 03:21:54
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-07-23 16:34:03
+ * @LastEditTime: 2022-07-27 03:39:42
  * @FilePath: \bl-device-manage-test\src\layouts\FormLayout\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 import React, { useEffect, useState } from 'react';
 import FormRender, { useForm } from 'form-render';
-import { Button, Tabs } from 'antd';
+import { Button, Spin, Tabs } from 'antd';
 import { inject, observer } from 'mobx-react';
 import { toJS } from 'mobx';
 import { restore } from 'layouts/FormEdit/changeTool';
@@ -17,7 +17,7 @@ import { Self_divider } from 'layouts/FormEdit/self_item/self_divider';
 
 
 const FormLayout = observer(({ HomeStore, FormStore }) => {
-  const [schema, setSchema] = useState({});
+  const { formField, schema } = FormStore
   const [data, setData] = useState({});
   const form = useForm();
   const formList = useForm()
@@ -41,11 +41,7 @@ const FormLayout = observer(({ HomeStore, FormStore }) => {
   }
   useEffect(() => {
     const { firstFormId } = HomeStore
-    FormStore.getFormField({ formId: firstFormId }).then(() => {
-      setSchema(restore(toJS(FormStore.formField), 'submit'))
-      console.log(restore(toJS(FormStore.formField)));
-      console.log(schema);
-    });
+    FormStore.getFormField({ formId: firstFormId })
   }, [])
   const getItem = () => {
     let nArr = []
@@ -92,18 +88,20 @@ const FormLayout = observer(({ HomeStore, FormStore }) => {
     formList.resetFields();
   }
   return (
-    <div>
-      <div className='form_layout'>
-        <FormRender schema={schema['root']} widgets={{ self_divider: Self_divider }}
-          form={form} onFinish={onFinish} style={{ overflowY: 'auto' }} />
-        <Tabs onChange={handleChange} tabBarGutter={20} destroyInactiveTabPane={true}>
-          {
-            getItem()
-          }
-        </Tabs>
+    <Spin spinning={FormStore.loading} tip={'loading...'}>
+      <div>
+        <div className='form_layout'>
+          <FormRender schema={schema['root']} widgets={{ self_divider: Self_divider }}
+            form={form} onFinish={onFinish} style={{ overflowY: 'auto' }} />
+          <Tabs onChange={handleChange} tabBarGutter={20} destroyInactiveTabPane={true}>
+            {
+              getItem()
+            }
+          </Tabs>
+        </div>
+        <Button onClick={form.submit} type="primary">提交</Button>
       </div>
-      <Button onClick={form.submit} type="primary">提交</Button>
-    </div>
+    </Spin>
   );
 });
 

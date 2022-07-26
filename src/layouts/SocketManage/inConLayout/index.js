@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-19 23:03:37
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-07-22 15:00:22
+ * @LastEditTime: 2022-07-26 18:32:44
  * @FilePath: \bl-device-manage-test\src\layouts\SocketManage\inConLayout\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -99,14 +99,14 @@ const InConLayout = observer(({ SocketStore }) => {
                     </div>
                 )
             }
-        },{
+        }, {
             key: 'operation',
             fixed: 'right',
             width: 100,
             render: (text, record, index) => <DeleteOutlined onClick={() => {
                 let arr = []
                 roleList.map((item) => {
-                    if(item['userId'] != text['userId']){
+                    if (item['userId'] != text['userId']) {
                         arr.push(item['userId'])
                     }
                 })
@@ -114,8 +114,8 @@ const InConLayout = observer(({ SocketStore }) => {
                     SocketStore.getOneRoleUser({ 'roleId': SelectKey })
                     SocketStore.getAllRoles()
                 })
-            }} style={{cursor:'pointer'}}/>,
-          },
+            }} style={{ cursor: 'pointer' }} />,
+        },
     ]
     const handleChange = (value) => {
         setTotal(value.target.value)
@@ -409,7 +409,16 @@ const InConLayout = observer(({ SocketStore }) => {
                                     <Button type="primary" style={{ marginRight: '10px' }}>邀请成员</Button>
                                     <Button>导出</Button>
                                 </div>
-                                <Input placeholder="搜索成员" style={{ width: '200px', marginRight: '20px' }} />
+                                <div>
+                                    <span style={{ marginRight: '10px', fontWeight: '100', fontSize: '10px', userSelect: 'none' }}>按下回车搜索，内容为空则筛选全部成员</span>
+                                    <Input onPressEnter={(e) => {
+                                        if (SelectKey != '全部成员' && SelectKey != '离职成员') {
+                                            SocketStore.searchDeUsers({ 'userInfo': e.target.value, 'departmentId': SelectKey })
+                                        } else {
+                                            SocketStore.searchAllUsers({ 'userInfo': e.target.value })
+                                        }
+                                    }} placeholder="搜索成员" style={{ width: '200px', marginRight: '20px' }} />
+                                </div>
                             </div>
                             <Spin spinning={loading} tip='Loading...'>
                                 <div className="socket_table">
@@ -478,7 +487,12 @@ const InConLayout = observer(({ SocketStore }) => {
                                         SocketStore.getAddUserList({ 'departmentId': 1 });
                                     }} type="primary" style={{ marginRight: '10px' }}>添加成员</Button>
                                 </div>
-                                <Input placeholder="搜索成员" style={{ width: '200px', marginRight: '20px' }} />
+                                <div>
+                                    <span style={{ marginRight: '10px', fontWeight: '100', fontSize: '10px', userSelect: 'none' }}>按下回车搜索，内容为空则筛选全部成员</span>
+                                    <Input onPressEnter={(e) => {
+                                        SocketStore.searchOneRoleUser({ 'userInfo': e.target.value, 'roleId': SelectKey })
+                                    }} placeholder="搜索成员" style={{ width: '200px', marginRight: '20px' }} />
+                                </div>
                             </div>
                             <Spin spinning={loading} tip='Loading...'>
                                 <div className="socket_table">
@@ -593,7 +607,7 @@ const InConLayout = observer(({ SocketStore }) => {
                             itemRoles.map((item, index) => {
                                 let checkClass = "false"
                                 if (-item['key'] == fatherId) checkClass = "true"
-                                if(index < initRole.length && initRole[index].hasOwnProperty('name')){
+                                if (index < initRole.length && initRole[index].hasOwnProperty('name')) {
                                     return (
                                         <div className={"sel_item " + checkClass} key={index} onClick={() => handleSelect(-item['key'])}>
                                             <div className="item_l">
@@ -606,7 +620,7 @@ const InConLayout = observer(({ SocketStore }) => {
                                         </div>
                                     )
                                 }
-                                
+
                             })
                         }
                     </div>

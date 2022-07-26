@@ -6,6 +6,9 @@ import { checkCurrentMenu } from 'utils/dataTools';
 import { MenuObj } from '../constants/configs';
 
 class Home {
+  constructor(){
+    makeObservable(this)
+  }
   @observable contentScrollHeight = 0; //当前content滚动高度
   @observable collapsed = false;
   @observable menuObj = MenuObj.leafMenuModels;
@@ -31,6 +34,13 @@ class Home {
   @observable showColumns = [];
   @observable lastColumns = [];
   @observable fieldValue = [];
+
+  @observable openMenuKeys = []
+
+
+  @action.bound setValue(key,value){
+    this[key] = value
+  }
 
   @action.bound setFieldValue(value){
     this.fieldValue = value
@@ -215,10 +225,10 @@ class Home {
       /* 记录历史-浏览记录 */
       this.setLastMenuHistory(currentMenu[0], actionId);
       this.toggledActionId = currentMenu[0].id;
-      this.selectedKeys = [`${currentMenu[0].id}`];
+      this.selectedKeys = [`${actionId}`];
       this.openKeys = [`${currentMenu[0].parentId}`];
       this.model = 'submit'
-      this.firstFormId = currentMenu[0].id;
+      this.firstFormId = actionId;
     } catch (error) {
       console.log(error)
     }

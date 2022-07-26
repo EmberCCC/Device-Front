@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-11-02 14:29:58
- * @LastEditTime: 2022-07-07 09:30:01
+ * @LastEditTime: 2022-07-27 03:27:21
  * @LastEditors: EmberCCC 1810888456@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage\src\routes\HomeRouter\index.js
@@ -14,7 +14,7 @@ import HomeLayout from 'Layouts/HomeLayout';
 import {
   Route, Redirect,
 } from 'react-router-dom';
-import { BasicManager, DeviceManager, EquipmentManager, MaintenanceManager, SpareManager, ManagerManager, MessageManager } from './configs'
+import { BasicManager, DeviceManager, EquipmentManager, MaintenanceManager, SpareManager, ManagerManager, MessageManager, CommonForm } from './configs'
 import { inject, observer } from 'mobx-react';
 
 let id = 1;
@@ -34,12 +34,12 @@ class HomeRouter extends PureComponent {
     >
       <HomeLayout type={isMobile} children={<React.Fragment>
         <Route exact path="/" render={() => <Redirect to='/login' />} />
-        <Route path='/basic' component={BasicManager} />
-        <Route path='/device' component={DeviceManager} />
+        <Route path='/common' component={CommonForm} />
+        {/* <Route path='/device' component={DeviceManager} />
         <Route path='/equipment' component={EquipmentManager} />
         <Route path='/maintenance' component={MaintenanceManager} />
         <Route path='/spare' component={SpareManager} />
-        <Route path='/manage' component={ManagerManager} />
+        <Route path='/manage' component={ManagerManager} /> */}
         <Route path='/message' component={MessageManager} />
       </React.Fragment>} />
     </div>;

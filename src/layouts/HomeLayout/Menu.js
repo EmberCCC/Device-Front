@@ -3,15 +3,15 @@ import { inject, observer } from 'mobx-react';
 import { NavLink, withRouter } from 'react-router-dom';
 import classnames from 'classnames';
 import './index.less';
-import { BellTwoTone, CarryOutTwoTone, FolderFilled, FolderOutlined, PlayCircleTwoTone, SoundTwoTone } from '@ant-design/icons';
+import { BellTwoTone, CarryOutTwoTone, FileTextOutlined, FolderFilled, FolderOpenOutlined, FolderOutlined, PlayCircleTwoTone, SoundTwoTone, ToolOutlined } from '@ant-design/icons';
 import { Menu, Layout, Badge } from 'antd';
 import { toJS } from 'mobx';
+import { MenuObj } from 'constants/configs';
 const { Sider } = Layout;
-const SubMenu = Menu.SubMenu;
 
 let firstMount = false;
 @withRouter
-@inject('HomeStore', 'MessageStore', 'TableStore')
+@inject('HomeStore', 'MessageStore', 'TableStore', 'FormStore')
 @observer
 class MenuLayout extends Component {
   constructor(props) {
@@ -26,74 +26,91 @@ class MenuLayout extends Component {
   }
   render() {
     const isMobile = this.props.mobile === 'false';
-    const { menuObj } = toJS(this.store);
     const { todoCount, createCount, handleCount, copyCount } = this.props.MessageStore;
     return (
       <Sider
         theme='light'
-        style={{overflow:'auto'}}
+        style={{ overflow: 'auto' }}
       >
         <div id='manu_container'>
-          <NavLink to={{ pathname: "/message/todo" }} onClick={this.loadData}>
-            <div className='message_logo'>
-              <div className='message_item'>
-                <BellTwoTone />
-                我的待办
+          <div className='manu_top'>
+            <div className='message_list'>
+              <div className='message_logo'>
+                <div className='message_item'>
+                  <BellTwoTone />
+                  <div className='message_name'>我的待办</div>
+                </div>
+                <Badge count={todoCount} style={{ float: 'right' }} offset={[1, 5]}></Badge>
               </div>
-              <Badge count={todoCount} style={{ float: 'right' }} offset={[1, 5]}></Badge>
-            </div>
-          </NavLink>
-          <NavLink to={{ pathname: "/message/create" }}>
-            <div className='message_logo'>
-              <div className='message_item'>
-                <PlayCircleTwoTone />
-                我发起的
+              <div className='message_logo'>
+                <div className='message_item'>
+                  <PlayCircleTwoTone />
+                  <div className='message_name'>我发起的</div>
+                </div>
+                <Badge count={createCount} style={{ float: 'right' }} offset={[1, 5]}></Badge>
               </div>
-              <Badge count={createCount} style={{ float: 'right' }} offset={[1, 5]}></Badge>
-            </div>
-          </NavLink>
-          <NavLink to={{ pathname: "/message/handle" }}>
-            <div className='message_logo'>
-              <div className='message_item'>
-                <CarryOutTwoTone />
-                我处理的
+              <div className='message_logo'>
+                <div className='message_item'>
+                  <CarryOutTwoTone />
+                  <div className='message_name'>我处理的</div>
+                </div>
+                <Badge count={handleCount} style={{ float: 'right' }} offset={[1, 5]}></Badge>
               </div>
-              <Badge count={handleCount} style={{ float: 'right' }} offset={[1, 5]}></Badge>
-            </div>
-          </NavLink>
-          <NavLink to={{ pathname: "/message/copy" }}>
-            <div className='message_logo'>
-              <div className='message_item'>
-                <SoundTwoTone />
-                抄送我的
+              <div className='message_logo'>
+                <div className='message_item'>
+                  <SoundTwoTone />
+                  <div className='message_name'>抄送我的</div>
+                </div>
+                <Badge count={copyCount} style={{ float: 'right' }} offset={[1, 5]}></Badge>
               </div>
-              <Badge count={copyCount} style={{ float: 'right' }} offset={[1, 5]}></Badge>
             </div>
-          </NavLink>
-          <hr style={{border:'1px solid #e9e9e9'}}></hr>
-          <Menu theme="light"
-            // defaultOpenKeys={toJS(this.store.openKeys)}
-            selectedKeys={toJS(this.store.selectedKeys)}
-            // openKeys={this.store.openKeys}
-            mode={'inline'}
-            onClick={this.handleMenu}
-            onOpenChange={this.onOpenChange}
-            onSelect={this.onMenuSelect}
-          // inlineCollapsed={this.state.collapsed}
-          >
-            {
-              menuObj.map(leaf => !leaf.displayNone && <SubMenu
-                theme='light'
-                key={leaf.id}
-                title={<span><FolderFilled style={{color: "#0db3a6"}}/><span >{leaf.name}</span></span>}
-              >
-                {
-                  leaf.leafMenuModels.length > 0 && leaf.leafMenuModels.map(ele =>
-                    !ele.displayNone && <Menu.Item key={ele.id}>{ele.name}</Menu.Item>)
-                }
-              </SubMenu>)
-            }
-          </Menu>
+            <div className='left_menu_all'>
+              {
+                MenuObj.leafMenuModels.map((item, index) => {
+                  let idIndex = this.store.openMenuKeys.indexOf(item['id']);
+                  return (
+                    <div className='left_menu_father'>
+                      <div onClick={() => {
+
+                        let iArr = [...this.store.openMenuKeys]
+                        if (idIndex > -1) {
+                          iArr.splice(idIndex, 1)
+                        } else {
+                          iArr.push(item['id'])
+                        }
+                        this.store.setValue('openMenuKeys', iArr)
+                        console.log(this.store.openMenuKeys);
+                      }} className='left_menu_f1'>
+                        {idIndex > -1 && (
+                          <FolderOpenOutlined className='node_icon' style={{ color: "#0db3a6" }} />
+                        )}
+                        {idIndex <= -1 && (
+                          <FolderFilled className='node_icon' style={{ color: "#0db3a6" }} />
+                        )}
+                        <span className='node_name'>{item.name}
+                        </span>
+                      </div>
+                      {
+                        item.leafMenuModels.length > 0 && (
+                          item.leafMenuModels.map((one, oIndex) => {
+                            return (
+                              <div onClick={() => {
+                                this.props.TableStore.getAllData({ formId: one['id'] }, 'myself')
+                                this.props.FormStore.getFormField({ formId: one['id'] })
+                                this.props.HomeStore.setValue('firstFormId', one['id'])
+
+                              }} className={`left_menu_child ${idIndex > -1 ? 'display' : 'undisplay'}`}><FileTextOutlined className='node_icon' style={{ color: '#5da0cc' }} /><span className='node_name'>{one.name}</span></div>
+                            )
+                          })
+                        )
+                      }
+                    </div>
+                  )
+                })
+              }
+            </div>
+          </div>
+          <div className='bottom_name'><ToolOutlined style={{marginRight:'5px'}}/>管理后台</div>
         </div>
 
       </Sider>
@@ -108,17 +125,12 @@ class MenuLayout extends Component {
   }
   handleMenu = ({ item, key, }) => {
     let lo = this.props.location.pathname
-    this.props.HomeStore.model = 'look'
     if (key.startsWith('my')) {
       this.props.HomeStore.changeViewModel(key)
     } else if (lo != '/manage/todo' && lo != '/manage/create' && lo != '/manage/handle' && lo != '/manage/copy') {
-      this.props.HomeStore.toggleMenu({ actionItem: item, actionId: key, from: 'menu-click' }, (url) => {
-        if (url) {
-          this.props.history.push(url);
-        } else {
-          alert('false');
-        }
-      });
+      console.log(key);
+      this.props.TableStore.getAllData({ formId: key }, 'myself')
+      this.props.FormStore.getFormField({ formId: key })
     }
   }
   handleRe = (key) => {

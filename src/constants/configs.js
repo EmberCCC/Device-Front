@@ -40,49 +40,6 @@ export const MenuObj = {
       ]
     },
     {
-      id: -2,
-      name: '经营分析报表',
-      iconfontFont: '&#xe629;',
-      iconfont: 'icon-device',
-      path: '/manage',
-      action: false,
-      displayNone: false,
-      leafMenuModels: [
-        {
-          id: 201,
-          name: '设备动态推送',
-          parentId: 1,
-          path: '/manage/dynamic',
-          action: false,
-          displayNone: false
-        },
-        {
-          id: 202,
-          name: '点检巡检推送',
-          icon: 'profile',
-          parentId: 1,
-          path: '/manage/check',
-          action: false,
-          displayNone: false,
-        },
-        {
-          id: 203,
-          name: '保养维护统计',
-          parentId: 1,
-          path: '/manage/protect',
-          action: false,
-          displayNone: false
-        },{
-          id: 204,
-          name: '设备维修统计',
-          parentId: 1,
-          path: '/manage/repair',
-          action: false,
-          displayNone: false
-        },
-      ]
-    },
-    {
       id: -3,
       name: '基础信息',
       iconfont: 'icon-part',
@@ -237,14 +194,6 @@ export const MenuObj = {
           parentId: 6,
           name: '保养计划基础表',
           path: '/maintenance/base',
-          action: false,
-          displayNone: false
-        },
-        {
-          id: 603,
-          parentId: 6,
-          name: '设备保养日历',
-          path: '/maintenance/date',
           action: false,
           displayNone: false
         }

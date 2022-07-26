@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-04-02 11:12:08
- * @LastEditTime: 2022-07-08 12:19:31
+ * @LastEditTime: 2022-07-27 04:44:25
  * @LastEditors: EmberCCC 1810888456@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage-test\src\layouts\BasicManage\ComputerPage\index.js
@@ -9,7 +9,7 @@
 
 import { inject, observer } from 'mobx-react'
 import React, { Component } from 'react'
-import { Button, Select, Table } from 'antd'
+import { Button, Select, Spin, Table } from 'antd'
 import { toJS } from 'mobx';
 import { NavLink } from 'react-router-dom';
 import './index.css'
@@ -23,7 +23,7 @@ class CommonTable extends Component {
 
   render() {
     const { secondFormId, selectedKeys, itemDataT, firstFormId } = this.props.HomeStore;
-    const { dataSource, columns, PageInfo, model,isLoading } = this.props.TableStore;
+    const { dataSource, columns, PageInfo, model, isLoading } = this.props.TableStore;
     const handleSelect = (value) => {
       if (value == 'subitAndManage') {
         this.props.TableStore.getAllData({ formId: firstFormId }, 'myself')
@@ -44,13 +44,15 @@ class CommonTable extends Component {
           </Select>
           <NavLink to={{ pathname: '/design', state: { selectedKeys: toJS(selectedKeys), item: toJS(itemDataT), secondFormId: toJS(secondFormId) } }} style={{ float: 'right' }}><Button>编辑表单</Button></NavLink>
         </div>
-        <div className='table_content'>
-          {
+        <Spin spinning={isLoading} tip={'loading...'}>
+          <div className='table_content'>
+            {
               model == 'submit' ?
-                <FormLayout loading={isLoading}/> :
-                <GlobalTabel2 loading={isLoading} scroll={{x:true}}/>
-          }
-        </div>
+                <FormLayout loading={isLoading} /> :
+                <GlobalTabel2 loading={isLoading} scroll={{ x: true }} />
+            }
+          </div>
+        </Spin>
       </div>
     )
   }

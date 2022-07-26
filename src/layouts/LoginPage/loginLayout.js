@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-07 16:13:38
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-07-07 16:24:16
+ * @LastEditTime: 2022-07-27 03:28:11
  * @FilePath: \bl-device-manage-test\src\layouts\LoginPage\loginLayout.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -84,7 +84,7 @@ class LoginLayout extends Component {
                 sessionStorage.setItem('selfToken', 'Bearer ' + token); // 设置前局登陆token
                 sessionStorage.setItem('username', values.username); // 设置登录用户名
                 this.props.history.push({
-                    pathname: '/basic',
+                    pathname: '/common',
                     state: { username: values.username, password: values.password, selfToken: token }
                 });
             }

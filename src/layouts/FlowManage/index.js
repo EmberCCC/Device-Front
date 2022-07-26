@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-04-11 16:11:20
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-07-25 19:50:00
+ * @LastEditTime: 2022-07-27 02:54:59
  * @FilePath: \bl-device-manage-test\src\layouts\FlowManage\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -17,7 +17,7 @@
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 import { BulbOutlined, CopyOutlined, FormOutlined, NodeExpandOutlined, PlayCircleOutlined, PoweroffOutlined } from "@ant-design/icons";
-import { CanvasToolbar, createGraphConfig, XFlow, XFlowNodeCommands, CanvasScaleToolbar, CanvasSnapline, JsonSchemaForm, NsJsonSchemaForm, CanvasNodePortTooltip, FlowchartCanvas, FlowchartExtension, useXFlowApp, XFlowGraphCommands, MODELS, XFlowEdgeCommands } from "@antv/xflow";
+import { CanvasToolbar, createGraphConfig, XFlow, XFlowNodeCommands, CanvasScaleToolbar, CanvasSnapline, JsonSchemaForm, NsJsonSchemaForm, CanvasNodePortTooltip, FlowchartCanvas, FlowchartExtension, XFlowGraphCommands, randomInt, XFlowEdgeCommands } from "@antv/xflow";
 import { inject, observer } from "mobx-react";
 import AuthShape from './Self_Form/field_auth';
 import React, { useEffect, useState } from "react";
@@ -30,10 +30,10 @@ import Node_name from "./Self_Form/node_name";
 import Node_copy from "./Self_Form/node_copy";
 import Node_charge from "./Self_Form/node_charge";
 import Flow_Config from "./flowConfig";
-import getPorts from "./getports";
 import { changeFlow } from "./changeTool";
-import { message } from "antd";
-import Flow_head from "./flow_head";
+import { message, Popover, Spin } from "antd";
+import getPorts from "./getports";
+import * as services from '../../services/flow'
 import { toJS } from "mobx";
 export const useGraphConfig = createGraphConfig(graphConfig => {
   graphConfig.setX6Config({
@@ -165,8 +165,9 @@ const configCanvas = {
 
 const FlowManage = observer(({ FlowStore, HomeStore, TableStore, SocketStore, props }) => {
   // const { commandService, modelService } = useXFlowApp();
-  const { flowProperty } = FlowStore
+  const { flowProperty, canOb, allFlowList, flowversion, ableversion } = FlowStore
   const { firstFormId } = HomeStore
+  const [load, setIsload] = useState(false)
   const [app, setApp] = useState(null)
   const toolbarConfig = useToolbarConfig(props)
   const graphConfig = useGraphConfig(props);
@@ -327,54 +328,64 @@ const FlowManage = observer(({ FlowStore, HomeStore, TableStore, SocketStore, pr
   })(NsJsonForm || (NsJsonForm = {}));
   const onLoad = async app => {
     setApp(app)
-    FlowStore.getShowFlow({ 'formId': firstFormId }).then((res) => {
-      console.log(res);
-      flowProperty.nodes.map((item) => {
-        app.executeCommand(XFlowNodeCommands.ADD_NODE.id, {
-          nodeConfig: item,
-        })
-      })
-      flowProperty.edges.map((item) => {
-        app.executeCommand(XFlowEdgeCommands.ADD_EDGE.id, {
-          edgeConfig: item
-        })
-      })
+    console.log(flowProperty);
+    if (canOb == true) {
+      app.executeCommand(
+        XFlowNodeCommands.ADD_NODE.id, {
+        nodeConfig:
+        {
+          id: -1,
+          name: '开始节点',
+          label: `开始节点`,
+          typeId: '-1',
+          auth_info: {},
+          charge_person: {
+            'department': [],
+            'role': [],
+            'user': []
+          },
+          copy: false,
+          x: randomInt(50, 100),
+          y: randomInt(50, 100),
+          width: 180,
+          height: 38,
+          ports: getPorts()
+        }
+      }
+      )
+      app.executeCommand(
+        XFlowNodeCommands.ADD_NODE.id, {
+        nodeConfig:
+        {
+          id: -2,
+          name: '结束节点',
+          label: `结束节点`,
+          typeId: '-2',
+          auth_info: {},
+          charge_person: {
+            'department': [],
+            'role': [],
+            'user': []
+          },
+          copy: false,
+          x: randomInt(50, 100),
+          y: randomInt(50, 100),
+          width: 180,
+          height: 38,
+          ports: getPorts()
+        }
+      }
+      )
     }
-    );
-    console.log(toJS(flowProperty['nodes']))
-
-    // app.executeCommand(XFlowNodeCommands.ADD_NODE.id, {
-    //   nodeConfig: {
-    //     id: -1,
-    //     label: `开始节点`,
-    //     typeId: '-1',
-    //     charge_person: {
-    //       'department': [],
-    //       'role': [],
-    //       'user': []
-    //     },
-    //     x: 600,
-    //     y: 100,
-    //     width: 180,
-    //     height: 38,
-    //     ports: getPorts()
-    //   },
-    // })
-    // app.executeCommand(XFlowNodeCommands.ADD_NODE.id, {
-    //   nodeConfig: {
-    //     id: -2,
-    //     label: `结束节点`,
-    //     typeId: '-2',
-    //     x: 600,
-    //     y: 500,
-    //     width: 180,
-    //     height: 38,
-    //     ports: getPorts()
-    //   },
-    // })
+    //  else {
+    //   await app.executeCommand(
+    //     XFlowGraphCommands.GRAPH_RENDER.id,
+    //     toJS(flowProperty)
+    //   )
+    // }
   }
   useEffect(() => {
-    FlowStore.getShowFlow({ 'formId': firstFormId })
+    // FlowStore.getOneFlow({ 'formId': firstFormId })
     console.log(firstFormId);
   }, [])
   return (
@@ -383,9 +394,53 @@ const FlowManage = observer(({ FlowStore, HomeStore, TableStore, SocketStore, pr
         <div className='edit_left'>
           <BulbOutlined className='icon_edit' />
           <a>查看新手引导</a>
+          <div style={{ display: 'inline-block', marginLeft: '20px', background: '#f1f1f1', userSelect: 'none' }}>流程已启用，如需增删节点和连线，请<a>添加新版本</a></div>
         </div>
+
         <div className='edit_right'>
-          <button className='edit_look' onClick={() => console.log(1)}>版本</button>
+          <Popover overlayClassName="myPop" trigger={'click'} placement='bottom' content={
+            <div>
+              {allFlowList.map((item, index) => {
+                return (
+                  <div onClick={async () => {
+                    setIsload(true)
+                    console.log(toJS(flowProperty));
+                    let ig = { 'nodes': JSON.parse(item['origin'])['nodes'], 'edges': JSON.parse(item['origin'])['edges'] }
+                    console.log(JSON.parse(item['origin']));
+                    flowProperty['edges'].forEach(async (item) => {
+                      console.log(item);
+                      await app.executeCommand(
+                        XFlowEdgeCommands.DEL_EDGE.id, {
+                        edgeConfig: item
+                      })
+                    })
+                    flowProperty['nodes'].forEach(async (item) => {
+                      await app.executeCommand(
+                        XFlowNodeCommands.DEL_NODE.id, {
+                        nodeConfig: item
+                      })
+                    })
+                    // await app.executeCommand(
+                    //   XFlowGraphCommands.GRAPH_RENDER.id, {
+                    //   'graphData': ig
+                    // })
+                    FlowStore.setValue('flowversion', item['id'])
+                    FlowStore.setValue('flowProperty', JSON.parse(item['origin']))
+                    setIsload(false)
+                  }} key={index} className="oneflowversion">
+                    <div className="oneflow1">{flowversion == item['id'] ? '√' : ''}</div>
+                    <div className="oneflow2">流程版本(V{item['id']})</div>
+                    <div className={`oneflow3 ${item['enable'] == true ? 'true' : ""}`}>{item['enable'] == true ? '启用中' : '设计'}</div>
+                  </div>
+                )
+              })}
+              <div className="controlVersion">管理流程版本</div>
+            </div>
+          }>
+            <div className="all_flowversion">
+              流程版本（V{flowversion != -1 ? flowversion : '(新版本)'}）
+            </div>
+          </Popover>
           <button className='edit_save' onClick={() => {
             app.commandService.executeCommand(
               XFlowGraphCommands.SAVE_GRAPH_DATA.id,
@@ -399,54 +454,68 @@ const FlowManage = observer(({ FlowStore, HomeStore, TableStore, SocketStore, pr
               },
             )
           }}>保存</button>
+          {
+            flowversion != ableversion && (
+              <button className='edit_save edit_open' onClick={() => {
+                FlowStore.openFlow({ 'flowId': flowversion }).then(() => {
+                  FlowStore.getOneFlow({ 'formId': firstFormId })
+                })
+              }}>启用流程</button>
+            )
+          }
         </div>
       </div>
       <div className="flow_main">
-        <XFlow
-          onLoad={onLoad}
-          config={graphConfig}
-          className="xflow-workspace"
-          meta={flowProperty}
-        >
-
-          <CanvasToolbar
-            config={toolbarConfig}
-            position={{ left: 200 }}
-            style={{ zIndex: 100 }}
-          />
-          <CanvasScaleToolbar
-            layout='horizontal'
-            position={{ right: 500 }} />
-          <FlowchartCanvas
-            config={configCanvas}
-            useConfig={(config) => {
-              config.setDefaultNodeRender(props => {
-                if (props.data.typeId == '1') {
-                  return <div className="react-node"><FormOutlined style={{ marginRight: '10px' }} /> {props.data.label} </div>;
-                } else if (props.data.typeId == '2') {
-                  return <div className="react-node"><CopyOutlined style={{ marginRight: '10px' }} /> {props.data.label} </div>;
-                } else if (props.data.typeId == '3') {
-                  return <div className="react-node"><NodeExpandOutlined style={{ marginRight: '10px' }} /> {props.data.label} </div>;
-                } else if (props.data.typeId == '-2') {
-                  return <div className="react-node"><PoweroffOutlined style={{ marginRight: '10px' }} /> {props.data.label} </div>;
-                } else if (props.data.typeId == '-1') {
-                  return <div className="react-node"><PlayCircleOutlined style={{ marginRight: '10px' }} /> {props.data.label} </div>;
-                }
-              });
-            }}
-            position={{ top: 0, left: 0, height: 800 }}
+        <Spin spinning={load} tip={'loading...'}>
+          <XFlow
+            onLoad={onLoad}
+            // config={graphConfig}
+            className="xflow-workspace"
+            graphData={flowProperty}
           >
-            <FlowchartExtension />
-            <CanvasSnapline />
-            <CanvasNodePortTooltip />
-            <JsonSchemaForm
-              getCustomRenderComponent={NsJsonForm.getCustomRenderComponent}
-              controlMapService={controlMapService}
-              formSchemaService={NsJsonForm.formSchemaService}
-              formValueUpdateService={NsJsonForm.formValueUpdateService}
-              position={{ top: 0, bottom: 0, right: 0, width: 290 }} />
-          </FlowchartCanvas>
-        </XFlow>
+            {
+              canOb && (
+                <CanvasToolbar
+                  config={toolbarConfig}
+                  position={{ left: 200 }}
+                  style={{ zIndex: 100 }}
+                />
+              )
+            }
+            <CanvasScaleToolbar
+              layout='horizontal'
+              position={{ right: 500 }} />
+            <FlowchartCanvas
+              config={configCanvas}
+              useConfig={(config) => {
+                config.setDefaultNodeRender(props => {
+                  if (props.data.typeId == '1') {
+                    return <div className="react-node"><FormOutlined style={{ marginRight: '10px' }} /> {props.data.label} </div>;
+                  } else if (props.data.typeId == '2') {
+                    return <div className="react-node"><CopyOutlined style={{ marginRight: '10px' }} /> {props.data.label} </div>;
+                  } else if (props.data.typeId == '3') {
+                    return <div className="react-node"><NodeExpandOutlined style={{ marginRight: '10px' }} /> {props.data.label} </div>;
+                  } else if (props.data.typeId == '-2') {
+                    return <div className="react-node"><PoweroffOutlined style={{ marginRight: '10px' }} /> {props.data.label} </div>;
+                  } else if (props.data.typeId == '-1') {
+                    return <div className="react-node"><PlayCircleOutlined style={{ marginRight: '10px' }} /> {props.data.label} </div>;
+                  }
+                });
+              }}
+              position={{ top: 0, left: 0, height: 800 }}
+            >
+              <FlowchartExtension />
+              <CanvasSnapline />
+              <CanvasNodePortTooltip />
+              <JsonSchemaForm
+                getCustomRenderComponent={NsJsonForm.getCustomRenderComponent}
+                controlMapService={controlMapService}
+                formSchemaService={NsJsonForm.formSchemaService}
+                formValueUpdateService={NsJsonForm.formValueUpdateService}
+                position={{ top: 0, bottom: 0, right: 0, width: 290 }} />
+            </FlowchartCanvas>
+          </XFlow>
+        </Spin>
       </div>
     </div >
   )

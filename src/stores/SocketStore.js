@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-19 23:01:23
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-07-24 23:24:12
+ * @LastEditTime: 2022-07-26 18:29:28
  * @FilePath: \bl-device-manage-test\src\stores\SocketStore.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -22,7 +22,7 @@ class Socket {
 
     @observable userAuth = {}
 
-    @observable SocketId = '3'
+    @observable SocketId = '1'
     @observable SelectKey = '全部成员';
     @observable allUsers = [];
     @observable selectRowKeys = [];
@@ -230,6 +230,42 @@ class Socket {
     }
     @action.bound setValue(key, value) {
         this[key] = value;
+    }
+    @action.bound async searchAllUsers(params) {
+        this.setValue('loading', true)
+        try {
+            let res = await services.putUrlRequest(services.requestList.searchAllUser, params);
+            this.setValue('loading', false)
+            if (isDataExist(res)) {
+                console.log(res.data);
+                this.setValue('allUsers', res.data.data)
+                let obj = {}
+                res.data.data.map((item,index) => {
+                    obj[item['userId']] = item['name'];
+                })
+                this.setValue('userName',obj)
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    @action.bound async searchDeUsers(params) {
+        this.setValue('loading', true)
+        try {
+            let res = await services.putUrlRequest(services.requestList.searchDeUser, params);
+            this.setValue('loading', false)
+            if (isDataExist(res)) {
+                console.log(res.data);
+                this.setValue('allUsers', res.data.data)
+                let obj = {}
+                res.data.data.map((item,index) => {
+                    obj[item['userId']] = item['name'];
+                })
+                this.setValue('userName',obj)
+            }
+        } catch (error) {
+            console.log(error);
+        }
     }
     @action.bound async getAllUsers(params) {
         this.setValue('loading', true)
@@ -488,6 +524,17 @@ class Socket {
     @action.bound async getOneRoleUser(params) {
         try {
             let res = await services.getRequest(services.requestList.getOneRoleUsers, params);
+            if (isDataExist(res)) {
+                console.log(res.data.data);
+                this.setValue('roleList', res.data.data)
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    @action.bound async searchOneRoleUser(params) {
+        try {
+            let res = await services.putUrlRequest(services.requestList.searchRoUser, params);
             if (isDataExist(res)) {
                 console.log(res.data.data);
                 this.setValue('roleList', res.data.data)
