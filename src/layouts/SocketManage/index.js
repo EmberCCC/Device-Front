@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-19 23:02:26
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-07-22 16:04:29
+ * @LastEditTime: 2022-07-27 11:14:53
  * @FilePath: \bl-device-manage-test\src\layouts\SocketManage\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -30,7 +30,7 @@ const SocketManage = observer(({ SocketStore,props }) => {
     return (
         <div className="socket_all">
             <div className="socket_header">
-                <NavLink to='/basic'>
+                <NavLink to='/common'>
                     <div className="socket_header_left"><LeftOutlined style={{color:'#0db3a6'}}/>通讯录</div>
                 </NavLink>
                 <Menu theme="light" mode='horizontal' selectedKeys={[SocketId]} justify='center' onClick={changeModel} items={item} />
