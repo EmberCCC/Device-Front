@@ -1,12 +1,13 @@
 /**
  * modal 样式文件
  */
-.global-modal-zyn{
+.global-modal-zyn {
   position: absolute;
   top: 0;
   right: 0;
-  .ant-modal-header{
-    span{
+
+  .ant-modal-header {
+    span {
       float: right;
       margin-right: 30px;
       cursor: pointer;
@@ -14,11 +15,13 @@
       top: 1px;
       color: #666;
       transform: scale(0.9);
-      &:hover{
-        color:#333;
+
+      &:hover {
+        color: #333;
       }
     }
   }
+
   .ant-modal-close-x {
     display: block;
     width: 40px;
@@ -30,5 +33,9 @@
     text-align: center;
     text-transform: none;
     text-rendering: auto;
+  }
+
+  .ant-modal-content {
+    height: 100vh !important;
   }
 }

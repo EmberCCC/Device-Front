@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-05 10:16:45
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-07-23 10:21:56
+ * @LastEditTime: 2022-07-27 07:29:13
  * @FilePath: \bl-device-manage-test\src\layouts\FormEdit\changeTool.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -54,6 +54,12 @@ function getOneForm(fields, fieldIds, type) {
       if (field['id'] == item) {
         const detailJson = JSON.parse(field['detailJson']);
         const name = type == 'submit' ? field['id'] : "".concat(detailJson['typeId'], "_").concat(nanoid(6))
+        console.log(detailJson);
+        if(type == 'submit'){
+          if(detailJson.hasOwnProperty('title_vis') && detailJson['title_vis'] == false){
+            detailJson['title'] = ""
+          }
+        }
         result[name] = detailJson;
         result[name]['fieldId'] = field['id'];
       }

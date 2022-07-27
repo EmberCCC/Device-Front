@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-04-07 11:58:39
- * @LastEditTime: 2022-07-27 04:53:56
+ * @LastEditTime: 2022-07-27 06:51:13
  * @LastEditors: EmberCCC 1810888456@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage-test\src\components\GlobalTabel\index.js
@@ -32,7 +32,7 @@ class GlobalTabel2 extends React.Component {
         /* 表格第一列选择框事件 */
         const rowSelection = {
             selectedRowKeys,
-            columnWidth: 2,
+            columnWidth: 50,
             onChange: (selectedRowKeys, selectedRows) => {
                 this.props.TableStore.setSelectedRowKeys(selectedRowKeys);
                 this.props.TableStore.selectedIdsList = toJS(selectedRows);
@@ -154,9 +154,19 @@ class GlobalTabel2 extends React.Component {
                         onRow={(key, record) => {
                             return {
                                 onClick: event => {
+                                    console.log(toJS(dataSource));
+                                    console.log(toJS(key));
+                                    let dindex = 0;
+                                    dataSource.forEach((one,index) => {
+                                        if(one['key'] == key['key']){
+                                            dindex = index
+                                        }
+                                    })
                                     this.props.TableStore.getOneData({ 'formId': this.props.HomeStore.firstFormId, 'dataId': key.key })
                                     this.props.TableStore.setDataPageModalVis(true);
-                                    this.props.TableStore.setValue('itemIndex', record)
+                                    this.props.TableStore.setValue('itemIndex', dindex)
+                                    console.log(record);
+                                    console.log(key);
                                 }, // 点击行
                             };
                         }}
@@ -175,6 +185,7 @@ class GlobalTabel2 extends React.Component {
 
                 {
                     this.props.TableStore.dataPageModalVis && <GlobalModal
+                        
                         title={firstFormName[this.props.HomeStore.firstFormId]}
                         width={1300}
                         visible={this.props.TableStore.dataPageModalVis}

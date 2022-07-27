@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-02 03:21:54
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-07-27 03:39:42
+ * @LastEditTime: 2022-07-27 07:37:27
  * @FilePath: \bl-device-manage-test\src\layouts\FormLayout\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -93,13 +93,13 @@ const FormLayout = observer(({ HomeStore, FormStore }) => {
         <div className='form_layout'>
           <FormRender schema={schema['root']} widgets={{ self_divider: Self_divider }}
             form={form} onFinish={onFinish} style={{ overflowY: 'auto' }} />
-          <Tabs onChange={handleChange} tabBarGutter={20} destroyInactiveTabPane={true}>
+          <Tabs onChange={handleChange} tabBarGutter={20} destroyInactiveTabPane={true} type='card'>
             {
               getItem()
             }
           </Tabs>
         </div>
-        <Button onClick={form.submit} type="primary">提交</Button>
+        <Button className='form_btn_sub' onClick={form.submit} type="primary">提交</Button>
       </div>
     </Spin>
   );

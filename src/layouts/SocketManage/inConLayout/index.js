@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-19 23:03:37
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-07-26 18:32:44
+ * @LastEditTime: 2022-07-27 09:25:17
  * @FilePath: \bl-device-manage-test\src\layouts\SocketManage\inConLayout\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -104,16 +104,29 @@ const InConLayout = observer(({ SocketStore }) => {
             fixed: 'right',
             width: 100,
             render: (text, record, index) => <DeleteOutlined onClick={() => {
-                let arr = []
-                roleList.map((item) => {
-                    if (item['userId'] != text['userId']) {
-                        arr.push(item['userId'])
+                Modal.confirm({
+                    title: '您确定删除该成员',
+                    content: '移出成员会同时移除所选成员的当前角色身份，但不会在通讯录中删除所选成员',
+                    cancelText: "取消",
+                    okText:'确定',
+                    onCancel: () => {
+                        Modal.destroyAll()
+                    },
+                    onOk: () => {
+                        let arr = []
+                        roleList.map((item) => {
+                            if (item['userId'] != text['userId']) {
+                                arr.push(item['userId'])
+                            }
+                        })
+                        console.log(arr);
+                        SocketStore.saveRoleUser({ 'roleId': SelectKey }, arr).then(() => {
+                            SocketStore.getOneRoleUser({ 'roleId': SelectKey })
+                            SocketStore.getAllRoles()
+                        })
                     }
                 })
-                SocketStore.saveRoleUser({ 'roleId': SelectKey }, arr).then(() => {
-                    SocketStore.getOneRoleUser({ 'roleId': SelectKey })
-                    SocketStore.getAllRoles()
-                })
+
             }} style={{ cursor: 'pointer' }} />,
         },
     ]
@@ -200,7 +213,7 @@ const InConLayout = observer(({ SocketStore }) => {
         if (refAdd.current.input.value == "") {
             message.info('请输入部门名称');
         } else {
-            if (SocketStore.addDe({ 'preId': SelectKey, 'name': refAdd.current.input.value })) {
+            if (SocketStore.addDe({ 'preId': changeId, 'name': refAdd.current.input.value })) {
                 SocketStore.getOneDepartment({ 'departmentId': SelectKey })
                 SocketStore.getAllDepartment()
                 SocketStore.setValue('addVisible', false)
@@ -270,7 +283,7 @@ const InConLayout = observer(({ SocketStore }) => {
         console.log(value, label, extra);
     }
     const changeDePre = () => {
-        SocketStore.changeDePre({ 'preId': preId, 'departmentId': SelectKey, 'name': null }).then(() => {
+        SocketStore.changeDePre({ 'preId': preId, 'departmentId': changeId, 'name': null }).then(() => {
             SocketStore.getOneDepartment({ 'departmentId': SelectKey })
             SocketStore.getAllDepartment()
         })

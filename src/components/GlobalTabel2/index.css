@@ -21,7 +21,7 @@
 }
 
 .main_modal {
-    height: 100vh;
+    /* height: 100vh; */
     display: flex;
     flex-direction: row;
 }
@@ -111,10 +111,11 @@
     background-color: white;
     border: none;
     align-items: center;
+    cursor: pointer;
 }
 
 .header_btn:hover {
-    background-color: aliceblue;
+    color:#0db3a6;
 }
 
 .header_split {

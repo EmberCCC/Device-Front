@@ -79,7 +79,8 @@
 
 .right-layout{
     background-color: white;
-    height: auto
+    height: auto;
+    overflow: auto;
 }
 
 .edit_right button{

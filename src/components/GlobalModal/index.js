@@ -10,7 +10,7 @@ import React, { Component } from 'react';
 import { Modal, } from 'antd';
 import classnames from 'classnames';
 import { isEmpty } from 'lodash';
-// import './index.less';
+import './index.less';
 
 export default class GlobalModal extends Component {
   state = {
@@ -26,7 +26,6 @@ export default class GlobalModal extends Component {
     const dragable = !isEmpty(this.props.dragable) ? this.props.dragable : true;
     // const maxmin = !isEmpty(this.props.maxmin) ? this.props.maxmin : true;
     const curBodyStyle = {
-      height: this.state.isFullScreen && this.state.rootHeight - 110 + 'px',
       ...bodyStyle,
     };
     const wholeStyle = {
@@ -34,6 +33,7 @@ export default class GlobalModal extends Component {
       left: !this.state.isFullScreen && dragable && this.state.left + 'px',
       margin: this.state.isMouseMove && dragable && '0',
       paddingBottom: (this.state.isFullScreen || dragable) && '0',
+      height:'100vh',
       ...otherProps.style
     }
     return <Modal

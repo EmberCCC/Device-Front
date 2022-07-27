@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-02 03:21:54
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-07-19 16:00:29
+ * @LastEditTime: 2022-07-27 06:37:02
  * @FilePath: \bl-device-manage-test\src\layouts\FormLayout\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -24,9 +24,6 @@ const FormData = observer(({ HomeStore, FormStore, TableStore }) => {
   const onFinish = (formData) => {
     const { firstFormId } = HomeStore;
     let checkArr = getCheckArr(form.schema);
-    console.log(checkArr);
-    console.log({ 'formId': firstFormId, 'data': formData });
-    console.log({ 'formId': firstFormId, 'data': formData, 'dataId': toJS(TableStore.detailData['data']['id']) });
     if (TableStore.formEdit == false) {
       FormStore.setValue('formCopyVis', false)
       TableStore.setDataPageModalVis(false);

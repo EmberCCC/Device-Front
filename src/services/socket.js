@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-11-02 14:29:58
- * @LastEditTime: 2022-07-26 18:28:45
+ * @LastEditTime: 2022-07-27 09:59:51
  * @LastEditors: EmberCCC 1810888456@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage\src\services\home.js
@@ -36,6 +36,8 @@ export const requestList = {
   createNormalGroup:'/uaa/admin/createNormalAdmin',
   getAllSys:'/uaa/admin/showSysAdmins',
   createSys:'/uaa/admin/createSys',
+  setNorMan:'/uaa/admin/setupNormal',
+  updateNor:'/uaa/admin/updateNormalAdmin',
 
   searchAllUser:'/uaa/user/searchAll',
   searchDeUser:'/uaa/user/searchDepart',

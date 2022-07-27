@@ -2,11 +2,11 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-06-30 09:07:55
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-07-23 17:37:31
+ * @LastEditTime: 2022-07-27 06:51:05
  * @FilePath: \bl-device-manage-test\src\components\GlobalTabel2\dataModal.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
-import { FunnelPlotOutlined } from '@ant-design/icons'
+import { CopyOutlined, DeleteOutlined, EditOutlined, EyeOutlined, FunnelPlotOutlined, PrinterOutlined, ShareAltOutlined } from '@ant-design/icons'
 import { Button, Checkbox, Modal, Popover, Spin, Tabs } from 'antd'
 import { Radio } from 'components/BLComps'
 import { firstFormName } from 'constants/status_constant'
@@ -24,9 +24,6 @@ class DataModal extends Component {
         const getExactData = (formName) => {
             if (typeof (formArr[formName]) != 'undefined') {
                 const element = formArr[formName]['properties'];
-                console.log(toJS(element));
-                console.log(toJS(modalFieldValue));
-                console.log(toJS(modalField));
                 return (
                     modalField.map((item, index) => {
                         if (modalFieldValue.includes(item['id']) && !(['createPerson', 'createTime', 'updateTime'].indexOf(item['id']) > -1) && element.hasOwnProperty(item['id'])) {
@@ -74,10 +71,10 @@ class DataModal extends Component {
                 'updateTime': '更新时间'
             }
             return (
-                arr.map((item) => {
+                arr.map((item,index) => {
                     if (modalFieldValue.includes(item)) {
                         return (
-                            <div className='info_item'>
+                            <div className='info_item' key={index}>
                                 <div className='info_title'>{arr_title[item]}</div>
                                 <div className='info_article'>{modalData[item]}</div>
                             </div>
@@ -87,12 +84,10 @@ class DataModal extends Component {
             )
         }
         const handleClickFront = () => {
-            console.log(dataSource[itemIndex - 1]);
             this.props.TableStore.getOneData({ 'formId': this.props.HomeStore.firstFormId, "dataId": dataSource[itemIndex - 1]['key'] })
             this.props.TableStore.setValue('itemIndex', itemIndex - 1);
         }
         const handleClickBehind = () => {
-            console.log(dataSource[itemIndex + 1]);
             this.props.TableStore.getOneData({ 'formId': this.props.HomeStore.firstFormId, "dataId": dataSource[itemIndex + 1]['key'] })
             this.props.TableStore.setValue('itemIndex', itemIndex + 1);
 
@@ -224,7 +219,6 @@ class DataModal extends Component {
 
         }
         const getData = () => {
-            console.log(toJS(formArr));
             let newArr = []
             for (const key in formArr) {
                 if (Object.hasOwnProperty.call(formArr, key)) {
@@ -235,7 +229,6 @@ class DataModal extends Component {
                 }
             }
             return newArr.map((item, index) => {
-                console.log(item);
                 return (
                     <Tabs.TabPane tab={item} key={index}>
                         {getExactData(item)}
@@ -254,14 +247,14 @@ class DataModal extends Component {
                                         <Popover placement="bottomRight" content={fieldChoose} trigger="click"
                                             onVisibleChange={visibleChange}
                                         >
-                                            <button className='header_btn'><FunnelPlotOutlined />字段</button>
+                                            <button className='header_btn'><EyeOutlined style={{ color: '#0db3a6' }} /></button>
                                         </Popover>
-                                        <button onClick={() => { handleClick('share') }} className='header_btn'><FunnelPlotOutlined />分享</button>
+                                        <button onClick={() => { handleClick('share') }} className='header_btn'><ShareAltOutlined style={{ color: '#0db3a6', marginRight: '5px' }} /></button>
                                         <div className='header_split' />
-                                        <button onClick={() => { handleClick('print') }} className='header_btn'><FunnelPlotOutlined />打印</button>
-                                        <button onClick={() => { handleClick('copy') }} className='header_btn'><FunnelPlotOutlined />复制</button>
-                                        <button onClick={() => { handleClick('edit') }} className='header_btn'><FunnelPlotOutlined />编辑</button>
-                                        <button onClick={() => { handleClick('del') }} className='header_btn'><FunnelPlotOutlined />删除</button>
+                                        <button onClick={() => { handleClick('print') }} className='header_btn'><PrinterOutlined style={{ color: '#0db3a6', marginRight: '5px' }} />打印</button>
+                                        <button onClick={() => { handleClick('copy') }} className='header_btn'><CopyOutlined style={{ color: '#0db3a6', marginRight: '5px' }} />复制</button>
+                                        <button onClick={() => { handleClick('edit') }} className='header_btn'><EditOutlined style={{ color: '#0db3a6', marginRight: '5px' }} />编辑</button>
+                                        <button onClick={() => { handleClick('del') }} className='header_btn'><DeleteOutlined style={{ color: '#0db3a6', marginRight: '5px' }} />删除</button>
 
                                     </div>
                                     <div className='left_header_right'>

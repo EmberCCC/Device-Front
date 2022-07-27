@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-19 23:01:23
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-07-26 18:29:28
+ * @LastEditTime: 2022-07-27 11:05:27
  * @FilePath: \bl-device-manage-test\src\stores\SocketStore.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -76,25 +76,28 @@ class Socket {
     getChidren = (arr) => {
         let content = (
             <div className='createRole'>
-                <div onClick={() => {
+                <div onClick={(e) => {
+                    e.stopPropagation()
                     this.setValue('changeVis', true)
                     this.setValue('changetype', 'de')
                 }}>修改名称</div>
-                <div onClick={() => {
-
+                <div onClick={(e) => {
+                    e.stopPropagation()
                     // console.log(this.fatherIds['changeId']);
                     console.log(this.fatherIds);
                     console.log(this.SelectKey);
                     this.setValue('preId', this.fatherIds[this.changeId])
                     this.setValue('mulVisible', true)
                 }}>调整上级部门</div>
-                <div onClick={() => {
+                <div onClick={(e) => {
+                    e.stopPropagation()
                     this.setValue('addVisible', true)
                 }}>添加子部门</div>
-                <div onClick={() => {
+                <div onClick={(e) => {
+                    e.stopPropagation()
                     Modal.confirm({
                         title: `您确定要删除${this.changeName}吗？`,
-                        cancelText:'取消',
+                        cancelText: '取消',
                         okText: '确定',
                         onOk: () => {
                             console.log(this.changeId);
@@ -107,7 +110,7 @@ class Socket {
                         onCancel: () => {
                             Modal.destroyAll();
                         }
-                        
+
                     })
                 }}>删除</div>
             </div>
@@ -140,11 +143,13 @@ class Socket {
     exchange = (obj) => {
         let item = (
             <div className='createRole'>
-                <div onClick={() => {
+                <div onClick={(e) => {
+                    e.stopPropagation();
                     this.setValue('changeVis', true)
                     this.setValue('changetype', 'de')
                 }}>修改名称</div>
-                <div onClick={() => {
+                <div onClick={(e) => {
+                    e.stopPropagation()
                     this.setValue('addVisible', true)
                 }}>添加子部门</div>
             </div>
@@ -240,10 +245,10 @@ class Socket {
                 console.log(res.data);
                 this.setValue('allUsers', res.data.data)
                 let obj = {}
-                res.data.data.map((item,index) => {
+                res.data.data.map((item, index) => {
                     obj[item['userId']] = item['name'];
                 })
-                this.setValue('userName',obj)
+                this.setValue('userName', obj)
             }
         } catch (error) {
             console.log(error);
@@ -258,10 +263,10 @@ class Socket {
                 console.log(res.data);
                 this.setValue('allUsers', res.data.data)
                 let obj = {}
-                res.data.data.map((item,index) => {
+                res.data.data.map((item, index) => {
                     obj[item['userId']] = item['name'];
                 })
-                this.setValue('userName',obj)
+                this.setValue('userName', obj)
             }
         } catch (error) {
             console.log(error);
@@ -276,10 +281,10 @@ class Socket {
                 console.log(res.data);
                 this.setValue('allUsers', res.data.data)
                 let obj = {}
-                res.data.data.map((item,index) => {
+                res.data.data.map((item, index) => {
                     obj[item['userId']] = item['name'];
                 })
-                this.setValue('userName',obj)
+                this.setValue('userName', obj)
             }
         } catch (error) {
             console.log(error);
@@ -416,18 +421,21 @@ class Socket {
                 let nameObj = {}
                 const roleGroup = (
                     <div className='createRole'>
-                        <div onClick={() => {
+                        <div onClick={(e) => {
+                            e.stopPropagation()
                             this.setValue('changeVis', true)
                             this.setValue('changetype', 'roleg')
                         }}>修改名称</div>
-                        <div onClick={() => {
+                        <div onClick={(e) => {
+                            e.stopPropagation()
                             this.setValue('createRoleVis', true);
                         }}>添加角色</div>
-                        <div onClick={() => {
+                        <div onClick={(e) => {
+                            e.stopPropagation()
                             Modal.confirm({
                                 title: '您确定删除',
-                                cancelText:"取消",
-                                onCancel:() => {
+                                cancelText: "取消",
+                                onCancel: () => {
                                     Modal.destroyAll()
                                 },
                                 onOk: () => {
@@ -443,18 +451,21 @@ class Socket {
                 )
                 const roleItem = (
                     <div className='createRole'>
-                        <div onClick={() => {
+                        <div onClick={(e) => {
+                            e.stopPropagation()
                             this.setValue('changeVis', true)
                             this.setValue('changetype', 'role')
                         }}>修改名称</div>
-                        <div onClick={() => {
+                        <div onClick={(e) => {
+                            e.stopPropagation()
                             this.setValue('changeGroupVis', true)
                         }}>调整分组</div>
-                        <div onClick={() => {
+                        <div onClick={(e) => {
+                            e.stopPropagation()
                             Modal.confirm({
                                 title: '您确定删除',
                                 content: "删除角色同时会删除权限",
-                                cancelText:'取消',
+                                cancelText: '取消',
                                 onOk: () => {
                                     this.delRole({ 'roleId': this.changeId }).then(() => {
                                         this.getAllRoles();
@@ -670,6 +681,7 @@ class Socket {
     @observable inDCheck = false
     @observable inRLCheck = false
     @observable inRMCheck = false
+    @observable editForm = false;
     @observable maId = null;
     @observable norName = {}
 
@@ -680,21 +692,33 @@ class Socket {
         try {
             let res = await services.getRequest(services.requestList.getAllNorList, params);
             if (isDataExist(res)) {
+                if (this.maSelectKey != '-1') {
+                    res.data.data.map(item => {
+                        console.log(item);
+                        if (item['id'] == this.maSelectKey) {
+                            this.setValue('maSelectObj', item)
+                            this.setValue('deValue', item['authDto']['scope']['department'].length > 0 && item['authDto']['scope']['department'][0] == -1 ? 'all' : 'scope')
+                            this.setValue('roValue', item['authDto']['scope']['role'].length > 0 && item['authDto']['scope']['role'][0] == -1 ? 'all' : 'scope')
+                            this.setValue('inDCheck', item['authDto']['addressBook']['department'])
+                            this.setValue('inRLCheck', item['authDto']['addressBook']['role'][0])
+                            this.setValue('inRMCheck', item['authDto']['addressBook']['role'][1])
+                            this.setValue('editForm', item['authDto']['editForm'])
+                        }
+                    })
+                }
+                this.setValue('normalList', res.data.data)
                 console.log(res.data.data);
                 let obj = {}
                 let gObj = {}
-                res.data.data.map((item,index) => {
+                res.data.data.map((item, index) => {
                     obj[item['id']] = item['name']
-                    item['admins'].map((one,oIndex) => {
+                    item['admins'].map((one, oIndex) => {
                         gObj[one['userId']] = item['id'];
                     })
                 })
-                this.setValue('norName',obj)
-                this.setValue('groupUserIdObj',gObj)
-                console.log(obj);
-                console.log(gObj);
+                this.setValue('norName', obj)
+                this.setValue('groupUserIdObj', gObj)
                 this.setValue('canClick', true)
-                this.setValue('normalList', res.data.data)
             }
         } catch (error) {
             console.log(error);
@@ -726,12 +750,12 @@ class Socket {
         try {
             let res = await services.getRequest(services.requestList.getAllSys, params);
             if (isDataExist(res)) {
-                this.setValue('sysList',res.data.data)
+                this.setValue('sysList', res.data.data)
                 let arr = []
-                Object.keys(res.data.data).map((item,index) => {
+                Object.keys(res.data.data).map((item, index) => {
                     arr.push(item)
                 })
-                this.setValue('addUserIds',arr)
+                this.setValue('addUserIds', arr)
             }
         } catch (error) {
             console.log(error);
@@ -747,6 +771,26 @@ class Socket {
     //         console.log(error);
     //     }
     // }
+    @action.bound async createNor(params) {
+        try {
+            let res = await services.putRequest(services.requestList.setNorMan, params);
+            if (isDataExist(res)) {
+                message.success('设置成功')
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    @action.bound async updateNor(urlData, params) {
+        try {
+            let res = await services.putUrlRequest(services.requestList.updateNor, urlData, params);
+            if (isDataExist(res)) {
+                message.success('修改已保存')
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
 }
 
 let SocketStore = new Socket()

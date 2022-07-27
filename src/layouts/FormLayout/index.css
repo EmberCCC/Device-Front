@@ -23,3 +23,10 @@
     height: 100%;
     padding: 15px;
 }
+.form_layout{
+    overflow: auto;
+    height: 95%;
+}
+.form_btn_sub{
+    height: 5%;
+}
