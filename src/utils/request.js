@@ -1,4 +1,4 @@
-import { Modal } from 'antd';
+import { message, Modal } from 'antd';
 import querystring from 'query-string';
 import parseURL from './parseUrl';
 import { forEach } from 'lodash';
@@ -77,7 +77,7 @@ export function post(url, data, options) {
 
 export function put(url, data, options) {
   console.log(JSON.stringify(data));
-  if(url === '/uaa/login/token'){
+  if (url === '/uaa/login/token') {
     console.log(`${url}?${stringify(data)}`)
     return request(`${url}?${stringify(data)}`, {
       method: 'POST',
@@ -106,7 +106,7 @@ export function put(url, data, options) {
   });
 }
 
-export function putUrl(url,urlData, data, options) {
+export function putUrl(url, urlData, data, options) {
   console.log(JSON.stringify(data));
   return request(`${url}?${stringify(urlData)}`, {
     method: 'POST',
@@ -169,8 +169,8 @@ export function get(url, data = {}, options) {
 class AbstractResponse {
   constructor(response, error) {
     if (response) {
-        this.code = response.code;
-        this.data = response; // 这里的返回数据为整个response对象
+      this.code = response.code;
+      this.data = response; // 这里的返回数据为整个response对象
     }
     this.error = error || null;
   }
@@ -260,7 +260,7 @@ const ErrorHandlers = {
  */
 function checkResponse(response, options) {
   const { code, } = response;
-  if(response.tokenType != null){
+  if (response.tokenType != null) {
     console.log(response.tokenType != null);
     response.code = 0
   }
@@ -275,7 +275,7 @@ function checkResponse(response, options) {
           window.location.href = `//${window.location.host}/login`;
         }
       })
-    }else{
+    } else {
       throw new ErrorResponse(response);
     }
   }
@@ -300,7 +300,7 @@ let dialogInstance;
 function handleError(err, options) {
   let msg = null,
     code = null;
-    console.log(err)
+  console.log(err)
   if (!options.ignoreError) {
     // if (dialogInstance) return;
     if (err.errorType === 'response') {
@@ -326,13 +326,19 @@ function handleError(err, options) {
     if (msg === 'request.addEventListener is not a function') {
       return;
     }
-    return (dialogInstance = Modal.error({
-      title: '提示',
-      content: `${decodeHtml(msg)}`,
-      afterClose: () => {
-        dialogInstance = null;
-      }
-    }));
+    if (err.code == 1) {
+      return (dialogInstance = message.error(`${decodeHtml(msg)}`));
+    } else {
+      return (dialogInstance = message.error(`${decodeHtml(msg)}`));
+      // return (dialogInstance = Modal.error({
+      //   title: '提示',
+      //   content: `${decodeHtml(msg)}`,
+      //   afterClose: () => {
+      //     dialogInstance = null;
+      //   }
+      // }));
+    }
+
   }
   throw new ErrorResponse(err);
 }

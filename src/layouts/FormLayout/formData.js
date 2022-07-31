@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-02 03:21:54
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-07-27 06:37:02
+ * @LastEditTime: 2022-07-30 08:00:37
  * @FilePath: \bl-device-manage-test\src\layouts\FormLayout\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -17,18 +17,25 @@ import { getCheckArr } from './formUtil';
 import { Self_divider } from 'layouts/FormEdit/self_item/self_divider';
 
 const FormData = observer(({ HomeStore, FormStore, TableStore }) => {
-  const [schema, setSchema] = useState({});
+  const [schema, setSchema] = useState({
+    "type": "object",
+    "properties": {},
+    "labelWidth": 120,
+    "displayType": "row"
+  });
   const [data, setData] = useState({});
   const form = useForm();
   const formList = useForm()
   const onFinish = (formData) => {
     const { firstFormId } = HomeStore;
-    let checkArr = getCheckArr(form.schema);
+    let checkArr = getCheckArr(schema);
+    let nData = formList.getValues()
+    let newData = { ...formData, ...nData, ...data };
     if (TableStore.formEdit == false) {
       FormStore.setValue('formCopyVis', false)
       TableStore.setDataPageModalVis(false);
       if (checkArr.length == 0) {
-        FormStore.submitData({ 'formId': firstFormId, 'data': formData }).then(() => {
+        FormStore.submitData({ 'formId': firstFormId, 'data': newData }).then(() => {
           if (TableStore.model == 'subitAndManage') {
             TableStore.getAllData({ formId: HomeStore.firstFormId }, 'myself')
           } else {
@@ -36,7 +43,7 @@ const FormData = observer(({ HomeStore, FormStore, TableStore }) => {
           }
         })
       } else {
-        FormStore.submitData({ 'formId': firstFormId, 'data': formData, 'checkFieldIds': checkArr }).then(() => {
+        FormStore.submitData({ 'formId': firstFormId, 'data': newData, 'checkFieldIds': checkArr }).then(() => {
           if (TableStore.model == 'subitAndManage') {
             TableStore.getAllData({ formId: HomeStore.firstFormId }, 'myself')
           } else {
@@ -46,7 +53,7 @@ const FormData = observer(({ HomeStore, FormStore, TableStore }) => {
       }
     } else {
       if (checkArr.length == 0) {
-        FormStore.changeData({ 'formId': firstFormId, 'data': formData, 'dataId': toJS(TableStore.detailData['data']['id']) }).then(() => {
+        FormStore.changeData({ 'formId': firstFormId, 'data': newData, 'dataId': toJS(TableStore.detailData['data']['id']) }).then(() => {
           TableStore.setValue('formEdit', false);
           TableStore.getOneData({ 'formId': HomeStore.firstFormId, 'dataId': toJS(TableStore.detailData['data']['id']) })
           if (TableStore.model == 'subitAndManage') {
@@ -56,7 +63,7 @@ const FormData = observer(({ HomeStore, FormStore, TableStore }) => {
           }
         })
       } else {
-        FormStore.changeDataCheck({ 'formId': firstFormId, 'data': formData, 'dataId': toJS(TableStore.detailData['data']['id']), 'checkFieldIds': checkArr }).then(() => {
+        FormStore.changeDataCheck({ 'formId': firstFormId, 'data': newData, 'dataId': toJS(TableStore.detailData['data']['id']), 'checkFieldIds': checkArr }).then(() => {
           TableStore.setValue('formEdit', false);
           TableStore.getOneData({ 'formId': HomeStore.firstFormId, 'dataId': toJS(TableStore.detailData['data']['id']) })
           if (TableStore.model == 'subitAndManage') {
@@ -68,6 +75,7 @@ const FormData = observer(({ HomeStore, FormStore, TableStore }) => {
       }
 
     }
+    formList.resetFields();
     form.resetFields();
   }
   const handleCancel = () => {

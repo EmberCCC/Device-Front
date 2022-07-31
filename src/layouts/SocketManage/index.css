@@ -350,3 +350,7 @@
     height: 400px;
     width: 50%;
 }
+.ant-table{
+    overflow-y: auto;
+    height: 600px;
+}

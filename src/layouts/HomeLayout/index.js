@@ -31,26 +31,6 @@ class HomeLayout extends Component {
     // const isMobile = judgeIsMobile(this.props.type).toString();
     const isAuth = true;
     const layout = <Layout className='home_layout'>
-      {/* {
-        isAuth && !isHome && (size_class === 's_size' ?
-          <Drawer
-            visible={this.state.firstMount ? false : !this.props.HomeStore.collapsed}
-            placement="left"
-            onClose={this.toggle}
-            width='200px'
-            style={{
-              padding: 0,
-              height: '100vh',
-            }}
-            bodyStyle={{
-              height: '100%',
-              padding: '0'
-            }}
-          >
-            <Menu sizetype={size_class} mobile={isMobile} />
-          </Drawer>
-          : <Menu sizetype={size_class} mobile={isMobile} />)
-      } */}
       <GlobalHeader />
       <Layout className='right_layout'>
         <Menu />

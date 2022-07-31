@@ -19,9 +19,15 @@
     background: #0db3a6;
     border-color: #0db3a6;
 }
-
+.ant-spin-nested-loading{
+    height: 100%;
+}
+.ant-spin-container{
+    height: 100%;
+}
 .main_modal {
-    /* height: 100vh; */
+    height: 100%;
+    overflow: auto;
     display: flex;
     flex-direction: row;
 }
@@ -39,6 +45,8 @@
     width: 70%;
     display: flex;
     flex-direction: column;
+    height: 100%;
+    overflow: auto;
 }
 
 .left_header_right {
@@ -53,6 +61,7 @@
 }
 
 .left_content {
+    height: 100%;
     border-top: 1px solid rgba(0, 0, 0, 0.055);
     overflow-y: auto;
 }
@@ -539,4 +548,7 @@
 
 .sel_del {
     margin-left: 50px;
+}
+.search_bar{
+    margin-top: 20px;
 }

@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-24 21:41:47
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-07-25 17:11:05
+ * @LastEditTime: 2022-08-01 05:08:03
  * @FilePath: \bl-device-manage-test\src\layouts\FlowManage\Self_Form\node_charge.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -14,28 +14,32 @@ import { inject, observer } from "mobx-react";
 import React, { useEffect, useState } from "react";
 
 import './index.css'
-const Node_charge = observer(({FlowStore, HomeStore, TableStore, SocketStore, initData, charge_person }) => {
-    const { commandService, modelService } = useXFlowApp();
+const Node_charge = observer(({ FlowStore, HomeStore, TableStore, SocketStore, initData, charge_person, handleUpdate, typeName }) => {
+    const { commandService, modelService } = typeName == 'node' ? useXFlowApp() : { commandService: null, modelService: null };
     const { itemName, rolesName, mulSelect, itemRoles, initRole, addUserList, allUsers, addUserObjs, userName } = SocketStore
     const { loading } = FlowStore
     const [icharge, setIcharge] = useState(charge_person);
     const [visible, setVisible] = useState(false);
     const [openKey, setOpenKey] = useState([]);
     const [type, setType] = useState('1')
+    const [roleOpenKey, setRoleOpenKey] = useState([])
     useEffect(() => {
         SocketStore.getAllDepartment()
         SocketStore.getAllRoles()
         SocketStore.getAllUsers()
     }, [])
+    useEffect(() => {
+        setIcharge(charge_person)
+    }, [charge_person])
     return (
         <div>
             <div className="select_show" onClick={() => {
                 setVisible(true)
             }}>
                 {
-                    Object.keys(icharge).map((key, index) => {
+                    Object.keys(charge_person).map((key, index) => {
                         return (
-                            icharge[key].map((one, oIndex) => {
+                            charge_person[key].map((one, oIndex) => {
                                 if (key == 'department') {
                                     return (
                                         <div key={parseInt(index.toString() + oIndex.toString())} className="select_display_item">
@@ -75,18 +79,22 @@ const Node_charge = observer(({FlowStore, HomeStore, TableStore, SocketStore, in
                                                 <div key={parseInt(index.toString() + oIndex.toString())} className="select_display_item">
                                                     <ApartmentOutlined style={{ color: '#fa0' }} />
                                                     {itemName[one]} <span onClick={() => {
-                                                        MODELS.SELECTED_NODE.useValue(modelService).then(res => {
-                                                            let nCharge = res.data.charge_person
-                                                            let iArr = [...nCharge['department']]
-                                                            iArr.splice(oIndex, 1);
-                                                            nCharge['department'] = iArr
-                                                            commandService.executeCommand(XFlowNodeCommands.UPDATE_NODE.id, {
-                                                                nodeConfig:
-                                                                    { ...res.data, ...nCharge }
+                                                        let nCharge = { ...icharge }
+                                                        let iArr = [...nCharge['department']]
+                                                        iArr.splice(oIndex, 1);
+                                                        nCharge['department'] = iArr
+                                                        if (typeName == 'node') {
+                                                            MODELS.SELECTED_NODE.useValue(modelService).then(res => {
+                                                                let nCharge = res.data.charge_person
+                                                                nCharge = iArr
+                                                                commandService.executeCommand(XFlowNodeCommands.UPDATE_NODE.id, {
+                                                                    nodeConfig:
+                                                                        { ...res.data, ...nCharge }
 
+                                                                })
                                                             })
-                                                            setIcharge({ ...nCharge })
-                                                        })
+                                                        }
+                                                        setIcharge({ ...nCharge })
                                                     }} className="select_cancel">X</span>
                                                 </div>
                                             )
@@ -95,18 +103,22 @@ const Node_charge = observer(({FlowStore, HomeStore, TableStore, SocketStore, in
                                                 <div key={parseInt(index.toString() + oIndex.toString())} className="select_display_item">
                                                     <UserAddOutlined style={{ color: '#248af9' }} />
                                                     {rolesName[one]} <span onClick={() => {
-                                                        MODELS.SELECTED_NODE.useValue(modelService).then(res => {
-                                                            let nCharge = res.data.charge_person
-                                                            let iArr = [...nCharge['role']]
-                                                            iArr.splice(oIndex, 1);
-                                                            nCharge['role'] = iArr
-                                                            commandService.executeCommand(XFlowNodeCommands.UPDATE_NODE.id, {
-                                                                nodeConfig:
-                                                                    { ...res.data, ...nCharge }
+                                                        let nCharge = { ...icharge }
+                                                        let iArr = [...nCharge['role']]
+                                                        iArr.splice(oIndex, 1);
+                                                        nCharge['role'] = iArr
+                                                        if (typeName == 'node') {
+                                                            MODELS.SELECTED_NODE.useValue(modelService).then(res => {
+                                                                let nCharge = res.data.charge_person
+                                                                nCharge = iArr
+                                                                commandService.executeCommand(XFlowNodeCommands.UPDATE_NODE.id, {
+                                                                    nodeConfig:
+                                                                        { ...res.data, ...nCharge }
 
+                                                                })
                                                             })
-                                                            setIcharge({ ...nCharge })
-                                                        })
+                                                        }
+                                                        setIcharge({ ...nCharge })
                                                     }} className="select_cancel">X</span>
                                                 </div>
                                             )
@@ -115,18 +127,22 @@ const Node_charge = observer(({FlowStore, HomeStore, TableStore, SocketStore, in
                                                 <div key={parseInt(index.toString() + oIndex.toString())} className="select_display_item">
                                                     <UserOutlined style={{ color: '#5d9cee' }} />
                                                     {userName[one]} <span onClick={() => {
-                                                        MODELS.SELECTED_NODE.useValue(modelService).then(res => {
-                                                            let nCharge = res.data.charge_person
-                                                            let iArr = [...nCharge['user']]
-                                                            iArr.splice(oIndex, 1);
-                                                            nCharge['user'] = iArr
-                                                            commandService.executeCommand(XFlowNodeCommands.UPDATE_NODE.id, {
-                                                                nodeConfig:
-                                                                    { ...res.data, ...nCharge }
+                                                        let nCharge = { ...icharge }
+                                                        let iArr = [...nCharge['user']]
+                                                        iArr.splice(oIndex, 1);
+                                                        nCharge['user'] = iArr
+                                                        if (typeName == 'node') {
+                                                            MODELS.SELECTED_NODE.useValue(modelService).then(res => {
+                                                                let nCharge = res.data.charge_person
+                                                                nCharge = iArr
+                                                                commandService.executeCommand(XFlowNodeCommands.UPDATE_NODE.id, {
+                                                                    nodeConfig:
+                                                                        { ...res.data, ...nCharge }
 
+                                                                })
                                                             })
-                                                            setIcharge({ ...nCharge })
-                                                        })
+                                                        }
+                                                        setIcharge({ ...nCharge })
                                                     }} className="select_cancel">X</span>
                                                 </div>
                                             )
@@ -138,39 +154,45 @@ const Node_charge = observer(({FlowStore, HomeStore, TableStore, SocketStore, in
                     </div>
                     <div className="select_menu">
                         <div className="select_menu_head">
-                            <div className={`select_menu_1 ${type == '1' && 'checked'}`} onClick={() => {
+                            <div className={`select_menu_1 ${type == '1' ? 'checked' : ''}`} onClick={() => {
                                 setType('1')
                                 SocketStore.getAllDepartment();
                             }}>组织架构</div>
-                            <div className={`select_menu_2 ${type == '2' && 'checked'}`} onClick={() => {
+                            <div className={`select_menu_2 ${type == '2' ? 'checked' : ''}`} onClick={() => {
                                 setType('2')
                                 SocketStore.getAllRoles()
                             }}>角色</div>
-                            <div className={`select_menu_3 ${type == '3' && 'checked'}`} onClick={() => {
+                            <div className={`select_menu_3 ${type == '3' ? 'checked' : ''}`} onClick={() => {
                                 setType('3')
                                 SocketStore.getAllUsers()
                                 SocketStore.getAddUserList({ 'departmentId': 1 });
                             }}>成员</div>
-                            <div className={`select_menu_4 ${type == '4' && 'checked'}`} onClick={() => {
-                                setType('4')
-                            }}>动态负责人</div>
+                            {
+                                typeName == 'node' && (
+                                    <div className={`select_menu_4 ${type == '4' ? 'checked' : ''}`} onClick={() => {
+                                        setType('4')
+                                    }}>动态负责人</div>
+                                )
+                            }
                         </div>
                         <div className="select_choice">
                             {
                                 type == '1' && (
                                     <TreeSelect multiple style={{ width: '100%' }} treeData={mulSelect} value={icharge['department']} onChange={(value) => {
-                                        let iObj = value
-                                        MODELS.SELECTED_NODE.useValue(modelService).then(res => {
-                                            
-                                            let nCharge = res.data.charge_person
-                                            nCharge['department'] = iObj
-                                            commandService.executeCommand(XFlowNodeCommands.UPDATE_NODE.id, {
-                                                nodeConfig:
-                                                    { ...res.data, ...nCharge }
+                                        if (typeName == 'node') {
+                                            MODELS.SELECTED_NODE.useValue(modelService).then(res => {
+                                                let nCharge = res.data.charge_person
+                                                nCharge['department'] = value
+                                                commandService.executeCommand(XFlowNodeCommands.UPDATE_NODE.id, {
+                                                    nodeConfig:
+                                                        { ...res.data, ...nCharge }
 
+                                                })
                                             })
-                                            setIcharge({ ...nCharge })
-                                        })
+                                        }
+                                        let nCharge = { ...icharge }
+                                        nCharge['department'] = value
+                                        setIcharge({ ...nCharge })
                                     }} />
                                 )
                             }
@@ -198,19 +220,24 @@ const Node_charge = observer(({FlowStore, HomeStore, TableStore, SocketStore, in
                                                                                 } else {
                                                                                     iArr.push(key)
                                                                                 }
-                                                                                MODELS.SELECTED_NODE.useValue(modelService).then(res => {
-                                                                                    let nCharge = res.data.charge_person
-                                                                                    nCharge['role'] = iArr
-                                                                                    commandService.executeCommand(XFlowNodeCommands.UPDATE_NODE.id, {
-                                                                                        nodeConfig:
-                                                                                            { ...res.data, ...nCharge }
+                                                                                let nCharge = { ...icharge }
+                                                                                nCharge['role'] = iArr
+                                                                                if (typeName == 'node') {
+                                                                                    MODELS.SELECTED_NODE.useValue(modelService).then(res => {
+                                                                                        let nCharge = res.data.charge_person
+                                                                                        nCharge['role'] = iArr
+                                                                                        commandService.executeCommand(XFlowNodeCommands.UPDATE_NODE.id, {
+                                                                                            nodeConfig:
+                                                                                                { ...res.data, ...nCharge }
 
+                                                                                        })
                                                                                     })
-                                                                                    setIcharge({ ...nCharge })
-                                                                                })
-                                                                                console.log(key);
+                                                                                }
+                                                                                setIcharge({ ...nCharge })
                                                                             }} key={oIndex} className="select_role_child">
-                                                                                <div><UserAddOutlined style={{ color: '#248af9' }} /> {item['roles'][key]}</div>
+                                                                                <div>
+                                                                                    <UserAddOutlined style={{ color: '#248af9' }} /> {item['roles'][key]}
+                                                                                </div>
                                                                                 <Checkbox checked={icharge['role'].indexOf(key) > -1} />
                                                                             </div>
                                                                         )
@@ -264,18 +291,22 @@ const Node_charge = observer(({FlowStore, HomeStore, TableStore, SocketStore, in
                                                                                 arr.push(item['userId'])
                                                                                 obj[item['userId']] = item['name']
                                                                             }
-                                                                            MODELS.SELECTED_NODE.useValue(modelService).then(res => {
-                                                                                let nCharge = res.data.charge_person
-                                                                                nCharge['user'] = arr
-                                                                                commandService.executeCommand(XFlowNodeCommands.UPDATE_NODE.id, {
-                                                                                    nodeConfig:
-                                                                                        { ...res.data, ...nCharge }
+                                                                            let nCharge = { ...icharge }
+                                                                            nCharge['user'] = arr
+                                                                            if (typeName == 'node') {
+                                                                                MODELS.SELECTED_NODE.useValue(modelService).then(res => {
+                                                                                    let nCharge = res.data.charge_person
+                                                                                    nCharge['user'] = arr
+                                                                                    commandService.executeCommand(XFlowNodeCommands.UPDATE_NODE.id, {
+                                                                                        nodeConfig:
+                                                                                            { ...res.data, ...nCharge }
 
+                                                                                    })
                                                                                 })
-                                                                                setIcharge({ ...nCharge })
-                                                                            })
+                                                                            }
+                                                                            setIcharge({ ...nCharge })
                                                                             SocketStore.setValue('addUserObjs', obj);
-                                                                        }} value={item['userId']} key={index}>{item['name']}</Checkbox>
+                                                                        }} value={typeName == 'node' ? item['userId'] : item['userId'].toString()} key={index}>{item['name']}</Checkbox>
                                                                     )
                                                                 }
                                                             })
@@ -296,6 +327,20 @@ const Node_charge = observer(({FlowStore, HomeStore, TableStore, SocketStore, in
                         </div>
                     </div>
                 </div>
+                {
+                    typeName != 'node' && (
+                        <div className="add_btn">
+                            <div onClick={() => {
+                                setIcharge(charge_person)
+                                setVisible(false)
+                            }} className="add_cancel">取消</div>
+                            <div onClick={() => {
+                                handleUpdate(toJS(icharge))
+                                setVisible(false)
+                            }} className="add_sure">确定</div>
+                        </div>
+                    )
+                }
             </Modal>
         </div>
     )

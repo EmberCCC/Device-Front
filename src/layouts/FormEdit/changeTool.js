@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-05 10:16:45
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-07-27 07:29:13
+ * @LastEditTime: 2022-08-01 02:39:17
  * @FilePath: \bl-device-manage-test\src\layouts\FormEdit\changeTool.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -47,21 +47,35 @@ export function exChange(item, firstFormId, name) {
   return params;
 }
 
-function getOneForm(fields, fieldIds, type) {
+function getOneForm(fields, fieldIds, type, flag, authInfo) {
   let result = {}
   fieldIds.forEach(item => {
     fields.forEach(field => {
       if (field['id'] == item) {
         const detailJson = JSON.parse(field['detailJson']);
         const name = type == 'submit' ? field['id'] : "".concat(detailJson['typeId'], "_").concat(nanoid(6))
-        console.log(detailJson);
-        if(type == 'submit'){
-          if(detailJson.hasOwnProperty('title_vis') && detailJson['title_vis'] == false){
+        if (type == 'submit') {
+          if (detailJson.hasOwnProperty('title_vis') && detailJson['title_vis'] == false) {
             detailJson['title'] = ""
           }
         }
-        result[name] = detailJson;
-        result[name]['fieldId'] = field['id'];
+        if (flag && type == 'submit') {
+          if (authInfo.hasOwnProperty(detailJson['fieldId'])) {
+            if (authInfo[detailJson['fieldId']].indexOf('look') > -1) {
+              if (authInfo[detailJson['fieldId']].indexOf('edit') > -1) {
+                detailJson['disabled'] = false
+              } else {
+                detailJson['disabled'] = true;
+              }
+              result[name] = detailJson;
+              result[name]['fieldId'] = field['id'];
+            }
+          }
+        } else {
+          result[name] = detailJson;
+          result[name]['fieldId'] = field['id'];
+        }
+
       }
     });
   });
@@ -71,6 +85,12 @@ export function restore(obj, type) {
   let formArr = {}
   let fieldInfo;
   let properties;
+  let authField = {}
+  if (obj.hasOwnProperty('fieldsAuth')) {
+    authField = JSON.parse(obj['fieldsAuth'])
+  }
+  console.log(authField);
+
   if (obj.hasOwnProperty('form') && obj['form'].hasOwnProperty('formFields')) {
     fieldInfo = JSON.parse(obj['form']['formFields']);
     properties = JSON.parse(obj['form']['properties']);
@@ -78,7 +98,7 @@ export function restore(obj, type) {
     for (let index = 0; index < fieldInfo.length; index++) {
       let formItem = {}
       const element = fieldInfo[index];
-      formItem['properties'] = getOneForm(fields, element['fieldsId'], type)
+      formItem['properties'] = getOneForm(fields, element['fieldsId'], type, obj.hasOwnProperty('fieldsAuth'), authField)
       for (const key in properties) {
         if (Object.hasOwnProperty.call(properties, key)) {
           const element = properties[key];
@@ -88,8 +108,42 @@ export function restore(obj, type) {
       formArr[fieldInfo[index]['name']] = formItem;
     }
   }
-
-
+  return formArr;
+}
+function getOneForm2(fields, fieldIds) {
+  let result = {}
+  fieldIds.forEach(item => {
+    fields.forEach(field => {
+      if (field['fieldId'] == item) {
+        const name = field['fieldId']
+        result[name] = field;
+        result[name]['fieldId'] = field['fieldId'];
+      }
+    });
+  });
+  return result
+}
+export function restore2(obj) {
+  let formArr = {}
+  let fieldInfo;
+  let formInfo;
+  if (obj.hasOwnProperty('form') && obj.hasOwnProperty('formFields')) {
+    fieldInfo = obj['formFields'];
+    formInfo = obj['form'];
+    for (let index = 0; index < formInfo.length; index++) {
+      let formItem = {}
+      const element = formInfo[index];
+      formItem['properties'] = getOneForm2(fieldInfo, element['fieldsId'])
+      let pObj = { "displayType": "column", "labelWidth": 120, "type": "object" }
+      for (const key in pObj) {
+        if (Object.hasOwnProperty.call(pObj, key)) {
+          const element = pObj[key];
+          formItem[key] = element
+        }
+      }
+      formArr[formInfo[index]['name']] = formItem;
+    }
+  }
   return formArr;
 }
 

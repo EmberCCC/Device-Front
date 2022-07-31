@@ -7,6 +7,7 @@
   right: 0;
 
   .ant-modal-header {
+    height: 56px;
     span {
       float: right;
       margin-right: 30px;
@@ -36,6 +37,10 @@
   }
 
   .ant-modal-content {
-    height: 100vh !important;
+    height: 100% !important;
+    overflow: auto;
+  }
+  .ant-modal-body{
+    height: calc(~"100% - 56px")
   }
 }

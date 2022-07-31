@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-07 16:13:38
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-07-27 03:28:11
+ * @LastEditTime: 2022-07-31 23:44:06
  * @FilePath: \bl-device-manage-test\src\layouts\LoginPage\loginLayout.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -17,7 +17,7 @@ import './index.less'
 
 
 @withRouter
-@inject('HomeStore')
+@inject('HomeStore','SocketStore','MessageStore')
 @observer
 class LoginLayout extends Component {
     render() {
@@ -83,6 +83,11 @@ class LoginLayout extends Component {
             if (success) {
                 sessionStorage.setItem('selfToken', 'Bearer ' + token); // 设置前局登陆token
                 sessionStorage.setItem('username', values.username); // 设置登录用户名
+                this.props.SocketStore.getMyInfo();
+                this.props.MessageStore.getWaitList()
+                this.props.MessageStore.getLaunchList()
+                this.props.MessageStore.getHandleList()
+                this.props.MessageStore.getCopyList()
                 this.props.history.push({
                     pathname: '/common',
                     state: { username: values.username, password: values.password, selfToken: token }

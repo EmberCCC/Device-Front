@@ -4,7 +4,7 @@
  * @Author: zhihao
  * @Date: 2022-04-17 15:22:43
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-07-27 04:52:43
+ * @LastEditTime: 2022-07-30 00:30:00
  */
 
 import { message, Modal } from 'antd';
@@ -179,6 +179,9 @@ class Table {
 			}
 		} catch (error) {
 			console.log(error);
+		} finally {
+			this.setValue('isLoading', false);
+
 		}
 	}
 	@action.bound async getOneData(params) {
@@ -219,6 +222,9 @@ class Table {
 			this.setValue('isLoading', false);
 		} catch (error) {
 			console.log(error);
+		} finally {
+			this.setValue('isLoading', false);
+
 		}
 	}
 	@action.bound async mulChange(params) {
@@ -263,7 +269,6 @@ class Table {
 				obj.createTime = item.createTime;
 				obj.updateTime = item.updateTime;
 				obj.key = item.id;
-
 				let iObj = JSON.parse(toJS(item.formData))
 				for (const front in iObj) {
 					obj[front] = iObj[front]
@@ -312,6 +317,9 @@ class Table {
 			console.log(iDataSource);
 		} catch (error) {
 			console.log(error);
+		} finally {
+			this.setValue('isLoading', false);
+
 		}
 	}
 
@@ -377,6 +385,9 @@ class Table {
 			console.log(iDataSource);
 		} catch (error) {
 			console.log(error);
+		} finally {
+			this.setValue('isLoading', false);
+
 		}
 	}
 

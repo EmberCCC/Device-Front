@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-24 16:26:33
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-07-25 18:20:44
+ * @LastEditTime: 2022-07-31 08:28:19
  * @FilePath: \bl-device-manage-test\src\layouts\FlowManage\Self_Form\field_auth.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -12,7 +12,7 @@ import { toJS } from "mobx";
 import { inject, observer } from "mobx-react";
 import React, { useEffect, useState } from "react";
 import './index.css'
-const AuthShape = observer(({FlowStore, HomeStore, TableStore, FormStore, data, initData, typeId }) => {
+const AuthShape = observer(({ FlowStore, HomeStore, TableStore, FormStore, data, initData, typeId }) => {
 
     const { commandService, modelService } = useXFlowApp();
     const { formField } = FormStore
@@ -30,6 +30,11 @@ const AuthShape = observer(({FlowStore, HomeStore, TableStore, FormStore, data, 
                     <Col span={5}>可见</Col>
                     {
                         typeId == 1 && (
+                            <Col span={5}>可编辑</Col>
+                        )
+                    }
+                    {
+                        typeId == -1 && (
                             <Col span={5}>可编辑</Col>
                         )
                     }
@@ -52,7 +57,7 @@ const AuthShape = observer(({FlowStore, HomeStore, TableStore, FormStore, data, 
                                                 res.data['auth_info'][item['id']] = nValue
                                                 commandService.executeCommand(XFlowNodeCommands.UPDATE_NODE.id, {
                                                     nodeConfig:
-                                                        { ...iData}
+                                                        { ...iData }
 
                                                 })
                                             })
@@ -61,6 +66,11 @@ const AuthShape = observer(({FlowStore, HomeStore, TableStore, FormStore, data, 
                                                 <Col span={8}><Checkbox value={'look'} /></Col>
                                                 {
                                                     typeId == 1 && (
+                                                        <Col span={8}><Checkbox value={'edit'} /></Col>
+                                                    )
+                                                }
+                                                {
+                                                    typeId == -1 && (
                                                         <Col span={8}><Checkbox value={'edit'} /></Col>
                                                     )
                                                 }
@@ -78,4 +88,4 @@ const AuthShape = observer(({FlowStore, HomeStore, TableStore, FormStore, data, 
         </div>
     )
 })
-export default inject((stores) => ({FlowStore:stores.FlowStore, HomeStore: stores.HomeStore, TableStore: stores.TableStore, FormStore: stores.FormStore }))(AuthShape)
+export default inject((stores) => ({ FlowStore: stores.FlowStore, HomeStore: stores.HomeStore, TableStore: stores.TableStore, FormStore: stores.FormStore }))(AuthShape)

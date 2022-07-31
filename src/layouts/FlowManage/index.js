@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-04-11 16:11:20
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-07-27 02:54:59
+ * @LastEditTime: 2022-07-31 08:58:14
  * @FilePath: \bl-device-manage-test\src\layouts\FlowManage\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -20,7 +20,7 @@ import { BulbOutlined, CopyOutlined, FormOutlined, NodeExpandOutlined, PlayCircl
 import { CanvasToolbar, createGraphConfig, XFlow, XFlowNodeCommands, CanvasScaleToolbar, CanvasSnapline, JsonSchemaForm, NsJsonSchemaForm, CanvasNodePortTooltip, FlowchartCanvas, FlowchartExtension, XFlowGraphCommands, randomInt, XFlowEdgeCommands } from "@antv/xflow";
 import { inject, observer } from "mobx-react";
 import AuthShape from './Self_Form/field_auth';
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import './index.less'
 import '@antv/xflow/dist/index.css'
 import { useToolbarConfig } from "./tool_bar";
@@ -32,8 +32,6 @@ import Node_charge from "./Self_Form/node_charge";
 import Flow_Config from "./flowConfig";
 import { changeFlow } from "./changeTool";
 import { message, Popover, Spin } from "antd";
-import getPorts from "./getports";
-import * as services from '../../services/flow'
 import { toJS } from "mobx";
 export const useGraphConfig = createGraphConfig(graphConfig => {
   graphConfig.setX6Config({
@@ -164,13 +162,13 @@ const configCanvas = {
 
 
 const FlowManage = observer(({ FlowStore, HomeStore, TableStore, SocketStore, props }) => {
-  // const { commandService, modelService } = useXFlowApp();
   const { flowProperty, canOb, allFlowList, flowversion, ableversion } = FlowStore
   const { firstFormId } = HomeStore
   const [load, setIsload] = useState(false)
   const [app, setApp] = useState(null)
   const toolbarConfig = useToolbarConfig(props)
   const graphConfig = useGraphConfig(props);
+  const forceUpdate = useReducer((bool) => !bool)[1]
   var NsJsonForm;
   (function (NsJsonForm) {
     /** ControlShape的Enum */
@@ -221,7 +219,7 @@ const FlowManage = observer(({ FlowStore, HomeStore, TableStore, SocketStore, pr
                 </div>
                 <div className="formItem_chargePerson">
                   <div className="formItem_name">负责人</div>
-                  <Node_charge initData={targetData} charge_person={targetData.charge_person} />
+                  <Node_charge typeName={'node'} initData={targetData} charge_person={targetData.charge_person} />
                 </div>
                 <div className="formItem_copy">
                   <Node_copy initData={targetData} checked={targetData.copy} />
@@ -243,7 +241,7 @@ const FlowManage = observer(({ FlowStore, HomeStore, TableStore, SocketStore, pr
               </div>
               <div className="formItem_chargePerson">
                 <div className="formItem_name">抄送人</div>
-                <Node_charge initData={targetData} charge_person={targetData.charge_person} />
+                <Node_charge typeName={'node'} initData={targetData} charge_person={targetData.charge_person} />
               </div>
               <div className="formItem_copy">
                 <div className="formItem_name copyself">打印</div>
@@ -264,7 +262,7 @@ const FlowManage = observer(({ FlowStore, HomeStore, TableStore, SocketStore, pr
               </div>
               <div className="formItem_chargePerson">
                 <div className="formItem_name">子流程发起人</div>
-                <Node_charge initData={targetData} charge_person={targetData.charge_person} />
+                <Node_charge typeNam={'node'} initData={targetData} charge_person={targetData.charge_person} />
               </div>
               <div className="formItem_auth">
                 <div className="formItem_name">数据传递</div>
@@ -281,7 +279,7 @@ const FlowManage = observer(({ FlowStore, HomeStore, TableStore, SocketStore, pr
               </div>
               <div className="formItem_auth">
                 <div className="formItem_name">字段权限</div>
-                <AuthShape data={targetData.auth_info} initData={targetData} typeId={2} />
+                <AuthShape data={targetData.auth_info} initData={targetData} typeId={-1} />
               </div>
             </div>
           )
@@ -328,60 +326,17 @@ const FlowManage = observer(({ FlowStore, HomeStore, TableStore, SocketStore, pr
   })(NsJsonForm || (NsJsonForm = {}));
   const onLoad = async app => {
     setApp(app)
-    console.log(flowProperty);
-    if (canOb == true) {
-      app.executeCommand(
-        XFlowNodeCommands.ADD_NODE.id, {
-        nodeConfig:
-        {
-          id: -1,
-          name: '开始节点',
-          label: `开始节点`,
-          typeId: '-1',
-          auth_info: {},
-          charge_person: {
-            'department': [],
-            'role': [],
-            'user': []
-          },
-          copy: false,
-          x: randomInt(50, 100),
-          y: randomInt(50, 100),
-          width: 180,
-          height: 38,
-          ports: getPorts()
-        }
-      }
-      )
-      app.executeCommand(
-        XFlowNodeCommands.ADD_NODE.id, {
-        nodeConfig:
-        {
-          id: -2,
-          name: '结束节点',
-          label: `结束节点`,
-          typeId: '-2',
-          auth_info: {},
-          charge_person: {
-            'department': [],
-            'role': [],
-            'user': []
-          },
-          copy: false,
-          x: randomInt(50, 100),
-          y: randomInt(50, 100),
-          width: 180,
-          height: 38,
-          ports: getPorts()
-        }
-      }
-      )
-    }
+    console.log(toJS(flowProperty));
+    let iObj = JSON.parse(JSON.stringify(flowProperty))
+    delete iObj['flowProperty']
+    console.log(iObj);
     //  else {
-    //   await app.executeCommand(
-    //     XFlowGraphCommands.GRAPH_RENDER.id,
-    //     toJS(flowProperty)
-    //   )
+    await app.executeCommand(
+      XFlowGraphCommands.GRAPH_RENDER.id,
+      {
+        'graphData': iObj
+      }
+    )
     // }
   }
   useEffect(() => {
@@ -394,36 +349,34 @@ const FlowManage = observer(({ FlowStore, HomeStore, TableStore, SocketStore, pr
         <div className='edit_left'>
           <BulbOutlined className='icon_edit' />
           <a>查看新手引导</a>
-          <div style={{ display: 'inline-block', marginLeft: '20px', background: '#f1f1f1', userSelect: 'none' }}>流程已启用，如需增删节点和连线，请<a>添加新版本</a></div>
+          {
+            canOb == false && (
+              <div style={{ display: 'inline-block', marginLeft: '20px', background: '#f1f1f1', userSelect: 'none' }}>流程已启用，如需增删节点和连线，请<a onClick={() => {
+                FlowStore.setValue('canOb', true)
+                forceUpdate()
+                console.log(canOb);
+              }}>添加新版本</a></div>
+            )
+          }
         </div>
 
         <div className='edit_right'>
           <Popover overlayClassName="myPop" trigger={'click'} placement='bottom' content={
-            <div>
+            <div className="allFlow_list">
               {allFlowList.map((item, index) => {
                 return (
                   <div onClick={async () => {
+                    FlowStore.setValue('canOb', false)
                     setIsload(true)
-                    console.log(toJS(flowProperty));
                     let ig = { 'nodes': JSON.parse(item['origin'])['nodes'], 'edges': JSON.parse(item['origin'])['edges'] }
-                    console.log(JSON.parse(item['origin']));
-                    flowProperty['edges'].forEach(async (item) => {
-                      console.log(item);
-                      await app.executeCommand(
-                        XFlowEdgeCommands.DEL_EDGE.id, {
-                        edgeConfig: item
-                      })
-                    })
+                    console.log(ig);
                     flowProperty['nodes'].forEach(async (item) => {
                       await app.executeCommand(
                         XFlowNodeCommands.DEL_NODE.id, {
                         nodeConfig: item
                       })
                     })
-                    // await app.executeCommand(
-                    //   XFlowGraphCommands.GRAPH_RENDER.id, {
-                    //   'graphData': ig
-                    // })
+
                     FlowStore.setValue('flowversion', item['id'])
                     FlowStore.setValue('flowProperty', JSON.parse(item['origin']))
                     setIsload(false)
@@ -442,20 +395,35 @@ const FlowManage = observer(({ FlowStore, HomeStore, TableStore, SocketStore, pr
             </div>
           </Popover>
           <button className='edit_save' onClick={() => {
-            app.commandService.executeCommand(
-              XFlowGraphCommands.SAVE_GRAPH_DATA.id,
-              {
-                saveGraphDataService: async (meta, data) => {
-                  console.log(meta);
-                  console.log(changeFlow(data, firstFormId, flowProperty['flowProperty']))
-                  FlowStore.createFlow(changeFlow(data, firstFormId, flowProperty['flowProperty']))
-                  // message.success('nodes count:' + data.nodes.length)
+            if (canOb == true) {
+              app.commandService.executeCommand(
+                XFlowGraphCommands.SAVE_GRAPH_DATA.id,
+                {
+                  saveGraphDataService: async (meta, data) => {
+                    console.log(changeFlow(data, firstFormId, flowProperty['flowProperty']))
+                    FlowStore.createFlow(changeFlow(data, firstFormId, flowProperty['flowProperty'])).then(() => {
+                      FlowStore.getOneFlow({ 'formId': firstFormId });
+                    })
+                  },
                 },
-              },
-            )
+              )
+              forceUpdate()
+              FlowStore.setValue('canOb', false);
+            } else {
+              app.commandService.executeCommand(
+                XFlowGraphCommands.SAVE_GRAPH_DATA.id,
+                {
+                  saveGraphDataService: async (meta, data) => {
+                    console.log(meta);
+                    console.log({ ...changeFlow(data, firstFormId, flowProperty['flowProperty']) })
+                    // FlowStore.createFlow(changeFlow(data, firstFormId, flowProperty['flowProperty']))
+                  },
+                },
+              )
+            }
           }}>保存</button>
           {
-            flowversion != ableversion && (
+            flowversion != ableversion && canOb == false && (
               <button className='edit_save edit_open' onClick={() => {
                 FlowStore.openFlow({ 'flowId': flowversion }).then(() => {
                   FlowStore.getOneFlow({ 'formId': firstFormId })
@@ -474,7 +442,7 @@ const FlowManage = observer(({ FlowStore, HomeStore, TableStore, SocketStore, pr
             graphData={flowProperty}
           >
             {
-              canOb && (
+              canOb == true && (
                 <CanvasToolbar
                   config={toolbarConfig}
                   position={{ left: 200 }}

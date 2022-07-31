@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-25 14:57:26
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-07-26 11:11:05
+ * @LastEditTime: 2022-07-31 09:05:33
  * @FilePath: \bl-device-manage-test\src\stores\FlowStore.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -43,20 +43,229 @@ class Flow {
             if (isDataExist(res)) {
                 console.log(res.data.data);
                 this.setValue('allFlowList', res.data.data)
-                if (res.data.data.length == 0) {
-                    this.setValue('flowversion', -1)
-                } else {
-                    res.data.data.forEach(element => {
-                        if (element['enable'] == true) {
-                            this.setValue('flowversion', element['id'])
-                            this.setValue('ableversion', element['id'])
-                            this.setValue('flowProperty',JSON.parse(element['origin']))
-                            return;
-                        }
-                    });
+                if (this.canOb == false) {
+                    if (res.data.data.length == 0) {
+                        this.setValue('flowversion', -1)
+                    } else {
+                        res.data.data.forEach(element => {
+                            if (element['enable'] == true) {
+                                this.setValue('flowversion', element['id'])
+                                this.setValue('ableversion', element['id'])
+                                this.setValue('flowProperty', JSON.parse(element['origin']))
+                                return;
+                            }
+                        });
+                    }
                 }
-                if(this.flowversion == 0){
-                    this.setValue('flowversion',this.allFlowList[this.allFlowList.length - 1])
+                if (res.data.data.length == 0) {
+                    this.setValue('canOb', true);
+                    this.setValue('flowProperty', {
+                        "nodes": [
+                            {
+                                "id": -1,
+                                "name": "开始节点",
+                                "label": "开始节点",
+                                "typeId": "-1",
+                                "auth_info": {
+
+                                },
+                                "charge_person": {
+                                    "department": [
+
+                                    ],
+                                    "role": [
+
+                                    ],
+                                    "user": [
+
+                                    ]
+                                },
+                                "copy": false,
+                                "x": 410,
+                                "y": 120,
+                                "width": 180,
+                                "height": 38,
+                                "ports": {
+                                    "groups": {
+                                        "top": {
+                                            "position": "top",
+                                            "attrs": {
+                                                "circle": {
+                                                    "r": 4,
+                                                    "magnet": true,
+                                                    "stroke": "#5F95FF",
+                                                    "strokeWidth": 1,
+                                                    "fill": "#fff"
+                                                }
+                                            }
+                                        },
+                                        "right": {
+                                            "position": "right",
+                                            "attrs": {
+                                                "circle": {
+                                                    "r": 4,
+                                                    "magnet": true,
+                                                    "stroke": "#5F95FF",
+                                                    "strokeWidth": 1,
+                                                    "fill": "#fff"
+                                                }
+                                            }
+                                        },
+                                        "bottom": {
+                                            "position": "bottom",
+                                            "attrs": {
+                                                "circle": {
+                                                    "r": 4,
+                                                    "magnet": true,
+                                                    "stroke": "#5F95FF",
+                                                    "strokeWidth": 1,
+                                                    "fill": "#fff"
+                                                }
+                                            }
+                                        },
+                                        "left": {
+                                            "position": "left",
+                                            "attrs": {
+                                                "circle": {
+                                                    "r": 4,
+                                                    "magnet": true,
+                                                    "stroke": "#5F95FF",
+                                                    "strokeWidth": 1,
+                                                    "fill": "#fff"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "items": [
+                                        {
+                                            "group": "top",
+                                            "id": "fuImaKPSV-UIdAa8rT8pm"
+                                        },
+                                        {
+                                            "group": "right",
+                                            "id": "Iy3ivGVELoZwmp_Z8pDak"
+                                        },
+                                        {
+                                            "group": "bottom",
+                                            "id": "1sOowdo1pCRmA0KW3sXKj"
+                                        },
+                                        {
+                                            "group": "left",
+                                            "id": "0QJUiwOKXWSYIqXaFXDd6"
+                                        }
+                                    ]
+                                }
+                            },
+                            {
+                                "id": -2,
+                                "name": "结束节点",
+                                "label": "结束节点",
+                                "typeId": "-2",
+                                "auth_info": {
+
+                                },
+                                "charge_person": {
+                                    "department": [
+
+                                    ],
+                                    "role": [
+
+                                    ],
+                                    "user": [
+
+                                    ]
+                                },
+                                "copy": false,
+                                "x": 410,
+                                "y": 360,
+                                "width": 180,
+                                "height": 38,
+                                "ports": {
+                                    "groups": {
+                                        "top": {
+                                            "position": "top",
+                                            "attrs": {
+                                                "circle": {
+                                                    "r": 4,
+                                                    "magnet": true,
+                                                    "stroke": "#5F95FF",
+                                                    "strokeWidth": 1,
+                                                    "fill": "#fff"
+                                                }
+                                            }
+                                        },
+                                        "right": {
+                                            "position": "right",
+                                            "attrs": {
+                                                "circle": {
+                                                    "r": 4,
+                                                    "magnet": true,
+                                                    "stroke": "#5F95FF",
+                                                    "strokeWidth": 1,
+                                                    "fill": "#fff"
+                                                }
+                                            }
+                                        },
+                                        "bottom": {
+                                            "position": "bottom",
+                                            "attrs": {
+                                                "circle": {
+                                                    "r": 4,
+                                                    "magnet": true,
+                                                    "stroke": "#5F95FF",
+                                                    "strokeWidth": 1,
+                                                    "fill": "#fff"
+                                                }
+                                            }
+                                        },
+                                        "left": {
+                                            "position": "left",
+                                            "attrs": {
+                                                "circle": {
+                                                    "r": 4,
+                                                    "magnet": true,
+                                                    "stroke": "#5F95FF",
+                                                    "strokeWidth": 1,
+                                                    "fill": "#fff"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "items": [
+                                        {
+                                            "group": "top",
+                                            "id": "zTE8F8NBaOKm51De-Wn3Q"
+                                        },
+                                        {
+                                            "group": "right",
+                                            "id": "QwASLVDGdtc4TUIPC2b4_"
+                                        },
+                                        {
+                                            "group": "bottom",
+                                            "id": "glfIPhpnA3iDu28ycQKlR"
+                                        },
+                                        {
+                                            "group": "left",
+                                            "id": "P89GfZ-Qvzx9jriu9-00O"
+                                        }
+                                    ]
+                                }
+                            }
+                        ],
+                        "edges": [],
+                        "flowProperty": {
+                            "wx": false,
+                            "mail": false,
+                            "withdraw": false,
+                            "cuiBan": false,
+                            "see": true,
+                            "rule": 0
+                        }
+                    })
+                }
+                if (this.flowversion == 0) {
+                    this.setValue('flowversion', res.data.data[res.data.data.length - 1]['id'])
+                    this.setValue('flowProperty', JSON.parse(res.data.data[res.data.data.length - 1]['origin']))
                 }
             }
         } catch (error) {
@@ -90,6 +299,26 @@ class Flow {
             let res = await services.putUrlRequest(services.requestList.openFlow, params)
             if (isDataExist(res)) {
                 message.success('启用成功')
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    @action.bound async updateFlow(params) {
+        try {
+            let res = await services.putRequest(services.requestList.updateFlow, params)
+            if (isDataExist(res)) {
+                message.success('修改成功')
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    @action.bound async agreeFlow(urlData, params) {
+        try {
+            let res = await services.putUrlRequest(services.requestList.agreeFlow, urlData, params)
+            if (isDataExist(res)) {
+                message.success('成功')
             }
         } catch (error) {
             console.log(error);

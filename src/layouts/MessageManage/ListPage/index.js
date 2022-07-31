@@ -1,65 +1,45 @@
 /*
  * @Author: your name
  * @Date: 2022-04-24 12:36:43
- * @LastEditTime: 2022-06-28 16:59:11
+ * @LastEditTime: 2022-07-31 09:19:24
  * @LastEditors: EmberCCC 1810888456@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage-test\src\layouts\MessageManage\ListPage\index.js
  */
-import { Button, DatePicker, Dropdown, List, Select } from 'antd'
+import { Button, DatePicker, Dropdown, Select } from 'antd'
 import React, { Component } from 'react'
-import VirtualList from 'rc-virtual-list';
 import { inject, observer } from 'mobx-react';
-import DetailPage from '../DetailPage'
-import { firstFormName, state } from 'constants/status_constant';
-import '../index.css'
+import '../index.less'
 import { messageName } from '../constants';
+import { toJS } from 'mobx';
+import { getField } from '../visUtil';
+import GlobalModal from 'components/GlobalModal';
+import Detail from '../detail';
 
-@inject('MessageStore')
+@inject('MessageStore', 'HomeStore', 'TableStore', 'FormStore')
 @observer
-// @withRouter
 class index extends Component {
-    state =  {
-        isLoading:false
+    state = {
+        isLoading: false
     }
     render() {
         const ContainerHeight = 800;
-        const { modalVisible, data } = this.props.MessageStore
-        const onScroll = e => {
-            if (e.target.scrollHeight - e.target.scrollTop === ContainerHeight) {
-                this.appendData();
-            }
-        };
-        const changeVisible = (data) => {
-            const location = this.props.location.pathname
-            const nowL = location.split('/')[2];
-            let params = {}
-            params.firstFormId = data.firstFormId
-            this.setState({
-                isLoading:true
-            })
-            this.props.MessageStore.getLog(data)
-            this.props.MessageStore.setItemInfo(data);
-            this.props.MessageStore.getField(params).then(() => {
-                this.props.MessageStore.getOne(data).then(() => {
-                    this.setState({
-                        isLoading:false
-                    })
-                    this.props.MessageStore.changeModal()
-                    if (nowL == 'todo') {
-                        this.props.MessageStore.changeSubFlag(true);
-                    }
-                })
-            })
-
-
-
-        }
-        // const {data} = this.props.MessageStore
+        const { waitList, launchList, handleList, copyList, model, list, detailVis, info } = this.props.MessageStore
         return (
             <div>
                 <div className='title'>
-                    <div style={{ paddingTop: '5px', fontWeight: '700' }}>{messageName[this.props.location.pathname.split('/')[2]]}</div>
+                    {model == 'wait' && (
+                        <div style={{ paddingTop: '5px', fontWeight: '700' }}>{'我的待办'}<span style={{ paddingLeft: '2px', color: '#f0ad4e', fontWeight: 400 }}>{`(${list.length})`}</span></div>
+                    )}
+                    {model == 'launch' && (
+                        <div style={{ paddingTop: '5px', fontWeight: '700' }}>{'我发起的'}</div>
+                    )}
+                    {model == 'handle' && (
+                        <div style={{ paddingTop: '5px', fontWeight: '700' }}>{'我处理的'}</div>
+                    )}
+                    {model == 'copy' && (
+                        <div style={{ paddingTop: '5px', fontWeight: '700' }}>{'抄送我的'}</div>
+                    )}
                     <div>
                         <Button style={{ float: 'right' }}>最新</Button>
                         <Dropdown overlay={this.selectList} placement="bottomLeft">
@@ -69,31 +49,82 @@ class index extends Component {
                     </div>
                 </div>
                 <hr />
-                <List loading={this.state.isLoading}>
-                    <VirtualList
-                        data={data}
-                        height={ContainerHeight}
-                        itemHeight={47}
-                        onScroll={onScroll}
-                    >
-                        {item => (
-                            <List.Item key={item.dataId} extra={<div>{firstFormName[item.firstFormId]}</div>} onClick={() => changeVisible(item)} style={{ border: '1px solid grey', margin: '5px', padding: '4px', borderRadius: '5px', textShadow: '0 0 8px #DDD', backgroundColor: 'white' }}>
-                                <div>
-                                    <div>
-                                        维修工单：{item.flowLogId}
+                <div className='all_message_list'>
+                    {
+                        list.map((item, index) => {
+                            let auth = {}
+                            let data = {}
+                            let fieldList = []
+                            let nameObj = {}
+                            let fieldObj = {}
+                            item['oneDataVo']['fields'].map((one) => {
+                                try {
+                                    fieldObj[one['id']] = toJS(JSON.parse(one['detailJson']))
+                                    nameObj[one['id']] = one['name']
+                                } catch (error) {
+                                    fieldObj[one['id']] = toJS({})
+                                }
+
+                            })
+                                auth = JSON.parse(item['nodeProperty']['fieldAuth'])
+                                data = JSON.parse(item['oneDataVo']['data']['formData'])
+                                fieldList = getField(auth, fieldObj);
+                            return (
+                                <div className='one_message' key={index} onClick={() => {
+                                    this.props.MessageStore.setValue('fieldInfo', fieldList)
+                                    this.props.MessageStore.setValue('detailVis', true)
+                                    this.props.MessageStore.setValue('info', item)
+                                    this.props.MessageStore.setValue('formData', JSON.parse(item['oneDataVo']['data']['formData']));
+                                    this.props.MessageStore.setValue('formInfo', toJS(item['oneDataVo']['form']))
+                                    this.props.MessageStore.setValue('nameObj', toJS(nameObj))
+                                }}>
+                                    <div className='one_message1'>{item['flowLog']['createPerson']}</div>
+                                    <div className='one_message2'>
+                                        <div className='message2_name'>{item['formName']}</div>
+                                        {
+                                            model == 'wait' && (
+                                                <div className='message2_node'>当前: {item['nodeProperty']['nodeName']}</div>
+                                            )
+                                        }
+                                        {
+                                            model != 'wait' && (
+                                                <div className='message_statu'>{item['nodeId'] == -2 ? '已结束' : '进行中'}</div>
+                                            )
+                                        }
                                     </div>
-                                    <div>
-                                        流程版本：{item.flowId}
+                                    <div className='one_message3'>
+                                        {
+                                            Object.keys(auth).map((key, kIndex) => {
+                                                if (auth[key].indexOf('sketch') > -1 && data.hasOwnProperty(key)) {
+                                                    return (
+                                                        <div className='message_sketch' key={kIndex}>
+                                                            <span className='sketch_name'>{nameObj[key]}:</span>
+                                                            <span className='sketch_content'>{data[key]}</span>
+                                                        </div>
+                                                    )
+                                                }
+                                            })
+                                        }
+                                        <div className='message_sketch'></div>
+                                        <div className='message_sketch'></div>
+                                        <div className='message_sketch'></div>
                                     </div>
-                                    <div>
-                                        状态：{state[item.state]}
-                                    </div>
+                                    <div className='one_message4'>{item['updateTime']}</div>
                                 </div>
-                            </List.Item>
-                        )}
-                    </VirtualList>
-                    {modalVisible && <DetailPage />}
-                </List>
+                            )
+                        })
+                    }
+                </div>
+                <GlobalModal
+                    title={info['formName']}
+                    visible={detailVis}
+                    width={1080}
+                    footer={null}
+                    onCancel={() => { this.props.MessageStore.setValue('detailVis', false) }}
+                    children={
+                        <Detail />
+                    }
+                />
             </div>
         )
 
@@ -134,11 +165,6 @@ class index extends Component {
             </Button>
         </div>
     )
-    componentWillMount() {
-        const location = this.props.location.pathname
-        const nowL = location.split('/')[2];
-        this.props.MessageStore.setData(nowL);
-    }
 }
 
 export default index

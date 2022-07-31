@@ -2,13 +2,13 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-22 15:01:06
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-07-27 11:06:42
+ * @LastEditTime: 2022-07-29 01:39:05
  * @FilePath: \bl-device-manage-test\src\layouts\SocketManage\MaLayout\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 
 
-import { ApartmentOutlined, InfoCircleOutlined, MoreOutlined, TeamOutlined, UserAddOutlined, UserOutlined } from "@ant-design/icons";
+import { ApartmentOutlined, FolderAddOutlined, FolderOutlined, InfoCircleOutlined, MoreOutlined, TeamOutlined, UserAddOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Checkbox, Input, message, Modal, Popover, Radio, Space, Spin, Tooltip, TreeSelect } from "antd";
 import { toJS } from "mobx";
 import { inject, observer } from "mobx-react";
@@ -17,7 +17,8 @@ import '../index.css'
 import './index.css'
 const MaLayout = observer(({ SocketStore }) => {
     const { normalList, maSelectKey, maSelectObj, canClick, deValue, roValue, inDCheck, inRLCheck, inRMCheck, mulSelect, fatherIds, itemName,
-        rolesName, itemRoles, maId, norName, addUserObjs, addUserVis, addUserIds, addUserList, allUsers ,editForm} = SocketStore
+        rolesName, itemRoles, maId, norName, addUserObjs, addUserVis, addUserIds, addUserList, allUsers, editForm, userName, sysList,
+        initList, deObj, cantList, initRole, } = SocketStore
     useEffect(() => {
         SocketStore.getNormalList();
         SocketStore.getAllDepartment();
@@ -27,6 +28,9 @@ const MaLayout = observer(({ SocketStore }) => {
     const [name, setName] = useState('')
     const [visible, setVisible] = useState(false)
     const [cvisible, setCvisible] = useState(false)
+    const [addDeVisible, setAddDeVisible] = useState(false)
+    const [addRoleVisible, setAddRoleVisible] = useState(false)
+    const [addList, setAddList] = useState([])
     const [load, setLoad] = useState(false)
     const ref = useRef()
     const handleMenu = (e, obj, value, type) => {
@@ -53,24 +57,53 @@ const MaLayout = observer(({ SocketStore }) => {
         SocketStore.getAddUserList({ 'departmentId': value });
     }
 
-    const initData = () => {
+    const initData = (type) => {
         SocketStore.getAllDepartment();
         SocketStore.getAllRoles();
         SocketStore.getAllSys();
-        SocketStore.getNormalList().then(() => {
-            setLoad(false)
-
-        })
+        if (type != 'add') {
+            SocketStore.getNormalList().then(() => {
+                setLoad(false)
+            })
+        }
         console.log({ deValue, roValue, inDCheck, inRLCheck, inRMCheck });
     }
     const handleAddRole = () => {
+        SocketStore.setValue('cantList', [])
+        let arr = []
         if (maSelectKey != '-1') {
-            SocketStore.createNor({ 'userIds': addUserIds, 'groupId': maSelectKey }).then(() => {
+            addUserIds.forEach(item => {
+                if (initList.indexOf(item) <= -1) arr.push(item)
+            })
+            SocketStore.createNor({ 'userIds': arr, 'groupId': maSelectKey }).then(() => {
                 initData();
             })
+        } else if (maSelectKey == '-1') {
+            addUserIds.forEach(item => {
+                if (initList.indexOf(item) <= -1) arr.push(item)
+            })
+            SocketStore.createSys(arr).then(() => {
+                initData('add');
+            })
         }
-        console.log(maSelectKey);
-        console.log(addUserIds);
+        SocketStore.setValue('addUserVis', false)
+    }
+    const handleAddDe = (type) => {
+        setLoad(true)
+        let iObj = { ...maSelectObj }
+        delete iObj.admins
+        delete iObj.id
+        delete iObj.name
+        if (type == 'de') {
+            iObj['authDto']['scope']['department'] = addList
+            setAddDeVisible(false)
+        } else {
+            iObj['authDto']['scope']['role'] = addList
+            setAddRoleVisible(false)
+        }
+        SocketStore.updateNor({ 'groupId': maSelectKey }, iObj['authDto']).then(() => {
+            initData();
+        })
     }
     const popConetnt = (
         <div className="createRole">
@@ -79,12 +112,19 @@ const MaLayout = observer(({ SocketStore }) => {
                 Modal.confirm({
                     title: '修改名称',
                     content: <div>
-                        <Input ref={ref} />
+                        <Input ref={ref} placeholder={'不可为空'} />
                     </div>
                     ,
                     cancelText: '取消',
                     okText: '确定',
                     onOk: () => {
+                        if (ref.current.input.value == '') {
+                            message.info('名称不可为空')
+                        } else {
+                            SocketStore.changeNorName({ 'name': ref.current.input.value, "groupId": maId }).then(() => {
+                                initData()
+                            })
+                        }
                         console.log(ref.current.input.value);
                     }
                 })
@@ -130,7 +170,7 @@ const MaLayout = observer(({ SocketStore }) => {
                                         </div>
                                         <div className="one_menu_right">
                                             <Popover overlayClassName={'myPopover'} placement='right' content={popConetnt} trigger='hover'>
-                                                <MoreOutlined onMouseEnter={() => SocketStore.setValue('maId', item['id'])}/>
+                                                <MoreOutlined onMouseEnter={() => SocketStore.setValue('maId', item['id'])} />
                                             </Popover>
                                         </div>
                                     </div>
@@ -153,18 +193,38 @@ const MaLayout = observer(({ SocketStore }) => {
                                             <div className="mar_l">
                                                 系统管理员
                                             </div>
-                                            <div className="mar_r addM" onClick={() => {
-                                                SocketStore.setValue('addUserVis', true)
-                                                SocketStore.setValue('addUserIds', [])
-                                                SocketStore.setValue('addUserObjs', {})
-                                                SocketStore.getAllDepartment();
-                                                SocketStore.getAllSys();
-                                                SocketStore.getAllUsers();
-                                                SocketStore.getAddUserList({ 'departmentId': 1 });
+                                            <div className="manage_list">
+                                                <div className="mar_r addM" onClick={() => {
+                                                    SocketStore.setValue('addUserVis', true)
+                                                    SocketStore.setValue('addUserIds', [])
+                                                    SocketStore.setValue('addUserObjs', {})
+                                                    SocketStore.getAllDepartment();
+                                                    SocketStore.getAllSys();
+                                                    SocketStore.getAllUsers();
+                                                    SocketStore.getAddUserList({ 'departmentId': 1 });
 
-                                            }}>
-                                                + 添加管理员
+                                                }}>
+                                                    + 添加管理员
+                                                </div>
+                                                <div className="de_list">
+                                                    {
+                                                        Object.keys(sysList).map((item, index) => {
+                                                            return (
+                                                                <div className="de_one" key={index}>
+                                                                    <ApartmentOutlined /> {sysList[item]['username']} <span style={{ cursor: 'pointer' }} onClick={() => {
+                                                                        SocketStore.delSys({ 'userId': item }).then(() => {
+                                                                            initData('add');
+                                                                        })
+                                                                        console.log(item);
+                                                                    }}>X</span>
+                                                                </div>
+                                                            )
+                                                        })
+                                                    }
+                                                </div>
                                             </div>
+
+
                                         </div>
                                         <div className="ma_right_m">
                                             <div className="mar_l">
@@ -206,23 +266,53 @@ const MaLayout = observer(({ SocketStore }) => {
                                             <div className="mar_l">
                                                 管理员
                                             </div>
-                                            <div className="mar_r addM" onClick={() => {
-                                                SocketStore.setValue('addUserVis', true)
-                                                SocketStore.setValue('addUserIds', [])
-                                                SocketStore.setValue('addUserObjs', {})
-                                                SocketStore.getAllDepartment();
-                                                SocketStore.getAllUsers();
-                                                let arr = []
-                                                maSelectObj['admins'].map((item, index) => {
-                                                    Object.keys(item).forEach(one => [
-                                                        arr.push(one)
-                                                    ])
-                                                })
-                                                SocketStore.setValue('addUserIds', arr);
-                                                SocketStore.getAddUserList({ 'departmentId': 1 });
+                                            <div className="manage_list">
+                                                <div className="mar_r addM" onClick={() => {
+                                                    SocketStore.setValue('initList', []);
+                                                    SocketStore.setValue('addUserVis', true)
+                                                    SocketStore.setValue('addUserIds', [])
+                                                    SocketStore.setValue('addUserObjs', {})
+                                                    SocketStore.getAllDepartment();
+                                                    SocketStore.getAllUsers();
+                                                    let arr = []
+                                                    let iArr = []
+                                                    Object.keys(deObj).map((item) => {
+                                                        console.log(item);
+                                                        if (item != maSelectKey) {
+                                                            deObj[item].map((one) => {
+                                                                iArr.push(one['userId'])
+                                                            })
+                                                        }
+                                                    })
+                                                    maSelectObj['admins'].map((item, index) => {
+                                                        arr.push(item['userId'])
+                                                    })
+                                                    console.log(arr);
+                                                    console.log(toJS(deObj));
+                                                    console.log(iArr);
+                                                    SocketStore.setValue('addUserIds', arr);
+                                                    SocketStore.setValue('initList', arr);
+                                                    SocketStore.setValue('cantList', iArr);
+                                                    SocketStore.getAddUserList({ 'departmentId': 1 });
 
-                                            }}>
-                                                + 添加管理员
+                                                }}>
+                                                    + 添加管理员
+                                                </div>
+                                                <div className="de_list">
+                                                    {
+                                                        maSelectObj['admins'].map((item, index) => {
+                                                            return (
+                                                                <div className="de_one" key={index}>
+                                                                    <ApartmentOutlined /> {userName[item['userId']]} <span style={{ cursor: 'pointer' }} onClick={() => {
+                                                                        SocketStore.delNor({ 'userId': item['userId'] }).then(() => {
+                                                                            initData();
+                                                                        })
+                                                                    }}>X</span>
+                                                                </div>
+                                                            )
+                                                        })
+                                                    }
+                                                </div>
                                             </div>
                                         </div>
                                         <div className="ma_right_m">
@@ -256,7 +346,7 @@ const MaLayout = observer(({ SocketStore }) => {
                                                     {
                                                         deValue == 'scope' && (
                                                             <div className="de_m">
-                                                                <div style={{ color: '#0db3a6', cursor: 'pointer', margin: '3px 5px 3px 0' }}>
+                                                                <div onClick={() => setAddDeVisible(true)} style={{ color: '#0db3a6', cursor: 'pointer', margin: '3px 5px 3px 0' }}>
                                                                     + 选择可管理的部门
                                                                 </div>
                                                                 <div className="de_list">
@@ -299,7 +389,10 @@ const MaLayout = observer(({ SocketStore }) => {
                                                     {
                                                         roValue == 'scope' && (
                                                             <div className="de_m">
-                                                                <div style={{ color: '#0db3a6', cursor: 'pointer', margin: '3px 5px 3px 0' }}>
+                                                                <div onClick={() => {
+                                                                    setAddRoleVisible(true)
+                                                                    setAddList(maSelectObj['authDto']['scope']['role'])
+                                                                }} style={{ color: '#0db3a6', cursor: 'pointer', margin: '3px 5px 3px 0' }}>
                                                                     + 选择可管理的角色
                                                                 </div>
                                                                 <div className="de_list">
@@ -328,7 +421,7 @@ const MaLayout = observer(({ SocketStore }) => {
                                             <div className="mar_r">
                                                 <div style={{ marginBottom: '20px' }}>
                                                     内部部门
-                                                    <Checkbox checked={inDCheck} onChange={(value) => { 
+                                                    <Checkbox checked={inDCheck} onChange={(value) => {
                                                         setLoad(true)
                                                         let iObj = { ...maSelectObj }
                                                         delete iObj.admins
@@ -338,7 +431,7 @@ const MaLayout = observer(({ SocketStore }) => {
                                                         SocketStore.updateNor({ 'groupId': maSelectKey }, iObj['authDto']).then(() => {
                                                             initData();
                                                         })
-                                                     }} style={{ marginLeft: "40px" }}>可见可管理</Checkbox>
+                                                    }} style={{ marginLeft: "40px" }}>可见可管理</Checkbox>
                                                 </div>
                                                 <div style={{ marginBottom: '20px' }}>
                                                     内部角色
@@ -348,7 +441,7 @@ const MaLayout = observer(({ SocketStore }) => {
                                                         delete iObj.admins
                                                         delete iObj.id
                                                         delete iObj.name
-                                                        iObj['authDto']['addressBook']['role'] = [value.indexOf('look') > -1,value.indexOf('manage') > -1]
+                                                        iObj['authDto']['addressBook']['role'] = [value.indexOf('look') > -1, value.indexOf('manage') > -1]
                                                         SocketStore.updateNor({ 'groupId': maSelectKey }, iObj['authDto']).then(() => {
                                                             initData();
                                                         })
@@ -370,7 +463,7 @@ const MaLayout = observer(({ SocketStore }) => {
                                             <div className="mar_r">
                                                 <div style={{ marginBottom: '20px' }}>
                                                     编辑表单
-                                                    <Checkbox checked={editForm} onChange={(value) => { 
+                                                    <Checkbox checked={editForm} onChange={(value) => {
                                                         setLoad(true)
                                                         let iObj = { ...maSelectObj }
                                                         delete iObj.admins
@@ -380,7 +473,7 @@ const MaLayout = observer(({ SocketStore }) => {
                                                         SocketStore.updateNor({ 'groupId': maSelectKey }, iObj['authDto']).then(() => {
                                                             initData();
                                                         })
-                                                     }} style={{ marginLeft: "40px" }}>可编辑</Checkbox>
+                                                    }} style={{ marginLeft: "40px" }}>可编辑</Checkbox>
                                                 </div>
                                             </div>
                                         </div>
@@ -469,19 +562,19 @@ const MaLayout = observer(({ SocketStore }) => {
                 <div className="addUser_main">
                     <div className="addUser_top">
                         {
-                            Object.keys(addUserObjs).map((key, index) => {
+                            addUserIds.map((item, index) => {
                                 return (
                                     <div className="addUser_one" key={index}>
-                                        <div className="one_name">{addUserObjs[key]}</div>
-                                        <div onClick={() => {
-                                            console.log(key);
-                                            let obj = { ...addUserObjs }
-                                            let arr = [...addUserIds]
-                                            arr.splice(arr.indexOf(key), 1)
-                                            delete obj[key]
-                                            SocketStore.setValue('addUserObjs', obj)
-                                            SocketStore.setValue('addUserIds', arr)
-                                        }} className="one_cross">X</div>
+                                        <div className="one_name">{userName[item]}</div>
+                                        {
+                                            initList.indexOf(item) <= -1 && (
+                                                <div onClick={() => {
+                                                    let arr = [...addUserIds]
+                                                    arr.splice(arr.indexOf(item), 1)
+                                                    SocketStore.setValue('addUserIds', arr)
+                                                }} className="one_cross">X</div>
+                                            )
+                                        }
                                     </div>
                                 )
                             })
@@ -499,20 +592,16 @@ const MaLayout = observer(({ SocketStore }) => {
                                             allUsers.map((item, index) => {
                                                 if (addUserList.some((one) => one['userId'] == item['userId'])) {
                                                     return (
-                                                        <Checkbox onClick={() => {
+                                                        <Checkbox disabled={initList.indexOf(item['userId']) > -1 || cantList.indexOf(item['userId']) > -1} onClick={() => {
                                                             console.log(item['userId'])
                                                             let arr = [...addUserIds]
-                                                            let obj = { ...addUserObjs }
                                                             let index = addUserIds.indexOf(item['userId'])
                                                             if (index > -1) {
                                                                 arr.splice(index, 1)
-                                                                delete obj[item['userId']]
                                                             } else {
                                                                 arr.push(item['userId'])
-                                                                obj[item['userId']] = item['name']
                                                             }
                                                             SocketStore.setValue('addUserIds', arr);
-                                                            SocketStore.setValue('addUserObjs', obj);
                                                         }} value={item['userId']} key={index}>{item['name']}</Checkbox>
                                                     )
                                                 }
@@ -531,6 +620,85 @@ const MaLayout = observer(({ SocketStore }) => {
                     <div className="add_btn">
                         <Button style={{ marginRight: '15px' }} onClick={() => SocketStore.setValue('addUserVis', false)}>取消</Button>
                         <Button type='primary' onClick={handleAddRole}>确定</Button>
+                    </div>
+                </div>
+            </Modal>
+            <Modal title='添加部门' visible={addDeVisible} onCancel={() => setAddDeVisible(false)} footer={null} destroyOnClose={true}>
+                <div className="addUser_main">
+                    <TreeSelect multiple treeData={mulSelect} style={{ width: '100%' }} onChange={(value) => setAddList(value)} defaultValue={maSelectObj?.['authDto']?.['scope']?.['department'] || []} />
+                    <div className="add_btn">
+                        <Button style={{ marginRight: '15px' }} onClick={() => () => setAddDeVisible(false)}>取消</Button>
+                        <Button type='primary' onClick={() => handleAddDe('de')}>确定</Button>
+                    </div>
+                </div>
+            </Modal>
+            <Modal title='添加角色' visible={addRoleVisible} onCancel={() => setAddRoleVisible(false)} footer={null} destroyOnClose={true}>
+                <div className="addUser_main">
+                    <div className="addUser_top">
+                        {
+                            addList.map((item, index) => {
+                                return (
+                                    <div className="addUser_one" key={index}>
+                                        <div className="one_name">{rolesName[item]}</div>
+                                        <div onClick={() => {
+                                            let arr = [...addList]
+                                            arr.splice(arr.indexOf(item), 1)
+                                            setAddList(arr)
+                                        }} className="one_cross">X</div>
+                                    </div>
+                                )
+                            })
+                        }
+                    </div>
+                    <div className="select_choice">
+                        <div style={{ width: '100%' }}>
+                            {
+                                initRole.map((item, index) => {
+                                    if (item.hasOwnProperty('roles') && JSON.stringify(item['roles']) != '{}') {
+                                        return (
+                                            <div className="select_role_oneItem" key={index}>
+                                                <div className="select_role_father">
+                                                    <FolderAddOutlined style={{ color: '#248af9' }} /> {item['name']}
+                                                </div>
+                                                {
+                                                    Object.keys(item['roles']).map((key, oIndex) => {
+                                                        return (
+                                                            <div onClick={() => {
+                                                                let iArr = [...addList]
+                                                                let keyIndex = iArr.indexOf(parseInt(key))
+                                                                if (keyIndex > -1) {
+                                                                    iArr.splice(keyIndex, 1)
+                                                                } else {
+                                                                    iArr.push(parseInt(key))
+                                                                }
+                                                                console.log(key);
+                                                                setAddList(iArr)
+                                                            }} key={oIndex} className="select_role_child">
+                                                                <div><UserAddOutlined style={{ color: '#248af9' }} /> {item['roles'][key]}</div>
+                                                                <Checkbox checked={addList.indexOf(parseInt(key)) > -1} />
+                                                            </div>
+                                                        )
+                                                    })
+                                                }
+                                            </div>
+
+                                        )
+                                    } else {
+                                        return (
+                                            <div className="select_role_oneItem" key={index}>
+                                                <div className="select_role_father">
+                                                    <FolderOutlined style={{ color: '#248af9' }} /> {item['name']}
+                                                </div>
+                                            </div>
+                                        )
+                                    }
+                                })
+                            }
+                        </div>
+                    </div>
+                    <div className="add_btn">
+                        <Button style={{ marginRight: '15px' }} onClick={() => () => setAddRoleVisible(false)}>取消</Button>
+                        <Button type='primary' onClick={() => handleAddDe('ro')}>确定</Button>
                     </div>
                 </div>
             </Modal>

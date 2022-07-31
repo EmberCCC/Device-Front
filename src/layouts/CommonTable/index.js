@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-04-02 11:12:08
- * @LastEditTime: 2022-07-27 04:44:25
+ * @LastEditTime: 2022-08-01 05:34:11
  * @LastEditors: EmberCCC 1810888456@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage-test\src\layouts\BasicManage\ComputerPage\index.js
@@ -12,18 +12,20 @@ import React, { Component } from 'react'
 import { Button, Select, Spin, Table } from 'antd'
 import { toJS } from 'mobx';
 import { NavLink } from 'react-router-dom';
-import './index.css'
+import './index.less'
 import GlobalTabel2 from 'components/GlobalTabel2';
 import { InsertRowBelowOutlined } from '@ant-design/icons';
 import FormLayout from 'layouts/FormLayout';
 const { Option } = Select
-@inject('HomeStore', 'TableStore')
+@inject('HomeStore', 'TableStore', 'FormStore', 'SocketStore')
 @observer
 class CommonTable extends Component {
 
   render() {
     const { secondFormId, selectedKeys, itemDataT, firstFormId } = this.props.HomeStore;
     const { dataSource, columns, PageInfo, model, isLoading } = this.props.TableStore;
+    const { formAuthInfo } = this.props.FormStore;
+    const { userAuth } = this.props.SocketStore
     const handleSelect = (value) => {
       if (value == 'subitAndManage') {
         this.props.TableStore.getAllData({ formId: firstFormId }, 'myself')
@@ -38,11 +40,29 @@ class CommonTable extends Component {
         <div className='tableHeader'>
           <Select value={this.props.TableStore.getModel()} style={{ width: 180, float: 'left', backgroundColor: 'gray', fontWeight: '1000' }} onSelect={handleSelect}>
             <Option value="submit"><InsertRowBelowOutlined /> 直接提交数据</Option>
-            <Option value="subitAndManage"><InsertRowBelowOutlined /> 提交并管理本人数据</Option>
-            <Option value="manage"><InsertRowBelowOutlined /> 管理全部数据</Option>
-            <Option value="look"><InsertRowBelowOutlined /> 查看全部数据</Option>
+            {
+              formAuthInfo.indexOf(2) > -1 && (
+                <Option value="subitAndManage"><InsertRowBelowOutlined /> 提交并管理本人数据</Option>
+              )
+            }
+            {
+              formAuthInfo.indexOf(3) > -1 && (
+                <Option value="manage"><InsertRowBelowOutlined /> 管理全部数据</Option>
+              )
+            }
+            {
+              formAuthInfo.indexOf(4) > -1 && (
+                <Option value="look"><InsertRowBelowOutlined /> 查看全部数据</Option>
+              )
+            }
           </Select>
-          <NavLink to={{ pathname: '/design', state: { selectedKeys: toJS(selectedKeys), item: toJS(itemDataT), secondFormId: toJS(secondFormId) } }} style={{ float: 'right' }}><Button>编辑表单</Button></NavLink>
+          {
+            (userAuth['creater'] || userAuth['sysAdmin'] || userAuth?.['authDetails']?.['editForm']) && (
+              <NavLink to={{ pathname: '/design', state: { selectedKeys: toJS(selectedKeys), item: toJS(itemDataT), secondFormId: toJS(secondFormId) } }} style={{ float: 'right' }}>
+                <Button>编辑表单</Button>
+              </NavLink>
+            )
+          }
         </div>
         <Spin spinning={isLoading} tip={'loading...'}>
           <div className='table_content'>
@@ -56,20 +76,11 @@ class CommonTable extends Component {
       </div>
     )
   }
-
-  onChange = (e) => {
+  componentWillMount() {
+    this.props.FormStore.getFormAuthInfo({ 'formId': this.props.HomeStore.firstFormId })
+    this.props.SocketStore.getMyInfo()
+    console.log(toJS(this.props.SocketStore.userAuth));
   }
-
-  componentDidMount() {
-    const { firstFormId } = this.props.HomeStore
-    if (this.props.TableStore.model == 'subitAndManage') {
-      this.props.TableStore.getAllData({ formId: firstFormId }, 'myself')
-    } else {
-      this.props.TableStore.getAllData({ formId: firstFormId }, 'all')
-    }
-
-  }
-
 }
 
 export default CommonTable;

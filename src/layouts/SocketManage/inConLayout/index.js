@@ -2,12 +2,12 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-19 23:03:37
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-07-27 09:25:17
+ * @LastEditTime: 2022-08-01 02:26:49
  * @FilePath: \bl-device-manage-test\src\layouts\SocketManage\inConLayout\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 import { CheckCircleFilled, DeleteOutlined, FolderFilled } from "@ant-design/icons";
-import { Button, Checkbox, Divider, Drawer, Form, Input, Menu, message, Modal, Popover, Radio, Select, Space, Spin, Switch, Table, TreeSelect } from "antd";
+import { Button, Checkbox, Divider, Drawer, Empty, Form, Input, Menu, message, Modal, Popover, Radio, Select, Space, Spin, Switch, Table, TreeSelect } from "antd";
 import { toJS } from "mobx";
 import { inject, observer } from "mobx-react";
 import React, { useEffect, useRef, useState } from "react";
@@ -17,7 +17,7 @@ const InConLayout = observer(({ SocketStore }) => {
     const { roleList, SelectKey, allUsers, selectRowKeys, visible, oneUserInfo, loading, departments,
         items, itemName, itemRoles, rolesName, changetype, changeVis, changeId,
         changeName, changeGroupVis, fatherId, initRole, addVisible, mulSelect, mulVisible, fatherIds,
-        preId, addUserVis, addUserList, addUserIds, addUserObjs, createRoleVis } = SocketStore;
+        preId, addUserVis, addUserList, addUserIds, addUserObjs, createRoleVis, userAuth, deArr } = SocketStore;
     const [form] = Form.useForm();
     const [createVis, setCreateVis] = useState(false)
     const [total, setTotal] = useState('department')
@@ -26,6 +26,24 @@ const InConLayout = observer(({ SocketStore }) => {
     const refAdd = useRef();
     const refCreate = useRef()
     const refChange = useRef()
+    const iArr = [
+        {
+            "key": "g1",
+            "icon": null,
+            "children": [
+                {
+                    "key": "全部成员",
+                    "label": "全部成员"
+                },
+                {
+                    "key": "离职成员",
+                    "label": "离职成员"
+                }
+            ],
+            "label": "成员",
+            "type": "group"
+        }
+    ]
     useEffect(() => {
         setTotal('department')
         SocketStore.setValue('SelectKey', '全部成员')
@@ -47,6 +65,41 @@ const InConLayout = observer(({ SocketStore }) => {
             title: '邮箱',
             dataIndex: 'email',
             key: 'email'
+        },
+        {
+            title: '角色',
+            dataIndex: 'role',
+            key: 'role',
+            render: (text, record, index) => {
+                let newArr = []
+                for (const key in text) {
+                    if (Object.hasOwnProperty.call(text, key)) {
+                        const element = text[key];
+                        newArr.push({ 'group': key, 'name': element })
+                    }
+                }
+                return (
+                    <div className="role_item">
+                        {
+                            newArr.map((item, index) => {
+                                return <div className="role_one" key={index}>{item['name']}</div>
+                            })
+                        }
+                    </div>
+                )
+            }
+        }
+    ]
+    const columnLeave = [
+        {
+            title: '姓名',
+            dataIndex: 'name',
+            key: 'name'
+        },
+        {
+            title: '手机号',
+            dataIndex: 'phone',
+            key: 'phone'
         },
         {
             title: '角色',
@@ -103,31 +156,36 @@ const InConLayout = observer(({ SocketStore }) => {
             key: 'operation',
             fixed: 'right',
             width: 100,
-            render: (text, record, index) => <DeleteOutlined onClick={() => {
-                Modal.confirm({
-                    title: '您确定删除该成员',
-                    content: '移出成员会同时移除所选成员的当前角色身份，但不会在通讯录中删除所选成员',
-                    cancelText: "取消",
-                    okText:'确定',
-                    onCancel: () => {
-                        Modal.destroyAll()
-                    },
-                    onOk: () => {
-                        let arr = []
-                        roleList.map((item) => {
-                            if (item['userId'] != text['userId']) {
-                                arr.push(item['userId'])
-                            }
-                        })
-                        console.log(arr);
-                        SocketStore.saveRoleUser({ 'roleId': SelectKey }, arr).then(() => {
-                            SocketStore.getOneRoleUser({ 'roleId': SelectKey })
-                            SocketStore.getAllRoles()
-                        })
-                    }
-                })
-
-            }} style={{ cursor: 'pointer' }} />,
+            render: (text, record, index) => {
+                if (userAuth['creater'] || userAuth['sysAdmin'] || userAuth?.['authDetails']?.['addressBook']?.['role'][1]) {
+                    return (
+                        <DeleteOutlined onClick={() => {
+                            Modal.confirm({
+                                title: '您确定删除该成员',
+                                content: '移出成员会同时移除所选成员的当前角色身份，但不会在通讯录中删除所选成员',
+                                cancelText: "取消",
+                                okText: '确定',
+                                onCancel: () => {
+                                    Modal.destroyAll()
+                                },
+                                onOk: () => {
+                                    let arr = []
+                                    roleList.map((item) => {
+                                        if (item['userId'] != text['userId']) {
+                                            arr.push(item['userId'])
+                                        }
+                                    })
+                                    console.log(arr);
+                                    SocketStore.saveRoleUser({ 'roleId': SelectKey }, arr).then(() => {
+                                        SocketStore.getOneRoleUser({ 'roleId': SelectKey })
+                                        SocketStore.getAllRoles()
+                                    })
+                                }
+                            })
+                        }} style={{ cursor: 'pointer' }} />
+                    )
+                }
+            }
         },
     ]
     const handleChange = (value) => {
@@ -148,8 +206,10 @@ const InConLayout = observer(({ SocketStore }) => {
         console.log(value.target.value);
     }
     const handleClick = ({ item, key, keyPath, domEvent }) => {
-        if (key == '全部成员' || key == '离职成员') {
-            SocketStore.getAllUsers()
+        if (key == '全部成员') {
+            SocketStore.getAllUsers('all')
+        } else if (key == '离职成员') {
+            SocketStore.getAllUsers('leave')
         }
     }
     const handleClickRole = ({ item, key, keyPath, domEvent }) => {
@@ -242,9 +302,6 @@ const InConLayout = observer(({ SocketStore }) => {
 
     }
     const handleNameChange = (type) => {
-        console.log(refChange.current.input.value);
-        console.log(type);
-        console.log(changeId);
         if (refChange.current.input.value != '') {
             if (type == 'roleg') {
                 SocketStore.changeRoleGroupName({ 'groupId': changeId, 'name': refChange.current.input.value }).then(() => {
@@ -354,21 +411,26 @@ const InConLayout = observer(({ SocketStore }) => {
                     <div className="inL_first">
                         <Radio.Group onChange={handleChange} defaultValue={total}>
                             <Radio.Button value='department'>部门</Radio.Button>
-                            <Radio.Button value='role'>角色</Radio.Button>
+                            <Radio.Button value='role' disabled={!(userAuth['creater'] || userAuth['sysAdmin'] || userAuth?.['authDetails']?.['addressBook']?.['role'][0])}>角色</Radio.Button>
                         </Radio.Group>
                     </div>
                     {
-                        total == 'department' && (
-                            <Menu selectable={!loading} items={items} onClick={(value) => handleClick(value)} mode='inline' theme='light' defaultSelectedKeys={[SelectKey]} />
-                        )
-                    }{
+                        total == 'department' &&
+                        <Menu selectable={!loading} items={items} onClick={(value) => handleClick(value)} mode='inline' theme='light' defaultSelectedKeys={[SelectKey]} />
+
+                    }
+                    {
                         total == 'role' && (
                             <div className="role_top">
-                                <Popover overlayClassName={'myPopover'} placement='bottom' content={createContent} trigger='click'>
-                                    <div className="rt_F">
-                                        创建的角色 +
-                                    </div>
-                                </Popover>
+                                {
+                                    (userAuth['creater'] || userAuth['sysAdmin'] || userAuth?.['authDetails']?.['addressBook']?.['role'][1]) && (
+                                        <Popover overlayClassName={'myPopover'} placement='bottom' content={createContent} trigger='click'>
+                                            <div className="rt_F">
+                                                创建的角色 +
+                                            </div>
+                                        </Popover>
+                                    )
+                                }
                                 <Menu selectable={!loading} items={itemRoles} onClick={(value) => handleClickRole(value)} mode='inline' theme='light' defaultSelectedKeys={[SelectKey]} />
 
                             </div>
@@ -376,7 +438,23 @@ const InConLayout = observer(({ SocketStore }) => {
                     }
                 </div>
                 {
-                    total == 'department' && (
+                    (total == 'department' && !userAuth['creater'] && !userAuth['sysAdmin']) && deArr.indexOf(SelectKey) <= -1 && SelectKey != '全部成员' && SelectKey != '离职成员' && (
+                        <Empty style={{ width: '100%', overflow: 'auto', margin: 'auto auto' }} description={'无权限或无数据'} />
+                    )
+                }
+                {
+                    (total == 'department' && !userAuth['creater'] && !userAuth['sysAdmin']) && (SelectKey == '全部成员' || SelectKey == '离职成员') && (
+                        <div className="in_right" style={{ paddingLeft: '20px', paddingTop: '60px' }}>
+                            <Table
+                                columns={columnAll}
+                                dataSource={allUsers}
+                                rowKey={record => record.userId}
+                            />
+                        </div>
+                    )
+                }
+                {
+                    (total == 'department' && (userAuth['creater'] || userAuth['sysAdmin'] || deArr.indexOf(SelectKey) > -1)) && (
                         <div className="in_right">
                             <div className="inR_first">
                                 <div className="inRF_L">
@@ -384,7 +462,7 @@ const InConLayout = observer(({ SocketStore }) => {
                                 </div>
                                 <div className="inRF_R">
                                     {
-                                        SelectKey == '全部成员' && (
+                                        SelectKey == '全部成员' && (userAuth['creater'] || userAuth['sysAdmin'] || userAuth?.['authDetails']?.['addressBook']?.['department']) && (
                                             <>
                                                 <Switch onChange={handleSwitch} size='small' />
                                                 <div className="switch_des">允许成员修改姓名</div>
@@ -428,7 +506,7 @@ const InConLayout = observer(({ SocketStore }) => {
                                         if (SelectKey != '全部成员' && SelectKey != '离职成员') {
                                             SocketStore.searchDeUsers({ 'userInfo': e.target.value, 'departmentId': SelectKey })
                                         } else {
-                                            SocketStore.searchAllUsers({ 'userInfo': e.target.value })
+                                            SocketStore.searchAllUsers({ 'userInfo': e.target.value }, { 'type': SelectKey })
                                         }
                                     }} placeholder="搜索成员" style={{ width: '200px', marginRight: '20px' }} />
                                 </div>
@@ -448,14 +526,32 @@ const InConLayout = observer(({ SocketStore }) => {
                                                 onRow={(key, record) => {
                                                     return {
                                                         onClick: event => {
-                                                            SocketStore.getOneUser({ 'userId': key['userId'] }).then(() => {
-                                                                console.log(toJS(mulSelect));
-                                                                form.resetFields()
-                                                                SocketStore.getAllRoles();
-                                                                SocketStore.setValue('visible', true);
-                                                            })
+                                                            if(userAuth['creater'] || userAuth['sysAdmin']){
+                                                                SocketStore.getOneUser({ 'userId': key['userId'] }).then(() => {
+                                                                    console.log(toJS(mulSelect));
+                                                                    form.resetFields()
+                                                                    SocketStore.getAllRoles();
+                                                                    SocketStore.setValue('visible', true);
+                                                                })
+                                                            }else{
+                                                                message.info('权限不足，请联系管理员')
+                                                            }
+                                                            
                                                         }
                                                     }
+                                                }}
+                                            />
+                                        )
+                                    }
+                                    {
+                                        SelectKey == '离职成员' && (
+                                            <Table
+                                                columns={columnAll}
+                                                dataSource={allUsers}
+                                                rowKey={record => record.userId}
+                                                rowSelection={{
+                                                    type: 'checkbox',
+                                                    ...rowSelection,
                                                 }}
                                             />
                                         )
@@ -474,7 +570,7 @@ const InConLayout = observer(({ SocketStore }) => {
                                 </div>
                                 <div className="inRF_R">
                                     {
-                                        SelectKey != '全部成员' && SelectKey != '离职成员' && (
+                                        SelectKey != '全部成员' && SelectKey != '离职成员' && (userAuth['creater'] || userAuth['sysAdmin'] || userAuth?.['authDetails']?.['addressBook']?.['role'][1]) && (
                                             <div className="inRF_R2">
                                                 <Popover content={changeRoleName} trigger='click' destroyTooltipOnHide={true}>
                                                     <div>修改名称</div>
@@ -491,14 +587,18 @@ const InConLayout = observer(({ SocketStore }) => {
                             </div>
                             <div className="inR_Tool">
                                 <div>
-                                    <Button onClick={() => {
-                                        SocketStore.setValue('addUserVis', true)
-                                        SocketStore.setValue('addUserIds', [])
-                                        SocketStore.setValue('addUserObjs', {})
-                                        SocketStore.getAllDepartment();
-                                        SocketStore.getAllUsers();
-                                        SocketStore.getAddUserList({ 'departmentId': 1 });
-                                    }} type="primary" style={{ marginRight: '10px' }}>添加成员</Button>
+                                    {
+                                        (userAuth['creater'] || userAuth['sysAdmin'] || userAuth?.['authDetails']?.['addressBook']?.['role'][1]) && (
+                                            <Button onClick={() => {
+                                                SocketStore.setValue('addUserVis', true)
+                                                SocketStore.setValue('addUserIds', [])
+                                                SocketStore.setValue('addUserObjs', {})
+                                                SocketStore.getAllDepartment();
+                                                SocketStore.getAllUsers();
+                                                SocketStore.getAddUserList({ 'departmentId': 1 });
+                                            }} type="primary" style={{ marginRight: '10px' }}>添加成员</Button>
+                                        )
+                                    }
                                 </div>
                                 <div>
                                     <span style={{ marginRight: '10px', fontWeight: '100', fontSize: '10px', userSelect: 'none' }}>按下回车搜索，内容为空则筛选全部成员</span>
@@ -510,7 +610,7 @@ const InConLayout = observer(({ SocketStore }) => {
                             <Spin spinning={loading} tip='Loading...'>
                                 <div className="socket_table">
                                     {
-                                        SelectKey != '离职成员' && (
+                                        SelectKey != '离职成员' && (userAuth['creater'] || userAuth['sysAdmin'] || userAuth?.['authDetails']?.['addressBook']?.['role'][1]) && (
                                             <Table
                                                 columns={columnRole}
                                                 dataSource={roleList}
@@ -519,6 +619,15 @@ const InConLayout = observer(({ SocketStore }) => {
                                                     type: 'checkbox',
                                                     ...rowSelection,
                                                 }}
+                                            />
+                                        )
+                                    }
+                                    {
+                                        SelectKey != '离职成员' && !(userAuth['creater'] || userAuth['sysAdmin'] || userAuth?.['authDetails']?.['addressBook']?.['role'][1]) && (
+                                            <Table
+                                                columns={columnRole}
+                                                dataSource={roleList}
+                                                rowKey={record => record.userId}
                                             />
                                         )
                                     }
@@ -575,7 +684,35 @@ const InConLayout = observer(({ SocketStore }) => {
                             <div className="btn_group">
                                 <Button type="primary" htmlType="submit">修改</Button>
                                 <Button>交接工作</Button>
-                                <Button danger>转为离职</Button>
+                                <Button danger onClick={() => {
+                                    Modal.confirm({
+                                        title: '您确定将所选成员转为离职成员？',
+                                        content: '转为离职成员后，使用相同成员编号再次加入时，可恢复相关配置（邀请中的成员将直接删除）',
+                                        cancelText: '取消',
+                                        okText: '确定',
+                                        okButtonProps: {
+                                            danger: true
+                                        },
+                                        onOk: () => {
+                                            let obj = {}
+                                            obj['userId'] = oneUserInfo['userId']
+                                            obj['name'] = oneUserInfo['name']
+                                            obj['departmentIds'] = oneUserInfo.hasOwnProperty('departmentIds') ? oneUserInfo['departmentIds'] : []
+                                            obj['roleIds'] = oneUserInfo['roleIds']
+                                            obj['state'] = 2
+                                            SocketStore.changeUserInfo(obj).then(() => {
+                                                if (SelectKey == '全部成员') {
+                                                    SocketStore.getAllUsers('all');
+                                                } else if (SelectKey == '离职成员') {
+                                                    SocketStore.getAllUsers('filter');
+                                                } else {
+                                                    SocketStore.getOneDepartment({ 'departmentId': SelectKey })
+                                                }
+                                                SocketStore.getAllDepartment()
+                                            })
+                                        }
+                                    })
+                                }}>转为离职</Button>
                             </div>
                         </Form.Item>
                     </Form>

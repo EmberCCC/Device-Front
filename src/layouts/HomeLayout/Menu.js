@@ -11,7 +11,7 @@ const { Sider } = Layout;
 
 let firstMount = false;
 @withRouter
-@inject('HomeStore', 'MessageStore', 'TableStore', 'FormStore')
+@inject('HomeStore', 'MessageStore', 'TableStore', 'FormStore', 'SocketStore')
 @observer
 class MenuLayout extends Component {
   constructor(props) {
@@ -26,7 +26,8 @@ class MenuLayout extends Component {
   }
   render() {
     const isMobile = this.props.mobile === 'false';
-    const { todoCount, createCount, handleCount, copyCount } = this.props.MessageStore;
+    const { waitList, launchList, handleList, copyList } = this.props.MessageStore;
+    const { userAuth } = this.props.SocketStore
     return (
       <Sider
         theme='light'
@@ -35,33 +36,64 @@ class MenuLayout extends Component {
         <div id='manu_container'>
           <div className='manu_top'>
             <div className='message_list'>
-              <div className='message_logo'>
+              <div className='message_logo' onClick={() => {
+                this.props.history.push({ pathname: '/message' });
+                this.props.MessageStore.getWaitList().then(() => {
+                  this.props.MessageStore.setValue('list', waitList);
+                  this.props.MessageStore.setValue('model', 'wait');
+                })
+
+
+                console.log(toJS(waitList));
+              }}>
                 <div className='message_item'>
                   <BellTwoTone />
                   <div className='message_name'>我的待办</div>
                 </div>
-                <Badge count={todoCount} style={{ float: 'right' }} offset={[1, 5]}></Badge>
+                <Badge count={waitList.length} style={{ float: 'right' }} offset={[1, 5]}></Badge>
               </div>
-              <div className='message_logo'>
+              <div className='message_logo' onClick={() => {
+                this.props.history.push({ pathname: '/message' });
+                this.props.MessageStore.getLaunchList().then(() => {
+                  this.props.MessageStore.setValue('list', launchList);
+                  this.props.MessageStore.setValue('model', 'launch');
+                })
+
+                console.log(toJS(waitList));
+              }}>
                 <div className='message_item'>
                   <PlayCircleTwoTone />
                   <div className='message_name'>我发起的</div>
                 </div>
-                <Badge count={createCount} style={{ float: 'right' }} offset={[1, 5]}></Badge>
+                <Badge count={launchList.length} style={{ float: 'right' }} offset={[1, 5]}></Badge>
               </div>
-              <div className='message_logo'>
+              <div className='message_logo' onClick={() => {
+                this.props.history.push({ pathname: '/message' });
+                this.props.MessageStore.getHandleList().then(() => {
+                  this.props.MessageStore.setValue('list', handleList);
+                  this.props.MessageStore.setValue('model', 'handle');
+                })
+
+                console.log(toJS(waitList));
+              }}>
                 <div className='message_item'>
                   <CarryOutTwoTone />
                   <div className='message_name'>我处理的</div>
                 </div>
-                <Badge count={handleCount} style={{ float: 'right' }} offset={[1, 5]}></Badge>
+                <Badge count={handleList.length} style={{ float: 'right' }} offset={[1, 5]}></Badge>
               </div>
-              <div className='message_logo'>
+              <div className='message_logo' onClick={() => {
+                this.props.history.push({ pathname: '/message' });
+                this.props.MessageStore.getCopyList().then(() => {
+                  this.props.MessageStore.setValue('list', copyList);
+                  this.props.MessageStore.setValue('model', 'copy');
+                })
+              }}>
                 <div className='message_item'>
                   <SoundTwoTone />
                   <div className='message_name'>抄送我的</div>
                 </div>
-                <Badge count={copyCount} style={{ float: 'right' }} offset={[1, 5]}></Badge>
+                <Badge count={copyList.length} style={{ float: 'right' }} offset={[1, 5]}></Badge>
               </div>
             </div>
             <div className='left_menu_all'>
@@ -69,9 +101,8 @@ class MenuLayout extends Component {
                 MenuObj.leafMenuModels.map((item, index) => {
                   let idIndex = this.store.openMenuKeys.indexOf(item['id']);
                   return (
-                    <div className='left_menu_father'>
+                    <div className='left_menu_father' key={index}>
                       <div onClick={() => {
-
                         let iArr = [...this.store.openMenuKeys]
                         if (idIndex > -1) {
                           iArr.splice(idIndex, 1)
@@ -79,7 +110,6 @@ class MenuLayout extends Component {
                           iArr.push(item['id'])
                         }
                         this.store.setValue('openMenuKeys', iArr)
-                        console.log(this.store.openMenuKeys);
                       }} className='left_menu_f1'>
                         {idIndex > -1 && (
                           <FolderOpenOutlined className='node_icon' style={{ color: "#0db3a6" }} />
@@ -94,11 +124,12 @@ class MenuLayout extends Component {
                         item.leafMenuModels.length > 0 && (
                           item.leafMenuModels.map((one, oIndex) => {
                             return (
-                              <div onClick={() => {
-                                this.props.TableStore.getAllData({ formId: one['id'] }, 'myself')
-                                this.props.FormStore.getFormField({ formId: one['id'] })
+                              <div key={oIndex} onClick={() => {
+                                this.props.history.push({ pathname: '/common' });
+                                this.props.FormStore.getFormField({ 'formId': one['id'] })
                                 this.props.HomeStore.setValue('firstFormId', one['id'])
-
+                                this.props.FormStore.getFormAuthInfo({ 'formId': one['id'] })
+                                this.props.SocketStore.getMyInfo()
                               }} className={`left_menu_child ${idIndex > -1 ? 'display' : 'undisplay'}`}><FileTextOutlined className='node_icon' style={{ color: '#5da0cc' }} /><span className='node_name'>{one.name}</span></div>
                             )
                           })
@@ -110,43 +141,31 @@ class MenuLayout extends Component {
               }
             </div>
           </div>
-          <div className='bottom_name'><ToolOutlined style={{marginRight:'5px'}}/>管理后台</div>
+          {
+            (userAuth['creater'] || userAuth['sysAdmin']) && (
+              <div className='bottom_name' onClick={() => {
+                console.log(11);
+                this.props.history.push({
+                  pathname: '/manage'
+                });
+              }} ><ToolOutlined style={{ marginRight: '5px' }} />管理后台</div>
+            )
+          }
         </div>
 
       </Sider>
     );
   }
-  onMenuSelect = ({ selectedKeys }) => {
-    this.store.model = 'look'
-    this.store.selectedKeys = selectedKeys;
-  }
-  onOpenChange = (openKeys) => {
-    this.store.openKeys = openKeys;
-  }
-  handleMenu = ({ item, key, }) => {
-    let lo = this.props.location.pathname
-    if (key.startsWith('my')) {
-      this.props.HomeStore.changeViewModel(key)
-    } else if (lo != '/manage/todo' && lo != '/manage/create' && lo != '/manage/handle' && lo != '/manage/copy') {
-      console.log(key);
-      this.props.TableStore.getAllData({ formId: key }, 'myself')
-      this.props.FormStore.getFormField({ formId: key })
-    }
-  }
-  handleRe = (key) => {
-    console.log(key);
-  }
-  goBack = () => {
-    this.props.history.push('/index');
-  }
-
-  loadData = () => {
-    const location = this.props.location.pathname
-    const nowL = location.split('/')[2];
-    this.props.MessageStore.setData(nowL);
-  }
   componentDidMount() {
     firstMount = false;
+    if (sessionStorage.getItem('selfToken') != null) {
+      this.props.MessageStore.getWaitList()
+      this.props.MessageStore.getLaunchList()
+      this.props.MessageStore.getHandleList()
+      this.props.MessageStore.getCopyList()
+      this.props.SocketStore.getMyInfo();
+    }
+
     // this.props.HomeStore.getMenuList(this.props.location.pathname).then(() => {
     //   this.props.HomeStore.initMenu(this.props.location.pathname);
     // });
@@ -158,60 +177,6 @@ class MenuLayout extends Component {
       this.state.collapsed = false;
     }
     this.setState({});
-  }
-
-  static getDerivedStateFromProps(props, state) {
-    let newState = { ...state };
-    if (props.sizetype === 'l_size') {
-      if (props.HomeStore.isClickCollapsed) {
-        if (props.sizetype !== state.sizetype) {
-          props.HomeStore.changeValue('collapsed', false)
-        }
-        Object.assign(newState, {
-          sizetype: props.sizetype,
-          collapsed: props.HomeStore.collapsed,
-          pathname: props.location.pathname
-        })
-      } else {
-        Object.assign(newState, {
-          sizetype: props.sizetype,
-          collapsed: false,
-          pathname: props.location.pathname
-        })
-      }
-    } else {
-      if (props.HomeStore.isClickCollapsed) {
-        if (props.sizetype !== state.sizetype) {
-          props.HomeStore.changeValue('collapsed', true)
-        }
-        Object.assign(newState, {
-          sizetype: props.sizetype,
-          collapsed: props.HomeStore.collapsed,
-          pathname: props.location.pathname
-        })
-      } else {
-        Object.assign(newState, {
-          sizetype: props.sizetype,
-          collapsed: true,
-          pathname: props.location.pathname
-        })
-      }
-    }
-    if (props.location.pathname !== state.pathname) {
-      Object.assign(newState, {
-        isPath: true
-      })
-    } else {
-      Object.assign(newState, {
-        isPath: false
-      })
-    }
-    return newState;
-  }
-  componentDidUpdate() {
-    if (this.state.isPath) {
-      this.props.HomeStore.initMenu(this.state.pathname)
-    }
   }
 }
 export default MenuLayout;

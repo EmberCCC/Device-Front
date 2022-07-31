@@ -1,234 +1,74 @@
 /*
  * @Author: your name
  * @Date: 2022-03-31 23:08:16
- * @LastEditTime: 2022-05-07 22:21:44
+ * @LastEditTime: 2022-07-31 03:00:04
  * @LastEditors: EmberCCC 1810888456@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage-test\src\stores\SpareStore
  */
-import { observable, action, toJS } from 'mobx';
+import { observable, action, toJS, makeObservable } from 'mobx';
 import { isDataExist } from '../utils/dataTools';
 import * as services from '../services/message';
 
 class Message {
-    @observable data = []
-    @observable modalVisible = false
-    @observable todoCount = 0
-    @observable createCount = 0
-    @observable handleCount = 0
-    @observable copyCount = 0
-    @observable todoList = []
-    @observable createList = []
+    constructor(){
+        makeObservable(this)
+    }
+    @observable waitList = []
+    @observable launchList = []
     @observable handleList = []
     @observable copyList = []
-    @observable itemInfo = {}
-    @observable itemLog = {}
-    @observable itemField = []
-    @observable field = []
-    @observable lookData = []
-    @observable isLoading = false
-    @observable subFlag = false;
+    @observable list = [];
 
+    @observable fieldInfo = []
+    @observable formData = {}
+    @observable formInfo = {}
+    @observable info = {};
+    @observable nameObj = {};
 
-    @action.bound setItemInfo(obj) {
-        this['itemInfo'] = obj
+    @observable detailVis = false;
+
+    @observable model = 'wait'
+
+    @action.bound setValue(key,value){
+        this[key] = value
     }
 
-    @action.bound changeSubFlag(value) {
-        this['subFlag'] = value;
-    }
-    @action.bound setData(count) {
-        console.log(11);
-        switch (count) {
-            case 'todo':
-                this.data = this.todoList
-                break;
-            case 'create':
-                this.data = this.createList
-                break;
-            case 'handle':
-                this.data = this.handleList
-                break;
-            case 'copy':
-                this.data = this.copyList
-                break;
-            default:
-                break;
-        }
-    }
-
-    @action changeModal() {
-        this.modalVisible = !this.modalVisible;
-    }
-
-    @action.bound addList(value, list) {
-        // console.log(this[value]);
-        // this[value].map((item) =>{
-        //     if (item.flowLogId == list.flowLogId) {
-        //         return;
-        //     }
-        // })
-        if (list.nodeId == 0) {
-            this['createList'].push(list)
-            this['createCount'] = this['createList'].length
-            return
-        } else {
-            this[value].push(list);
-        }
-        switch (value) {
-            case 'todoList':
-                this['todoCount'] = this['todoList'].length
-                break;
-            case 'createList':
-                this['createCount'] = this['createList'].length
-                break;
-            case 'handleList':
-                this['handleCount'] = this['handleList'].length
-                break;
-            case 'copyList':
-                this['copyCount'] = this['copyList'].length
-                break;
-            default:
-                break;
-        }
-    }
-
-    @action.bound delList(value, flowLogId) {
-        let newArr = []
-        this[value].map((item) => {
-            if (item.flowLogId != flowLogId) {
-                newArr.push(item)
-            }
-        })
-        this[value] = newArr;
-        switch (value) {
-            case 'todoList':
-                this['todoCount'] = this['todoList'].length
-                break;
-            case 'createList':
-                this['createCount'] = this['createList'].length
-                break;
-            case 'handleList':
-                this['handleCount'] = this['handleList'].length
-                break;
-            case 'copyList':
-                this['copyCount'] = this['copyList'].length
-                break;
-            default:
-                break;
-        }
-    }
-
-    @action.bound changeList(value, flowLogId,state) {
-        let newArr = []
-        this[value].map((item) => {
-            if (item.flowLogId != flowLogId) {
-                newArr.push(item)
-            }else{
-                item.state = state
-                newArr.push(item);
-            }
-        })
-        this[value] = newArr;
-        switch (value) {
-            case 'todoList':
-                this['todoCount'] = this['todoList'].length
-                break;
-            case 'createList':
-                this['createCount'] = this['createList'].length
-                break;
-            case 'handleList':
-                this['handleCount'] = this['handleList'].length
-                break;
-            case 'copyList':
-                this['copyCount'] = this['copyList'].length
-                break;
-            default:
-                break;
-        }
-    }
-
-    @action.bound clearList() {
-        this['todoCount'] = 0;
-        this['todoList'] = [];
-        this['createCount'] = 0;
-        this['createList'] = [];
-        this['handleCount'] = 0;
-        this['handleList'] = [];
-        this['copyCount'] = 0;
-        this['copyList'] = [];
-    }
-
-    @action.bound async getLog(params) {
-        this.isLoading = true;
+    @action.bound async getWaitList(params){
         try {
-            let res = await services.putRequest(services.requestList.getLog, params);
-            this.isLoading = false
-            if (isDataExist(res)) {
-                this.itemLog = res.data.data
-                console.log(toJS(this.itemLog.message));
+            let res = await services.getRequest(services.requestList.getWaitList,params);
+            if(isDataExist(res)){
+                this.setValue('waitList',res.data.data)
             }
         } catch (error) {
             console.log(error);
         }
     }
-
-    @action.bound async getOne(params) {
-        this.isLoading = true;
+    @action.bound async getLaunchList(params){
         try {
-            let res = await services.putRequest(services.requestList.getOne, params);
-            this.isLoading = false
-            if (isDataExist(res)) {
-                this.itemField = res.data.data
-                this.lookData = this.itemField.data
+            let res = await services.getRequest(services.requestList.getLaunchList,params);
+            if(isDataExist(res)){
+                this.setValue('launchList',res.data.data)
             }
         } catch (error) {
             console.log(error);
         }
     }
-
-    @action.bound async getField(params) {
-        this.isLoading = true;
+    @action.bound async getHandleList(params){
         try {
-            let res = await services.getRequest(services.requestList.getField, params);
-            this.isLoading = false
-            if (isDataExist(res)) {
-                this.field = res.data.data
+            let res = await services.getRequest(services.requestList.getHandleList,params);
+            if(isDataExist(res)){
+                this.setValue('handleList',res.data.data)
             }
         } catch (error) {
             console.log(error);
         }
     }
-
-    @action.bound async agreeFlow(params) {
-        this.isLoading = true;
+    @action.bound async getCopyList(params){
         try {
-            let param = params.messageDto
-            console.log(params);
-            let res = await services.putRequest(services.requestList.agreeFlow + params.message, param);
-            this.isLoading = false
-            if (isDataExist(res)) {
-                this.delList('todoList', params.messageDto.flowLogId);
-                params.messageDto.state = 1;
-                this.addList('handleList', params.messageDto);
-                return res;
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
-    @action.bound async refuseFlow(params) {
-        this.isLoading = true;
-        try {
-            let param = params.messageDto
-            let res = await services.putRequest(services.requestList.refuseFlow + params.message, param);
-            this.isLoading = false
-            if (isDataExist(res)) {
-                this.delList('todoList', params.messageDto.flowLogId);
-                params.messageDto.state = 2;
-                this.addList('handleList', params.messageDto);
-                return res;
+            let res = await services.getRequest(services.requestList.getCopyList,params);
+            if(isDataExist(res)){
+                this.setValue('copyList',res.data.data)
             }
         } catch (error) {
             console.log(error);

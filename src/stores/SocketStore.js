@@ -2,13 +2,13 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-19 23:01:23
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-07-27 11:05:27
+ * @LastEditTime: 2022-08-01 02:24:02
  * @FilePath: \bl-device-manage-test\src\stores\SocketStore.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 import { message, Modal, Popover } from 'antd';
 import React from 'react'
-import { observable, action, makeObservable } from 'mobx';
+import { observable, action, makeObservable, toJS } from 'mobx';
 import { isDataExist } from 'utils/dataTools';
 import * as services from '../services/socket';
 import { GoldFilled, MoreOutlined } from '@ant-design/icons';
@@ -66,6 +66,8 @@ class Socket {
 
     @observable userName = {};
 
+    @observable deArr = []
+
     @observable createRoleVis = false
     handleClick = ({ key, domEvent }) => {
         this.setValue('SelectKey', key);
@@ -74,6 +76,7 @@ class Socket {
         this.setValue('selectRowKeys', [])
     }
     getChidren = (arr) => {
+        let deArr = this.userAuth?.['authDetails']?.['scope']?.['department']
         let content = (
             <div className='createRole'>
                 <div onClick={(e) => {
@@ -120,15 +123,21 @@ class Socket {
             let iObj = {
                 'label': <div className='de_item' onClick={() => {
                     this.setValue('SelectKey', item['id'])
-                    this.getOneDepartment({ 'departmentId': item['id'] })
+                    if (this.userAuth['creater'] || this.userAuth['sysAdmin'] || deArr.indexOf(-1) > -1 || deArr.indexOf(item['id']) > -1) {
+                        this.getOneDepartment({ 'departmentId': item['id'] })
+                    } else {
+                        message.info('无权限查看该部门，请联系管理员')
+                    }
                 }}>
                     <div className='de_name'><GoldFilled /> {item['name']}</div>
-                    <Popover placement='right' trigger='hover' content={content} overlayClassName='myPopover' >
-                        <div className='de_more'><MoreOutlined onMouseEnter={() => {
-                            this.setValue('changeId', item['id'])
-                            this.setValue('changeName', item['name'])
-                        }} /></div>
-                    </Popover>
+                    {
+                        (this.userAuth['creater'] || this.userAuth['sysAdmin'] || deArr.indexOf(-1) > -1 || deArr.indexOf(item['id']) > -1) && <Popover placement='right' trigger='hover' content={content} overlayClassName='myPopover' >
+                            <div className='de_more'><MoreOutlined onMouseEnter={() => {
+                                this.setValue('changeId', item['id'])
+                                this.setValue('changeName', item['name'])
+                            }} /></div>
+                        </Popover>
+                    }
                 </div>
                 , 'key': item['id']
             }
@@ -141,6 +150,8 @@ class Socket {
     }
 
     exchange = (obj) => {
+        let deArr = this.userAuth?.['authDetails']?.['scope']?.['department']
+        let iObj = {}
         let item = (
             <div className='createRole'>
                 <div onClick={(e) => {
@@ -154,18 +165,27 @@ class Socket {
                 }}>添加子部门</div>
             </div>
         )
-        let iObj = {
+
+        iObj = {
             'label': <div className='de_item' onClick={() => {
                 this.setValue('SelectKey', obj['id'])
-                this.getOneDepartment({ 'departmentId': obj['id'] })
+                if (this.userAuth['creater'] || this.userAuth['sysAdmin'] || deArr.indexOf(-1) > -1 || deArr.indexOf(obj['id']) > -1) {
+                    this.getOneDepartment({ 'departmentId': obj['id'] })
+                } else {
+                    message.info('无权限查看该部门，请联系管理员')
+                }
             }}>
                 <div className='de_name'><GoldFilled />  {obj['name']}</div>
-                <Popover placement='right' trigger='hover' content={item} overlayClassName='myPopover' >
-                    <div className='de_more'><MoreOutlined onMouseEnter={() => {
-                        this.setValue('changeId', obj['id'])
-                        this.setValue('changeName', obj['name'])
-                    }} /></div>
-                </Popover>
+                {
+                    this.userAuth['creater'] || this.userAuth['sysAdmin'] || deArr.indexOf(-1) > -1 || deArr.indexOf(obj['id']) > -1 && (
+                        <Popover placement='right' trigger='hover' content={item} overlayClassName='myPopover' >
+                            <div className='de_more'><MoreOutlined onMouseEnter={() => {
+                                this.setValue('changeId', obj['id'])
+                                this.setValue('changeName', obj['name'])
+                            }} /></div>
+                        </Popover>
+                    )
+                }
             </div>, 'key': obj['id']
         }
         if (obj.hasOwnProperty('nodes')) {
@@ -176,12 +196,13 @@ class Socket {
 
     getChidrenMul = (arr) => {
         let iArr = []
+        let deArr = this.userAuth?.['authDetails']?.['scope']?.['department']
         arr.map((item) => {
             let iObj = {
                 'title': <div className='de_item'>
-                    <div className='de_name'><GoldFilled /> {item['name']}</div>
+                    <div className='de_name1'><GoldFilled /> {item['name']}</div>
                 </div>
-                , 'value': item['id']
+                , 'value': item['id'], 'selectable': this.userAuth['creater'] || this.userAuth['sysAdmin'] || deArr.indexOf(-1) > -1 || deArr.indexOf(item['id']) > -1
             }
             if (item.hasOwnProperty('nodes')) {
                 iObj['children'] = this.getChidrenMul(item['nodes'], iObj['children'])
@@ -211,10 +232,13 @@ class Socket {
     }
 
     exchangeMul = (obj) => {
+        console.log(toJS(this.userAuth));
+        let deArr = this.userAuth?.['authDetails']?.['scope']?.['department']
+        console.log(deArr);
         let iObj = {
             'title': <div className='de_item'>
-                <div className='de_name'><GoldFilled />  {obj['name']}</div>
-            </div>, 'value': obj['id']
+                <div className='de_name1'><GoldFilled />  {obj['name']}</div>
+            </div>, 'value': obj['id'], 'selectable': this.userAuth['creater'] || this.userAuth['sysAdmin'] || deArr.indexOf(-1) > -1 || deArr.indexOf(obj['id']) > -1
         }
         if (obj.hasOwnProperty('nodes')) {
             iObj['children'] = this.getChidrenMul(obj['nodes'], iObj['children'])
@@ -236,14 +260,21 @@ class Socket {
     @action.bound setValue(key, value) {
         this[key] = value;
     }
-    @action.bound async searchAllUsers(params) {
+    @action.bound async searchAllUsers(params, type) {
         this.setValue('loading', true)
         try {
             let res = await services.putUrlRequest(services.requestList.searchAllUser, params);
             this.setValue('loading', false)
             if (isDataExist(res)) {
                 console.log(res.data);
-                this.setValue('allUsers', res.data.data)
+                console.log(type);
+                if (type['type'] == '全部成员') {
+                    this.setValue('allUsers', res.data.data.filter((item) => item['state'] == 1 || item['state'] == 0))
+
+                } else {
+                    this.setValue('allUsers', res.data.data.filter((item) => item['state'] == 2))
+
+                }
                 let obj = {}
                 res.data.data.map((item, index) => {
                     obj[item['userId']] = item['name'];
@@ -279,7 +310,14 @@ class Socket {
             this.setValue('loading', false)
             if (isDataExist(res)) {
                 console.log(res.data);
-                this.setValue('allUsers', res.data.data)
+                if (params == 'all') {
+                    this.setValue('allUsers', res.data.data.filter((item) => item['state'] == 1 || item['state'] == 0))
+                    console.log(res.data.data.filter((item) => item['state'] == 0));
+                } else if (params == 'leave') {
+                    this.setValue('allUsers', res.data.data.filter((item) => item['state'] == 2))
+                } else {
+                    this.setValue('allUsers', res.data.data)
+                }
                 let obj = {}
                 res.data.data.map((item, index) => {
                     obj[item['userId']] = item['name'];
@@ -302,7 +340,7 @@ class Socket {
                 let roleIds = []
                 for (const key in res.data.data['departments']) {
                     if (Object.hasOwnProperty.call(res.data.data['departments'], key)) {
-                        depaermentIds.push(key)
+                        depaermentIds.push(parseInt(key))
                     }
                 }
                 for (const key in res.data.data['roles']) {
@@ -320,6 +358,7 @@ class Socket {
 
     @action.bound async getAllDepartment(params) {
         try {
+            await this.getMyInfo();
             let res = await services.getRequest(services.requestList.getAllDepartment, params);
             if (isDataExist(res)) {
                 this.setValue('departments', res.data.data)
@@ -344,9 +383,12 @@ class Socket {
                 let arr = []
                 let nameObj = { '全部成员': '全部成员', "离职成员": '离职成员' }
                 let jsonArr = []
+                console.log(this.userAuth);
+                if (this.userAuth['creater'] || this.userAuth['sysAdmin'] || this.userAuth?.['authDetails']?.['addressBook']?.['department']) {
+                    iArr.push({ 'children': arr, 'type': 'group', 'label': '部门' })
+                }
                 jsonArr.push(this.exchangeMul(res.data.data))
                 arr.push(this.exchange(res.data.data))
-                iArr.push({ 'children': arr, 'type': 'group', 'label': '部门' })
                 this.setValue('items', iArr)
                 this.setValue('mulSelect', jsonArr)
                 this.setValue('fatherIds', this.getMulFather({}, res.data.data))
@@ -412,11 +454,12 @@ class Socket {
 
     @action.bound async getAllRoles(params) {
         try {
+            await this.getMyInfo();
             let res = await services.getRequest(services.requestList.getAllRole, params);
             if (isDataExist(res)) {
                 console.log(res.data.data);
+                console.log(toJS(this.userAuth));
                 this.setValue('initRole', res.data.data)
-                console.log(res.data.data);
                 let iArr = []
                 let nameObj = {}
                 const roleGroup = (
@@ -484,14 +527,18 @@ class Socket {
                             <div className='role_name'>
                                 {item['name']}
                             </div>
-                            <Popover placement='right' trigger='hover' content={roleGroup} overlayClassName='myPopover'>
-                                <div className='role_more'>
-                                    <MoreOutlined onMouseEnter={() => {
-                                        this.setValue('changeId', item['groupId'])
-                                        this.setValue('changeName', item['name'])
-                                    }} />
-                                </div>
-                            </Popover>
+                            {
+                                (this.userAuth['creater'] || this.userAuth['sysAdmin'] || this.userAuth?.['authDetails']?.['addressBook']?.['role'][1]) && (
+                                    <Popover placement='right' trigger='hover' content={roleGroup} overlayClassName='myPopover'>
+                                        <div className='role_more'>
+                                            <MoreOutlined onMouseEnter={() => {
+                                                this.setValue('changeId', item['groupId'])
+                                                this.setValue('changeName', item['name'])
+                                            }} />
+                                        </div>
+                                    </Popover>
+                                )
+                            }
                         </div>, children: []
                     }
                     if (item.hasOwnProperty('roles') && JSON.stringify(item['roles']) != '{}') {
@@ -505,15 +552,19 @@ class Socket {
                                         <div className='role_name'>
                                             {element}
                                         </div>
-                                        <Popover placement='right' trigger='hover' content={roleItem} overlayClassName='myPopover'>
-                                            <div className='role_more'>
-                                                <MoreOutlined onMouseEnter={() => {
-                                                    this.setValue('changeId', key)
-                                                    this.setValue('changeName', element)
-                                                    this.setValue('fatherId', item['groupId'])
-                                                }} />
-                                            </div>
-                                        </Popover>
+                                        {
+                                            (this.userAuth['creater'] || this.userAuth['sysAdmin'] || this.userAuth?.['authDetails']?.['addressBook']?.['role'][1]) && (
+                                                <Popover placement='right' trigger='hover' content={roleItem} overlayClassName='myPopover'>
+                                                    <div className='role_more'>
+                                                        <MoreOutlined onMouseEnter={() => {
+                                                            this.setValue('changeId', key)
+                                                            this.setValue('changeName', element)
+                                                            this.setValue('fatherId', item['groupId'])
+                                                        }} />
+                                                    </div>
+                                                </Popover>
+                                            )
+                                        }
                                     </div>
                                 })
                             }
@@ -686,15 +737,20 @@ class Socket {
     @observable norName = {}
 
     @observable groupUserIdObj = {}
+    @observable deObj = {}
+    @observable cantList = []
+
+    @observable initList = [];
 
     @action.bound async getNormalList(params) {
         this.setValue('canClick', false)
         try {
             let res = await services.getRequest(services.requestList.getAllNorList, params);
             if (isDataExist(res)) {
-                if (this.maSelectKey != '-1') {
-                    res.data.data.map(item => {
-                        console.log(item);
+                let iDeObj = {}
+                res.data.data.map(item => {
+                    iDeObj[item['id']] = item['admins']
+                    if (this.maSelectKey != '-1') {
                         if (item['id'] == this.maSelectKey) {
                             this.setValue('maSelectObj', item)
                             this.setValue('deValue', item['authDto']['scope']['department'].length > 0 && item['authDto']['scope']['department'][0] == -1 ? 'all' : 'scope')
@@ -704,10 +760,12 @@ class Socket {
                             this.setValue('inRMCheck', item['authDto']['addressBook']['role'][1])
                             this.setValue('editForm', item['authDto']['editForm'])
                         }
-                    })
-                }
+                    }
+                })
+
+                console.log(iDeObj);
                 this.setValue('normalList', res.data.data)
-                console.log(res.data.data);
+                this.setValue('deObj', iDeObj)
                 let obj = {}
                 let gObj = {}
                 res.data.data.map((item, index) => {
@@ -753,24 +811,25 @@ class Socket {
                 this.setValue('sysList', res.data.data)
                 let arr = []
                 Object.keys(res.data.data).map((item, index) => {
-                    arr.push(item)
+                    arr.push(parseInt(item))
                 })
                 this.setValue('addUserIds', arr)
+                this.setValue('initList', arr)
             }
         } catch (error) {
             console.log(error);
         }
     }
-    // @action.bound async createSys(params) {
-    //     try {
-    //         let res = await services.putUrlRequest(services.requestList.getAllSys, params);
-    //         if (isDataExist(res)) {
-    //             message.success('创建成功')
-    //         }
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
-    // }
+    @action.bound async createSys(params) {
+        try {
+            let res = await services.putRequest(services.requestList.createSys, params);
+            if (isDataExist(res)) {
+                message.success('创建成功')
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
     @action.bound async createNor(params) {
         try {
             let res = await services.putRequest(services.requestList.setNorMan, params);
@@ -786,6 +845,50 @@ class Socket {
             let res = await services.putUrlRequest(services.requestList.updateNor, urlData, params);
             if (isDataExist(res)) {
                 message.success('修改已保存')
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    @action.bound async changeNorName(urlData, params) {
+        try {
+            let res = await services.putUrlRequest(services.requestList.changeNorName, urlData, params);
+            if (isDataExist(res)) {
+                message.success('修改成功')
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    @action.bound async delSys(urlData, params) {
+        try {
+            let res = await services.putUrlRequest(services.requestList.delSys, urlData, params);
+            if (isDataExist(res)) {
+                message.success('删除成功')
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    @action.bound async delNor(urlData, params) {
+        try {
+            let res = await services.putUrlRequest(services.requestList.delNor, urlData, params);
+            if (isDataExist(res)) {
+                message.success('删除成功')
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    @action.bound async getMyInfo(params) {
+        try {
+            let res = await services.getRequest(services.requestList.getUserAuth, params);
+            if (isDataExist(res)) {
+                console.log(res.data.data);
+                sessionStorage.setItem('auth', JSON.stringify(res.data.data))
+                this.setValue('userAuth', res.data.data)
+                this.setValue('deArr', res.data.data?.['authDetails']?.['scope']?.['department'])
             }
         } catch (error) {
             console.log(error);

@@ -5,43 +5,52 @@
     font-size: 14px;
     line-height: 28px;
 }
-.ma_add{
+
+.ma_add {
     margin: 16px 16px 6px;
     color: #0db3a6;
     font-size: 16px;
     cursor: pointer;
 }
-.ma_normal{
+
+.ma_normal {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
 }
-.ma_left_menu{
+
+.ma_left_menu {
     cursor: pointer;
     line-height: 40px;
     height: 40px;
     padding-left: 15px;
 }
-.ma_left_menu:hover{
+
+.ma_left_menu:hover {
     background-color: #e6f6f4;
 }
-.ma_left_menu:hover .one_menu_right{
+
+.ma_left_menu:hover .one_menu_right {
     display: unset;
 }
-.one_menu{
+
+.one_menu {
     padding-right: 16px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
 }
-.one_menu_right{
+
+.one_menu_right {
     display: none;
 }
-.checked{
+
+.checked {
     border-left: 2px solid #0db3a6;
     background-color: #e6f6f4;
 }
-.ma_right_title{
+
+.ma_right_title {
     height: 50px;
     padding: 10px 20px 0;
     font-weight: 700;
@@ -51,34 +60,90 @@
     white-space: nowrap;
     text-overflow: ellipsis;
 }
-.ma_right_content{
+
+.ma_right_content {
     margin: 0 20px;
 }
-.ma_right_m{
+
+.ma_right_m {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     border-bottom: 1px solid #eeecec;
     padding: 20px 0;
 }
-.mar_l{
+
+.mar_l {
     width: 180px;
     color: #1f2d3d;
     font-size: 14px
 }
-.addM{
+
+.addM {
     cursor: pointer;
     color: #0db3a6;
 }
-.de_list{
+
+.de_list {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+
 }
-.de_one{
+
+.de_one {
     margin: 3px 5px 3px 0;
     display: inline-block;
     margin: 5px 0 0 5px;
     padding: 5px 10px;
     background: #f3f6fc;
     border-radius: 1px;
+    cursor: unset !important;
+    color: unset !important;
+}
+
+.manage_list {
+    display: flex;
+    flex-direction: column;
+}
+
+.select_choice {
+    border: 1px solid #d9d9d9;
+    padding: 5px;
+    height: 360px;
+    overflow-y: auto;
+    overflow-x: auto;
+}
+.select_role{
+    height: 30px;
+    padding: 0 10px;
+    font-size: 14px;
+    line-height: 30px;
+    color: #5e6d82;
+}
+.select_role_oneItem{
+    padding: 0 10px
+}
+.select_role_father{
+    height: 34px;
+    margin-right: 5px;
+    padding: 7px 0;
+    line-height: 20px;
+    cursor: pointer;
+}
+.select_role_father:hover{
+    background-color: #e6f7f6;
+}
+.select_role_child{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    height: 34px;
+    padding: 7px 7px;
+    padding-left: 20px;
+    line-height: 20px;
+    cursor: pointer;
+}
+.select_role_child:hover{
+    background-color: #e6f7f6;
 }

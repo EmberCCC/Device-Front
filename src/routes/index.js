@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-11-02 14:29:58
- * @LastEditTime: 2022-07-19 23:05:38
+ * @LastEditTime: 2022-08-01 02:36:31
  * @LastEditors: EmberCCC 1810888456@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage\src\routes\index.js
@@ -25,7 +25,7 @@ import {
 
 /* 引入组件 */
 import { 
-  HomeRouter,LoginPage,FlowPage,DesignPage, MessageManage, SocketManage
+  HomeRouter,LoginPage,FlowPage,DesignPage, MessageManage, SocketManage, ManageManage
 } from './home';
 
 export default class RootRouter extends PureComponent{
@@ -38,6 +38,7 @@ export default class RootRouter extends PureComponent{
           <Route path="/login" component={LoginPage}/>
           <Route path="/globalList" component={WrapperList}/>
           <Route path="/socket" component={SocketManage} />
+          <Route path="/manage" component={ManageManage} />
           <Route path='/' component={HomeRouter} />
         </Switch>
       </Router>
