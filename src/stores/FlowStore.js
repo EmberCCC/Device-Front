@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-25 14:57:26
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-07-31 09:05:33
+ * @LastEditTime: 2022-08-01 07:22:50
  * @FilePath: \bl-device-manage-test\src\stores\FlowStore.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -34,6 +34,19 @@ class Flow {
     @observable allFlowList = []
     @observable flowversion = 0 /** 0:未启用 -1:没有流程 */
     @observable ableversion = 0
+
+    @observable picture = {
+        'nodes': [],
+        'edges': [],
+        "flowProperty": {
+            "wx": false,
+            "mail": false,
+            "withdraw": false,
+            "cuiBan": false,
+            "see": false,
+            "rule": 0,
+        }
+    }
     @action.bound setValue(key, value) {
         this[key] = value
     }
@@ -277,8 +290,7 @@ class Flow {
             let res = await services.getRequest(services.requestList.showOneFlow, params)
             if (isDataExist(res)) {
                 console.log(JSON.parse(res.data.data));
-                this.setValue('flowProperty', JSON.parse(res.data.data))
-                return res.data.data
+                this.setValue('picture', JSON.parse(res.data.data))
             }
         } catch (error) {
             console.log(error);

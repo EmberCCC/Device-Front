@@ -1,12 +1,12 @@
 /*
  * @Author: your name
  * @Date: 2022-04-24 12:36:43
- * @LastEditTime: 2022-07-31 09:19:24
+ * @LastEditTime: 2022-08-01 06:01:47
  * @LastEditors: EmberCCC 1810888456@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage-test\src\layouts\MessageManage\ListPage\index.js
  */
-import { Button, DatePicker, Dropdown, Select } from 'antd'
+import { Button, DatePicker, Dropdown, Select, Spin } from 'antd'
 import React, { Component } from 'react'
 import { inject, observer } from 'mobx-react';
 import '../index.less'
@@ -16,11 +16,21 @@ import { getField } from '../visUtil';
 import GlobalModal from 'components/GlobalModal';
 import Detail from '../detail';
 
-@inject('MessageStore', 'HomeStore', 'TableStore', 'FormStore')
+@inject('MessageStore', 'HomeStore', 'TableStore', 'FormStore', 'SocketStore')
 @observer
 class index extends Component {
     state = {
         isLoading: false
+    }
+    componentDidMount() {
+        this.props.MessageStore.getWaitList().then(() => {
+            this.props.MessageStore.setValue('list', this.props.MessageStore.waitList);
+            this.props.MessageStore.setValue('model', 'wait');
+        })
+        this.props.MessageStore.getLaunchList()
+        this.props.MessageStore.getHandleList()
+        this.props.MessageStore.getCopyList()
+        this.props.SocketStore.getMyInfo();
     }
     render() {
         const ContainerHeight = 800;
@@ -40,81 +50,89 @@ class index extends Component {
                     {model == 'copy' && (
                         <div style={{ paddingTop: '5px', fontWeight: '700' }}>{'抄送我的'}</div>
                     )}
-                    <div>
-                        <Button style={{ float: 'right' }}>最新</Button>
-                        <Dropdown overlay={this.selectList} placement="bottomLeft">
-                            <Button style={{ float: 'right' }}>筛选</Button>
-                        </Dropdown>
-                        <Button style={{ float: 'right' }}>批量提交</Button>
-                    </div>
-                </div>
-                <hr />
-                <div className='all_message_list'>
                     {
-                        list.map((item, index) => {
-                            let auth = {}
-                            let data = {}
-                            let fieldList = []
-                            let nameObj = {}
-                            let fieldObj = {}
-                            item['oneDataVo']['fields'].map((one) => {
-                                try {
-                                    fieldObj[one['id']] = toJS(JSON.parse(one['detailJson']))
-                                    nameObj[one['id']] = one['name']
-                                } catch (error) {
-                                    fieldObj[one['id']] = toJS({})
-                                }
-
-                            })
-                                auth = JSON.parse(item['nodeProperty']['fieldAuth'])
-                                data = JSON.parse(item['oneDataVo']['data']['formData'])
-                                fieldList = getField(auth, fieldObj);
-                            return (
-                                <div className='one_message' key={index} onClick={() => {
-                                    this.props.MessageStore.setValue('fieldInfo', fieldList)
-                                    this.props.MessageStore.setValue('detailVis', true)
-                                    this.props.MessageStore.setValue('info', item)
-                                    this.props.MessageStore.setValue('formData', JSON.parse(item['oneDataVo']['data']['formData']));
-                                    this.props.MessageStore.setValue('formInfo', toJS(item['oneDataVo']['form']))
-                                    this.props.MessageStore.setValue('nameObj', toJS(nameObj))
-                                }}>
-                                    <div className='one_message1'>{item['flowLog']['createPerson']}</div>
-                                    <div className='one_message2'>
-                                        <div className='message2_name'>{item['formName']}</div>
-                                        {
-                                            model == 'wait' && (
-                                                <div className='message2_node'>当前: {item['nodeProperty']['nodeName']}</div>
-                                            )
-                                        }
-                                        {
-                                            model != 'wait' && (
-                                                <div className='message_statu'>{item['nodeId'] == -2 ? '已结束' : '进行中'}</div>
-                                            )
-                                        }
-                                    </div>
-                                    <div className='one_message3'>
-                                        {
-                                            Object.keys(auth).map((key, kIndex) => {
-                                                if (auth[key].indexOf('sketch') > -1 && data.hasOwnProperty(key)) {
-                                                    return (
-                                                        <div className='message_sketch' key={kIndex}>
-                                                            <span className='sketch_name'>{nameObj[key]}:</span>
-                                                            <span className='sketch_content'>{data[key]}</span>
-                                                        </div>
-                                                    )
-                                                }
-                                            })
-                                        }
-                                        <div className='message_sketch'></div>
-                                        <div className='message_sketch'></div>
-                                        <div className='message_sketch'></div>
-                                    </div>
-                                    <div className='one_message4'>{item['updateTime']}</div>
-                                </div>
-                            )
-                        })
+                        model == 'wait' && (
+                            <div>
+                                <Button style={{ float: 'right' }}>最新</Button>
+                                <Dropdown overlay={this.selectList} placement="bottomLeft">
+                                    <Button style={{ float: 'right' }}>筛选</Button>
+                                </Dropdown>
+                                <Button style={{ float: 'right' }}>批量提交</Button>
+                            </div>
+                        )
                     }
                 </div>
+                <hr />
+                {
+                    <Spin wrapperClassName='all_message_list' spinning={this.props.MessageStore.loading} tip={'加载中....'}>
+                        <div className='all_message_list'>
+                            {
+                                list.map((item, index) => {
+                                    let auth = {}
+                                    let data = {}
+                                    let fieldList = []
+                                    let nameObj = {}
+                                    let fieldObj = {}
+                                    item['oneDataVo']['fields'].map((one) => {
+                                        try {
+                                            fieldObj[one['id']] = toJS(JSON.parse(one['detailJson']))
+                                            nameObj[one['id']] = one['name']
+                                        } catch (error) {
+                                            fieldObj[one['id']] = toJS({})
+                                        }
+
+                                    })
+                                    auth = JSON.parse(item['nodeProperty']['fieldAuth'])
+                                    data = JSON.parse(item['oneDataVo']['data']['formData'])
+                                    fieldList = getField(auth, fieldObj);
+                                    return (
+                                        <div className='one_message' key={index} onClick={() => {
+                                            this.props.MessageStore.setValue('fieldInfo', fieldList)
+                                            this.props.MessageStore.setValue('detailVis', true)
+                                            this.props.MessageStore.setValue('info', item)
+                                            this.props.MessageStore.setValue('formData', JSON.parse(item['oneDataVo']['data']['formData']));
+                                            this.props.MessageStore.setValue('formInfo', toJS(item['oneDataVo']['form']))
+                                            this.props.MessageStore.setValue('nameObj', toJS(nameObj))
+                                        }}>
+                                            <div className='one_message1'>{item['flowLog']['createPerson']}</div>
+                                            <div className='one_message2'>
+                                                <div className='message2_name'>{item['formName']}</div>
+                                                {
+                                                    model == 'wait' && (
+                                                        <div className='message2_node'>当前: {item['nodeProperty']['nodeName']}</div>
+                                                    )
+                                                }
+                                                {
+                                                    model != 'wait' && (
+                                                        <div className='message_statu'>{item['nodeId'] == -2 ? '已结束' : '进行中'}</div>
+                                                    )
+                                                }
+                                            </div>
+                                            <div className='one_message3'>
+                                                {
+                                                    Object.keys(auth).map((key, kIndex) => {
+                                                        if (auth[key].indexOf('sketch') > -1 && data.hasOwnProperty(key)) {
+                                                            return (
+                                                                <div className='message_sketch' key={kIndex}>
+                                                                    <span className='sketch_name'>{nameObj[key]}:</span>
+                                                                    <span className='sketch_content'>{data[key]}</span>
+                                                                </div>
+                                                            )
+                                                        }
+                                                    })
+                                                }
+                                                <div className='message_sketch'></div>
+                                                <div className='message_sketch'></div>
+                                                <div className='message_sketch'></div>
+                                            </div>
+                                            <div className='one_message4'>{item['updateTime']}</div>
+                                        </div>
+                                    )
+                                })
+                            }
+                        </div>
+                    </Spin>
+                }
                 <GlobalModal
                     title={info['formName']}
                     visible={detailVis}

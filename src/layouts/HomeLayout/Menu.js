@@ -38,9 +38,12 @@ class MenuLayout extends Component {
             <div className='message_list'>
               <div className='message_logo' onClick={() => {
                 this.props.history.push({ pathname: '/message' });
+                this.props.MessageStore.setValue('loading', true)
                 this.props.MessageStore.getWaitList().then(() => {
                   this.props.MessageStore.setValue('list', waitList);
                   this.props.MessageStore.setValue('model', 'wait');
+                  this.props.MessageStore.setValue('loading', false)
+
                 })
 
 
@@ -54,9 +57,12 @@ class MenuLayout extends Component {
               </div>
               <div className='message_logo' onClick={() => {
                 this.props.history.push({ pathname: '/message' });
+                this.props.MessageStore.setValue('loading', true)
                 this.props.MessageStore.getLaunchList().then(() => {
                   this.props.MessageStore.setValue('list', launchList);
                   this.props.MessageStore.setValue('model', 'launch');
+                  this.props.MessageStore.setValue('loading', false)
+
                 })
 
                 console.log(toJS(waitList));
@@ -69,9 +75,12 @@ class MenuLayout extends Component {
               </div>
               <div className='message_logo' onClick={() => {
                 this.props.history.push({ pathname: '/message' });
+                this.props.MessageStore.setValue('loading', true)
                 this.props.MessageStore.getHandleList().then(() => {
                   this.props.MessageStore.setValue('list', handleList);
                   this.props.MessageStore.setValue('model', 'handle');
+                  this.props.MessageStore.setValue('loading', false)
+
                 })
 
                 console.log(toJS(waitList));
@@ -84,9 +93,13 @@ class MenuLayout extends Component {
               </div>
               <div className='message_logo' onClick={() => {
                 this.props.history.push({ pathname: '/message' });
+                this.props.MessageStore.setValue('loading', true)
+
                 this.props.MessageStore.getCopyList().then(() => {
                   this.props.MessageStore.setValue('list', copyList);
                   this.props.MessageStore.setValue('model', 'copy');
+                  this.props.MessageStore.setValue('loading', false)
+
                 })
               }}>
                 <div className='message_item'>
