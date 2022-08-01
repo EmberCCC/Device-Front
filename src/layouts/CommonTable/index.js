@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-04-02 11:12:08
- * @LastEditTime: 2022-08-01 11:19:26
+ * @LastEditTime: 2022-08-01 23:58:14
  * @LastEditors: EmberCCC 1810888456@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage-test\src\layouts\BasicManage\ComputerPage\index.js
@@ -22,7 +22,7 @@ const { Option } = Select
 class CommonTable extends Component {
 
   render() {
-    const { secondFormId, selectedKeys, itemDataT, firstFormId } = this.props.HomeStore;
+    const { secondFormId, selectedKeys, itemDataT, firstFormId, formInfo } = this.props.HomeStore;
     const { dataSource, columns, PageInfo, model, isLoading } = this.props.TableStore;
     const { formAuthInfo } = this.props.FormStore;
     const { userAuth } = this.props.SocketStore
@@ -58,8 +58,11 @@ class CommonTable extends Component {
           </Select>
           {
             (userAuth['creater'] || userAuth['sysAdmin'] || userAuth?.['authDetails']?.['editForm']) && (
-              <NavLink to={{ pathname: '/design', state: { selectedKeys: toJS(selectedKeys), item: toJS(itemDataT), secondFormId: toJS(secondFormId) } }} style={{ float: 'right' }}>
-                <Button>编辑表单</Button>
+              <NavLink to={{ pathname: '/design' }} style={{ float: 'right' }}>
+                <Button onClick={() => {
+                  sessionStorage.setItem('formId', firstFormId)
+                  sessionStorage.setItem('formName', JSON.stringify(formInfo))
+                }}>编辑表单</Button>
               </NavLink>
             )
           }

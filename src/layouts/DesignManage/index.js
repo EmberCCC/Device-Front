@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-03-28 20:01:19
- * @LastEditTime: 2022-08-01 23:24:11
+ * @LastEditTime: 2022-08-02 00:54:46
  * @LastEditors: EmberCCC 1810888456@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage-test\src\layouts\BasicManage\index.js
@@ -49,30 +49,32 @@ class DesignManage extends React.Component {
                 4: '/design/flow',
             }
             this.props.DesignStore.changeDesignId(key)
-
+            let formId = sessionStorage.getItem('formId') ? sessionStorage.getItem('formId') : this.props.HomeStore.firstFormId
             if (key == '3') {
-                this.props.FlowStore.getOneFlow({ 'formId': firstFormId }).then(() => {
+                this.props.FlowStore.getOneFlow({ 'formId': formId }).then(() => {
                     this.props.FlowStore.setValue('canOb', false)
                     this.props.history.push({ pathname: arr[key] });
                 })
             } else {
-                this.props.FlowStore.getOneFlow({ 'formId': firstFormId }).then(() => {
+                this.props.FlowStore.getOneFlow({ 'formId': formId }).then(() => {
                     this.props.history.push({ pathname: arr[key] });
                 })
             }
         }
         const { DesignId } = this.props.DesignStore;
+
         const item = [
             { label: '表单设计', key: '1' },
             { label: '扩展功能', key: '2' },
-            { label: '表单发布', key: '3', disabled: formInfo?.['type'] == 0 },
-            { label: '流程设计', key: '4', disabled: formInfo?.['type'] == 0 }
+            { label: '表单发布', key: '3', disabled: sessionStorage.getItem('formName') ? JSON.parse(sessionStorage.getItem('formName'))['type'] == 0 : false },
+            { label: '流程设计', key: '4', disabled: sessionStorage.getItem('formName') ? JSON.parse(sessionStorage.getItem('formName'))['type'] == 0 : false }
         ]
+        let formName = sessionStorage.getItem('formName') && sessionStorage.getItem('formName') != '{}' ? JSON.parse(sessionStorage.getItem('formName'))['formName'] : '机房'
         return (
             <Layout>
                 <Header className="header">
                     <NavLink to='/common'>
-                        <span className='form_title'>{formInfo['formName']}</span>
+                        <span className='form_title'>{formName}</span>
                     </NavLink>
                     <Menu theme="light" mode="horizontal" selectedKeys={[DesignId]} justify='center' className='headerMenu' onClick={changeModel} items={item} />
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingRight: 10 }}>

@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-02 08:07:00
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-07-27 07:48:39
+ * @LastEditTime: 2022-08-02 01:31:41
  * @FilePath: \bl-device-manage-test\src\constants\field_config.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -10,9 +10,6 @@ var elements = [
     {
         text: '单行文本',
         name: '0',
-        props: {
-            className: 'left_my_item'
-        },
         schema: {
             title: '单行文本',
             type: 'string'
@@ -352,12 +349,22 @@ var elements = [
             type: 'string',
             enum: ['1', '2', '3'],
             enumNames: ['选项一', '选项二', '选项三'],
-            widget: 'radio'
+            widget: 'radio',
         },
         setting: {
             title: {
                 title: '标题',
                 type: 'string',
+            },
+            className:{
+                title: '展示方式',
+                type: 'string',
+                widget: 'radio',
+                enum: ['item_row', 'item_column'],
+                enumNames: ['横向排列', '纵向排列'],
+                props:{
+                    defaultValue:'item_row'
+                }
             },
             title_vis: {
                 title: '显示标题',
@@ -376,7 +383,10 @@ var elements = [
                 type: 'string',
                 widget: 'radio',
                 enum: ['row', 'column'],
-                enumNames: ['横向排列', '纵向排列']
+                enumNames: ['横向排列', '纵向排列'],
+                props:{
+                    defaultValue:'row'
+                }
             },
             enumList: {
                 title: '选项',

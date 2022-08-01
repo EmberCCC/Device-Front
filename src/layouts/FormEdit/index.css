@@ -132,6 +132,14 @@
 .myTabs .right-layout{
     height: 100%;
 }
+.item_row .ant-radio-group{
+    display: flex;
+    flex-direction: row;
+}
+.item_column .ant-radio-group{
+    display: flex;
+    flex-direction: column;
+}
 /* .edit_look{
     ma
 }

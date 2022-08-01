@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-01 20:45:23
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-01 23:38:38
+ * @LastEditTime: 2022-08-02 01:05:37
  * @FilePath: \bl-device-manage-test\src\layouts\FormEdit\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -35,7 +35,8 @@ const FormEdit = observer(({ HomeStore, FormStore }) => {
   const form = useForm();
   const formList = useForm();
   useEffect(() => {
-    FormStore.getFormField({ formId: HomeStore.firstFormId }).then(() => {
+    let formId = sessionStorage.getItem('formId') ? sessionStorage.getItem('formId') : HomeStore.firstFormId
+    FormStore.getFormField({ 'formId': formId }).then(() => {
       try {
         FormStore.setValue('subFormList', JSON.parse(FormStore?.['formField']?.['form']?.['formFields']))
         let nameArr = []
@@ -81,9 +82,9 @@ const FormEdit = observer(({ HomeStore, FormStore }) => {
         params['subForms'].push(exChange(item['schema'], HomeStore.firstFormId, subFormName[index])['subForms'][0] || { 'name': subFormName[index], 'fields': [] })
       })
     }
-    FormStore.saveForm(params).then(() => {
-      message.success('保存成功')
-    })
+    // FormStore.saveForm(params).then(() => {
+    //   message.success('保存成功')
+    // })
     console.log(params);
   }
   const closeDrawer = () => {
