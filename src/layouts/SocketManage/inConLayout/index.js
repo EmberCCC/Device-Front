@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-19 23:03:37
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-01 09:44:34
+ * @LastEditTime: 2022-08-01 12:25:37
  * @FilePath: \bl-device-manage-test\src\layouts\SocketManage\inConLayout\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -207,8 +207,10 @@ const InConLayout = observer(({ SocketStore }) => {
     }
     const handleClick = ({ item, key, keyPath, domEvent }) => {
         if (key == '全部成员') {
+            SocketStore.setValue('SelectKey','全部成员')
             SocketStore.getAllUsers('all')
         } else if (key == '离职成员') {
+            SocketStore.setValue('SelectKey','离职成员')
             SocketStore.getAllUsers('leave')
         }
     }
@@ -440,11 +442,6 @@ const InConLayout = observer(({ SocketStore }) => {
                     }
                 </div>
                 {
-                    (total == 'department' && !userAuth['creater'] && !userAuth['sysAdmin']) && deArr.indexOf(SelectKey) <= -1 && SelectKey != '全部成员' && SelectKey != '离职成员' && (
-                        <Empty style={{ width: '100%', overflow: 'auto', margin: 'auto auto' }} description={'无权限或无数据'} />
-                    )
-                }
-                {
                     (total == 'department' && !userAuth['creater'] && !userAuth['sysAdmin']) && (SelectKey == '全部成员' || SelectKey == '离职成员') && (
                         <div className="in_right" style={{ paddingLeft: '20px', paddingTop: '60px' }}>
                             <Table
@@ -456,7 +453,13 @@ const InConLayout = observer(({ SocketStore }) => {
                     )
                 }
                 {
-                    (total == 'department' && (userAuth['creater'] || userAuth['sysAdmin'] || deArr.indexOf(SelectKey) > -1)) && (
+                    (total == 'department' && !userAuth['creater'] && !userAuth['sysAdmin']) && deArr.indexOf(SelectKey) <= -1 && (SelectKey != '全部成员' && SelectKey != '离职成员') && (
+                        <Empty style={{ width: '100%', overflow: 'auto', margin: 'auto auto' }} description={'无权限或无数据'} />
+                    )
+                }
+                
+                {
+                    (total == 'department' && (userAuth['creater'] || userAuth['sysAdmin'] || deArr.indexOf(SelectKey) > -1 || deArr.indexOf(-1) > -1)) && (
                         <div className="in_right">
                             <div className="inR_first">
                                 <div className="inRF_L">
