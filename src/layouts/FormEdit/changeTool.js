@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-05 10:16:45
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-01 11:33:20
+ * @LastEditTime: 2022-08-01 23:33:07
  * @FilePath: \bl-device-manage-test\src\layouts\FormEdit\changeTool.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -51,39 +51,42 @@ function getOneForm(fields, fieldIds, type, flag, authInfo) {
   let result = {}
   fieldIds.forEach(item => {
     fields.forEach(field => {
-      if (field['id'] == item) {
-        const detailJson = JSON.parse(field['detailJson']);
-        const name = type == 'submit' ? field['id'] : "".concat(detailJson['typeId'], "_").concat(nanoid(6))
-        if (type == 'submit') {
-          if (detailJson.hasOwnProperty('title_vis') && detailJson['title_vis'] == false) {
-            detailJson['title'] = ""
-          }
-        }
-        if (flag && type == 'submit') {
-          if (authInfo.hasOwnProperty(detailJson['fieldId'])) {
-            if (authInfo[detailJson['fieldId']].indexOf('look') > -1) {
-              if (authInfo[detailJson['fieldId']].indexOf('edit') > -1) {
-                detailJson['disabled'] = false
-              } else {
-                detailJson['disabled'] = true;
-              }
-              result[name] = detailJson;
-              result[name]['fieldId'] = field['id'];
+      if (field != null) {
+        if (field['id'] == item) {
+          const detailJson = JSON.parse(field['detailJson']);
+          const name = type == 'submit' ? field['id'] : "".concat(detailJson['typeId'], "_").concat(nanoid(6))
+          if (type == 'submit') {
+            if (detailJson.hasOwnProperty('title_vis') && detailJson['title_vis'] == false) {
+              detailJson['title'] = ""
             }
           }
-        } else {
-          result[name] = detailJson;
-          result[name]['fieldId'] = field['id'];
-        }
+          if (flag && type == 'submit') {
+            if (authInfo.hasOwnProperty(detailJson['fieldId'])) {
+              if (authInfo[detailJson['fieldId']].indexOf('look') > -1) {
+                if (authInfo[detailJson['fieldId']].indexOf('edit') > -1) {
+                  detailJson['disabled'] = false
+                } else {
+                  detailJson['disabled'] = true;
+                }
+                result[name] = detailJson;
+                result[name]['fieldId'] = field['id'];
+              }
+            }
+          } else {
+            result[name] = detailJson;
+            result[name]['fieldId'] = field['id'];
+          }
 
+        }
       }
+
     });
   });
   return result
 }
 export function restore(obj, type) {
   console.log(obj);
-  if(JSON.stringify(obj) != "{}"){
+  if (JSON.stringify(obj) != "{}") {
     let formArr = {}
     let fieldInfo;
     let properties;
@@ -92,7 +95,7 @@ export function restore(obj, type) {
       authField = JSON.parse(obj['fieldsAuth'])
     }
     console.log(authField);
-  
+
     if (obj.hasOwnProperty('form') && obj['form'].hasOwnProperty('formFields')) {
       fieldInfo = JSON.parse(obj['form']['formFields']);
       properties = JSON.parse(obj['form']['properties']);
@@ -111,10 +114,10 @@ export function restore(obj, type) {
       }
     }
     return formArr;
-  }else{
+  } else {
     return {}
   }
-  
+
 }
 function getOneForm2(fields, fieldIds) {
   let result = {}
