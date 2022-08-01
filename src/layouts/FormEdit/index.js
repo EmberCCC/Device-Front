@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-01 20:45:23
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-01 10:20:25
+ * @LastEditTime: 2022-08-01 23:23:48
  * @FilePath: \bl-device-manage-test\src\layouts\FormEdit\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -29,6 +29,7 @@ const FormEdit = observer(({ HomeStore, FormStore }) => {
   const [visible, setVisisble] = useState(false)
   const [lookItem, setLookItem] = useState({})
   const { schemaList, subFormName } = FormStore
+  const {formInfo} = HomeStore
   const ref = useRef();
   const refList = useRef();
   const form = useForm();
@@ -80,9 +81,9 @@ const FormEdit = observer(({ HomeStore, FormStore }) => {
         params['subForms'].push(exChange(item['schema'], HomeStore.firstFormId, subFormName[index])['subForms'][0] || { 'name': subFormName[index], 'fields': [] })
       })
     }
-    FormStore.saveForm(params).then(() => {
-      message.success('保存成功')
-    })
+    // FormStore.saveForm(params).then(() => {
+    //   message.success('保存成功')
+    // })
     console.log(params);
   }
   const closeDrawer = () => {

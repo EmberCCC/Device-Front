@@ -80,21 +80,10 @@ class Home {
   /* 首页初始化获取菜单信息 */
   @action async getMenuList(params) {
     try {
-      console.log(params['type']);
       let res = await services.getRequest(services.requestList.getMenuInfo);
       if (isDataExist(res)) {
         let flag = false
         this.setValue('menu', res.data.data)
-        if(params['type'] == 1){
-          res.data.data.forEach(item => {
-            if(item.simpleForms.length > 0){
-              this.setValue('firstFormId',item.simpleForms[0]['formId'])
-              this.setValue('formInfo',item.simpleForms[0])
-              flag = true
-              return;
-            }
-          })
-        }
       }
     } catch (error) {
       console.log(error);

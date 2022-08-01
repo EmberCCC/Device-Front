@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-03-28 20:01:19
- * @LastEditTime: 2022-08-01 11:38:02
+ * @LastEditTime: 2022-08-01 23:24:11
  * @LastEditors: EmberCCC 1810888456@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage-test\src\layouts\BasicManage\index.js
@@ -72,7 +72,7 @@ class DesignManage extends React.Component {
             <Layout>
                 <Header className="header">
                     <NavLink to='/common'>
-                        <span className='form_title'>{firstFormName[firstFormId]}</span>
+                        <span className='form_title'>{formInfo['formName']}</span>
                     </NavLink>
                     <Menu theme="light" mode="horizontal" selectedKeys={[DesignId]} justify='center' className='headerMenu' onClick={changeModel} items={item} />
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingRight: 10 }}>
@@ -101,7 +101,6 @@ class DesignManage extends React.Component {
         let PersonListT = { ...toJS(PersonList) };
         this.props.history.push({ pathname: arr[DesignId], state: { firstFormId, itemData, PersonListT } });
         this.props.SocketStore.getMyInfo()
-        this.props.HomeStore.getMenuList({'type':1})
     }
 }
 
