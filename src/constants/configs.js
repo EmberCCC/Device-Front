@@ -1,206 +1,130 @@
-export const MenuObj = {
-  id: 'root',
-  name: '首页',
-  path: '/index',
-  activeRouter: [],
-  displayNone: false,
-  leafMenuModels: [
-    {
-      id: -1,
-      name: '备品备件管理',
-      iconfont: 'icon-instrument',
-      path: '/spare',
-      action: false,
-      displayNone: false,
-      leafMenuModels: [
-        {
-          id: 16,
-          parentId: 1,
-          name: '巡检方案',
-          path: '/spare/standing',
-          action: false,
-          displayNone: false
-        },
-        {
-          id: 17,
-          name: '备件入库单',
-          parentId: 1,
-          path: '/spare/storage',
-          action: false,
-          displayNone: false
-        },
-        {
-          id: 18,
-          name: '备件领用单',
-          parentId: 1,
-          path: '/spare/receive',
-          action: false,
-          displayNone: false
-        }
-      ]
-    },
-    {
-      id: -3,
-      name: '基础信息',
-      iconfont: 'icon-part',
-      path: '/basic',
-      action: false,
-      displayNone: false,
-      leafMenuModels: [
-        {
-          id: 1,
-          parentId: 3,
-          name: '机房',
-          path: '/basic/computer',
-          action: false,
-          displayNone: false
-        },
-        {
-          id: 2,
-          name: '设备类型',
-          parentId: 3,
-          path: '/basic/type',
-          action: false,
-          displayNone: false
-        },
-        {
-          id: 3,
-          name: '部门',
-          parentId: 3,
-          path: '/basic/department',
-          action: false,
-          displayNone: false
-        },
-        {
-          id: 4,
-          parentId: 3,
-          name: '设备状态',
-          path: '/basic/state',
-          action: false,
-          displayNone: false
-        },
-        {
-          id: 5,
-          name: '保养等级与频次',
-          parentId: 3,
-          path: '/basic/level',
-          action: false,
-          displayNone: false
-        },
-        {
-          id: 6,
-          name: '仓库',
-          parentId: 3,
-          path: '/basic/storage',
-          action: false,
-          displayNone: false
-        },
-        {
-          id: 7,
-          parentId: 3,
-          name: '单位',
-          path: '/basic/unit',
-          action: false,
-          displayNone: false
-        },
-        {
-          id: 8,
-          name: '安装地点',
-          parentId: 3,
-          path: '/basic/location',
-          action: false,
-          displayNone: false
-        }
-      ]
-    },
-    {
-      id: -4,
-      name: '设备点检巡检',
-      iconfont: 'icon-chart',
-      path: '/device',
-      action: false,
-      displayNone: false,
-      leafMenuModels: [
-        {
-          id: 9,
-          parentId: 4,
-          name: '设备巡检单',
-          path: '/device/list',
-          action: false,
-          displayNone: false
-        },
-        {
-          id: 10,
-          parentId: 4,
-          name: '巡检方案',
-          path: '/device/plan',
-          action: false,
-          displayNone: false
-        },
-        {
-          id: 11,
-          parentId: 4,
-          name: '巡检内容计划',
-          path: '/device/content',
-          action: false,
-          displayNone: false
-        },
-        {
-          id: 12,
-          parentId: 4,
-          name: '巡检时间计划',
-          path: '/device/time',
-          action: false,
-          displayNone: false
-        }
-      ]
-    },
-    {
-      id: -5,
-      name: '设备维修报修',
-      iconfont: 'icon-system',
-      path: '/equipment',
-      action: false,
-      displayNone: false,
-      leafMenuModels: [
-        {
-          id: 13,
-          parentId: 5,
-          name: '设备报修单',
-          path: '/equipment/list',
-          action: false,
-          displayNone: false
-        },
-      ]
-    },
-    {
-      id: -6,
-      name: '设备维护保养',
-      iconfont: 'icon-system',
-      path: '/maintenance',
-      action: false,
-      displayNone: false,
-      leafMenuModels: [
-        {
-          id: 14,
-          parentId: 6,
-          name: '设备保养单',
-          path: '/maintenance/list',
-          action: false,
-          displayNone: false
-        },
-        {
-          id: 15,
-          parentId: 6,
-          name: '保养计划基础表',
-          path: '/maintenance/base',
-          action: false,
-          displayNone: false
-        }
-      ]
-    },
-  ]
-};
+export const MenuObj = [
+  {
+    "menuId": 1,
+    "menuName": "经营分析报表",
+    "simpleForms": []
+  },
+  {
+    "menuId": 2,
+    "menuName": "设备点检巡检",
+    "simpleForms": [
+      {
+        "formId": 9,
+        "formName": "设备巡检单",
+        "type": 0
+      },
+      {
+        "formId": 19,
+        "formName": "巡检方案",
+        "type": 1
+      },
+      {
+        "formId": 20,
+        "formName": "巡检内容计划",
+        "type": 0
+      },
+      {
+        "formId": 21,
+        "formName": "巡检时间计划",
+        "type": 0
+      }
+    ]
+  },
+  {
+    "menuId": 3,
+    "menuName": "设备维修保修",
+    "simpleForms": [
+      {
+        "formId": 14,
+        "formName": "设备报修单",
+        "type": 1
+      }
+    ]
+  },
+  {
+    "menuId": 4,
+    "menuName": "设备维护保养",
+    "simpleForms": [
+      {
+        "formId": 12,
+        "formName": "设备保养单",
+        "type": 0
+      },
+      {
+        "formId": 13,
+        "formName": "保养计划基础表",
+        "type": 0
+      }
+    ]
+  },
+  {
+    "menuId": 5,
+    "menuName": "备品备件管理",
+    "simpleForms": [
+      {
+        "formId": 10,
+        "formName": "备件入库单",
+        "type": 0
+      },
+      {
+        "formId": 11,
+        "formName": "备件领用单",
+        "type": 0
+      },
+      {
+        "formId": 16,
+        "formName": "备件台账",
+        "type": 0
+      }
+    ]
+  },
+  {
+    "menuId": 6,
+    "menuName": "基础信息",
+    "simpleForms": [
+      {
+        "formId": 1,
+        "formName": "机房",
+        "type": 1
+      },
+      {
+        "formId": 2,
+        "formName": "设备类型",
+        "type": 0
+      },
+      {
+        "formId": 3,
+        "formName": "部门",
+        "type": 0
+      },
+      {
+        "formId": 4,
+        "formName": "设备状态",
+        "type": 0
+      },
+      {
+        "formId": 5,
+        "formName": "保养等级与频次",
+        "type": 0
+      },
+      {
+        "formId": 6,
+        "formName": "仓库",
+        "type": 0
+      },
+      {
+        "formId": 7,
+        "formName": "单位",
+        "type": 0
+      },
+      {
+        "formId": 8,
+        "formName": "安装地点",
+        "type": 0
+      }
+    ]
+  }
+]
 
 
 

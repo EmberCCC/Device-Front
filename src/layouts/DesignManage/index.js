@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-03-28 20:01:19
- * @LastEditTime: 2022-07-31 09:04:36
+ * @LastEditTime: 2022-08-01 11:38:02
  * @LastEditors: EmberCCC 1810888456@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage-test\src\layouts\BasicManage\index.js
@@ -39,7 +39,7 @@ class DesignManage extends React.Component {
             </Menu>
         );
 
-        const { firstFormId, itemDataT } = this.props.HomeStore
+        const { firstFormId, itemDataT, formInfo } = this.props.HomeStore
         const { PersonList } = this.props.DesignStore
         const changeModel = ({ item, key, keyPath, domEvent }) => {
             const arr = {
@@ -65,8 +65,8 @@ class DesignManage extends React.Component {
         const item = [
             { label: '表单设计', key: '1' },
             { label: '扩展功能', key: '2' },
-            { label: '表单发布', key: '3' },
-            { label: '流程设计', key: '4' }
+            { label: '表单发布', key: '3', disabled: formInfo?.['type'] == 0 },
+            { label: '流程设计', key: '4', disabled: formInfo?.['type'] == 0 }
         ]
         return (
             <Layout>
@@ -101,6 +101,7 @@ class DesignManage extends React.Component {
         let PersonListT = { ...toJS(PersonList) };
         this.props.history.push({ pathname: arr[DesignId], state: { firstFormId, itemData, PersonListT } });
         this.props.SocketStore.getMyInfo()
+        this.props.HomeStore.getMenuList({'type':1})
     }
 }
 

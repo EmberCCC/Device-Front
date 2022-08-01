@@ -6,7 +6,7 @@ import { checkCurrentMenu } from 'utils/dataTools';
 import { MenuObj } from '../constants/configs';
 
 class Home {
-  constructor(){
+  constructor() {
     makeObservable(this)
   }
   @observable contentScrollHeight = 0; //当前content滚动高度
@@ -37,16 +37,19 @@ class Home {
 
   @observable openMenuKeys = []
 
+  @observable formInfo = {}
+  @observable menu = []
 
-  @action.bound setValue(key,value){
+
+  @action.bound setValue(key, value) {
     this[key] = value
   }
 
-  @action.bound setFieldValue(value){
+  @action.bound setFieldValue(value) {
     this.fieldValue = value
   }
 
-  @action.bound setLastColumns(){
+  @action.bound setLastColumns() {
     this.lastColumns = []
     this.columns.forEach((item) => {
       if (this.fieldValue.indexOf(item.key) > -1) {
@@ -75,80 +78,32 @@ class Home {
   }
 
   /* 首页初始化获取菜单信息 */
-  @action async getMenuList() {
-    let menuObj = toJS(this.menuObj);
-    // try {
-    //   let res = await services.gets('getMenuList')();
-    //   if (isDataExist(res)) {
-    //     let data = res.data.data.children;
-    //     /* 一级菜单 */
-    //     menuObj.map(lv => {
-    //       Object.assign(lv, {
-    //         id: uuid(),
-    //         displayNone: true
-    //       });
-    //       data.map(item => {
-    //         if (lv.name === item.text) {
-    //           if (item.children) {
-    //             lv.children = item.children;
-    //           }
-    //           Object.assign(lv, {
-    //             id: item.id,
-    //             displayNone: false
-    //           });
-    //         }
-    //       })
-    //     })
-    //     /* 二级菜单 */
-    //     menuObj.map(lv => {
-    //       if (!lv.displayNone) {
-    //         lv.leafMenuModels.map(lv2 => {
-    //           Object.assign(lv2, {
-    //             id: uuid(),
-    //             displayNone: false
-    //           });
-    //           lv.children.map(item => {
-    //             if (item.parentId === lv.id) {
-    //               if (item.text === lv2.name) {
-    //                 Object.assign(lv2, {
-    //                   id: item.id,
-    //                   displayNone: false
-    //                 })
-    //               }
-    //             }
-    //           })
-    //         })
-    //       }
-
-    //     })
-    //     this.isAuth = !isEmpty(data);
-    //     this.menuObj = menuObj;
-    //     /* 设置当前登录页面 */
-    //     let current = {
-    //       id: -1, parentId: -1
-    //     }
-    //     data.map(item => {
-    //       if (current.id > 0) return;
-    //       if (!isEmpty(item.children)) {
-    //         current = item.children[0]
-    //       }
-    //     })
-    //     menuObj.map(lv => {
-    //       if (lv.id === current.parentId) {
-    //         current.url = lv.leafMenuModels.filter(lv2 => lv2.id === current.id)[0].path
-    //       }
-    //     })
-    //     return current.url
-    //   }
-    // } catch (error) {
-    //   console.log(error);
-    // }
+  @action async getMenuList(params) {
+    try {
+      console.log(params['type']);
+      let res = await services.getRequest(services.requestList.getMenuInfo);
+      if (isDataExist(res)) {
+        let flag = false
+        this.setValue('menu', res.data.data)
+        if(params['type'] == 1){
+          res.data.data.forEach(item => {
+            if(item.simpleForms.length > 0){
+              this.setValue('firstFormId',item.simpleForms[0]['formId'])
+              this.setValue('formInfo',item.simpleForms[0])
+              flag = true
+              return;
+            }
+          })
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   /* 菜单加载的初始化 */
   @action initMenu(pathname) {
     // pathname=['/device']
-
     try {
       let menuObj = toJS(this.menuObj);
       let currentMenu = [], crumbsList = [];
@@ -252,7 +207,7 @@ class Home {
     history = uniqBy(history, 'id');
     sessionStorage.setItem('menu', JSON.stringify(history));
   }
-  
+
   @action.bound addCrumbs(obj) {
     this.crumbsList.push(obj);
   }
@@ -261,7 +216,7 @@ class Home {
     this[key] = value;
   }
 
-  
+
 
   //修改展示模式
   @action changeViewModel(value) {
@@ -282,7 +237,7 @@ class Home {
     this.showColumns = value;
   }
 
-  @action.bound initColumns(){
+  @action.bound initColumns() {
     this.showColumns = [];
     this.itemDataT[0].properties.map((item) => {
       this.showColumns.push(item.propertyId);

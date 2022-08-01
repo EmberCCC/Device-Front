@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-11-02 14:29:58
- * @LastEditTime: 2022-07-13 19:24:48
+ * @LastEditTime: 2022-08-01 11:05:32
  * @LastEditors: EmberCCC 1810888456@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage\src\services\home.js
@@ -16,6 +16,7 @@ export const requestList = {
   delBatchDel: '/data/batch/delete',
   getScreenData:'/data/screen/all',
   getScreenDataUser:'/data/screen/user',
+  getMenuInfo:'/data/form/menu',
 
 
   /* 基础信息 */

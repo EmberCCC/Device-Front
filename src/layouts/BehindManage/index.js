@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-31 20:40:52
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-01 05:28:47
+ * @LastEditTime: 2022-08-01 11:13:01
  * @FilePath: \bl-device-manage-test\src\layouts\BehindManage\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -17,12 +17,14 @@ import { NavLink } from "react-router-dom"
 import './index.less'
 const BehindLayout = observer(({ HomeStore, TableStore, SocketStore, FormStore }) => {
     const { selectFormId, arr1, arr2, arr3, arr4 } = FormStore
+    const { menu } = HomeStore
     const [operation, setOperation] = useState(1);
     const [type, setType] = useState(1)
     const [openKey, setOpenKey] = useState([])
     const [loading, setLoading] = useState(false)
     useEffect(() => {
         FormStore.getFormAuth({ 'formId': selectFormId })
+        HomeStore.getMenuList();
     }, [])
     const handleUpdate = (value) => {
         setLoading(true)
@@ -106,8 +108,8 @@ const BehindLayout = observer(({ HomeStore, TableStore, SocketStore, FormStore }
                                 </div>
                                 <div className="operation_left_content">
                                     {
-                                        MenuObj.leafMenuModels.map((item, index) => {
-                                            let idIndex = openKey.indexOf(item['id'])
+                                        menu.map((item, index) => {
+                                            let idIndex = openKey.indexOf(item['menuId'])
                                             return (
                                                 <div className='left_menu_father' key={index}>
                                                     <div onClick={() => {
@@ -115,7 +117,7 @@ const BehindLayout = observer(({ HomeStore, TableStore, SocketStore, FormStore }
                                                         if (idIndex > -1) {
                                                             iArr.splice(idIndex, 1)
                                                         } else {
-                                                            iArr.push(item['id'])
+                                                            iArr.push(item['menuId'])
                                                         }
                                                         setOpenKey(iArr)
                                                     }} className='left_menu_f1'>
@@ -125,18 +127,18 @@ const BehindLayout = observer(({ HomeStore, TableStore, SocketStore, FormStore }
                                                         {idIndex <= -1 && (
                                                             <FolderOutlined className='node_icon' style={{ color: "#0db3a6" }} />
                                                         )}
-                                                        <span className='node_name'>{item.name}
+                                                        <span className='node_name'>{item.menuName}
                                                         </span>
                                                     </div>
                                                     {
-                                                        item.leafMenuModels.length > 0 && (
-                                                            item.leafMenuModels.map((one, oIndex) => {
+                                                        item.simpleForms.length > 0 && (
+                                                            item.simpleForms.map((one, oIndex) => {
                                                                 return (
                                                                     <div key={oIndex} onClick={() => {
                                                                         setLoading(true)
-                                                                        FormStore.setValue('selectFormId', one['id'])
-                                                                        FormStore.getFormAuth({ 'formId': one['id'] }).then(() => setLoading(false))
-                                                                    }} className={`left_menu_child ${idIndex > -1 ? 'display' : 'undisplay'} ${selectFormId == one['id'] ? 'actived' : ''}`}><FileTextOutlined className='node_icon' style={{ color: '#5da0cc' }} /><span className='node_name'>{one.name}</span></div>
+                                                                        FormStore.setValue('selectFormId', one['formId'])
+                                                                        FormStore.getFormAuth({ 'formId': one['formId'] }).then(() => setLoading(false))
+                                                                    }} className={`left_menu_child ${idIndex > -1 ? 'display' : 'undisplay'} ${selectFormId == one['id'] ? 'actived' : ''}`}><FileTextOutlined className='node_icon' style={{ 'color': `${one['type'] == 0 ? "#5da0cc" : "rgb(245, 164, 57)"}` }} /><span className='node_name'>{one.formName}</span></div>
                                                                 )
                                                             })
                                                         )

@@ -26,6 +26,7 @@ class MenuLayout extends Component {
   }
   render() {
     const isMobile = this.props.mobile === 'false';
+    const {menu} = this.props.HomeStore;
     const { waitList, launchList, handleList, copyList } = this.props.MessageStore;
     const { userAuth } = this.props.SocketStore
     return (
@@ -111,8 +112,8 @@ class MenuLayout extends Component {
             </div>
             <div className='left_menu_all'>
               {
-                MenuObj.leafMenuModels.map((item, index) => {
-                  let idIndex = this.store.openMenuKeys.indexOf(item['id']);
+                menu.map((item, index) => {
+                  let idIndex = this.store.openMenuKeys.indexOf(item['menuId']);
                   return (
                     <div className='left_menu_father' key={index}>
                       <div onClick={() => {
@@ -120,7 +121,7 @@ class MenuLayout extends Component {
                         if (idIndex > -1) {
                           iArr.splice(idIndex, 1)
                         } else {
-                          iArr.push(item['id'])
+                          iArr.push(item['menuId'])
                         }
                         this.store.setValue('openMenuKeys', iArr)
                       }} className='left_menu_f1'>
@@ -130,20 +131,24 @@ class MenuLayout extends Component {
                         {idIndex <= -1 && (
                           <FolderFilled className='node_icon' style={{ color: "#0db3a6" }} />
                         )}
-                        <span className='node_name'>{item.name}
+                        <span className='node_name'>{item.menuName}
                         </span>
                       </div>
                       {
-                        item.leafMenuModels.length > 0 && (
-                          item.leafMenuModels.map((one, oIndex) => {
+                        item.simpleForms.length > 0 && (
+                          item.simpleForms.map((one, oIndex) => {
                             return (
                               <div key={oIndex} onClick={() => {
                                 this.props.history.push({ pathname: '/common' });
-                                this.props.FormStore.getFormField({ 'formId': one['id'] })
-                                this.props.HomeStore.setValue('firstFormId', one['id'])
-                                this.props.FormStore.getFormAuthInfo({ 'formId': one['id'] })
+                                this.props.FormStore.getFormField({ 'formId': one['formId'] })
+                                this.props.HomeStore.setValue('firstFormId', one['formId'])
+                                this.props.FormStore.getFormAuthInfo({ 'formId': one['formId'] })
+                                this.props.HomeStore.setValue('formInfo', one)
                                 this.props.SocketStore.getMyInfo()
-                              }} className={`left_menu_child ${idIndex > -1 ? 'display' : 'undisplay'}`}><FileTextOutlined className='node_icon' style={{ color: '#5da0cc' }} /><span className='node_name'>{one.name}</span></div>
+                              }} className={`left_menu_child ${idIndex > -1 ? 'display' : 'undisplay'}`}>
+                                <FileTextOutlined className='node_icon' style={{ 'color': `${one['type'] == 0 ? "#5da0cc" : "rgb(245, 164, 57)"}` }} />
+                                <span className='node_name'>{one.formName}</span>
+                              </div>
                             )
                           })
                         )
@@ -178,7 +183,8 @@ class MenuLayout extends Component {
       this.props.MessageStore.getCopyList()
       this.props.SocketStore.getMyInfo();
     }
-
+    this.props.HomeStore.initMenu(this.props.location.pathname);
+    this.props.HomeStore.getMenuList()
     // this.props.HomeStore.getMenuList(this.props.location.pathname).then(() => {
     //   this.props.HomeStore.initMenu(this.props.location.pathname);
     // });

@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-05 10:16:45
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-01 02:39:17
+ * @LastEditTime: 2022-08-01 11:33:20
  * @FilePath: \bl-device-manage-test\src\layouts\FormEdit\changeTool.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -82,33 +82,39 @@ function getOneForm(fields, fieldIds, type, flag, authInfo) {
   return result
 }
 export function restore(obj, type) {
-  let formArr = {}
-  let fieldInfo;
-  let properties;
-  let authField = {}
-  if (obj.hasOwnProperty('fieldsAuth')) {
-    authField = JSON.parse(obj['fieldsAuth'])
-  }
-  console.log(authField);
-
-  if (obj.hasOwnProperty('form') && obj['form'].hasOwnProperty('formFields')) {
-    fieldInfo = JSON.parse(obj['form']['formFields']);
-    properties = JSON.parse(obj['form']['properties']);
-    const fields = obj['fields'];
-    for (let index = 0; index < fieldInfo.length; index++) {
-      let formItem = {}
-      const element = fieldInfo[index];
-      formItem['properties'] = getOneForm(fields, element['fieldsId'], type, obj.hasOwnProperty('fieldsAuth'), authField)
-      for (const key in properties) {
-        if (Object.hasOwnProperty.call(properties, key)) {
-          const element = properties[key];
-          formItem[key] = element
-        }
-      }
-      formArr[fieldInfo[index]['name']] = formItem;
+  console.log(obj);
+  if(JSON.stringify(obj) != "{}"){
+    let formArr = {}
+    let fieldInfo;
+    let properties;
+    let authField = {}
+    if (obj.hasOwnProperty('fieldsAuth')) {
+      authField = JSON.parse(obj['fieldsAuth'])
     }
+    console.log(authField);
+  
+    if (obj.hasOwnProperty('form') && obj['form'].hasOwnProperty('formFields')) {
+      fieldInfo = JSON.parse(obj['form']['formFields']);
+      properties = JSON.parse(obj['form']['properties']);
+      const fields = obj['fields'];
+      for (let index = 0; index < fieldInfo.length; index++) {
+        let formItem = {}
+        const element = fieldInfo[index];
+        formItem['properties'] = getOneForm(fields, element['fieldsId'], type, obj.hasOwnProperty('fieldsAuth'), authField)
+        for (const key in properties) {
+          if (Object.hasOwnProperty.call(properties, key)) {
+            const element = properties[key];
+            formItem[key] = element
+          }
+        }
+        formArr[fieldInfo[index]['name']] = formItem;
+      }
+    }
+    return formArr;
+  }else{
+    return {}
   }
-  return formArr;
+  
 }
 function getOneForm2(fields, fieldIds) {
   let result = {}

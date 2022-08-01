@@ -79,7 +79,7 @@ export function put(url, data, options) {
   console.log(JSON.stringify(data));
   if (url === '/uaa/login/token') {
     console.log(`${url}?${stringify(data)}`)
-    return request(`${url}?${stringify(data)}`, {
+    return request(url, {
       method: 'POST',
       credentials: 'same-origin',
       headers: {
