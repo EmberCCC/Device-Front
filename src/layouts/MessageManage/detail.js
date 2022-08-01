@@ -2,13 +2,13 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-30 05:48:44
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-01 07:22:20
+ * @LastEditTime: 2022-08-01 09:23:49
  * @FilePath: \bl-device-manage-test\src\layouts\MessageManage\detail.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 import { ApartmentOutlined, CopyOutlined, FormOutlined, NodeExpandOutlined, PlayCircleOutlined, PoweroffOutlined } from "@ant-design/icons"
 import { createGraphConfig, FlowchartCanvas, XFlow, XFlowCanvas, XFlowGraphCommands } from "@antv/xflow"
-import { Button, Drawer, Input, Tabs } from "antd"
+import { Button, Drawer, Input, message, Tabs } from "antd"
 import FormRender, { useForm } from "form-render"
 import { restore, restore2 } from "layouts/FormEdit/changeTool"
 import { Self_divider } from "layouts/FormEdit/self_item/self_divider"
@@ -43,28 +43,28 @@ const DetailPage = observer(({ MessageStore, HomeStore, FlowStore, FormStore, pr
     }, [])
     const useGraphConfig = createGraphConfig(graphConfig => {
         graphConfig.setX6Config({
-            connecting:{
-                allowBlank:false,
-                allowEdge:false,
-                allowLoop:false,
-                allowMulti:false,
-                allowNode:false,
-                allowPort:false,
-                
+            connecting: {
+                allowBlank: false,
+                allowEdge: false,
+                allowLoop: false,
+                allowMulti: false,
+                allowNode: false,
+                allowPort: false,
+
             },
-            grid:false,
-            scroller:{
-                enabled:false
+            grid: false,
+            scroller: {
+                enabled: false
             },
-            mousewheel:{
-                enabled:false
+            mousewheel: {
+                enabled: false
             },
-            panning:{
-                enabled:false
+            panning: {
+                enabled: false
             },
-            interacting:{
-                nodeMovable:false,
-                edgeLabelMovable:false
+            interacting: {
+                nodeMovable: false,
+                edgeLabelMovable: false
             }
         })
         graphConfig.setDefaultNodeRender(props => {
@@ -86,8 +86,10 @@ const DetailPage = observer(({ MessageStore, HomeStore, FlowStore, FormStore, pr
         const { firstFormId } = HomeStore;
         let checkArr = getCheckArr(schema);
         if (checkArr.length > 0) {
-            FormStore.changeDataCheck({ 'formId': info['formId'], 'data': { ...formData, ...formList.getValues(), ...data }, 'checkFieldIds': checkArr, 'dataId': info['dataId'] }).then(() => {
-                FlowStore.agreeFlow({ 'workLogId': info['id'] }, { 'message': ref.current.input.value, 'attachment': "" })
+            FormStore.changeDataCheck({ 'formId': info['formId'], 'data': { ...formData, ...formList.getValues(), ...data }, 'checkFieldIds': checkArr, 'dataId': info['dataId'] }, (flag) => {
+                if (flag) {
+                    FlowStore.agreeFlow({ 'workLogId': info['id'] }, { 'message': ref.current.input.value, 'attachment': "" })
+                }
             })
         } else {
             FormStore.changeData({ 'formId': info['formId'], 'data': { ...formData, ...formList.getValues(), ...data }, 'dataId': info['dataId'] }).then(() => {
@@ -224,8 +226,10 @@ const DetailPage = observer(({ MessageStore, HomeStore, FlowStore, FormStore, pr
                             <div className='form_footer'>
                                 <div style={{ fontWeight: '700' }}>审批意见</div>
                                 <Input ref={ref} style={{ marginTop: "20px", resize: 'none', marginBottom: '50px' }} />
-                                <Button onClick={form.submit} type="primary">提交</Button>
-                                <Button onClick={handleCancel} style={{ marginLeft: '20px' }}>取消</Button>
+                                <div>
+                                    <Button onClick={form.submit} type="primary">提交</Button>
+                                    <Button onClick={handleCancel} style={{ marginLeft: '20px' }}>取消</Button>
+                                </div>
                             </div>
                         </div>
                     )

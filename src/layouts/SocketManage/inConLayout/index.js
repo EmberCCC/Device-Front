@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-19 23:03:37
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-01 02:26:49
+ * @LastEditTime: 2022-08-01 09:44:34
  * @FilePath: \bl-device-manage-test\src\layouts\SocketManage\inConLayout\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -189,12 +189,12 @@ const InConLayout = observer(({ SocketStore }) => {
         },
     ]
     const handleChange = (value) => {
-        setTotal(value.target.value)
+        setTotal(value)
         SocketStore.setValue('selectRow', [])
         SocketStore.setValue('selectRowKeys', [])
         SocketStore.setValue('allUsers', [])
         SocketStore.setValue('roleList', [])
-        if (value.target.value == 'department') {
+        if (value == 'department') {
             SocketStore.setValue('SelectKey', '全部成员')
             SocketStore.getAllUsers();
             SocketStore.getAllDepartment()
@@ -203,7 +203,7 @@ const InConLayout = observer(({ SocketStore }) => {
             SocketStore.getAllRoles();
             SocketStore.getOneRoleUser({ 'roleId': 1 });
         }
-        console.log(value.target.value);
+        console.log(value);
     }
     const handleClick = ({ item, key, keyPath, domEvent }) => {
         if (key == '全部成员') {
@@ -409,10 +409,12 @@ const InConLayout = observer(({ SocketStore }) => {
             <div className="in_all">
                 <div className="in_left">
                     <div className="inL_first">
-                        <Radio.Group onChange={handleChange} defaultValue={total}>
-                            <Radio.Button value='department'>部门</Radio.Button>
-                            <Radio.Button value='role' disabled={!(userAuth['creater'] || userAuth['sysAdmin'] || userAuth?.['authDetails']?.['addressBook']?.['role'][0])}>角色</Radio.Button>
-                        </Radio.Group>
+                        <div className={`inL_first_de ${total == 'department' ? 'active' : ''}`} onClick={() => {
+                            handleChange('department')
+                        }}>部门</div>
+                        <div className={`inL_first_ro ${total == 'role' ? 'active' : ''}`} onClick={() => {
+                            handleChange('role')
+                        }}>角色</div>
                     </div>
                     {
                         total == 'department' &&
@@ -526,17 +528,17 @@ const InConLayout = observer(({ SocketStore }) => {
                                                 onRow={(key, record) => {
                                                     return {
                                                         onClick: event => {
-                                                            if(userAuth['creater'] || userAuth['sysAdmin']){
+                                                            if (userAuth['creater'] || userAuth['sysAdmin']) {
                                                                 SocketStore.getOneUser({ 'userId': key['userId'] }).then(() => {
                                                                     console.log(toJS(mulSelect));
                                                                     form.resetFields()
                                                                     SocketStore.getAllRoles();
                                                                     SocketStore.setValue('visible', true);
                                                                 })
-                                                            }else{
+                                                            } else {
                                                                 message.info('权限不足，请联系管理员')
                                                             }
-                                                            
+
                                                         }
                                                     }
                                                 }}
