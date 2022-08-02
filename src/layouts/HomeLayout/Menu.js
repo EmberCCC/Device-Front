@@ -26,7 +26,7 @@ class MenuLayout extends Component {
   }
   render() {
     const isMobile = this.props.mobile === 'false';
-    const {menu} = this.props.HomeStore;
+    const { menu } = this.props.HomeStore;
     const { waitList, launchList, handleList, copyList } = this.props.MessageStore;
     const { userAuth } = this.props.SocketStore
     return (
@@ -144,8 +144,11 @@ class MenuLayout extends Component {
                                 this.props.HomeStore.setValue('firstFormId', one['formId'])
                                 this.props.FormStore.getFormAuthInfo({ 'formId': one['formId'] })
                                 this.props.HomeStore.setValue('formInfo', one)
+                                this.props.TableStore.setValue('model', 'submit')
                                 this.props.SocketStore.getMyInfo()
-                              }} className={`left_menu_child ${idIndex > -1 ? 'display' : 'undisplay'}`}>
+                                sessionStorage.setItem('formId', one['formId'])
+                                sessionStorage.setItem('formName', JSON.stringify(one))
+                              }} className={`left_menu_child ${idIndex > -1 ? 'display' : 'undisplay'} ${this.props.HomeStore.firstFormId == one['formId'] ? 'selectForm' : ''}`}>
                                 <FileTextOutlined className='node_icon' style={{ 'color': `${one['type'] == 0 ? "#5da0cc" : "rgb(245, 164, 57)"}` }} />
                                 <span className='node_name'>{one.formName}</span>
                               </div>

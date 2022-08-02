@@ -57,8 +57,17 @@
     cursor: pointer;
 }
 .edit_main{
+    height: 100%;
     overflow-y: auto;
 }
+.edit_main .mid-layout{
+    min-height: 400px;
+    height: unset;
+}
 .myTabs{
-    margin: 0 !important;
+    /* margin: 0 !important; */
+}
+.edit_main .myTabs{
+    overflow: auto;
+    min-height: 400px;
 }

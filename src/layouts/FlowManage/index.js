@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-04-11 16:11:20
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-02 00:06:51
+ * @LastEditTime: 2022-08-02 14:25:19
  * @FilePath: \bl-device-manage-test\src\layouts\FlowManage\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -17,96 +17,22 @@
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 import { BulbOutlined, CopyOutlined, FormOutlined, NodeExpandOutlined, PlayCircleOutlined, PoweroffOutlined } from "@ant-design/icons";
-import { CanvasToolbar, createGraphConfig, XFlow, XFlowNodeCommands, CanvasScaleToolbar, CanvasSnapline, JsonSchemaForm, NsJsonSchemaForm, CanvasNodePortTooltip, FlowchartCanvas, FlowchartExtension, XFlowGraphCommands, randomInt, XFlowEdgeCommands } from "@antv/xflow";
+import { CanvasToolbar, XFlow, XFlowNodeCommands, CanvasScaleToolbar, CanvasSnapline, JsonSchemaForm, NsJsonSchemaForm, CanvasNodePortTooltip, FlowchartCanvas, FlowchartExtension, XFlowGraphCommands, randomInt, XFlowEdgeCommands } from "@antv/xflow";
 import { inject, observer } from "mobx-react";
 import AuthShape from './Self_Form/field_auth';
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useReducer, useState } from "react";
 import './index.less'
 import '@antv/xflow/dist/index.css'
 import { useToolbarConfig } from "./tool_bar";
-import { controlMapService } from './Self_Form'
 import { set } from "lodash";
 import Node_name from "./Self_Form/node_name";
 import Node_copy from "./Self_Form/node_copy";
 import Node_charge from "./Self_Form/node_charge";
 import Flow_Config from "./flowConfig";
 import { changeFlow } from "./changeTool";
-import { message, Popover, Spin } from "antd";
+import { Popover, Spin } from "antd";
 import { toJS } from "mobx";
-export const useGraphConfig = createGraphConfig(graphConfig => {
-  graphConfig.setX6Config({
-    grid: false,
-    mousewheel: {
-      enabled: true,
-      minScale: 0.5,
-      maxScale: 3,
-    },
-    // 节点是否可旋转
-    rotating: false,
-    // 节点是否可调整大小
-    resizing: false,
-    selecting: {
-      enabled: false,
-      multiple: false,
-      selectCellOnMoved: false,
-      showNodeSelectionBox: false,
-      movable: false,
-    },
-    connecting: {
-      router: {
-        name: 'manhattan',
-        args: {
-          padding: 0,
-        },
-      },
-      connector: {
-        name: 'rounded',
-        args: {
-          radius: 2,
-        },
-      },
-      anchor: 'center',
-      connectionPoint: 'anchor',
-      allowBlank: false,
-      snap: {
-        radius: 20,
-      },
-      validateConnection({ targetMagnet }) {
-        return !!targetMagnet
-      },
-    },
-  })
-  graphConfig.setDefaultEdgeRender(props => {
-    console.log(props);
-  })
-  graphConfig.setDefaultNodeRender(props => {
-    if (props.data.typeId == '1') {
-      return <div className="react-node"><FormOutlined /> {props.data.label} </div>;
-    } else if (props.data.typeId == '2') {
-      return <div className="react-node"><CopyOutlined /> {props.data.label} </div>;
-    } else if (props.data.typeId == '3') {
-      return <div className="react-node"><NodeExpandOutlined /> {props.data.label} </div>;
-    } else if (props.data.typeId == '-2') {
-      return <div className="react-node"><PoweroffOutlined /> {props.data.label} </div>;
-    } else if (props.data.typeId == '-1') {
-      return <div className="react-node"><PlayCircleOutlined /> {props.data.label} </div>;
-    }
-  });
-});
 const configCanvas = {
-  setDefaultNodeRender: (props) => {
-    if (props.data.typeId == '1') {
-      return <div className="react-node"><FormOutlined /> {props.data.label} </div>;
-    } else if (props.data.typeId == '2') {
-      return <div className="react-node"><CopyOutlined /> {props.data.label} </div>;
-    } else if (props.data.typeId == '3') {
-      return <div className="react-node"><NodeExpandOutlined /> {props.data.label} </div>;
-    } else if (props.data.typeId == '-2') {
-      return <div className="react-node"><PoweroffOutlined /> {props.data.label} </div>;
-    } else if (props.data.typeId == '-1') {
-      return <div className="react-node"><PlayCircleOutlined /> {props.data.label} </div>;
-    }
-  },
   grid: false,
   mousewheel: {
     enabled: true,
@@ -166,9 +92,7 @@ const FlowManage = observer(({ FlowStore, HomeStore, TableStore, SocketStore, pr
   const { firstFormId } = HomeStore
   const [load, setIsload] = useState(false)
   const [app, setApp] = useState(null)
-  const [toolbarConfig,setBoolbarConfig] = useState(useToolbarConfig(props))
-  // const toolbarConfig = useToolbarConfig(props)
-  const graphConfig = useGraphConfig(props);
+  const [toolbarConfig, setBoolbarConfig] = useState(useToolbarConfig(props))
   const forceUpdate = useReducer((bool) => !bool)[1]
   var NsJsonForm;
   (function (NsJsonForm) {
@@ -340,10 +264,6 @@ const FlowManage = observer(({ FlowStore, HomeStore, TableStore, SocketStore, pr
     )
     // }
   }
-  useEffect(() => {
-    // FlowStore.getOneFlow({ 'formId': firstFormId })
-    console.log(firstFormId);
-  }, [])
   return (
     <div className="flow_all">
       <div className="edit_header">
@@ -438,7 +358,6 @@ const FlowManage = observer(({ FlowStore, HomeStore, TableStore, SocketStore, pr
         <Spin spinning={load} tip={'loading...'}>
           <XFlow
             onLoad={onLoad}
-            // config={graphConfig}
             className="xflow-workspace"
             graphData={flowProperty}
           >
@@ -456,6 +375,9 @@ const FlowManage = observer(({ FlowStore, HomeStore, TableStore, SocketStore, pr
               position={{ right: 500 }} />
             <FlowchartCanvas
               config={configCanvas}
+              onConfigChange={() => {
+                console.log(1);
+              }}
               useConfig={(config) => {
                 config.setDefaultNodeRender(props => {
                   if (props.data.typeId == '1') {
@@ -478,7 +400,6 @@ const FlowManage = observer(({ FlowStore, HomeStore, TableStore, SocketStore, pr
               <CanvasNodePortTooltip />
               <JsonSchemaForm
                 getCustomRenderComponent={NsJsonForm.getCustomRenderComponent}
-                controlMapService={controlMapService}
                 formSchemaService={NsJsonForm.formSchemaService}
                 formValueUpdateService={NsJsonForm.formValueUpdateService}
                 position={{ top: 0, bottom: 0, right: 0, width: 290 }} />

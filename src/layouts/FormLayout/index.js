@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-02 03:21:54
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-01 11:25:32
+ * @LastEditTime: 2022-08-02 11:14:09
  * @FilePath: \bl-device-manage-test\src\layouts\FormLayout\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -85,7 +85,7 @@ const FormLayout = observer(({ HomeStore, FormStore }) => {
   }
   return (
     <Spin spinning={FormStore.loading} tip={'loading...'} wrapperClassName={'form_layout'}>
-      <div style={{height:'100%'}}>
+      <div style={{ height: '100%' }}>
         <div className='form_layout'>
           <FormRender schema={schema['root']} widgets={{ self_divider: Self_divider }}
             form={form} onFinish={onFinish} style={{ overflowY: 'auto' }} />
@@ -95,7 +95,7 @@ const FormLayout = observer(({ HomeStore, FormStore }) => {
             }
           </Tabs>
         </div>
-        <Button className='form_btn_sub' onClick={form.submit} type="primary">提交</Button>
+        <Button onClick={form.submit} type="primary">提交</Button>
       </div>
     </Spin>
   );

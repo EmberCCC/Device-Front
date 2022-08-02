@@ -47,12 +47,12 @@ class HomeLayout extends Component {
       </Layout>
     </Layout>;
     return (
-      <div id='Assets'>
+      <div id='Assets' style={{height:'100%'}}>
         <ContainerQuery query={Media_Query}>
           {params => {
             this.getMediaQuery(params);
             return <Context.Provider value={this.getContext()}>
-              <div className={classnames(params)}>
+              <div className={classnames(params)} style={{height:'100%'}}>
                 {layout}
               </div>
             </Context.Provider>
@@ -116,12 +116,7 @@ class HomeLayout extends Component {
     });
     /* 进入即请求菜单 */
     if (this.props.history.location.pathname !== '/login') {
-      this.props.HomeStore.getMenuList().then((url) => {
-        if (this.props.history.location.pathname.indexOf('index') === -1) {
-          this.props.history.push(url)
-          this.props.HomeStore.initMenu(this.props.history.location.pathname)
-        }
-      })
+      this.props.HomeStore.getMenuList()
     }
   }
 }

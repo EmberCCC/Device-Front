@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-24 16:26:33
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-07-31 08:28:19
+ * @LastEditTime: 2022-08-02 14:52:40
  * @FilePath: \bl-device-manage-test\src\layouts\FlowManage\Self_Form\field_auth.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -18,7 +18,19 @@ const AuthShape = observer(({ FlowStore, HomeStore, TableStore, FormStore, data,
     const { formField } = FormStore
     const { loading } = FormStore
     useEffect(() => {
-        // FormStore.getFormField({ 'formId': HomeStore.firstFormId })
+        console.log(data);
+        console.log(toJS(formField['fields']));
+        let iObj = {}
+        formField['fields'].map((item) => {
+            if (!data.hasOwnProperty(item['id'])) {
+                iObj[item['id']] = ['look']
+            } else if (data[item['id']].indexOf('look') <= -1) {
+                iObj[item['id']] = data[item['id']].push('look')
+            } else {
+                iObj[item['id']] = data[item['id']];
+            }
+        })
+        console.log(iObj);
     }, [])
     return (
         <div className="all_auth">
@@ -42,6 +54,31 @@ const AuthShape = observer(({ FlowStore, HomeStore, TableStore, FormStore, data,
                 </Row>
             </div>
             <div className="auth_item">
+                <div className="auth_one">
+                    <Row>
+                        <Col span={9}>全选</Col>
+                        <Col span={15}>
+                            <Checkbox.Group style={{ width: '100%' }} onChange={(value) => {
+                                console.log(value);
+                            }}>
+                                <Row>
+                                    <Col span={8}><Checkbox value={'-1'} /></Col>
+                                    {
+                                        typeId == 1 && (
+                                            <Col span={8}><Checkbox value={'-2'} /></Col>
+                                        )
+                                    }
+                                    {
+                                        typeId == -1 && (
+                                            <Col span={8}><Checkbox value={'-2'} /></Col>
+                                        )
+                                    }
+                                </Row>
+                            </Checkbox.Group>
+
+                        </Col>
+                    </Row>
+                </div>
                 {
                     formField['fields'].map((item, index) => {
                         let obj = {}

@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-02 08:07:00
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-02 01:31:41
+ * @LastEditTime: 2022-08-02 13:29:37
  * @FilePath: \bl-device-manage-test\src\constants\field_config.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -36,7 +36,10 @@ var elements = [
                 type: 'string',
                 enum: ['1', '2', '3'],
                 enumNames: ['自定义', '数据联动', '公式编辑'],
-                widget: 'select'
+                widget: 'select',
+                props: {
+                    defaultValue: '1'
+                }
             },
             default: {
                 type: 'any',
@@ -63,7 +66,10 @@ var elements = [
                     '(^\\d{15}$)|(^\\d{18}$)|(^\\d{17}(\\d|X|x)$)',
                     '^\\w+([-+.]\\w+)\\*@\\w+([-.]\\w+)\\*\\.\\w+([-.]\\w+)\\*$'],
                 enumNames: ['无', '手机号码', '电话号码', '邮政编码', '身份证号码', '邮箱'],
-                widget: 'select'
+                widget: 'select',
+                props: {
+                    defaultValue: '无'
+                }
             },
             scan: {
                 title: '扫码',
@@ -136,7 +142,10 @@ var elements = [
                 type: 'string',
                 enum: ['1', '2', '3'],
                 enumNames: ['自定义', '数据联动', '公式编辑'],
-                widget: 'select'
+                widget: 'select',
+                props: {
+                    defaultValue: '1'
+                }
             },
             default: {
                 type: 'any',
@@ -218,7 +227,10 @@ var elements = [
                 type: 'string',
                 enum: ['1', '2', '3'],
                 enumNames: ['自定义', '数据联动', '公式编辑'],
-                widget: 'select'
+                widget: 'select',
+                props: {
+                    defaultValue: '1'
+                }
             },
             default: {
                 type: 'any',
@@ -306,19 +318,6 @@ var elements = [
                 type: 'string',
                 format: '{{rootValue.format}}'
             },
-            // default_type: {
-            //     title: '默认值',
-            //     type: 'string',
-            //     enum: ['1', '2', '3'],
-            //     enumNames: ['自定义', '数据联动', '公式编辑'],
-            //     widget: 'select'
-            // },
-            // default: {
-            //     type: 'any',
-            //     widget: 'link_item',
-            //     format: '{{rootValue.format}}',
-            //     dependencies: ['default_type']
-            // },
             width: {
                 title: '元素宽度',
                 type: 'string',
@@ -347,24 +346,12 @@ var elements = [
         schema: {
             title: '单选按钮组',
             type: 'string',
-            enum: ['1', '2', '3'],
-            enumNames: ['选项一', '选项二', '选项三'],
             widget: 'radio',
         },
         setting: {
             title: {
                 title: '标题',
                 type: 'string',
-            },
-            className:{
-                title: '展示方式',
-                type: 'string',
-                widget: 'radio',
-                enum: ['item_row', 'item_column'],
-                enumNames: ['横向排列', '纵向排列'],
-                props:{
-                    defaultValue:'item_row'
-                }
             },
             title_vis: {
                 title: '显示标题',
@@ -378,14 +365,14 @@ var elements = [
                 type: 'string',
                 widget: 'RichText'
             },
-            display_ways: {
+            className: {
                 title: '展示方式',
                 type: 'string',
                 widget: 'radio',
-                enum: ['row', 'column'],
+                enum: ['item_row', 'item_column'],
                 enumNames: ['横向排列', '纵向排列'],
-                props:{
-                    defaultValue:'row'
+                props: {
+                    defaultValue: 'item_row'
                 }
             },
             enumList: {
@@ -406,8 +393,11 @@ var elements = [
                         label: {
                             title: '',
                             type: 'string',
+                            hidden:true,
                             className: 'frg-options-input',
-                            props: {},
+                            props: {
+                                value:"{{rootValue.value}}"
+                            },
                             placeholder: '名称'
                         }
                     }
@@ -448,8 +438,6 @@ var elements = [
             items: {
                 type: 'string'
             },
-            enum: ['A', 'B', 'C', 'D'],
-            enumNames: ['杭州', '武汉', '湖州', '贵阳']
         },
         setting: {
             title: {
@@ -468,12 +456,15 @@ var elements = [
                 type: 'string',
                 widget: 'RichText'
             },
-            display_ways: {
+            className: {
                 title: '展示方式',
                 type: 'string',
                 widget: 'radio',
-                enum: ['row', 'column'],
-                enumNames: ['横向排列', '纵向排列']
+                enum: ['item_row', 'item_column'],
+                enumNames: ['横向排列', '纵向排列'],
+                props: {
+                    defaultValue: 'item_row'
+                }
             },
             enumList: {
                 title: '选项',
@@ -493,8 +484,11 @@ var elements = [
                         label: {
                             title: '',
                             type: 'string',
+                            hidden:true,
                             className: 'frg-options-input',
-                            props: {},
+                            props: {
+                                value:"{{rootValue.value}}"
+                            },
                             placeholder: '名称'
                         }
                     }
@@ -531,8 +525,6 @@ var elements = [
         schema: {
             title: '下拉框',
             type: 'string',
-            enum: ['a', 'b', 'c'],
-            enumNames: ['早', '中', '晚'],
             widget: 'select'
         },
         setting: {
@@ -574,8 +566,11 @@ var elements = [
                         label: {
                             title: '',
                             type: 'string',
+                            hidden:true,
                             className: 'frg-options-input',
-                            props: {},
+                            props: {
+                                value:"{{rootValue.value}}"
+                            },
                             placeholder: '名称'
                         }
                     }
@@ -627,8 +622,6 @@ var elements = [
             title: '下拉复选框',
             description: '下拉多选',
             type: 'array',
-            enum: ['A', 'B', 'C', 'D'],
-            enumNames: ['杭州', '武汉', '湖州', '贵阳'],
             widget: 'multiSelect'
         },
         setting: {
@@ -666,8 +659,11 @@ var elements = [
                         label: {
                             title: '',
                             type: 'string',
+                            hidden:true,
                             className: 'frg-options-input',
-                            props: {},
+                            props: {
+                                value:"{{rootValue.value}}"
+                            },
                             placeholder: '名称'
                         }
                     }
