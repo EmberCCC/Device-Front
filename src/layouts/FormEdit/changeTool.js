@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-05 10:16:45
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-02 13:46:52
+ * @LastEditTime: 2022-08-02 21:43:24
  * @FilePath: \bl-device-manage-test\src\layouts\FormEdit\changeTool.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -54,6 +54,7 @@ function getOneForm(fields, fieldIds, type, flag, authInfo) {
       if (field != null) {
         if (field['id'] == item) {
           const detailJson = JSON.parse(field['detailJson']);
+          const id = field['id']
           const name = type == 'submit' ? field['id'] : "".concat(detailJson['typeId'], "_").concat(nanoid(6))
           if (type == 'submit') {
             if (detailJson.hasOwnProperty('title_vis') && detailJson['title_vis'] == false) {
@@ -61,9 +62,9 @@ function getOneForm(fields, fieldIds, type, flag, authInfo) {
             }
           }
           if (flag && type == 'submit') {
-            if (authInfo.hasOwnProperty(detailJson['fieldId'])) {
-              if (authInfo[detailJson['fieldId']].indexOf('look') > -1) {
-                if (authInfo[detailJson['fieldId']].indexOf('edit') > -1) {
+            if (authInfo.hasOwnProperty(id)) {
+              if (authInfo[id].indexOf('look') > -1) {
+                if (authInfo[id].indexOf('edit') > -1) {
                   detailJson['disabled'] = false
                 } else {
                   detailJson['disabled'] = true;
