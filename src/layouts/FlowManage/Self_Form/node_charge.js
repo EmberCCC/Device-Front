@@ -2,13 +2,13 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-24 21:41:47
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-01 05:08:03
+ * @LastEditTime: 2022-08-02 09:09:17
  * @FilePath: \bl-device-manage-test\src\layouts\FlowManage\Self_Form\node_charge.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 import { ApartmentOutlined, FolderOutlined, UserAddOutlined, UserOutlined } from "@ant-design/icons";
 import { MODELS, useXFlowApp, XFlowNodeCommands } from "@antv/xflow";
-import { Checkbox, Modal, Space, TreeSelect } from "antd";
+import { Checkbox, Modal, Space, Tree, TreeSelect } from "antd";
 import { toJS } from "mobx";
 import { inject, observer } from "mobx-react";
 import React, { useEffect, useState } from "react";
@@ -154,22 +154,22 @@ const Node_charge = observer(({ FlowStore, HomeStore, TableStore, SocketStore, i
                     </div>
                     <div className="select_menu">
                         <div className="select_menu_head">
-                            <div className={`select_menu_1 ${type == '1' ? 'checked' : ''}`} onClick={() => {
+                            <div className={`select_menu_1 ${type == '1' ? 'checkedS' : ''}`} onClick={() => {
                                 setType('1')
                                 SocketStore.getAllDepartment();
                             }}>组织架构</div>
-                            <div className={`select_menu_2 ${type == '2' ? 'checked' : ''}`} onClick={() => {
+                            <div className={`select_menu_2 ${type == '2' ? 'checkedS' : ''}`} onClick={() => {
                                 setType('2')
                                 SocketStore.getAllRoles()
                             }}>角色</div>
-                            <div className={`select_menu_3 ${type == '3' ? 'checked' : ''}`} onClick={() => {
+                            <div className={`select_menu_3 ${type == '3' ? 'checkedS' : ''}`} onClick={() => {
                                 setType('3')
                                 SocketStore.getAllUsers()
                                 SocketStore.getAddUserList({ 'departmentId': 1 });
                             }}>成员</div>
                             {
                                 typeName == 'node' && (
-                                    <div className={`select_menu_4 ${type == '4' ? 'checked' : ''}`} onClick={() => {
+                                    <div className={`select_menu_4 ${type == '4' ? 'checkedS' : ''}`} onClick={() => {
                                         setType('4')
                                     }}>动态负责人</div>
                                 )
@@ -265,9 +265,8 @@ const Node_charge = observer(({ FlowStore, HomeStore, TableStore, SocketStore, i
                                 type == '3' && (
                                     <div className="select_user">
                                         <div className="select_user_left">
-                                            <TreeSelect style={{ width: '100%' }} treeData={mulSelect} defaultValue={1} onChange={(value) => {
-                                                console.log(value);
-                                                SocketStore.getAddUserList({ 'departmentId': value });
+                                            <Tree defaultExpandAll={true} defaultCheckedKeys={[1]} treeData={mulSelect} onSelect={(selectedKeys, { selected, selectedNodes, node, event }) => {
+                                                SocketStore.getAddUserList({ 'departmentId': node.value });
                                             }} />
                                         </div>
                                         <div className="select_user_right">

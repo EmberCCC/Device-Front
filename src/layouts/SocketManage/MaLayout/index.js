@@ -2,14 +2,14 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-22 15:01:06
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-07-29 01:39:05
+ * @LastEditTime: 2022-08-02 09:06:21
  * @FilePath: \bl-device-manage-test\src\layouts\SocketManage\MaLayout\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 
 
 import { ApartmentOutlined, FolderAddOutlined, FolderOutlined, InfoCircleOutlined, MoreOutlined, TeamOutlined, UserAddOutlined, UserOutlined } from "@ant-design/icons";
-import { Button, Checkbox, Input, message, Modal, Popover, Radio, Space, Spin, Tooltip, TreeSelect } from "antd";
+import { Button, Checkbox, Input, message, Modal, Popover, Radio, Space, Spin, Tooltip, Tree, TreeSelect } from "antd";
 import { toJS } from "mobx";
 import { inject, observer } from "mobx-react";
 import React, { useEffect, useRef, useState } from "react";
@@ -582,7 +582,9 @@ const MaLayout = observer(({ SocketStore }) => {
                     </div>
                     <div className="addUser_bottom">
                         <div className="addUser_left">
-                            <TreeSelect defaultValue={1} treeData={mulSelect} onChange={haneleAddUser} style={{ width: '100%' }} />
+                            <Tree defaultExpandAll={true} defaultCheckedKeys={[1]} treeData={mulSelect} onSelect={(selectedKeys, { selected, selectedNodes, node, event }) => {
+                                SocketStore.getAddUserList({ 'departmentId': node.value });
+                            }} />
                         </div>
                         <div className="addUser_right">
                             <Checkbox.Group value={addUserIds} style={{ width: '100%' }} >

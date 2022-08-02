@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-19 23:01:23
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-01 02:24:02
+ * @LastEditTime: 2022-08-02 08:53:29
  * @FilePath: \bl-device-manage-test\src\stores\SocketStore.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -86,11 +86,9 @@ class Socket {
                 }}>修改名称</div>
                 <div onClick={(e) => {
                     e.stopPropagation()
-                    // console.log(this.fatherIds['changeId']);
-                    console.log(this.fatherIds);
-                    console.log(this.SelectKey);
                     this.setValue('preId', this.fatherIds[this.changeId])
                     this.setValue('mulVisible', true)
+
                 }}>调整上级部门</div>
                 <div onClick={(e) => {
                     e.stopPropagation()
@@ -383,12 +381,13 @@ class Socket {
                 let arr = []
                 let nameObj = { '全部成员': '全部成员', "离职成员": '离职成员' }
                 let jsonArr = []
+                arr.push(this.exchange(res.data.data))
                 console.log(this.userAuth);
                 if (this.userAuth['creater'] || this.userAuth['sysAdmin'] || this.userAuth?.['authDetails']?.['addressBook']?.['department']) {
                     iArr.push({ 'children': arr, 'type': 'group', 'label': '部门' })
                 }
                 jsonArr.push(this.exchangeMul(res.data.data))
-                arr.push(this.exchange(res.data.data))
+
                 this.setValue('items', iArr)
                 this.setValue('mulSelect', jsonArr)
                 this.setValue('fatherIds', this.getMulFather({}, res.data.data))
