@@ -24,50 +24,102 @@
     cursor: pointer;
     position: relative;
 }
-.tags_title{
+
+.tags_title {
     width: 224px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
 }
+
 .check_item_one {
     display: flex;
     flex-direction: row;
     align-items: center;
 }
-.total_tags{
+
+.total_tags {
     display: flex;
     flex-direction: column;
 }
-.all_tags{
+
+.all_tags {
     margin-top: 10px;
 }
-.one_tag{
+
+.one_tag {
     display: flex;
     flex-direction: row;
     align-items: center;
     margin-bottom: 5px;
 }
-.one_title{
+
+.one_title {
     margin-right: 8px;
 }
-.add_tag{
+
+.add_tag {
     color: #0DB3A6;
     display: inline-block;
     cursor: pointer;
 }
-.edit_main{
+
+.edit_main {
     height: 100%;
     overflow-y: auto;
 }
-.edit_main .mid-layout{
-    min-height: 400px;
-    height: unset;
+
+.edit_main .mid-layout {
+    min-height: 200px;
+    /* height: 100%; */
 }
-.myTabs{
+
+.myTabs {
     /* margin: 0 !important; */
 }
-.edit_main .myTabs{
+
+.edit_main .myTabs {
     overflow: auto;
     min-height: 400px;
+}
+
+/* .my_controller {
+    position: relative;
+    z-index: 999;
+}
+
+.my_controller * {}
+.text-color-dropdown 
+
+
+/* .bf-link-editor {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+} */
+/* .text-color-dropdown{
+    width: 22px !important;
+}
+.text-color-dropdown span{
+    width: 22px !important;
+}
+.bf-link-editor .input-group {
+    width: fit-content;
+}
+
+.bf-link-editor .buttons {
+    width: fit-content;
+    height: 100% !important;
+    display: flex;
+    flex-direction: column;
+}
+
+.bf-link-editor .buttons * {
+    margin-bottom: 4px;
+} */
+
+.my_controller .button {
+    min-width: 22px !important;
+    width: 22px !important;
+    padding: 0 !important;
 }

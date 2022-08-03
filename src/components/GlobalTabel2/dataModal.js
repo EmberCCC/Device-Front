@@ -2,13 +2,14 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-06-30 09:07:55
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-07-30 05:10:03
+ * @LastEditTime: 2022-08-03 11:15:10
  * @FilePath: \bl-device-manage-test\src\components\GlobalTabel2\dataModal.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 import { CopyOutlined, DeleteOutlined, EditOutlined, EyeOutlined, FunnelPlotOutlined, PrinterOutlined, ShareAltOutlined } from '@ant-design/icons'
 import { Button, Checkbox, Modal, Popover, Spin, Tabs } from 'antd'
 import { Radio } from 'components/BLComps'
+import GlobalModal from 'components/GlobalModal'
 import { firstFormName } from 'constants/status_constant'
 import FormData from 'layouts/FormLayout/formData'
 import { toJS } from 'mobx'
@@ -287,7 +288,7 @@ class DataModal extends Component {
                 </div>
                 {
                     this.props.FormStore.formCopyVis &&
-                    <Modal
+                    <GlobalModal
                         style={{
                             top: 0,
                         }}

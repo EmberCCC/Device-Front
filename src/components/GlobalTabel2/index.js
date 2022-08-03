@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-04-07 11:58:39
- * @LastEditTime: 2022-07-27 06:51:13
+ * @LastEditTime: 2022-08-03 11:19:05
  * @LastEditors: EmberCCC 1810888456@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage-test\src\components\GlobalTabel\index.js
@@ -143,7 +143,7 @@ class GlobalTabel2 extends React.Component {
                             type: 'checkbox',
                             ...rowSelection,
                         }}
-                        scroll={{ x: 1500 }}
+                        scroll={{ x: 1500, y: 600 }}
                         bordered
                         rowKey={record => record.key}
                         dataSource={dataSource}
@@ -157,8 +157,8 @@ class GlobalTabel2 extends React.Component {
                                     console.log(toJS(dataSource));
                                     console.log(toJS(key));
                                     let dindex = 0;
-                                    dataSource.forEach((one,index) => {
-                                        if(one['key'] == key['key']){
+                                    dataSource.forEach((one, index) => {
+                                        if (one['key'] == key['key']) {
                                             dindex = index
                                         }
                                     })
@@ -172,7 +172,7 @@ class GlobalTabel2 extends React.Component {
                         }}
                     /> :
                         <Table
-                            scroll={{ x: 1500 }}
+                            scroll={{ x: 1500, y: 600 }}
                             bordered
                             rowKey={record => record.key}
                             dataSource={dataSource}
@@ -185,12 +185,16 @@ class GlobalTabel2 extends React.Component {
 
                 {
                     this.props.TableStore.dataPageModalVis && <GlobalModal
-                        
+
                         title={firstFormName[this.props.HomeStore.firstFormId]}
                         width={1300}
                         visible={this.props.TableStore.dataPageModalVis}
                         onOk={e => { this.props.TableStore.setDataPageModalVis(false) }}
-                        onCancel={e => { this.props.TableStore.setDataPageModalVis(false); this.props.TableStore.setIsModalEdit(false); }}
+                        onCancel={e => {
+                            this.props.TableStore.setDataPageModalVis(false);
+                            this.props.TableStore.setIsModalEdit(false);
+                            this.props.TableStore.setValue('formEdit', false);
+                        }}
                         footer={null}
                         children={
                             <DataModal />
@@ -210,7 +214,9 @@ class GlobalTabel2 extends React.Component {
                             }
                         }}
                         onCancel={e => {
-                            this.props.TableStore.setDataPageModalVis(false); this.props.TableStore.setIsModalEdit(false);
+                            this.props.TableStore.setDataPageModalVis(false);
+                            this.props.TableStore.setIsModalEdit(false);
+                            this.props.TableStore.setValue('formEdit', false);
                             if (this.props.TableStore.model == 'subitAndManage') {
                                 this.props.TableStore.getAllData({ formId: this.props.HomeStore.firstFormId }, 'myself')
                             } else {

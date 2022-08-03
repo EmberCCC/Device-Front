@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-05 10:16:45
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-02 21:43:24
+ * @LastEditTime: 2022-08-03 11:23:45
  * @FilePath: \bl-device-manage-test\src\layouts\FormEdit\changeTool.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -50,10 +50,11 @@ export function exChange(item, firstFormId, name) {
 function getOneForm(fields, fieldIds, type, flag, authInfo) {
   let result = {}
   fieldIds.forEach(item => {
-    fields.forEach(field => {
+    fields.forEach((field,index) => {
       if (field != null) {
         if (field['id'] == item) {
           const detailJson = JSON.parse(field['detailJson']);
+          detailJson['order'] = index
           const id = field['id']
           const name = type == 'submit' ? field['id'] : "".concat(detailJson['typeId'], "_").concat(nanoid(6))
           if (type == 'submit') {

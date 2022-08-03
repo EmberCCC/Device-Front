@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-04-11 16:11:20
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-02 21:21:31
+ * @LastEditTime: 2022-08-02 22:48:51
  * @FilePath: \bl-device-manage-test\src\layouts\FlowManage\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -20,7 +20,7 @@ import { BulbOutlined, CopyOutlined, FormOutlined, NodeExpandOutlined, PlayCircl
 import { CanvasToolbar, XFlow, XFlowNodeCommands, CanvasScaleToolbar, CanvasSnapline, JsonSchemaForm, NsJsonSchemaForm, CanvasNodePortTooltip, FlowchartCanvas, FlowchartExtension, XFlowGraphCommands, randomInt, XFlowEdgeCommands } from "@antv/xflow";
 import { inject, observer } from "mobx-react";
 import AuthShape from './Self_Form/field_auth';
-import React, { useReducer, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import './index.less'
 import '@antv/xflow/dist/index.css'
 import { useToolbarConfig } from "./tool_bar";
@@ -249,13 +249,14 @@ const FlowManage = observer(({ FlowStore, HomeStore, TableStore, SocketStore, pr
 
     };
   })(NsJsonForm || (NsJsonForm = {}));
+  useEffect(() => {
+
+  }, [flowProperty])
   const onLoad = async app => {
     setApp(app)
     console.log(toJS(flowProperty));
     let iObj = JSON.parse(JSON.stringify(flowProperty))
     delete iObj['flowProperty']
-    console.log(iObj);
-    //  else {
     await app.executeCommand(
       XFlowGraphCommands.GRAPH_RENDER.id,
       {
@@ -287,19 +288,36 @@ const FlowManage = observer(({ FlowStore, HomeStore, TableStore, SocketStore, pr
               {allFlowList.map((item, index) => {
                 return (
                   <div onClick={async () => {
-                    FlowStore.setValue('canOb', false)
-                    setIsload(true)
-                    let ig = { 'nodes': JSON.parse(item['origin'])['nodes'], 'edges': JSON.parse(item['origin'])['edges'] }
-                    console.log(ig);
-                    flowProperty['nodes'].forEach(async (item) => {
-                      await app.executeCommand(
-                        XFlowNodeCommands.DEL_NODE.id, {
-                        nodeConfig: item
+                    if (flowversion != item['id']) {
+                      FlowStore.setValue('canOb', false)
+                      setIsload(true)
+                      let ig = { 'nodes': JSON.parse(item['origin'])['nodes'], 'edges': JSON.parse(item['origin'])['edges'] }
+                      console.log(ig);
+                      flowProperty['nodes'].forEach(async (item) => {
+                        await app.executeCommand(
+                          XFlowNodeCommands.DEL_NODE.id, {
+                          nodeConfig: {
+                            id:item['id']
+                          }
+                        })
                       })
-                    })
-                    FlowStore.setValue('flowversion', item['id'])
-                    FlowStore.setValue('flowProperty', JSON.parse(item['origin']))
-                    setIsload(false)
+                      FlowStore.setValue('flowversion', item['id'])
+                      FlowStore.setValue('flowProperty', JSON.parse(item['origin']))
+                      flowProperty['nodes'].forEach(async item => {
+                        await app.executeCommand(
+                          XFlowNodeCommands.ADD_NODE.id, {
+                          nodeConfig: item
+                        })
+                      })
+                      flowProperty['edges'].forEach(async item => {
+                        await app.executeCommand(
+                          XFlowEdgeCommands.ADD_EDGE.id, {
+                          edgeConfig: item
+                        })
+                      })
+                      setIsload(false)
+                    }
+
                   }} key={index} className="oneflowversion">
                     <div className="oneflow1">{flowversion == item['id'] ? '√' : ''}</div>
                     <div className="oneflow2">流程版本(V{item['id']})</div>
@@ -358,7 +376,7 @@ const FlowManage = observer(({ FlowStore, HomeStore, TableStore, SocketStore, pr
           <XFlow
             onLoad={onLoad}
             className="xflow-workspace"
-            graphData={flowProperty}
+            // graphData={flowProperty}
           >
             {
               canOb == true && (

@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-02 08:07:00
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-02 13:29:37
+ * @LastEditTime: 2022-08-03 09:41:55
  * @FilePath: \bl-device-manage-test\src\constants\field_config.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -12,7 +12,8 @@ var elements = [
         name: '0',
         schema: {
             title: '单行文本',
-            type: 'string'
+            type: 'string',
+            order: 1
         },
         setting: {
             title: {
@@ -26,10 +27,10 @@ var elements = [
                     defaultValue: true
                 }
             },
-            description: {
+            extra: {
                 title: '描述信息',
                 type: 'string',
-                widget: 'textarea'
+                widget: 'RichTextEditor'
             },
             default_type: {
                 title: '默认值',
@@ -114,7 +115,8 @@ var elements = [
         schema: {
             title: '多行文本',
             type: 'string',
-            format: 'textarea'
+            format: 'textarea',
+            order: 1
         },
         setting: {
             title: {
@@ -128,10 +130,10 @@ var elements = [
                     defaultValue: true
                 }
             },
-            description: {
+            extra: {
                 title: '描述信息',
                 type: 'string',
-                widget: 'RichText'
+                widget: 'RichTextEditor'
             },
             placeholder: {
                 title: '提示文字',
@@ -192,7 +194,8 @@ var elements = [
         name: '2',
         schema: {
             title: '数字',
-            type: 'number'
+            type: 'number',
+            order: 1
         },
         setting: {
             title: {
@@ -206,10 +209,10 @@ var elements = [
                     defaultValue: true
                 }
             },
-            description: {
+            extra: {
                 title: '描述信息',
                 type: 'string',
-                widget: 'RichText'
+                widget: 'RichTextEditor'
             },
             placeholder: {
                 title: '提示文字',
@@ -284,7 +287,8 @@ var elements = [
         schema: {
             title: '日期选择',
             type: 'string',
-            format: 'date'
+            format: 'date',
+            order: 1
         },
         setting: {
             title: {
@@ -298,10 +302,10 @@ var elements = [
                     defaultValue: true
                 }
             },
-            description: {
+            extra: {
                 title: '描述信息',
                 type: 'string',
-                widget: 'RichText'
+                widget: 'RichTextEditor'
             },
             placeholder: {
                 title: '提示文字',
@@ -347,6 +351,7 @@ var elements = [
             title: '单选按钮组',
             type: 'string',
             widget: 'radio',
+            order: 1
         },
         setting: {
             title: {
@@ -360,10 +365,10 @@ var elements = [
                     defaultValue: true
                 }
             },
-            description: {
+            extra: {
                 title: '描述信息',
                 type: 'string',
-                widget: 'RichText'
+                widget: 'RichTextEditor'
             },
             className: {
                 title: '展示方式',
@@ -393,10 +398,10 @@ var elements = [
                         label: {
                             title: '',
                             type: 'string',
-                            hidden:true,
+                            hidden: true,
                             className: 'frg-options-input',
                             props: {
-                                value:"{{rootValue.value}}"
+                                value: "{{rootValue.value}}"
                             },
                             placeholder: '名称'
                         }
@@ -438,6 +443,8 @@ var elements = [
             items: {
                 type: 'string'
             },
+            order: 1
+
         },
         setting: {
             title: {
@@ -451,10 +458,10 @@ var elements = [
                     defaultValue: true
                 }
             },
-            description: {
+            extra: {
                 title: '描述信息',
                 type: 'string',
-                widget: 'RichText'
+                widget: 'RichTextEditor'
             },
             className: {
                 title: '展示方式',
@@ -484,10 +491,10 @@ var elements = [
                         label: {
                             title: '',
                             type: 'string',
-                            hidden:true,
+                            hidden: true,
                             className: 'frg-options-input',
                             props: {
-                                value:"{{rootValue.value}}"
+                                value: "{{rootValue.value}}"
                             },
                             placeholder: '名称'
                         }
@@ -525,7 +532,8 @@ var elements = [
         schema: {
             title: '下拉框',
             type: 'string',
-            widget: 'select'
+            widget: 'select',
+            order: 1
         },
         setting: {
             title: {
@@ -539,10 +547,10 @@ var elements = [
                     defaultValue: true
                 }
             },
-            description: {
+            extra: {
                 title: '描述信息',
                 type: 'string',
-                widget: 'RichText'
+                widget: 'RichTextEditor'
             },
             placeholder: {
                 title: '提示文字',
@@ -566,10 +574,10 @@ var elements = [
                         label: {
                             title: '',
                             type: 'string',
-                            hidden:true,
+                            hidden: true,
                             className: 'frg-options-input',
                             props: {
-                                value:"{{rootValue.value}}"
+                                value: "{{rootValue.value}}"
                             },
                             placeholder: '名称'
                         }
@@ -622,7 +630,8 @@ var elements = [
             title: '下拉复选框',
             description: '下拉多选',
             type: 'array',
-            widget: 'multiSelect'
+            widget: 'multiSelect',
+            order: 1
         },
         setting: {
             title: {
@@ -636,10 +645,10 @@ var elements = [
                     defaultValue: true
                 }
             },
-            description: {
+            extra: {
                 title: '描述信息',
                 type: 'string',
-                widget: 'RichText'
+                widget: 'RichTextEditor'
             },
             enumList: {
                 title: '选项',
@@ -659,10 +668,10 @@ var elements = [
                         label: {
                             title: '',
                             type: 'string',
-                            hidden:true,
+                            hidden: true,
                             className: 'frg-options-input',
                             props: {
-                                value:"{{rootValue.value}}"
+                                value: "{{rootValue.value}}"
                             },
                             placeholder: '名称'
                         }
@@ -717,7 +726,8 @@ var elements = [
         schema: {
             title: '分割线',
             type: 'any',
-            widget: "self_divider"
+            widget: "self_divider",
+            order: 1
         },
         setting: {
             title: {
@@ -736,10 +746,10 @@ var elements = [
                 type: 'string',
                 widget: 'percentSlider'
             },
-            description: {
+            extra: {
                 title: '描述信息',
                 type: 'string',
-                widget: 'textarea'
+                widget: 'RichTextEditor'
             },
             hidden: {
                 title: '隐藏',
@@ -747,12 +757,14 @@ var elements = [
             }
         }
     }];
-export const defaultSettings = [{
-    title: '基础字段',
-    widgets: elements,
-    show: true,
-    useCommon: true // TODO: 是否将common
-}]
+export const defaultSettings = [
+    {
+        title: '基础字段',
+        widgets: elements,
+        show: true,
+        useCommon: true // TODO: 是否将common
+    }
+]
 export const defaultGlobalSettings = {
     type: 'object',
     properties: {

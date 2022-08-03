@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-02 03:21:54
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-02 11:14:09
+ * @LastEditTime: 2022-08-03 11:09:39
  * @FilePath: \bl-device-manage-test\src\layouts\FormLayout\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -21,11 +21,15 @@ const FormLayout = observer(({ HomeStore, FormStore }) => {
   const [data, setData] = useState({});
   const form = useForm();
   const formList = useForm()
-  const onFinish = (formData) => {
+  const onFinish = (formData, error) => {
+    console.log(form.errorFields);
     const { firstFormId } = HomeStore;
+    console.log(formData);
+    if (error.length > 0) {
+      return;
+    }
     let checkArr = getCheckArr(schema)
     let nData = formList.getValues()
-    console.log(({ 'formId': firstFormId, 'data': { ...formData, ...nData, ...data }, 'checkFieldIds': checkArr }));
     if (checkArr.length > 0) {
       FormStore.submitDataCheck({ 'formId': firstFormId, 'data': { ...formData, ...nData, ...data }, 'checkFieldIds': checkArr })
     } else {
@@ -54,12 +58,14 @@ const FormLayout = observer(({ HomeStore, FormStore }) => {
     }
     return (
       nArr.map((item, index) => {
-        return (
-          <Tabs.TabPane tab={item['name']} key={index}>
-            <FormRender schema={item['schema']} widgets={{ self_divider: Self_divider }}
-              form={formList} style={{ overflowY: 'auto' }} />
-          </Tabs.TabPane>
-        )
+        if (JSON.stringify(item['schema']['properties']) != '{}') {
+          return (
+            <Tabs.TabPane tab={item['name']} key={index}>
+              <FormRender schema={item['schema']} widgets={{ self_divider: Self_divider }}
+                form={formList} style={{ overflowY: 'auto' }} />
+            </Tabs.TabPane>
+          )
+        }
       })
     )
   }
@@ -68,20 +74,19 @@ const FormLayout = observer(({ HomeStore, FormStore }) => {
     let tdata = formList.getValues()
 
     let nData = { ...data, ...tdata }
-    console.log(tdata);
     setData(nData);
-    console.log(nData);
     let iObj = {}
     for (const key in nData) {
       if (Object.hasOwnProperty.call(nData, key)) {
         const element = nData[key];
         iObj[key] = element
-
       }
     }
 
     formList.setValues(iObj)
-    formList.resetFields();
+    formList.setValues(iObj)
+
+    // formList.resetFields();
   }
   return (
     <Spin spinning={FormStore.loading} tip={'loading...'} wrapperClassName={'form_layout'}>
@@ -89,13 +94,16 @@ const FormLayout = observer(({ HomeStore, FormStore }) => {
         <div className='form_layout'>
           <FormRender schema={schema['root']} widgets={{ self_divider: Self_divider }}
             form={form} onFinish={onFinish} style={{ overflowY: 'auto' }} />
-          <Tabs onChange={handleChange} tabBarGutter={20} destroyInactiveTabPane={true} type='card'>
+          <div style={{ fontSize: "10", fontWeight: '200' }}>（双击恢复之前数据）</div>
+          <Tabs onTabClick={handleChange} tabBarGutter={20} destroyInactiveTabPane={true} type='card'>
             {
               getItem()
             }
           </Tabs>
         </div>
-        <Button onClick={form.submit} type="primary">提交</Button>
+        <div className='form_footer'>
+          <Button onClick={form.submit} type="primary">提交</Button>
+        </div>
       </div>
     </Spin>
   );

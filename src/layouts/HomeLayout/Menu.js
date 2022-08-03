@@ -72,7 +72,6 @@ class MenuLayout extends Component {
                   <PlayCircleTwoTone />
                   <div className='message_name'>我发起的</div>
                 </div>
-                <Badge count={launchList.length} style={{ float: 'right' }} offset={[1, 5]}></Badge>
               </div>
               <div className='message_logo' onClick={() => {
                 this.props.history.push({ pathname: '/message' });
@@ -90,7 +89,6 @@ class MenuLayout extends Component {
                   <CarryOutTwoTone />
                   <div className='message_name'>我处理的</div>
                 </div>
-                <Badge count={handleList.length} style={{ float: 'right' }} offset={[1, 5]}></Badge>
               </div>
               <div className='message_logo' onClick={() => {
                 this.props.history.push({ pathname: '/message' });
@@ -107,7 +105,6 @@ class MenuLayout extends Component {
                   <SoundTwoTone />
                   <div className='message_name'>抄送我的</div>
                 </div>
-                <Badge count={copyList.length} style={{ float: 'right' }} offset={[1, 5]}></Badge>
               </div>
             </div>
             <div className='left_menu_all'>

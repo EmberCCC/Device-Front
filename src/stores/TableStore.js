@@ -4,7 +4,7 @@
  * @Author: zhihao
  * @Date: 2022-04-17 15:22:43
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-07-30 00:30:00
+ * @LastEditTime: 2022-08-03 11:03:30
  */
 
 import { message, Modal } from 'antd';
@@ -348,7 +348,7 @@ class Table {
 						obj[item] = jsonItem['enumNames'][index]
 					})
 				}
-				iColumns.push({ 'title': jsonItem.title, 'dataIndex': item.id, 'key': item.id, 'detailJson': jsonItem, 'exchange': obj });
+				iColumns.push({ 'title': jsonItem.title, 'dataIndex': item.id, 'key': item.id, 'detailJson': jsonItem, 'exchange': obj , 'width': 200, 'ellipsis': true });
 				iFieldValue.push(item.id)
 			})
 			data.fieldsValue.map((item) => {
@@ -367,9 +367,9 @@ class Table {
 			iFieldValue.push('createPerson')
 			iFieldValue.push('createTime')
 			iFieldValue.push('updateTime')
-			iColumns.push({ 'title': '创建人', 'dataIndex': 'createPerson', 'key': 'createPerson' });
-			iColumns.push({ 'title': '创建时间', 'dataIndex': 'createTime', 'key': 'createTime' });
-			iColumns.push({ 'title': '更新时间', 'dataIndex': 'updateTime', 'key': 'updateTime' });
+			iColumns.push({ 'title': '创建人', 'dataIndex': 'createPerson', 'key': 'createPerson' , 'width': 200, 'ellipsis': true });
+			iColumns.push({ 'title': '创建时间', 'dataIndex': 'createTime', 'key': 'createTime' , 'width': 200, 'ellipsis': true });
+			iColumns.push({ 'title': '更新时间', 'dataIndex': 'updateTime', 'key': 'updateTime' , 'width': 200, 'ellipsis': true });
 			this.setValue('fieldValue', iFieldValue)
 			this.setValue('modalFieldValue', iFieldValue)
 			this.setValue('columns', iColumns)
