@@ -2,21 +2,22 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-02 03:21:54
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-03 11:06:09
+ * @LastEditTime: 2022-08-03 12:05:56
  * @FilePath: \bl-device-manage-test\src\layouts\FormLayout\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 import React, { useEffect, useState } from 'react';
 import FormRender, { useForm } from 'form-render';
-import { Button, Tabs } from 'antd';
+import { Button, message, Tabs } from 'antd';
 import { inject, observer } from 'mobx-react';
 import { toJS } from 'mobx';
 import { restore } from 'layouts/FormEdit/changeTool';
 import './index.less'
-import { getCheckArr } from './formUtil';
+import { getCheckArr, getNotNullObj } from './formUtil';
 import { Self_divider } from 'layouts/FormEdit/self_item/self_divider';
 
 const FormData = observer(({ HomeStore, FormStore, TableStore }) => {
+  const { formField } = FormStore
   const [schema, setSchema] = useState({
     "type": "object",
     "properties": {},
@@ -26,8 +27,28 @@ const FormData = observer(({ HomeStore, FormStore, TableStore }) => {
   const [data, setData] = useState({});
   const form = useForm();
   const formList = useForm()
-  const onFinish = (formData) => {
+  const onFinish = (formData, error) => {
     const { firstFormId } = HomeStore;
+    const result = getNotNullObj(toJS(formField['fields'], toJS(formField['fieldsAuth'], { ...formData, ...nData, ...data })))
+
+    if (JSON.stringify(result) != "{}") {
+      message.error(
+        <div>
+          {
+            Object.keys(result).map((item, index) => {
+              console.log(result);
+              return (
+                <div key={index}>{result[item]}</div>
+              )
+            })
+          }
+        </div>
+      )
+      return;
+    }
+    if (error.length > 0) {
+      return;
+    }
     let checkArr = getCheckArr(schema);
     let nData = formList.getValues()
     let newData = { ...formData, ...nData, ...data };
