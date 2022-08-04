@@ -2,22 +2,14 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-04-11 16:11:20
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-02 22:48:51
+ * @LastEditTime: 2022-08-04 08:09:23
  * @FilePath: \bl-device-manage-test\src\layouts\FlowManage\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 
-
-/*
- * @Author: EmberCCC 1810888456@qq.com
- * @Date: 2022-04-11 16:11:20
- * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-07-25 16:20:11
- * @FilePath: \bl-device-manage-test\src\layouts\FlowManage\index.js
- * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
- */
 import { BulbOutlined, CopyOutlined, FormOutlined, NodeExpandOutlined, PlayCircleOutlined, PoweroffOutlined } from "@ant-design/icons";
-import { CanvasToolbar, XFlow, XFlowNodeCommands, CanvasScaleToolbar, CanvasSnapline, JsonSchemaForm, NsJsonSchemaForm, CanvasNodePortTooltip, FlowchartCanvas, FlowchartExtension, XFlowGraphCommands, randomInt, XFlowEdgeCommands } from "@antv/xflow";
+import { CanvasToolbar, XFlow, XFlowNodeCommands, CanvasScaleToolbar, CanvasSnapline, JsonSchemaForm, NsJsonSchemaForm, CanvasNodePortTooltip, FlowchartCanvas, FlowchartExtension, XFlowGraphCommands, randomInt, XFlowEdgeCommands, XFlowCanvas, createGraphConfig } from "@antv/xflow";
+import { DataUri } from '@antv/x6'
 import { inject, observer } from "mobx-react";
 import AuthShape from './Self_Form/field_auth';
 import React, { useEffect, useReducer, useState } from "react";
@@ -30,59 +22,79 @@ import Node_copy from "./Self_Form/node_copy";
 import Node_charge from "./Self_Form/node_charge";
 import Flow_Config from "./flowConfig";
 import { changeFlow } from "./changeTool";
-import { Popover, Spin } from "antd";
+import { message, Popover, Spin } from "antd";
 import { toJS } from "mobx";
-const configCanvas = {
-  grid: false,
-  mousewheel: {
-    enabled: true,
-    minScale: 0.5,
-    maxScale: 3,
-  },
-  // 节点是否可旋转
-  rotating: false,
-  // 节点是否可调整大小
-  resizing: false,
-  selecting: {
-    enabled: true,
-    multiple: false,
-    selectCellOnMoved: true,
-    showNodeSelectionBox: true,
-    movable: false,
-  },
-  connecting: {
-    router: {
-      name: 'manhattan',
-      args: {
-        padding: 0,
+import { customAlphabet } from "nanoid";
+import { checkFlow } from "./checkTool";
+export const useGraphConfig = createGraphConfig(graphConfig => {
+  graphConfig.setX6Config(
+    {
+      grid: false,
+      mousewheel: {
+        enabled: true,
+        minScale: 0.5,
+        maxScale: 3,
       },
-    },
-    connector: {
-      name: 'rounded',
-      args: {
-        radius: 2,
+      history: true,
+      // 节点是否可旋转
+      rotating: false,
+      // 节点是否可调整大小
+      resizing: false,
+      selecting: {
+        enabled: true,
+        multiple: false,
+        selectCellOnMoved: true,
+        showNodeSelectionBox: true,
+        movable: false,
       },
-    },
-    anchor: 'center',
-    connectionPoint: 'anchor',
-    allowBlank: false,
-    allowMulti: false,
-    allowEdge: false,
-    allowLoop: false,
-    allowNode: false,
-    snap: {
-      radius: 20,
-    },
-    validateConnection({ sourceView, targetView, sourceMagnet, targetMagnet }) {
-      let sourceId = sourceView.cell.data.typeId
-      let targetId = targetView.cell.data.typeId
-      if (targetId == '-1') return false
-      if (sourceId == '2' || sourceId == '-2') return false
-      return !!targetMagnet
-    },
+      connecting: {
+        router: {
+          name: 'manhattan',
+          args: {
+            padding: 0,
+          },
+        },
+        connector: {
+          name: 'rounded',
+          args: {
+            radius: 2,
+          },
+        },
+        anchor: 'center',
+        connectionPoint: 'anchor',
+        allowBlank: false,
+        allowMulti: false,
+        allowEdge: false,
+        allowLoop: false,
+        allowNode: false,
+        snap: {
+          radius: 20,
+        },
+        validateConnection({ sourceView, targetView, sourceMagnet, targetMagnet }) {
+          let sourceId = sourceView.cell.data.typeId
+          let targetId = targetView.cell.data.typeId
+          if (targetId == '-1') return false
+          if (sourceId == '2' || sourceId == '-2') return false
+          return !!targetMagnet
+        },
+      },
+    }
+  )
+  graphConfig.setDefaultNodeRender(props => {
+    if (props.data.typeId == '1') {
+      return <div className="react-node"><FormOutlined style={{ marginRight: '10px' }} /> {props.data.label} </div>;
+    } else if (props.data.typeId == '2') {
+      return <div className="react-node"><CopyOutlined style={{ marginRight: '10px' }} /> {props.data.label} </div>;
+    } else if (props.data.typeId == '3') {
+      return <div className="react-node"><NodeExpandOutlined style={{ marginRight: '10px' }} /> {props.data.label} </div>;
+    } else if (props.data.typeId == '-2') {
+      return <div className="react-node"><PoweroffOutlined style={{ marginRight: '10px' }} /> {props.data.label} </div>;
+    } else if (props.data.typeId == '-1') {
+      return <div className="react-node"><PlayCircleOutlined style={{ marginRight: '10px' }} /> {props.data.label} </div>;
+    }
+  });
+})
 
-  },
-}
 
 
 
@@ -92,6 +104,7 @@ const FlowManage = observer(({ FlowStore, HomeStore, TableStore, SocketStore, pr
   const { firstFormId } = HomeStore
   const [load, setIsload] = useState(false)
   const [app, setApp] = useState(null)
+  const [graph, setGraph] = useState(null)
   const [toolbarConfig, setBoolbarConfig] = useState(useToolbarConfig(props))
   const forceUpdate = useReducer((bool) => !bool)[1]
   var NsJsonForm;
@@ -116,6 +129,7 @@ const FlowManage = observer(({ FlowStore, HomeStore, TableStore, SocketStore, pr
       targetType,
       targetData
     ) => {
+      console.log(targetData);
       if (targetData != null && !targetData.hasOwnProperty('auth_info')) {
         targetData['auth_info'] = {}
       }
@@ -249,18 +263,17 @@ const FlowManage = observer(({ FlowStore, HomeStore, TableStore, SocketStore, pr
 
     };
   })(NsJsonForm || (NsJsonForm = {}));
-  useEffect(() => {
-
-  }, [flowProperty])
+  const nanoid = customAlphabet('1234567890', 7)
   const onLoad = async app => {
     setApp(app)
+    app.getGraphInstance().then(res => setGraph(res))
     console.log(toJS(flowProperty));
     let iObj = JSON.parse(JSON.stringify(flowProperty))
     delete iObj['flowProperty']
     await app.executeCommand(
       XFlowGraphCommands.GRAPH_RENDER.id,
       {
-        'graphData': iObj
+        'graphData': { ...iObj }
       }
     )
     // }
@@ -275,8 +288,6 @@ const FlowManage = observer(({ FlowStore, HomeStore, TableStore, SocketStore, pr
             canOb == false && (
               <div style={{ display: 'inline-block', marginLeft: '20px', background: '#f1f1f1', userSelect: 'none' }}>流程已启用，如需增删节点和连线，请<a onClick={() => {
                 FlowStore.setValue('canOb', true)
-                forceUpdate()
-                console.log(canOb);
               }}>添加新版本</a></div>
             )
           }
@@ -291,30 +302,29 @@ const FlowManage = observer(({ FlowStore, HomeStore, TableStore, SocketStore, pr
                     if (flowversion != item['id']) {
                       FlowStore.setValue('canOb', false)
                       setIsload(true)
-                      let ig = { 'nodes': JSON.parse(item['origin'])['nodes'], 'edges': JSON.parse(item['origin'])['edges'] }
-                      console.log(ig);
-                      flowProperty['nodes'].forEach(async (item) => {
+                      let ig1 = { 'nodes': JSON.parse(item['origin'])['nodes'], 'edges': JSON.parse(item['origin'])['edges'] }
+                      let ig2 = { 'nodes': [], 'edges': [] }
+                      flowProperty['edges'].forEach(async (item) => {
                         await app.executeCommand(
-                          XFlowNodeCommands.DEL_NODE.id, {
-                          nodeConfig: {
-                            id:item['id']
-                          }
-                        })
+                          XFlowEdgeCommands.DEL_EDGE.id, {
+                          edgeConfig: { ...item }
+                        }
+                        )
+                      })
+                      // console.log(ig);
+                      app.executeCommand(
+                        XFlowGraphCommands.GRAPH_RENDER.id, {
+                        graphData: { ...ig2 }
+                      }
+                      ).then(() => {
+                        app.executeCommand(
+                          XFlowGraphCommands.GRAPH_RENDER.id, {
+                          graphData: { ...ig1 }
+                        }
+                        )
                       })
                       FlowStore.setValue('flowversion', item['id'])
                       FlowStore.setValue('flowProperty', JSON.parse(item['origin']))
-                      flowProperty['nodes'].forEach(async item => {
-                        await app.executeCommand(
-                          XFlowNodeCommands.ADD_NODE.id, {
-                          nodeConfig: item
-                        })
-                      })
-                      flowProperty['edges'].forEach(async item => {
-                        await app.executeCommand(
-                          XFlowEdgeCommands.ADD_EDGE.id, {
-                          edgeConfig: item
-                        })
-                      })
                       setIsload(false)
                     }
 
@@ -339,22 +349,57 @@ const FlowManage = observer(({ FlowStore, HomeStore, TableStore, SocketStore, pr
                 {
                   saveGraphDataService: async (meta, data) => {
                     console.log(changeFlow(data, firstFormId, flowProperty['flowProperty']))
-                    FlowStore.createFlow(changeFlow(data, firstFormId, flowProperty['flowProperty'])).then(() => {
-                      FlowStore.getOneFlow({ 'formId': firstFormId });
-                    })
+                    const result = checkFlow(data);
+                    console.log(result);
+                    if (JSON.stringify(result['auth']) == "{}" && JSON.stringify(result['person']) == "{}") {
+                      FlowStore.createFlow(changeFlow(data, firstFormId, flowProperty['flowProperty'])).then(() => {
+                        FlowStore.getOneFlow({ 'formId': firstFormId });
+                      })
+                    } else {
+                      message.info(<div>
+                        {
+                          Object.keys(result).map(key => {
+                            return Object.keys(result[key]).map((one, index) => {
+                              console.log(result[key][one]);
+                              return (
+                                <div key={index}>{result[key][one]}</div>
+                              )
+                            })
+                          })
+                        }
+                      </div>)
+                    }
+
                   },
                 },
               )
-              forceUpdate()
               FlowStore.setValue('canOb', false);
             } else {
               app.commandService.executeCommand(
                 XFlowGraphCommands.SAVE_GRAPH_DATA.id,
                 {
                   saveGraphDataService: async (meta, data) => {
-                    console.log(meta);
-                    console.log({ ...changeFlow(data, firstFormId, flowProperty['flowProperty']) })
-                    // FlowStore.createFlow(changeFlow(data, firstFormId, flowProperty['flowProperty']))
+                    const result = checkFlow(data);
+                    console.log(result);
+                    if (JSON.stringify(result['auth']) == "{}" && JSON.stringify(result['person']) == "{}") {
+                      graph.toPNG(datauri => {
+                        DataUri.downloadDataUri(datauri, 'chart.png')
+                      })
+                      return;
+                    } else {
+                      message.info(<div>
+                        {
+                          Object.keys(result).map(key => {
+                            return Object.keys(result[key]).map((one, index) => {
+                              console.log(result[key][one]);
+                              return (
+                                <div key={index}>{result[key][one]}</div>
+                              )
+                            })
+                          })
+                        }
+                      </div>)
+                    }
                   },
                 },
               )
@@ -376,7 +421,8 @@ const FlowManage = observer(({ FlowStore, HomeStore, TableStore, SocketStore, pr
           <XFlow
             onLoad={onLoad}
             className="xflow-workspace"
-            // graphData={flowProperty}
+            config={useGraphConfig(props)}
+            isAutoCenter={true}
           >
             {
               canOb == true && (
@@ -390,29 +436,10 @@ const FlowManage = observer(({ FlowStore, HomeStore, TableStore, SocketStore, pr
             <CanvasScaleToolbar
               layout='horizontal'
               position={{ right: 500 }} />
-            <FlowchartCanvas
-              config={configCanvas}
-              onConfigChange={() => {
-                console.log(1);
-              }}
-              useConfig={(config) => {
-                config.setDefaultNodeRender(props => {
-                  if (props.data.typeId == '1') {
-                    return <div className="react-node"><FormOutlined style={{ marginRight: '10px' }} /> {props.data.label} </div>;
-                  } else if (props.data.typeId == '2') {
-                    return <div className="react-node"><CopyOutlined style={{ marginRight: '10px' }} /> {props.data.label} </div>;
-                  } else if (props.data.typeId == '3') {
-                    return <div className="react-node"><NodeExpandOutlined style={{ marginRight: '10px' }} /> {props.data.label} </div>;
-                  } else if (props.data.typeId == '-2') {
-                    return <div className="react-node"><PoweroffOutlined style={{ marginRight: '10px' }} /> {props.data.label} </div>;
-                  } else if (props.data.typeId == '-1') {
-                    return <div className="react-node"><PlayCircleOutlined style={{ marginRight: '10px' }} /> {props.data.label} </div>;
-                  }
-                });
-              }}
+            <XFlowCanvas
+              config={useGraphConfig()}
               position={{ top: 0, left: 0, height: 800 }}
             >
-              <FlowchartExtension />
               <CanvasSnapline />
               <CanvasNodePortTooltip />
               <JsonSchemaForm
@@ -420,7 +447,7 @@ const FlowManage = observer(({ FlowStore, HomeStore, TableStore, SocketStore, pr
                 formSchemaService={NsJsonForm.formSchemaService}
                 formValueUpdateService={NsJsonForm.formValueUpdateService}
                 position={{ top: 0, bottom: 0, right: 0, width: 290 }} />
-            </FlowchartCanvas>
+            </XFlowCanvas>
           </XFlow>
         </Spin>
       </div>

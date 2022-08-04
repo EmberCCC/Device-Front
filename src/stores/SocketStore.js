@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-19 23:01:23
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-02 08:53:29
+ * @LastEditTime: 2022-08-03 23:18:46
  * @FilePath: \bl-device-manage-test\src\stores\SocketStore.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -200,7 +200,7 @@ class Socket {
                 'title': <div className='de_item'>
                     <div className='de_name1'><GoldFilled /> {item['name']}</div>
                 </div>
-                , 'value': item['id'], 'selectable': this.userAuth['creater'] || this.userAuth['sysAdmin'] || deArr.indexOf(-1) > -1 || deArr.indexOf(item['id']) > -1
+                , 'value': item['id'], 'key': item['id'], 'selectable': this.userAuth['creater'] || this.userAuth['sysAdmin'] || deArr.indexOf(-1) > -1 || deArr.indexOf(item['id']) > -1
             }
             if (item.hasOwnProperty('nodes')) {
                 iObj['children'] = this.getChidrenMul(item['nodes'], iObj['children'])
@@ -236,7 +236,7 @@ class Socket {
         let iObj = {
             'title': <div className='de_item'>
                 <div className='de_name1'><GoldFilled />  {obj['name']}</div>
-            </div>, 'value': obj['id'], 'selectable': this.userAuth['creater'] || this.userAuth['sysAdmin'] || deArr.indexOf(-1) > -1 || deArr.indexOf(obj['id']) > -1
+            </div>, 'value': obj['id'], 'key': obj['id'], 'selectable': this.userAuth['creater'] || this.userAuth['sysAdmin'] || deArr.indexOf(-1) > -1 || deArr.indexOf(obj['id']) > -1
         }
         if (obj.hasOwnProperty('nodes')) {
             iObj['children'] = this.getChidrenMul(obj['nodes'], iObj['children'])
