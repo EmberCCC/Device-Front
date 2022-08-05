@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-04-11 16:11:20
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-04 08:09:23
+ * @LastEditTime: 2022-08-04 10:10:37
  * @FilePath: \bl-device-manage-test\src\layouts\FlowManage\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -108,6 +108,7 @@ const FlowManage = observer(({ FlowStore, HomeStore, TableStore, SocketStore, pr
   const [toolbarConfig, setBoolbarConfig] = useState(useToolbarConfig(props))
   const forceUpdate = useReducer((bool) => !bool)[1]
   var NsJsonForm;
+
   (function (NsJsonForm) {
     /** ControlShape的Enum */
     const { ControlShape } = NsJsonSchemaForm;
@@ -263,6 +264,10 @@ const FlowManage = observer(({ FlowStore, HomeStore, TableStore, SocketStore, pr
 
     };
   })(NsJsonForm || (NsJsonForm = {}));
+  useEffect(() => {
+    let formId = sessionStorage.getItem('formId') ? sessionStorage.getItem('formId') : HomeStore.firstFormId
+    FlowStore.getOneFlow({ "formId": formId })
+  }, [])
   const nanoid = customAlphabet('1234567890', 7)
   const onLoad = async app => {
     setApp(app)

@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-24 16:26:33
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-02 14:52:40
+ * @LastEditTime: 2022-08-05 10:40:55
  * @FilePath: \bl-device-manage-test\src\layouts\FlowManage\Self_Form\field_auth.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -54,11 +54,13 @@ const AuthShape = observer(({ FlowStore, HomeStore, TableStore, FormStore, data,
                 </Row>
             </div>
             <div className="auth_item">
-                <div className="auth_one">
+                {/* <div className="auth_one">
                     <Row>
                         <Col span={9}>全选</Col>
                         <Col span={15}>
                             <Checkbox.Group style={{ width: '100%' }} onChange={(value) => {
+                                console.log(data);
+                                console.log(toJS(formField));
                                 console.log(value);
                             }}>
                                 <Row>
@@ -78,7 +80,7 @@ const AuthShape = observer(({ FlowStore, HomeStore, TableStore, FormStore, data,
 
                         </Col>
                     </Row>
-                </div>
+                </div> */}
                 {
                     formField['fields'].map((item, index) => {
                         let obj = {}

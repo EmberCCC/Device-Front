@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-05 09:38:03
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-01 11:31:44
+ * @LastEditTime: 2022-08-04 11:38:16
  * @FilePath: \bl-device-manage-test\src\stores\FormStore.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -36,6 +36,7 @@ class Form {
     @observable formAuthManage = []
 
     @observable selectFormId = 1;
+    @observable testObj = {}
 
     @observable arr1 = {
         'department': [],

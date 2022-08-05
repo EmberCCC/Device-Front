@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-01 20:45:23
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-04 02:42:33
+ * @LastEditTime: 2022-08-05 06:47:27
  * @FilePath: \bl-device-manage-test\src\layouts\FormEdit\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -21,7 +21,6 @@ import { Submit_check } from './self_item/submit_check';
 import { Self_divider } from './self_item/self_divider';
 import mul_tag from './self_item/mul_tag';
 import RichTextEditor from './self_item/rich_text';
-import { type } from 'os';
 
 const { Provider, Sidebar, Canvas, Settings } = Generator;
 
@@ -30,7 +29,7 @@ const FormEdit = observer(({ HomeStore, FormStore }) => {
   const [schema, setSchema] = useState({});
   const [visible, setVisisble] = useState(false)
   const [lookItem, setLookItem] = useState({})
-  const [type,setType] = useState(1)
+  const [type, setType] = useState(1)
   const { schemaList, subFormName } = FormStore
   const { formInfo } = HomeStore
   const ref = useRef();
@@ -110,17 +109,15 @@ const FormEdit = observer(({ HomeStore, FormStore }) => {
     }
   }
   const handleSchemaChange = (schema, index, type) => {
-    
+
     if (type == 'root') {
-      setType(1)
       let iObj = {}
       Object.keys(schema).map((key) => {
-        if(key != 'properties'){
+        if (key != 'properties') {
           iObj[key] = schema[key]
         }
       })
     } else {
-      setType(2)
       let iList = [...schemaList]
       console.log(schema);
       iList.splice(index, 1, { 'name': subFormName[index], 'schema': schema });
@@ -150,7 +147,6 @@ const FormEdit = observer(({ HomeStore, FormStore }) => {
               defaultValue={item['schema']}
               settings={defaultSettings}
               commonSettings={defaultCommonSetting}
-              onCanvasSelect={() => setType(2)}
               globalSettings={[]}
               onSchemaChange={(schema) => handleSchemaChange(schema, index)}
               extraButtons={[false, false, false, false]}
@@ -163,9 +159,7 @@ const FormEdit = observer(({ HomeStore, FormStore }) => {
               }}
             >
               <div className="fr-generator-container" style={{ height: '100%' }}>
-                <div className='edit_main subForm' style={{ width: '100%' }} onClick={() => {
-                  console.log(11);
-                }}>
+                <div className='edit_main subForm' style={{ width: '100%' }}>
                   <Canvas />
                 </div>
                 <Settings />
@@ -195,7 +189,6 @@ const FormEdit = observer(({ HomeStore, FormStore }) => {
           settings={defaultSettings}
           commonSettings={defaultCommonSetting}
           globalSettings={defaultGlobalSettings}
-          onCanvasSelect={() => setType(1)}
           onSchemaChange={(schema) => handleSchemaChange(schema, 0, 'root')}
           extraButtons={[false, false, false, false]}
           controlButtons={[true, false, { text: 'up', onClick: (event, schema) => console.log(event, schema) }]}
@@ -212,7 +205,7 @@ const FormEdit = observer(({ HomeStore, FormStore }) => {
             <Sidebar />
             <div className='edit_main' style={{ width: '100%' }}>
               <Canvas />
-              <Tabs type='card' className={`myTabs ${type == 2 ? 'activedSub' : ''}`} tabBarGutter={5} size='small'>
+              <Tabs type='card' className={`myTabs ${type == 2 ? 'activedSub' : ''}`} tabBarGutter={5} size='small' destroyInactiveTabPane={true}>
                 {
                   getTag()
                 }

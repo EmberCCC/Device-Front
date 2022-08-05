@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-08-04 01:38:47
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-04 02:13:00
+ * @LastEditTime: 2022-08-04 12:34:29
  * @FilePath: \bl-device-manage-test\src\layouts\FlowManage\checkTool.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -22,7 +22,7 @@ export function checkFlow(flowProperty) {
     console.log(nodes);
     console.log(edges);
     nodes.map((item) => {
-        if (item['id'] != -2) {
+        if (item['id'] != -2 && item['id'] != -1) {
             if (item['charge_person']['department'].length == 0 && item['charge_person']['role'].length == 0 && item['charge_person']['user'].length == 0) {
                 result['person'][item['label']] = item['label'] + ':请至少选择一个负责人或者抄送人'
             }
