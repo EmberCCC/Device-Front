@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-30 05:48:44
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-04 09:38:27
+ * @LastEditTime: 2022-08-05 12:32:22
  * @FilePath: \bl-device-manage-test\src\layouts\MessageManage\detail.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -37,6 +37,8 @@ const DetailPage = observer(({ MessageStore, HomeStore, FlowStore, FormStore, pr
     useEffect(() => {
         setSchema(restore2({ 'form': toJS(formInfo), 'formFields': toJS(fieldInfo) }));
         console.log(toJS(info));
+        console.log(formData);
+        console.log(schema);
         FlowStore.getShowFlow({ 'formId': info['formId'] })
         formList.setValues(formData);
         form.setValues(formData);
@@ -114,9 +116,15 @@ const DetailPage = observer(({ MessageStore, HomeStore, FlowStore, FormStore, pr
         }
         formList.resetFields()
         formList.setValues(nData)
-
-
     }
+    const handleMount = () => {
+        formList.setValues(data)
+    }
+    const watch = {
+        '#': val => {
+          console.log(val);
+        }
+      }
     const getItem = () => {
         let nArr = []
         for (const key in schema) {
@@ -132,13 +140,15 @@ const DetailPage = observer(({ MessageStore, HomeStore, FlowStore, FormStore, pr
         }
         return (
             nArr.map((item, index) => {
-                return (
-                    <Tabs.TabPane tab={item['name']} key={index}>
-                        <div style={{ fontSize: "10", fontWeight: '200' }}>（双击恢复之前数据）</div>
-                        <FormRender schema={item['schema']} widgets={{ self_divider: Self_divider }}
-                            form={formList} style={{ overflowY: 'auto' }} />
-                    </Tabs.TabPane>
-                )
+                if (JSON.stringify(item['schema']['properties']) != '{}') {
+                    return (
+                        <Tabs.TabPane tab={item['name']} key={index}>
+                            {/* <div style={{ fontSize: "10", fontWeight: '200' }}>（双击恢复之前数据）</div> */}
+                            <FormRender schema={item['schema']} widgets={{ self_divider: Self_divider }}
+                                form={formList} style={{ overflowY: 'auto' }} watch={watch} onMount={handleMount} />
+                        </Tabs.TabPane>
+                    )
+                }
             })
         )
     }

@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-01 20:45:23
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-05 06:47:27
+ * @LastEditTime: 2022-08-05 12:00:29
  * @FilePath: \bl-device-manage-test\src\layouts\FormEdit\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -156,6 +156,7 @@ const FormEdit = observer(({ HomeStore, FormStore }) => {
                 link_item: Link_item,
                 submit_check: Submit_check,
                 self_divider: Self_divider,
+                RichTextEditor: RichTextEditor
               }}
             >
               <div className="fr-generator-container" style={{ height: '100%' }}>

@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-13 10:02:28
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-07-23 10:02:00
+ * @LastEditTime: 2022-08-05 11:11:49
  * @FilePath: \bl-device-manage-test\src\components\GlobalTabel2\selectLayout.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -19,13 +19,6 @@ const SelectLayout = observer(({ TableStore, HomeStore,type }) => {
     const [selectList, setSelectList] = useState(JSON.parse(sessionStorage.getItem('select_' + HomeStore.firstFormId)) || [])
     const [menu, setMenu] = useState(null)
     const { allData, columns, model } = TableStore
-    useEffect(() => {
-        console.log(toJS(columns));
-        console.log(type);
-    }, [])
-    useEffect(() => {
-        console.log(selectList);
-    },[selectList])
     const handleAdd = (item) => {
         let iList = []
         if (['createPerson', 'updateTime', 'createTime'].indexOf(item['dataIndex']) <= -1) {

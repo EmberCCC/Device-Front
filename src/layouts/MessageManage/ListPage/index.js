@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-04-24 12:36:43
- * @LastEditTime: 2022-08-01 06:01:47
+ * @LastEditTime: 2022-08-05 12:31:12
  * @LastEditors: EmberCCC 1810888456@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage-test\src\layouts\MessageManage\ListPage\index.js
@@ -75,7 +75,9 @@ class index extends Component {
                                     let fieldObj = {}
                                     item['oneDataVo']['fields'].map((one) => {
                                         try {
-                                            fieldObj[one['id']] = toJS(JSON.parse(one['detailJson']))
+                                            let de = JSON.parse(one['detailJson'])
+                                            de['fieldId'] = one['id']
+                                            fieldObj[one['id']] = toJS(de)
                                             nameObj[one['id']] = one['name']
                                         } catch (error) {
                                             fieldObj[one['id']] = toJS({})
