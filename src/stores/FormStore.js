@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-05 09:38:03
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-04 11:38:16
+ * @LastEditTime: 2022-08-06 12:55:19
  * @FilePath: \bl-device-manage-test\src\stores\FormStore.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -59,6 +59,9 @@ class Form {
         'user': []
     }
 
+    @observable formStru = {}
+
+    @observable linkData = []
     @action.bound setValue(key, value) {
         this[key] = value;
     }
@@ -118,12 +121,12 @@ class Form {
         }
     }
 
-    @action.bound async changeDataCheck(params,result) {
+    @action.bound async changeDataCheck(params, result) {
         try {
             let res = await services.putRequest(services.requestList.changeDataCheck, params);
             if (isDataExist(res)) {
                 message.success('修改成功');
-                if(result){
+                if (result) {
                     result(true);
                 }
                 return res
@@ -200,23 +203,45 @@ class Form {
         }
     }
 
-    @action.bound async updateFormInfo(params,type){
+    @action.bound async updateFormInfo(params, type) {
         try {
             let res
-            if(type == 1){
-                res = await services.putRequest(services.requestList.updateSubmit,params);
-            }else if(type == 2){
-                res = await services.putRequest(services.requestList.updateSubmitSelf,params);
-            }else if(type == 3){
-                res = await services.putRequest(services.requestList.updateManage,params);
-            }else if(type == 4){
-                res = await services.putRequest(services.requestList.updateWatch,params);
+            if (type == 1) {
+                res = await services.putRequest(services.requestList.updateSubmit, params);
+            } else if (type == 2) {
+                res = await services.putRequest(services.requestList.updateSubmitSelf, params);
+            } else if (type == 3) {
+                res = await services.putRequest(services.requestList.updateManage, params);
+            } else if (type == 4) {
+                res = await services.putRequest(services.requestList.updateWatch, params);
             }
-            if(isDataExist(res)){
+            if (isDataExist(res)) {
                 message.success('更新成功')
             }
         } catch (error) {
             console.log(error);
+        }
+    }
+
+    @action.bound async getFormSimple(params) {
+        try {
+            let res = await services.getRequest(services.requestList.getSimpleStru, params);
+            if (isDataExist(res)) {
+                this.setValue('formStru', res.data.data)
+            }
+        } catch (error) {
+
+        }
+    }
+
+    @action.bound async getLinkData(params) {
+        try {
+            let res = await services.putRequest(services.requestList.getLinkData, params);
+            if (isDataExist(res)) {
+                this.setValue('linkData', res.data.data)
+            }
+        } catch (error) {
+
         }
     }
 

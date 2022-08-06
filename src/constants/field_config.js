@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-02 08:07:00
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-05 12:43:24
+ * @LastEditTime: 2022-08-06 13:04:18
  * @FilePath: \bl-device-manage-test\src\constants\field_config.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -528,9 +528,10 @@ var elements = [
         name: '6',
         schema: {
             title: '下拉框',
-            type: 'string',
-            widget: 'select',
-            order: 1
+            type: 'any',
+            widget: 'self_select',
+            order: 1,
+            typeId:'6'
         },
         setting: {
             title: {
@@ -553,42 +554,39 @@ var elements = [
                 title: '提示文字',
                 type: 'string'
             },
-            enumList: {
+            option_type: {
                 title: '选项',
-                type: 'array',
-                widget: 'simpleList',
-                className: 'frg-options-list',
-                items: {
-                    type: 'object',
-                    properties: {
-                        value: {
-                            title: '',
-                            type: 'string',
-                            className: 'frg-options-input',
-                            props: {},
-                            placeholder: '字段'
-                        },
-                        label: {
-                            title: '',
-                            type: 'string',
-                            hidden: true,
-                            className: 'frg-options-input',
-                            props: {
-                                value: "{{rootValue.value}}"
-                            },
-                            placeholder: '名称'
-                        }
-                    }
-                },
+                type: 'string',
+                widget: 'select',
+                enum: ['1', '2', '3'],
+                enumNames: ['自定义', '关联其他表单', '数据联动'],
                 props: {
-                    hideMove: false,
-                    hideCopy: true
+                    defaultValue: '1'
+                }
+            },
+            option_list: {
+                type: 'any',
+                widget: 'select_option',
+                dependencies: ['option_type']
+            },
+            option_sort: {
+                title: '选项排序',
+                type: 'string',
+                widget: 'select',
+                enum: ['<v', '>v', '<n', '>n'],
+                enumNames: ['按选项的值：升序', '按选项的值：降序', '按提交时间：升序', '按提交时间：降s序',],
+                hidden: "{{rootValue.option_type != 2}}",
+                props: {
+                    defaultValue: '<v'
                 }
             },
             width: {
                 title: '元素宽度',
                 type: 'string',
-                widget: 'percentSlider'
+                widget: 'percentSlider',
+                props: {
+                    defaultValue: '100%'
+                }
             },
             required: {
                 title: '必填',
@@ -626,9 +624,10 @@ var elements = [
         schema: {
             title: '下拉复选框',
             description: '下拉多选',
-            type: 'array',
-            widget: 'multiSelect',
-            order: 1
+            type: 'any',
+            widget: 'self_select',
+            order: 1,
+            typeId:'7'
         },
         setting: {
             title: {
@@ -647,36 +646,30 @@ var elements = [
                 type: 'string',
                 widget: 'RichTextEditor'
             },
-            enumList: {
+            option_type: {
                 title: '选项',
-                type: 'array',
-                widget: 'simpleList',
-                className: 'frg-options-list',
-                items: {
-                    type: 'object',
-                    properties: {
-                        value: {
-                            title: '',
-                            type: 'string',
-                            className: 'frg-options-input',
-                            props: {},
-                            placeholder: '字段'
-                        },
-                        label: {
-                            title: '',
-                            type: 'string',
-                            hidden: true,
-                            className: 'frg-options-input',
-                            props: {
-                                value: "{{rootValue.value}}"
-                            },
-                            placeholder: '名称'
-                        }
-                    }
-                },
+                type: 'string',
+                widget: 'select',
+                enum: ['1', '2', '3'],
+                enumNames: ['自定义', '关联其他表单', '数据联动'],
                 props: {
-                    hideMove: false,
-                    hideCopy: true
+                    defaultValue: '1'
+                }
+            },
+            option_list: {
+                type: 'any',
+                widget: 'select_option',
+                dependencies: ['option_type']
+            },
+            option_sort: {
+                title: '选项排序',
+                type: 'string',
+                widget: 'select',
+                enum: ['<v', '>v', '<n', '>n'],
+                enumNames: ['按选项的值：升序', '按选项的值：降序', '按提交时间：升序', '按提交时间：降s序',],
+                hidden: "{{rootValue.option_type != 2}}",
+                props: {
+                    defaultValue: '<v'
                 }
             },
             width: {

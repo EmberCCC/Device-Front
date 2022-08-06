@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2021-11-02 14:29:58
- * @LastEditTime: 2022-08-01 05:16:50
+ * @LastEditTime: 2022-08-06 12:17:56
  * @LastEditors: EmberCCC 1810888456@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage\src\services\home.js
@@ -21,7 +21,10 @@ export const requestList = {
   updateSubmit: '/uaa/authF/updateSubmit',
   updateSubmitSelf: '/uaa/authF/updateSubmitSelf',
   updateManage: '/uaa/authF/updateManage',
-  updateWatch: '/uaa/authF/updateWatch'
+  updateWatch: '/uaa/authF/updateWatch',
+
+  getSimpleStru: '/data/form/getFormSimpleStruc',
+  getLinkData: '/data/link/other',
 
 }
 

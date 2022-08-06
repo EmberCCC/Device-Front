@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-01 20:45:23
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-05 12:00:29
+ * @LastEditTime: 2022-08-06 12:43:27
  * @FilePath: \bl-device-manage-test\src\layouts\FormEdit\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -21,6 +21,8 @@ import { Submit_check } from './self_item/submit_check';
 import { Self_divider } from './self_item/self_divider';
 import mul_tag from './self_item/mul_tag';
 import RichTextEditor from './self_item/rich_text';
+import Self_select from './self_item/self_select';
+import Select_option from './self_item/select_option';
 
 const { Provider, Sidebar, Canvas, Settings } = Generator;
 
@@ -37,6 +39,7 @@ const FormEdit = observer(({ HomeStore, FormStore }) => {
   const form = useForm();
   const formList = useForm();
   useEffect(() => {
+    FormStore.getFormSimple();
     let formId = sessionStorage.getItem('formId') ? sessionStorage.getItem('formId') : HomeStore.firstFormId
     FormStore.getFormField({ 'formId': formId }).then(() => {
       try {
@@ -78,15 +81,16 @@ const FormEdit = observer(({ HomeStore, FormStore }) => {
   }
   const save = () => {
     let params = exChange(ref.current.getValue(), HomeStore.firstFormId, 'root')
+    console.log(ref.current.getValue());
     if (schemaList.length > 0) {
       schemaList.map((item, index) => {
         // console.log(exChange(item['schema'], HomeStore.firstFormId, subFormName[index]));
         params['subForms'].push(exChange(item['schema'], HomeStore.firstFormId, subFormName[index])['subForms'][0] || { 'name': subFormName[index], 'fields': [] })
       })
     }
-    FormStore.saveForm(params).then(() => {
-      message.success('保存成功')
-    })
+    // FormStore.saveForm(params).then(() => {
+    //   message.success('保存成功')
+    // })
     console.log(params);
   }
   const closeDrawer = () => {
@@ -100,7 +104,12 @@ const FormEdit = observer(({ HomeStore, FormStore }) => {
         schemaList.map((item, index) => {
           return (
             <Tabs.TabPane tab={subFormName[index]} key={index}>
-              <FormRender schema={item['schema']} widgets={{ self_divider: Self_divider, RichTextEditor: RichTextEditor }}
+              <FormRender schema={item['schema']} widgets={{
+                self_divider: Self_divider,
+                RichTextEditor: RichTextEditor,
+                self_select: Self_select,
+                select_option: Select_option
+              }}
                 form={formList} style={{ overflowY: 'auto' }} />
             </Tabs.TabPane>
           )
@@ -156,7 +165,9 @@ const FormEdit = observer(({ HomeStore, FormStore }) => {
                 link_item: Link_item,
                 submit_check: Submit_check,
                 self_divider: Self_divider,
-                RichTextEditor: RichTextEditor
+                RichTextEditor: RichTextEditor,
+                self_select: Self_select,
+                select_option: Select_option
               }}
             >
               <div className="fr-generator-container" style={{ height: '100%' }}>
@@ -199,7 +210,9 @@ const FormEdit = observer(({ HomeStore, FormStore }) => {
             submit_check: Submit_check,
             self_divider: Self_divider,
             mul_tag: mul_tag,
-            RichTextEditor: RichTextEditor
+            RichTextEditor: RichTextEditor,
+            self_select: Self_select,
+            select_option: Select_option
           }}
         >
           <div className="fr-generator-container" >
@@ -226,7 +239,12 @@ const FormEdit = observer(({ HomeStore, FormStore }) => {
           <CloseOutlined onClick={closeDrawer} />
         }
       >
-        <FormRender schema={lookItem} form={form} widgets={{ self_divider: Self_divider }} />
+        <FormRender schema={lookItem} form={form} widgets={{
+          self_divider: Self_divider,
+          RichTextEditor: RichTextEditor,
+          self_select: Self_select,
+          select_option: Select_option
+        }} />
         <Tabs destroyInactiveTabPane={true} tabBarGutter={20} type='card'>
           {
             getItem()

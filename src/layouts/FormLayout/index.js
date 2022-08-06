@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-02 03:21:54
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-05 12:23:23
+ * @LastEditTime: 2022-08-06 13:05:49
  * @FilePath: \bl-device-manage-test\src\layouts\FormLayout\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -15,6 +15,8 @@ import { Self_divider } from 'layouts/FormEdit/self_item/self_divider';
 
 import './index.less'
 import { toJS } from 'mobx';
+import select_option from 'layouts/FormEdit/self_item/select_option';
+import self_select from 'layouts/FormEdit/self_item/self_select';
 const FormLayout = observer(({ HomeStore, FormStore }) => {
   const { schema, formField } = FormStore
   const [data, setData] = useState({});
@@ -22,16 +24,13 @@ const FormLayout = observer(({ HomeStore, FormStore }) => {
   const formList = useForm()
   const onFinish = (formData, error) => {
     const { firstFormId } = HomeStore;
-    console.log(formList.getValues());
-    console.log({ ...formData, ...nData, ...data });
-
     if (error.length > 0) {
       return;
     }
+    console.log(formData);
     let checkArr = getCheckArr(schema)
     let nData = formList.getValues()
     const result = getNotNullObj(toJS(formField['fields']), toJS(formField['fieldsAuth']), { ...formData, ...nData, ...data, ...formList.getValues() })
-
     if (JSON.stringify(result) != "{}") {
       message.error(
         <div>
@@ -81,8 +80,11 @@ const FormLayout = observer(({ HomeStore, FormStore }) => {
         if (JSON.stringify(item['schema']['properties']) != '{}') {
           return (
             <Tabs.TabPane tab={item['name']} key={index}>
-              {/* <div style={{ fontSize: "10", fontWeight: '200' }}>（双击恢复之前数据）</div> */}
-              <FormRender schema={item['schema']} widgets={{ self_divider: Self_divider }}
+              <FormRender schema={item['schema']} widgets={{
+                self_divider: Self_divider,
+                self_select: self_select,
+                select_option: select_option
+              }}
                 form={formList} style={{ overflowY: 'auto' }} watch={watch} onMount={handleMount} />
             </Tabs.TabPane>
           )
@@ -117,7 +119,11 @@ const FormLayout = observer(({ HomeStore, FormStore }) => {
     <Spin spinning={FormStore.loading} tip={'loading...'} wrapperClassName={'form_layout'}>
       <div style={{ height: '100%' }}>
         <div className='form_layout'>
-          <FormRender schema={schema['root']} widgets={{ self_divider: Self_divider }}
+          <FormRender schema={schema['root']} widgets={{
+            self_divider: Self_divider,
+            self_select: self_select,
+            select_option: select_option
+          }}
             form={form} onFinish={onFinish} style={{ overflowY: 'auto' }} watch={watch} />
 
           <Tabs onTabClick={handleChange} tabBarGutter={20} destroyInactiveTabPane={true} type='card'>

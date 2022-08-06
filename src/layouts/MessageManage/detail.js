@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-30 05:48:44
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-05 12:32:22
+ * @LastEditTime: 2022-08-06 13:07:21
  * @FilePath: \bl-device-manage-test\src\layouts\MessageManage\detail.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -19,6 +19,7 @@ import moment from "moment"
 import React, { useEffect, useRef, useState } from "react"
 import './index.less'
 import '@antv/xflow/dist/index.css'
+import self_select from "layouts/FormEdit/self_item/self_select"
 const DetailPage = observer(({ MessageStore, HomeStore, FlowStore, FormStore, props }) => {
     const [schema, setSchema] = useState({
         "type": "object",
@@ -36,9 +37,6 @@ const DetailPage = observer(({ MessageStore, HomeStore, FlowStore, FormStore, pr
     const ref = useRef();
     useEffect(() => {
         setSchema(restore2({ 'form': toJS(formInfo), 'formFields': toJS(fieldInfo) }));
-        console.log(toJS(info));
-        console.log(formData);
-        console.log(schema);
         FlowStore.getShowFlow({ 'formId': info['formId'] })
         formList.setValues(formData);
         form.setValues(formData);
@@ -122,9 +120,9 @@ const DetailPage = observer(({ MessageStore, HomeStore, FlowStore, FormStore, pr
     }
     const watch = {
         '#': val => {
-          console.log(val);
+            console.log(val);
         }
-      }
+    }
     const getItem = () => {
         let nArr = []
         for (const key in schema) {
@@ -143,8 +141,7 @@ const DetailPage = observer(({ MessageStore, HomeStore, FlowStore, FormStore, pr
                 if (JSON.stringify(item['schema']['properties']) != '{}') {
                     return (
                         <Tabs.TabPane tab={item['name']} key={index}>
-                            {/* <div style={{ fontSize: "10", fontWeight: '200' }}>（双击恢复之前数据）</div> */}
-                            <FormRender schema={item['schema']} widgets={{ self_divider: Self_divider }}
+                            <FormRender schema={item['schema']} widgets={{ self_divider: Self_divider, self_select: self_select }}
                                 form={formList} style={{ overflowY: 'auto' }} watch={watch} onMount={handleMount} />
                         </Tabs.TabPane>
                     )
@@ -226,7 +223,7 @@ const DetailPage = observer(({ MessageStore, HomeStore, FlowStore, FormStore, pr
                     model == 'wait' && (
                         <div style={{ height: '100%' }}>
                             <div className='form_main'>
-                                <FormRender schema={schema['root']} form={form} onFinish={onFinish} style={{ overflowY: 'auto' }} widgets={{ self_divider: Self_divider }} />
+                                <FormRender schema={schema['root']} form={form} onFinish={onFinish} style={{ overflowY: 'auto' }} widgets={{ self_divider: Self_divider, self_select: self_select }} />
 
                                 <Tabs destroyInactiveTabPane={true} onTabClick={handleChange} tabBarGutter={20} type='card'>
                                     {
