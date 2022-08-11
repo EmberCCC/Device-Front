@@ -4,7 +4,7 @@
  * @Author: zhihao
  * @Date: 2022-04-17 15:22:43
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-03 11:03:30
+ * @LastEditTime: 2022-08-08 09:31:55
  */
 
 import { message, Modal } from 'antd';
@@ -273,10 +273,10 @@ class Table {
 				for (const front in iObj) {
 					obj[front] = iObj[front]
 					iColumns.map((info) => {
-						if (info['key'] == front && ['4', '6'].indexOf(info['detailJson']['typeId']) > -1) {
+						if (info['key'] == front && ['4'].indexOf(info['detailJson']['typeId']) > -1) {
 							let index = info['detailJson']['enum'].indexOf(iObj[front])
 							obj[front] = info['detailJson']['enumNames'][index];
-						} else if (info['key'] == front && ['5', '7'].indexOf(info['detailJson']['typeId']) > -1) {
+						} else if (info['key'] == front && ['5'].indexOf(info['detailJson']['typeId']) > -1) {
 							obj[front] = ""
 							// console.log(typeof (iObj[front]));
 							let iArr = iObj[front].substring(1, iObj[front].length - 1).split(',')
@@ -343,12 +343,12 @@ class Table {
 				let jsonItem = JSON.parse(item['detailJson']);
 				jsonItem['fieldId'] = item['id'];
 				let obj = {}
-				if (['4', '5', '6', '7'].indexOf(jsonItem['typeId']) > -1) {
+				if (['4', '5'].indexOf(jsonItem['typeId']) > -1) {
 					jsonItem['enum'].map((item, index) => {
 						obj[item] = jsonItem['enumNames'][index]
 					})
 				}
-				iColumns.push({ 'title': jsonItem.title, 'dataIndex': item.id, 'key': item.id, 'detailJson': jsonItem, 'exchange': obj , 'width': 200, 'ellipsis': true });
+				iColumns.push({ 'title': jsonItem.title, 'dataIndex': item.id, 'key': item.id, 'detailJson': jsonItem, 'exchange': obj, 'width': 200, 'ellipsis': true });
 				iFieldValue.push(item.id)
 			})
 			data.fieldsValue.map((item) => {
@@ -367,9 +367,9 @@ class Table {
 			iFieldValue.push('createPerson')
 			iFieldValue.push('createTime')
 			iFieldValue.push('updateTime')
-			iColumns.push({ 'title': '创建人', 'dataIndex': 'createPerson', 'key': 'createPerson' , 'width': 200, 'ellipsis': true });
-			iColumns.push({ 'title': '创建时间', 'dataIndex': 'createTime', 'key': 'createTime' , 'width': 200, 'ellipsis': true });
-			iColumns.push({ 'title': '更新时间', 'dataIndex': 'updateTime', 'key': 'updateTime' , 'width': 200, 'ellipsis': true });
+			iColumns.push({ 'title': '创建人', 'dataIndex': 'createPerson', 'key': 'createPerson', 'width': 200, 'ellipsis': true });
+			iColumns.push({ 'title': '创建时间', 'dataIndex': 'createTime', 'key': 'createTime', 'width': 200, 'ellipsis': true });
+			iColumns.push({ 'title': '更新时间', 'dataIndex': 'updateTime', 'key': 'updateTime', 'width': 200, 'ellipsis': true });
 			this.setValue('fieldValue', iFieldValue)
 			this.setValue('modalFieldValue', iFieldValue)
 			this.setValue('columns', iColumns)
@@ -381,8 +381,6 @@ class Table {
 			this.setValue('columnsList', data.fields)
 			this.setValue('isLoading', false);
 			this.setValue('schema', getSchema(iColumns, iDataSource));
-			console.log(iColumns);
-			console.log(iDataSource);
 		} catch (error) {
 			console.log(error);
 		} finally {

@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-02 08:07:00
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-06 13:04:18
+ * @LastEditTime: 2022-08-10 18:51:25
  * @FilePath: \bl-device-manage-test\src\constants\field_config.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -13,7 +13,7 @@ var elements = [
         schema: {
             title: '单行文本',
             type: 'string',
-            order: 1
+            typeId: '0'
         },
         setting: {
             title: {
@@ -27,7 +27,7 @@ var elements = [
                     defaultValue: true
                 }
             },
-            extra: {
+            describe: {
                 title: '描述信息',
                 type: 'string',
                 widget: 'RichTextEditor'
@@ -38,11 +38,19 @@ var elements = [
                 enum: ['1', '2', '3'],
                 enumNames: ['自定义', '数据联动', '公式编辑'],
                 widget: 'select',
+                props: {
+                    defaultValue: '1'
+                }
             },
             default: {
                 type: 'any',
                 widget: 'link_item',
                 dependencies: ['default_type']
+            },
+            link_condition: {
+                type: 'any',
+                widget: 'link_condition',
+                hidden: "{{rootValue.default_type != 2}}"
             },
             width: {
                 title: '元素宽度',
@@ -112,8 +120,9 @@ var elements = [
         schema: {
             title: '多行文本',
             type: 'string',
-            format: 'textarea',
-            order: 1
+            widget: 'self_textarea',
+            // format: 'textarea',
+            typeId: '1'
         },
         setting: {
             title: {
@@ -127,7 +136,7 @@ var elements = [
                     defaultValue: true
                 }
             },
-            extra: {
+            describe: {
                 title: '描述信息',
                 type: 'string',
                 widget: 'RichTextEditor'
@@ -150,6 +159,11 @@ var elements = [
                 type: 'any',
                 widget: 'link_item',
                 dependencies: ['default_type']
+            },
+            link_condition: {
+                type: 'any',
+                widget: 'link_condition',
+                hidden: "{{rootValue.default_type != 2}}"
             },
             width: {
                 title: '元素宽度',
@@ -192,7 +206,8 @@ var elements = [
         schema: {
             title: '数字',
             type: 'number',
-            order: 1
+            widget: 'self_number',
+            typeId: '2'
         },
         setting: {
             title: {
@@ -206,7 +221,7 @@ var elements = [
                     defaultValue: true
                 }
             },
-            extra: {
+            describe: {
                 title: '描述信息',
                 type: 'string',
                 widget: 'RichTextEditor'
@@ -215,12 +230,10 @@ var elements = [
                 title: '提示文字',
                 type: 'string'
             },
-            pattern: {
+            self_pattern: {
                 title: '格式',
-                type: 'string',
-                props: {
-                    placeholder: '填写正则表达式'
-                }
+                type: 'any',
+                widget: "self_pattern"
             },
             default_type: {
                 title: '默认值',
@@ -236,6 +249,11 @@ var elements = [
                 type: 'any',
                 widget: 'link_item',
                 dependencies: ['default_type']
+            },
+            link_condition: {
+                type: 'any',
+                widget: 'link_condition',
+                hidden: "{{rootValue.default_type != 2}}"
             },
             width: {
                 title: '元素宽度',
@@ -284,8 +302,8 @@ var elements = [
         schema: {
             title: '日期选择',
             type: 'string',
-            format: 'date',
-            order: 1
+            widget: 'self_datapick',
+            typeId: '3'
         },
         setting: {
             title: {
@@ -299,7 +317,7 @@ var elements = [
                     defaultValue: true
                 }
             },
-            extra: {
+            describe: {
                 title: '描述信息',
                 type: 'string',
                 widget: 'RichTextEditor'
@@ -311,13 +329,31 @@ var elements = [
             format: {
                 title: '类型',
                 type: 'string',
-                enum: ['dateTime', 'date', 'time'],
-                enumNames: ['年-月-日 时:分:秒', '年-月-日', '时:分:秒']
+                enum: ['dateTime', 'date'],
+                enumNames: ['年-月-日 时:分:秒', '年-月-日'],
+                props: {
+                    defaultValue: 'dateTime'
+                }
             },
-            default: {
+            default_type: {
                 title: '默认值',
                 type: 'string',
-                format: '{{rootValue.format}}'
+                enum: ['1', '2', '3'],
+                enumNames: ['自定义', '数据联动', '公式编辑'],
+                widget: 'select',
+                props: {
+                    defaultValue: '1'
+                }
+            },
+            default: {
+                type: 'any',
+                widget: 'link_item',
+                dependencies: ['default_type']
+            },
+            link_condition: {
+                type: 'any',
+                widget: 'link_condition',
+                hidden: "{{rootValue.default_type != 2}}"
             },
             width: {
                 title: '元素宽度',
@@ -347,8 +383,8 @@ var elements = [
         schema: {
             title: '单选按钮组',
             type: 'string',
-            widget: 'radio',
-            order: 1
+            widget: 'self_radio',
+            typeId: '4'
         },
         setting: {
             title: {
@@ -362,7 +398,7 @@ var elements = [
                     defaultValue: true
                 }
             },
-            extra: {
+            describe: {
                 title: '描述信息',
                 type: 'string',
                 widget: 'RichTextEditor'
@@ -435,12 +471,9 @@ var elements = [
         name: '5',
         schema: {
             title: '复选框组',
-            type: 'array',
-            widget: 'checkboxes',
-            items: {
-                type: 'string'
-            },
-            order: 1
+            type: 'any',
+            widget: 'self_radio',
+            typeId: '5'
 
         },
         setting: {
@@ -455,7 +488,7 @@ var elements = [
                     defaultValue: true
                 }
             },
-            extra: {
+            describe: {
                 title: '描述信息',
                 type: 'string',
                 widget: 'RichTextEditor'
@@ -531,7 +564,7 @@ var elements = [
             type: 'any',
             widget: 'self_select',
             order: 1,
-            typeId:'6'
+            typeId: '6'
         },
         setting: {
             title: {
@@ -545,7 +578,7 @@ var elements = [
                     defaultValue: true
                 }
             },
-            extra: {
+            describe: {
                 title: '描述信息',
                 type: 'string',
                 widget: 'RichTextEditor'
@@ -627,7 +660,7 @@ var elements = [
             type: 'any',
             widget: 'self_select',
             order: 1,
-            typeId:'7'
+            typeId: '7'
         },
         setting: {
             title: {
@@ -641,7 +674,7 @@ var elements = [
                     defaultValue: true
                 }
             },
-            extra: {
+            describe: {
                 title: '描述信息',
                 type: 'string',
                 widget: 'RichTextEditor'
@@ -666,7 +699,7 @@ var elements = [
                 type: 'string',
                 widget: 'select',
                 enum: ['<v', '>v', '<n', '>n'],
-                enumNames: ['按选项的值：升序', '按选项的值：降序', '按提交时间：升序', '按提交时间：降s序',],
+                enumNames: ['按选项的值：升序', '按选项的值：降序', '按提交时间：升序', '按提交时间：降序',],
                 hidden: "{{rootValue.option_type != 2}}",
                 props: {
                     defaultValue: '<v'
@@ -717,7 +750,7 @@ var elements = [
             title: '分割线',
             type: 'any',
             widget: "self_divider",
-            order: 1
+            typeId: '8'
         },
         setting: {
             title: {
@@ -736,7 +769,7 @@ var elements = [
                 type: 'string',
                 widget: 'percentSlider'
             },
-            extra: {
+            describe: {
                 title: '描述信息',
                 type: 'string',
                 widget: 'RichTextEditor'
@@ -747,12 +780,61 @@ var elements = [
             }
         }
     }];
+var strongElements = [
+    {
+        text: '关联查询',
+        name: '14',
+        schema: {
+            title: '关联查询',
+            type: 'any',
+            typeId: '14',
+            widget: 'self_linkquery'
+        },
+        setting: {
+            title: {
+                title: '标题',
+                type: 'string',
+            },
+            title_vis: {
+                title: '显示标题',
+                type: 'boolean',
+                props: {
+                    defaultValue: true
+                }
+            },
+            describe: {
+                title: '描述信息',
+                type: 'string',
+                widget: 'RichTextEditor'
+            },
+            linkquery_condition: {
+                type: 'any',
+                widget: 'linkquery_condition'
+            },
+            width: {
+                title: '元素宽度',
+                type: 'string',
+                widget: 'percentSlider'
+            },
+            hidden: {
+                title: '隐藏',
+                type: 'boolean'
+            },
+        }
+    },
+]
 export const defaultSettings = [
     {
         title: '基础字段',
         widgets: elements,
         show: true,
         useCommon: true // TODO: 是否将common
+    },
+    {
+        title: '增强字段',
+        widgets: strongElements,
+        show: true,
+        useCommon: true
     }
 
 ]

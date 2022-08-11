@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-06-30 09:07:55
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-03 11:15:10
+ * @LastEditTime: 2022-08-10 10:58:43
  * @FilePath: \bl-device-manage-test\src\components\GlobalTabel2\dataModal.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -31,12 +31,11 @@ class DataModal extends Component {
                             let showData = modalData[item['id']]
                             let jsonData = JSON.parse(item['detailJson'])
                             if (modalData.hasOwnProperty(item['id'])) {
-                                if (jsonData['typeId'] == '4' || jsonData['typeId'] == '6') {
+                                if (jsonData['typeId'] == '4') {
                                     let index = jsonData['enum'].indexOf(modalData[item['id']])
                                     showData = jsonData['enumNames'][index]
-                                } else if (jsonData['typeId'] == '5' || jsonData['typeId'] == '7') {
+                                } else if (jsonData['typeId'] == '5') {
                                     showData = ""
-                                    console.log(modalData[item['id']]);
                                     let iData = modalData[item['id']].substring(1, modalData[item['id']].length).split(",");
                                     iData.map((one, index) => {
                                         let oneIndex = jsonData['enum'].findIndex(value => value.charCodeAt() == one.substring(1, one.length - 1).charCodeAt());
@@ -188,7 +187,7 @@ class DataModal extends Component {
                                     {
                                         infoItem.map((item, key) => {
                                             return <>
-                                                <div className='item_title'>{item.title}:</div>
+                                                <div className='item_title' key={key}>{item.title}:</div>
                                                 {
                                                     item.front != '' && <div className='item_front'>
                                                         <div className='tag'>{item.front}</div>

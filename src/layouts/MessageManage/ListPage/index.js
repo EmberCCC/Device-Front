@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-04-24 12:36:43
- * @LastEditTime: 2022-08-05 12:31:12
+ * @LastEditTime: 2022-08-10 14:42:29
  * @LastEditors: EmberCCC 1810888456@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage-test\src\layouts\MessageManage\ListPage\index.js
@@ -15,6 +15,7 @@ import { toJS } from 'mobx';
 import { getField } from '../visUtil';
 import GlobalModal from 'components/GlobalModal';
 import Detail from '../detail';
+import { getLinkCondition } from 'layouts/FormEdit/changeTool';
 
 @inject('MessageStore', 'HomeStore', 'TableStore', 'FormStore', 'SocketStore')
 @observer
@@ -92,9 +93,11 @@ class index extends Component {
                                             this.props.MessageStore.setValue('fieldInfo', fieldList)
                                             this.props.MessageStore.setValue('detailVis', true)
                                             this.props.MessageStore.setValue('info', item)
-                                            this.props.MessageStore.setValue('formData', JSON.parse(item['oneDataVo']['data']['formData']));
+                                            this.props.FormStore.setValue('formData', JSON.parse(item['oneDataVo']['data']['formData']));
                                             this.props.MessageStore.setValue('formInfo', toJS(item['oneDataVo']['form']))
                                             this.props.MessageStore.setValue('nameObj', toJS(nameObj))
+                                            this.props.FormStore.setValue('linkDataObj', getLinkCondition({ 'fields': item['oneDataVo']['fields'] })['LObj']);
+                                            this.props.FormStore.setValue('linkFieldObj', getLinkCondition({ 'fields': item['oneDataVo']['fields'] })['Fobj']);
                                         }}>
                                             <div className='one_message1'>{item['flowLog']['createPerson']}</div>
                                             <div className='one_message2'>

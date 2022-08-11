@@ -209,6 +209,9 @@
     text-overflow: ellipsis;
 
     &:hover {
+        .node_setting{
+            display: unset !important;
+        }
         background: #ebeef2;
     }
 }
@@ -222,8 +225,16 @@
     padding-left: 50px !important;
 
     &:hover {
+        .node_setting{
+            display: unset !important;
+        }
         background: #ebeef2;
     }
+}
+.node_setting{
+    display: none !important;
+    line-height: 40px !important;
+    float: right;
 }
 .selectForm{
     background-color: #ebeef2;

@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-02 03:21:54
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-06 13:05:49
+ * @LastEditTime: 2022-08-10 20:22:48
  * @FilePath: \bl-device-manage-test\src\layouts\FormLayout\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -15,10 +15,15 @@ import { Self_divider } from 'layouts/FormEdit/self_item/self_divider';
 
 import './index.less'
 import { toJS } from 'mobx';
-import select_option from 'layouts/FormEdit/self_item/select_option';
 import self_select from 'layouts/FormEdit/self_item/self_select';
+import My_string from 'layouts/FormEdit/self_item/my_string';
+import self_textarea from 'layouts/FormEdit/self_item/self_textarea';
+import self_number from 'layouts/FormEdit/self_item/self_number';
+import self_radio from 'layouts/FormEdit/self_item/self_radio';
+import self_datapick from 'layouts/FormEdit/self_item/self_datapick';
+import self_linkquery from 'layouts/FormEdit/self_item/self_linkquery';
 const FormLayout = observer(({ HomeStore, FormStore }) => {
-  const { schema, formField } = FormStore
+  const { schema, formField, formData, flag } = FormStore
   const [data, setData] = useState({});
   const form = useForm();
   const formList = useForm()
@@ -27,10 +32,8 @@ const FormLayout = observer(({ HomeStore, FormStore }) => {
     if (error.length > 0) {
       return;
     }
-    console.log(formData);
     let checkArr = getCheckArr(schema)
-    let nData = formList.getValues()
-    const result = getNotNullObj(toJS(formField['fields']), toJS(formField['fieldsAuth']), { ...formData, ...nData, ...data, ...formList.getValues() })
+    const result = getNotNullObj(toJS(formField['fields']), toJS(formField['fieldsAuth']), data)
     if (JSON.stringify(result) != "{}") {
       message.error(
         <div>
@@ -46,11 +49,11 @@ const FormLayout = observer(({ HomeStore, FormStore }) => {
       )
       return;
     }
-    if (checkArr.length > 0) {
-      FormStore.submitDataCheck({ 'formId': firstFormId, 'data': { ...formData, ...nData, ...data }, 'checkFieldIds': checkArr })
-    } else {
-      FormStore.submitData({ 'formId': firstFormId, 'data': { ...formData, ...nData, ...data } })
-    }
+    // if (checkArr.length > 0) {
+    //   FormStore.submitDataCheck({ 'formId': firstFormId, 'data': { ...formData, ...nData, ...data }, 'checkFieldIds': checkArr })
+    // } else {
+    //   FormStore.submitData({ 'formId': firstFormId, 'data': { ...formData, ...nData, ...data } })
+    // }
     console.log(checkArr);
     form.resetFields();
     formList.resetFields();
@@ -59,8 +62,15 @@ const FormLayout = observer(({ HomeStore, FormStore }) => {
     const { firstFormId } = HomeStore
     FormStore.getFormField({ formId: firstFormId })
   }, [])
+  useEffect(() => {
+    console.log(toJS(formData));
+    setData(formData)
+    form.setValues(formData)
+    formList.setValues(formData)
+  }, [flag])
   const handleMount = () => {
-    formList.setValues(data)
+    form.setValues(formData)
+    formList.setValues(formData)
   }
   const getItem = () => {
     let nArr = []
@@ -80,11 +90,19 @@ const FormLayout = observer(({ HomeStore, FormStore }) => {
         if (JSON.stringify(item['schema']['properties']) != '{}') {
           return (
             <Tabs.TabPane tab={item['name']} key={index}>
-              <FormRender schema={item['schema']} widgets={{
-                self_divider: Self_divider,
-                self_select: self_select,
-                select_option: select_option
-              }}
+              <FormRender
+                schema={item['schema']}
+                mapping={{ string: 'My_string' }}
+                widgets={{
+                  self_divider: Self_divider,
+                  self_select: self_select,
+                  My_string: My_string,
+                  self_textarea: self_textarea,
+                  self_number: self_number,
+                  self_radio: self_radio,
+                  self_datapick: self_datapick,
+                  self_linkquery:self_linkquery
+                }}
                 form={formList} style={{ overflowY: 'auto' }} watch={watch} onMount={handleMount} />
             </Tabs.TabPane>
           )
@@ -92,41 +110,38 @@ const FormLayout = observer(({ HomeStore, FormStore }) => {
       })
     )
   }
-  const handleChange = (activeKey) => {
-
-    let tdata = formList.getValues()
-
-    let nData = { ...data, ...tdata }
-    setData(nData);
-    let iObj = {}
-    for (const key in nData) {
-      if (Object.hasOwnProperty.call(nData, key)) {
-        const element = nData[key];
-        iObj[key] = element
-      }
-    }
-
-    formList.setValues(iObj)
-
-    // formList.resetFields();
-  }
   const watch = {
     '#': val => {
-      console.log(val);
+      let data = { ...data, ...val }
+      setData(data)
+      FormStore.setValue('formData', data)
     }
   }
+
   return (
     <Spin spinning={FormStore.loading} tip={'loading...'} wrapperClassName={'form_layout'}>
       <div style={{ height: '100%' }}>
         <div className='form_layout'>
-          <FormRender schema={schema['root']} widgets={{
-            self_divider: Self_divider,
-            self_select: self_select,
-            select_option: select_option
-          }}
-            form={form} onFinish={onFinish} style={{ overflowY: 'auto' }} watch={watch} />
+          <FormRender
+            schema={schema['root']}
+            mapping={{ string: 'My_string' }}
+            widgets={{
+              self_divider: Self_divider,
+              self_select: self_select,
+              My_string: My_string,
+              self_textarea: self_textarea,
+              self_number: self_number,
+              self_radio: self_radio,
+              self_datapick: self_datapick,
+              self_linkquery:self_linkquery
+            }}
+            form={form}
+            onFinish={onFinish}
+            style={{ overflowY: 'auto' }}
+            watch={watch}
+          />
 
-          <Tabs onTabClick={handleChange} tabBarGutter={20} destroyInactiveTabPane={true} type='card'>
+          <Tabs tabBarGutter={20} destroyInactiveTabPane={true} type='card'>
             {
               getItem()
             }

@@ -2,11 +2,11 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-02 03:21:54
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-06 13:07:47
+ * @LastEditTime: 2022-08-10 20:20:37
  * @FilePath: \bl-device-manage-test\src\layouts\FormLayout\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import FormRender, { useForm } from 'form-render';
 import { Button, message, Tabs } from 'antd';
 import { inject, observer } from 'mobx-react';
@@ -15,10 +15,18 @@ import { restore } from 'layouts/FormEdit/changeTool';
 import './index.less'
 import { getCheckArr, getNotNullObj } from './formUtil';
 import { Self_divider } from 'layouts/FormEdit/self_item/self_divider';
+import Self_select from 'layouts/FormEdit/self_item/self_select';
+import self_textarea from 'layouts/FormEdit/self_item/self_textarea';
+import self_number from 'layouts/FormEdit/self_item/self_number';
+import self_radio from 'layouts/FormEdit/self_item/self_radio';
+import my_string from 'layouts/FormEdit/self_item/my_string';
 import self_select from 'layouts/FormEdit/self_item/self_select';
+import self_datapick from 'layouts/FormEdit/self_item/self_datapick';
+import self_linkquery from 'layouts/FormEdit/self_item/self_linkquery';
 
 const FormData = observer(({ HomeStore, FormStore, TableStore }) => {
-  const { formField } = FormStore
+  const { formField, formData, flag } = FormStore
+  const dataRef = useRef()
   const [schema, setSchema] = useState({
     "type": "object",
     "properties": {},
@@ -30,7 +38,7 @@ const FormData = observer(({ HomeStore, FormStore, TableStore }) => {
   const formList = useForm()
   const onFinish = (formData, error) => {
     const { firstFormId } = HomeStore;
-    const result = getNotNullObj(toJS(formField['fields'], toJS(formField['fieldsAuth'], { ...formData, ...nData, ...data })))
+    const result = getNotNullObj(toJS(formField['fields']), toJS(formField?.['fieldsAuth']), { ...formData, ...data })
 
     if (JSON.stringify(result) != "{}") {
       message.error(
@@ -51,13 +59,11 @@ const FormData = observer(({ HomeStore, FormStore, TableStore }) => {
       return;
     }
     let checkArr = getCheckArr(schema);
-    let nData = formList.getValues()
-    let newData = { ...formData, ...nData, ...data };
     if (TableStore.formEdit == false) {
       FormStore.setValue('formCopyVis', false)
       TableStore.setDataPageModalVis(false);
       if (checkArr.length == 0) {
-        FormStore.submitData({ 'formId': firstFormId, 'data': newData }).then(() => {
+        FormStore.submitData({ 'formId': firstFormId, 'data': dataRef.current }).then(() => {
           if (TableStore.model == 'subitAndManage') {
             TableStore.getAllData({ formId: HomeStore.firstFormId }, 'myself')
           } else {
@@ -65,7 +71,7 @@ const FormData = observer(({ HomeStore, FormStore, TableStore }) => {
           }
         })
       } else {
-        FormStore.submitData({ 'formId': firstFormId, 'data': newData, 'checkFieldIds': checkArr }).then(() => {
+        FormStore.submitData({ 'formId': firstFormId, 'data': dataRef.current, 'checkFieldIds': checkArr }).then(() => {
           if (TableStore.model == 'subitAndManage') {
             TableStore.getAllData({ formId: HomeStore.firstFormId }, 'myself')
           } else {
@@ -75,7 +81,7 @@ const FormData = observer(({ HomeStore, FormStore, TableStore }) => {
       }
     } else {
       if (checkArr.length == 0) {
-        FormStore.changeData({ 'formId': firstFormId, 'data': newData, 'dataId': toJS(TableStore.detailData['data']['id']) }).then(() => {
+        FormStore.changeData({ 'formId': firstFormId, 'data': dataRef.current, 'dataId': toJS(TableStore.detailData['data']['id']) }).then(() => {
           TableStore.setValue('formEdit', false);
           TableStore.getOneData({ 'formId': HomeStore.firstFormId, 'dataId': toJS(TableStore.detailData['data']['id']) })
           if (TableStore.model == 'subitAndManage') {
@@ -85,7 +91,7 @@ const FormData = observer(({ HomeStore, FormStore, TableStore }) => {
           }
         })
       } else {
-        FormStore.changeDataCheck({ 'formId': firstFormId, 'data': newData, 'dataId': toJS(TableStore.detailData['data']['id']), 'checkFieldIds': checkArr }).then(() => {
+        FormStore.changeDataCheck({ 'formId': firstFormId, 'data': dataRef.current, 'dataId': toJS(TableStore.detailData['data']['id']), 'checkFieldIds': checkArr }).then(() => {
           TableStore.setValue('formEdit', false);
           TableStore.getOneData({ 'formId': HomeStore.firstFormId, 'dataId': toJS(TableStore.detailData['data']['id']) })
           if (TableStore.model == 'subitAndManage') {
@@ -104,15 +110,25 @@ const FormData = observer(({ HomeStore, FormStore, TableStore }) => {
     TableStore.setValue('formEdit', false);
   }
   const handleMount = () => {
-    formList.setValues(data)
+    formList.setValues(dataRef.current)
   }
+  useEffect(() => {
+    dataRef.current = data
+  }, [data])
+  useEffect(() => {
+    console.log(toJS(formData));
+    setData(formData)
+    form.setValues(formData)
+    formList.setValues(formData)
+  }, [flag])
   useEffect(() => {
     FormStore.getFormField({ formId: HomeStore.firstFormId }).then(() => {
       setSchema(restore(toJS(FormStore.formField), 'submit'))
-      console.log(toJS(FormStore.formField));
       const formData = JSON.parse(toJS(TableStore.formData)['formData'])
-      formList.setValues(formData);
-      form.setValues(formData);
+      FormStore.setValue('formData', formData)
+      setData(formData);
+      formList.setValues(dataRef.current);
+      form.setValues(dataRef.current);
     });
   }, [])
   const getItem = () => {
@@ -130,38 +146,63 @@ const FormData = observer(({ HomeStore, FormStore, TableStore }) => {
     }
     return (
       nArr.map((item, index) => {
-        return (
-          <Tabs.TabPane tab={item['name']} key={index}>
-            {/* <div style={{ fontSize: "10", fontWeight: '200' }}>（双击恢复之前数据）</div> */}
-            <FormRender schema={item['schema']} widgets={{ self_divider: Self_divider, sele_select: self_select }}
-              form={formList} style={{ overflowY: 'auto' }} onMount={handleMount} />
-          </Tabs.TabPane>
-        )
+        if (JSON.stringify(item['schema']['properties']) != "{}") {
+          return (
+            <Tabs.TabPane tab={item['name']} key={index}>
+              {/* <div style={{ fontSize: "10", fontWeight: '200' }}>（双击恢复之前数据）</div> */}
+              <FormRender
+                schema={item['schema']}
+                mapping={{ string: 'My_string' }}
+                widgets={{
+                  self_divider: Self_divider,
+                  self_select: self_select,
+                  My_string: my_string,
+                  self_textarea: self_textarea,
+                  self_number: self_number,
+                  self_radio: self_radio,
+                  self_datapick: self_datapick,
+                  self_linkquery: self_linkquery
+                }}
+                form={formList}
+                style={{ overflowY: 'auto' }}
+                onMount={handleMount}
+                watch={watch} />
+            </Tabs.TabPane>
+          )
+        }
       })
     )
   }
-  const handleChange = (activeKey) => {
-    let tdata = formList.getValues()
-    let nData = { ...data, ...tdata }
-    console.log(tdata);
-    setData(nData);
-    console.log(nData);
-    let iObj = {}
-    for (const key in nData) {
-      if (Object.hasOwnProperty.call(nData, key)) {
-        const element = nData[key];
-        iObj[key] = element
-
-      }
+  const watch = {
+    '#': val => {
+      let data = { ...data, ...val }
+      setData(data)
+      FormStore.setValue('formData', data)
     }
-    formList.setValues(nData)
   }
   return (
     <div className='form_content'>
       <div className='form_main'>
-        <FormRender schema={schema['root']} form={form} onFinish={onFinish} style={{ overflowY: 'auto' }} widgets={{ self_divider: Self_divider, sele_select: self_select }} />
+        <FormRender
+          schema={schema['root']}
+          form={form}
+          onFinish={onFinish}
+          style={{ overflowY: 'auto' }}
+          mapping={{ string: 'My_string' }}
+          widgets={{
+            self_divider: Self_divider,
+            self_select: self_select,
+            My_string: my_string,
+            self_textarea: self_textarea,
+            self_number: self_number,
+            self_radio: self_radio,
+            self_datapick: self_datapick,
+            self_linkquery: self_linkquery
+          }}
+          watch={watch}
+        />
 
-        <Tabs onTabClick={handleChange} tabBarGutter={20} destroyInactiveTabPane={true} type='card'>
+        <Tabs tabBarGutter={20} destroyInactiveTabPane={true} type='card'>
           {
             getItem()
           }

@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-01 20:45:23
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-06 12:43:27
+ * @LastEditTime: 2022-08-10 20:20:10
  * @FilePath: \bl-device-manage-test\src\layouts\FormEdit\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -16,13 +16,23 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Link_item } from './self_item/link_item';
 import { toJS } from 'mobx';
 import './index.less'
-import { exChange, restore } from './changeTool';
+import { exChange, getAllField, restore } from './changeTool';
 import { Submit_check } from './self_item/submit_check';
 import { Self_divider } from './self_item/self_divider';
 import mul_tag from './self_item/mul_tag';
 import RichTextEditor from './self_item/rich_text';
 import Self_select from './self_item/self_select';
 import Select_option from './self_item/select_option';
+import link_condition from './self_item/link_condition';
+import { nanoid } from 'nanoid';
+import My_string from './self_item/my_string';
+import self_textarea from './self_item/self_textarea';
+import self_number from './self_item/self_number';
+import self_radio from './self_item/self_radio';
+import self_pattern from './self_item/self_pattern';
+import self_datapick from './self_item/self_datapick';
+import self_linkquery from './self_item/self_linkquery';
+import linkquery_condition from './self_item/linkquery_condition';
 
 const { Provider, Sidebar, Canvas, Settings } = Generator;
 
@@ -81,6 +91,7 @@ const FormEdit = observer(({ HomeStore, FormStore }) => {
   }
   const save = () => {
     let params = exChange(ref.current.getValue(), HomeStore.firstFormId, 'root')
+    getAllField([ref.current.getValue(), ...toJS(schemaList)])
     console.log(ref.current.getValue());
     if (schemaList.length > 0) {
       schemaList.map((item, index) => {
@@ -104,12 +115,21 @@ const FormEdit = observer(({ HomeStore, FormStore }) => {
         schemaList.map((item, index) => {
           return (
             <Tabs.TabPane tab={subFormName[index]} key={index}>
-              <FormRender schema={item['schema']} widgets={{
-                self_divider: Self_divider,
-                RichTextEditor: RichTextEditor,
-                self_select: Self_select,
-                select_option: Select_option
-              }}
+              <FormRender
+                schema={item['schema']}
+                mapping={{ string: 'My_string' }}
+                widgets={{
+                  self_divider: Self_divider,
+                  RichTextEditor: RichTextEditor,
+                  self_select: Self_select,
+                  select_option: Select_option,
+                  My_string: My_string,
+                  self_textarea: self_textarea,
+                  self_number: self_number,
+                  self_radio: self_radio,
+                  self_datapick: self_datapick,
+                  self_linkquery: self_linkquery,
+                }}
                 form={formList} style={{ overflowY: 'auto' }} />
             </Tabs.TabPane>
           )
@@ -120,12 +140,7 @@ const FormEdit = observer(({ HomeStore, FormStore }) => {
   const handleSchemaChange = (schema, index, type) => {
 
     if (type == 'root') {
-      let iObj = {}
-      Object.keys(schema).map((key) => {
-        if (key != 'properties') {
-          iObj[key] = schema[key]
-        }
-      })
+      FormStore.setValue('rootSchema', schema)
     } else {
       let iList = [...schemaList]
       console.log(schema);
@@ -161,13 +176,25 @@ const FormEdit = observer(({ HomeStore, FormStore }) => {
               extraButtons={[false, false, false, false]}
               controlButtons={[true, false, { text: 'up', onClick: (event, schema) => console.log(event, schema) }]}
               hideId={true}
+              getId={name => `${name}_${nanoid(19)}`}
+              mapping={{ string: 'My_string' }}
               widgets={{
                 link_item: Link_item,
                 submit_check: Submit_check,
                 self_divider: Self_divider,
+                mul_tag: mul_tag,
                 RichTextEditor: RichTextEditor,
                 self_select: Self_select,
-                select_option: Select_option
+                select_option: Select_option,
+                link_condition: link_condition,
+                My_string: My_string,
+                self_textarea: self_textarea,
+                self_number: self_number,
+                self_radio: self_radio,
+                self_pattern: self_pattern,
+                self_datapick: self_datapick,
+                self_linkquery: self_linkquery,
+                linkquery_condition: linkquery_condition
               }}
             >
               <div className="fr-generator-container" style={{ height: '100%' }}>
@@ -205,6 +232,8 @@ const FormEdit = observer(({ HomeStore, FormStore }) => {
           extraButtons={[false, false, false, false]}
           controlButtons={[true, false, { text: 'up', onClick: (event, schema) => console.log(event, schema) }]}
           hideId={true}
+          getId={name => `${name}_${nanoid(19)}`}
+          mapping={{ string: 'My_string' }}
           widgets={{
             link_item: Link_item,
             submit_check: Submit_check,
@@ -212,7 +241,16 @@ const FormEdit = observer(({ HomeStore, FormStore }) => {
             mul_tag: mul_tag,
             RichTextEditor: RichTextEditor,
             self_select: Self_select,
-            select_option: Select_option
+            select_option: Select_option,
+            link_condition: link_condition,
+            My_string: My_string,
+            self_textarea: self_textarea,
+            self_number: self_number,
+            self_radio: self_radio,
+            self_pattern: self_pattern,
+            self_datapick: self_datapick,
+            self_linkquery: self_linkquery,
+            linkquery_condition: linkquery_condition
           }}
         >
           <div className="fr-generator-container" >
@@ -239,12 +277,22 @@ const FormEdit = observer(({ HomeStore, FormStore }) => {
           <CloseOutlined onClick={closeDrawer} />
         }
       >
-        <FormRender schema={lookItem} form={form} widgets={{
-          self_divider: Self_divider,
-          RichTextEditor: RichTextEditor,
-          self_select: Self_select,
-          select_option: Select_option
-        }} />
+        <FormRender
+          schema={lookItem}
+          form={form}
+          mapping={{ string: 'My_string' }}
+          widgets={{
+            self_divider: Self_divider,
+            RichTextEditor: RichTextEditor,
+            self_select: Self_select,
+            select_option: Select_option,
+            My_string: My_string,
+            self_textarea: self_textarea,
+            self_number: self_number,
+            self_radio: self_radio,
+            self_datapick: self_datapick,
+            self_linkquery: self_linkquery,
+          }} />
         <Tabs destroyInactiveTabPane={true} tabBarGutter={20} type='card'>
           {
             getItem()

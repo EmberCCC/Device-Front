@@ -2,16 +2,16 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-05 09:38:03
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-06 12:55:19
+ * @LastEditTime: 2022-08-10 20:39:43
  * @FilePath: \bl-device-manage-test\src\stores\FormStore.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 
 import { isDataExist } from 'utils/dataTools';
 import * as services from '../services/form';
-import { observable, action, makeObservable } from 'mobx';
+import { observable, action, makeObservable, toJS } from 'mobx';
 import { message, Modal } from 'antd';
-import { restore } from 'layouts/FormEdit/changeTool';
+import { getLinkCondition, restore } from 'layouts/FormEdit/changeTool';
 
 class Form {
     constructor() {
@@ -26,6 +26,7 @@ class Form {
     @observable loading = false
     @observable formField = {};
     @observable formCopyVis = false;
+    @observable rootSchema = {}
     @observable subFormList = [];
     @observable subFormName = [];
     @observable schemaList = [];
@@ -59,9 +60,28 @@ class Form {
         'user': []
     }
 
-    @observable formStru = {}
+    @observable formStru = []
 
     @observable linkData = []
+
+    @observable fieldName = {}
+
+    @observable linkDataObj = {}
+    @observable linkFieldObj = {}
+    @observable formData = {}
+    @observable flag = false
+
+    @action.bound async handleBlur(schema) {
+        let id = schema.hasOwnProperty('fieldId') ? schema.fieldId : schema.$id.substr(2)
+        if (this.linkFieldObj.hasOwnProperty(id)) {
+            let arr = []
+            this.linkFieldObj[id].map((item) => {
+                arr.push({ ...this.linkDataObj[item], 'nowValue': this.formData })
+            })
+            this.getData(arr)
+        }
+    }
+
     @action.bound setValue(key, value) {
         this[key] = value;
     }
@@ -89,7 +109,10 @@ class Form {
             let res = await services.getRequest(services.requestList.getFieldInfo, params);
             if (isDataExist(res)) {
                 this.setValue('formField', res.data.data);
+                getLinkCondition(res.data.data)
                 this.setValue('schema', restore(res.data.data, 'submit'));
+                this.setValue('linkDataObj', getLinkCondition(res.data.data)['LObj']);
+                this.setValue('linkFieldObj', getLinkCondition(res.data.data)['Fobj']);
             }
         } catch (error) {
             console.log(error);
@@ -239,12 +262,65 @@ class Form {
             let res = await services.putRequest(services.requestList.getLinkData, params);
             if (isDataExist(res)) {
                 this.setValue('linkData', res.data.data)
+                let obj = {}
+                res.data.data.map((item) => {
+                    item['fieldSimpleVos'].map((one) => {
+                        obj[one['fieldId']] = one['fieldName']
+                    })
+                })
+                this.setValue('fieldName', obj)
             }
         } catch (error) {
 
         }
     }
 
+    @action.bound async changeMenuName(params) {
+        try {
+            let res = await services.putUrlRequest(services.requestList.changeMenuName, params);
+            if (isDataExist(res)) {
+                message.success('修改成功')
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    @action.bound async getData(params) {
+        try {
+            let res = await services.putRequest(services.requestList.getData, params);
+            if (isDataExist(res)) {
+                console.log(res.data.data);
+                let obj = {}
+                res.data.data.map(item => obj[item['fieldId']] = item['fieldValue'])
+                console.log({ ...this.formData, ...obj });
+                this.setValue('formData', { ...this.formData, ...obj })
+                this.setValue('flag', !this.flag)
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    @action.bound async getSearchData(params) {
+        try {
+            let res = await services.putRequest(services.requestList.getSearchData, params);
+            if (isDataExist(res)) {
+                console.log(res.data.data);
+                let obj = {}
+                res.data.data.map(item => {
+                    let iObj = {}
+                    item['values'].map(one => {
+                        iObj[one['fieldId']] = one['fieldValue']
+                    })
+                    obj[item['fieldId']] = iObj
+                })
+                this.setValue('formData', { ...this.formData, ...obj })
+                this.setValue('flag', !this.flag)
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
 }
 
 let FormStore = new Form();

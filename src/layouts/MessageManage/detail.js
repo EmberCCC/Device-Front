@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-30 05:48:44
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-06 13:07:21
+ * @LastEditTime: 2022-08-10 20:21:06
  * @FilePath: \bl-device-manage-test\src\layouts\MessageManage\detail.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -10,7 +10,7 @@ import { ApartmentOutlined, CopyOutlined, FormOutlined, NodeExpandOutlined, Play
 import { createGraphConfig, FlowchartCanvas, XFlow, XFlowCanvas, XFlowGraphCommands } from "@antv/xflow"
 import { Button, Drawer, Input, message, Tabs } from "antd"
 import FormRender, { useForm } from "form-render"
-import { restore, restore2 } from "layouts/FormEdit/changeTool"
+import { getLinkCondition, restore, restore2 } from "layouts/FormEdit/changeTool"
 import { Self_divider } from "layouts/FormEdit/self_item/self_divider"
 import { getCheckArr } from "layouts/FormLayout/formUtil"
 import { toJS } from "mobx"
@@ -20,6 +20,12 @@ import React, { useEffect, useRef, useState } from "react"
 import './index.less'
 import '@antv/xflow/dist/index.css'
 import self_select from "layouts/FormEdit/self_item/self_select"
+import self_radio from "layouts/FormEdit/self_item/self_radio"
+import self_number from "layouts/FormEdit/self_item/self_number"
+import self_textarea from "layouts/FormEdit/self_item/self_textarea"
+import my_string from "layouts/FormEdit/self_item/my_string"
+import self_datapick from "layouts/FormEdit/self_item/self_datapick"
+import self_linkquery from "layouts/FormEdit/self_item/self_linkquery"
 const DetailPage = observer(({ MessageStore, HomeStore, FlowStore, FormStore, props }) => {
     const [schema, setSchema] = useState({
         "type": "object",
@@ -27,8 +33,10 @@ const DetailPage = observer(({ MessageStore, HomeStore, FlowStore, FormStore, pr
         "labelWidth": 120,
         "displayType": "row"
     });
-    const { fieldInfo, formData, formInfo, info, model, nameObj } = MessageStore
+    const dataRef = useRef()
+    const { fieldInfo, formInfo, info, model, nameObj } = MessageStore
     const { picture } = FlowStore
+    const { formData, flag } = FormStore
     const [type, setType] = useState(1)
     const [data, setData] = useState({});
     const [draVis, setDraVis] = useState(false)
@@ -36,8 +44,18 @@ const DetailPage = observer(({ MessageStore, HomeStore, FlowStore, FormStore, pr
     const formList = useForm()
     const ref = useRef();
     useEffect(() => {
+        dataRef.current = data;
+    }, [data])
+    useEffect(() => {
+        console.log(toJS(formData));
+        setData(formData)
+        form.setValues(formData)
+        formList.setValues(formData)
+    }, [flag])
+    useEffect(() => {
         setSchema(restore2({ 'form': toJS(formInfo), 'formFields': toJS(fieldInfo) }));
         FlowStore.getShowFlow({ 'formId': info['formId'] })
+        setData(formData)
         formList.setValues(formData);
         form.setValues(formData);
     }, [])
@@ -101,26 +119,15 @@ const DetailPage = observer(({ MessageStore, HomeStore, FlowStore, FormStore, pr
         form.resetFields();
         formList.resetFields();
     }
-    const handleChange = (activeKey) => {
-        let tdata = formList.getValues()
-        let nData = { ...data, ...tdata }
-        setData(nData);
-        let iObj = {}
-        for (const key in nData) {
-            if (Object.hasOwnProperty.call(nData, key)) {
-                const element = nData[key];
-                iObj[key] = element
-            }
-        }
-        formList.resetFields()
-        formList.setValues(nData)
-    }
     const handleMount = () => {
-        formList.setValues(data)
+        form.setValues(dataRef.current)
+        formList.setValues(dataRef.current)
     }
     const watch = {
         '#': val => {
-            console.log(val);
+            let data = { ...data, ...val }
+            setData(data)
+            FormStore.setValue('formData', data)
         }
     }
     const getItem = () => {
@@ -141,8 +148,23 @@ const DetailPage = observer(({ MessageStore, HomeStore, FlowStore, FormStore, pr
                 if (JSON.stringify(item['schema']['properties']) != '{}') {
                     return (
                         <Tabs.TabPane tab={item['name']} key={index}>
-                            <FormRender schema={item['schema']} widgets={{ self_divider: Self_divider, self_select: self_select }}
-                                form={formList} style={{ overflowY: 'auto' }} watch={watch} onMount={handleMount} />
+                            <FormRender
+                                schema={item['schema']}
+                                mapping={{ string: 'My_string' }}
+                                widgets={{
+                                    self_divider: Self_divider,
+                                    self_select: self_select,
+                                    My_string: my_string,
+                                    self_textarea: self_textarea,
+                                    self_number: self_number,
+                                    self_radio: self_radio,
+                                    self_datapick: self_datapick,
+                                    self_linkquery:self_linkquery
+                                }}
+                                form={formList}
+                                style={{ overflowY: 'auto' }}
+                                watch={watch}
+                                onMount={handleMount} />
                         </Tabs.TabPane>
                     )
                 }
@@ -156,10 +178,10 @@ const DetailPage = observer(({ MessageStore, HomeStore, FlowStore, FormStore, pr
             if (field != undefined) {
                 console.log(field);
                 let showData = formData[item]
-                if (field['typeId'] == '4' || field['typeId'] == '6') {
+                if (field['typeId'] == '4') {
                     let index = field['enum'].indexOf(formData[item])
                     showData = field['enumNames'][index]
-                } else if (field['typeId'] == '5' || field['typeId'] == '7') {
+                } else if (field['typeId'] == '5') {
                     showData = ""
                     let iData = formData[item].substring(1, formData[item].length).split(",");
                     iData.map((one, index) => {
@@ -223,9 +245,26 @@ const DetailPage = observer(({ MessageStore, HomeStore, FlowStore, FormStore, pr
                     model == 'wait' && (
                         <div style={{ height: '100%' }}>
                             <div className='form_main'>
-                                <FormRender schema={schema['root']} form={form} onFinish={onFinish} style={{ overflowY: 'auto' }} widgets={{ self_divider: Self_divider, self_select: self_select }} />
+                                <FormRender
+                                    schema={schema['root']}
+                                    form={form}
+                                    onFinish={onFinish}
+                                    style={{ overflowY: 'auto' }}
+                                    mapping={{ string: 'My_string' }}
+                                    widgets={{
+                                        self_divider: Self_divider,
+                                        self_select: self_select,
+                                        My_string: my_string,
+                                        self_textarea: self_textarea,
+                                        self_number: self_number,
+                                        self_radio: self_radio,
+                                        self_datapick: self_datapick,
+                                        self_linkquery:self_linkquery
+                                    }}
+                                    watch={watch}
+                                />
 
-                                <Tabs destroyInactiveTabPane={true} onTabClick={handleChange} tabBarGutter={20} type='card'>
+                                <Tabs destroyInactiveTabPane={true} tabBarGutter={20} type='card'>
                                     {
                                         getItem()
                                     }

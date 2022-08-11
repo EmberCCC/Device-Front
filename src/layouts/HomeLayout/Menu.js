@@ -3,7 +3,7 @@ import { inject, observer } from 'mobx-react';
 import { NavLink, withRouter } from 'react-router-dom';
 import classnames from 'classnames';
 import './index.less';
-import { BellTwoTone, CarryOutTwoTone, FileTextOutlined, FolderFilled, FolderOpenOutlined, FolderOutlined, PlayCircleTwoTone, SoundTwoTone, ToolOutlined } from '@ant-design/icons';
+import { BellTwoTone, CarryOutTwoTone, FileTextOutlined, FolderFilled, FolderOpenOutlined, FolderOutlined, PlayCircleTwoTone, SettingOutlined, SoundTwoTone, ToolOutlined } from '@ant-design/icons';
 import { Menu, Layout, Badge } from 'antd';
 import { toJS } from 'mobx';
 import { MenuObj } from 'constants/configs';
@@ -130,6 +130,7 @@ class MenuLayout extends Component {
                         )}
                         <span className='node_name'>{item.menuName}
                         </span>
+                        <SettingOutlined className='node_setting' />
                       </div>
                       {
                         item.simpleForms.length > 0 && (
@@ -148,6 +149,7 @@ class MenuLayout extends Component {
                               }} className={`left_menu_child ${idIndex > -1 ? 'display' : 'undisplay'} ${this.props.HomeStore.firstFormId == one['formId'] ? 'selectForm' : ''}`}>
                                 <FileTextOutlined className='node_icon' style={{ 'color': `${one['type'] == 0 ? "#5da0cc" : "rgb(245, 164, 57)"}` }} />
                                 <span className='node_name'>{one.formName}</span>
+                                <SettingOutlined className='node_setting' />
                               </div>
                             )
                           })

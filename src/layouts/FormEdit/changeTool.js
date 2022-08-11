@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-05 10:16:45
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-05 12:26:56
+ * @LastEditTime: 2022-08-10 10:29:37
  * @FilePath: \bl-device-manage-test\src\layouts\FormEdit\changeTool.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -27,8 +27,13 @@ export function exChange(item, firstFormId, name) {
         iObj['name'] = keyP
 
         iObj['detailJson'] = item[key][keyP]
+        if (iObj['detailJson'].hasOwnProperty('order')) {
+          delete iObj.detailJson.order
+        }
         if (iObj['detailJson'].hasOwnProperty('fieldId')) {
           iObj['fieldId'] = iObj['detailJson']['fieldId'];
+        } else {
+          iObj['fieldId'] = keyP
         }
         if (!iObj['detailJson'].hasOwnProperty('typeId')) {
           iObj['detailJson']['typeId'] = keyP.split('_')[0];
@@ -50,17 +55,18 @@ export function exChange(item, firstFormId, name) {
 function getOneForm(fields, fieldIds, type, flag, authInfo) {
   let result = {}
   fieldIds.forEach(item => {
-    fields.forEach((field,index) => {
+    fields.forEach((field, index) => {
       if (field != null) {
         if (field['id'] == item) {
           const detailJson = JSON.parse(field['detailJson']);
-          detailJson['order'] = index
+
           const id = field['id']
-          const name = type == 'submit' ? field['id'] : "".concat(detailJson['typeId'], "_").concat(nanoid(6))
+          const name = type == 'submit' ? field['id'] : "".concat(detailJson['typeId'], "_").concat(nanoid(19))
           if (type == 'submit') {
             if (detailJson.hasOwnProperty('title_vis') && detailJson['title_vis'] == false) {
               detailJson['title'] = ""
             }
+            detailJson['order'] = index
           }
           if (flag && type == 'submit') {
             if (authInfo.hasOwnProperty(id)) {
@@ -170,4 +176,70 @@ export function getSchema(columnsArr) {
   schema['properties'] = properties;
   console.log(schema);
   return schema
+}
+
+export function getAllField(schema) {
+  console.log(schema);
+  let obj = {}
+  schema.map(item => {
+    if (item) {
+      Object.keys(item).map(one => {
+        if (item[one].hasOwnProperty('fieldId')) {
+          obj[item[one]['fieldId']] = { 'fieldId': item[one]['fieldId'], 'fieldName': item[one]['title'], 'fieldTypeId': item[one]['typeId'] }
+        } else {
+          obj[one] = { 'fieldId': one, 'fieldName': item[one]['title'], 'fieldTypeId': item[one]['typeId'] }
+        }
+      })
+    }
+
+  })
+  console.log(obj);
+  return obj
+}
+
+export function checkCondition(list) {
+  let flag = true
+  list.forEach((item) => {
+    if (item['fieldId'] == null || item['fieldTypeId'] == null || item['operand'] == null) {
+      flag = false
+      return;
+    }
+  })
+  console.log(list);
+  return flag
+}
+
+export function checkSelf(list) {
+  let flag = false
+  list.forEach((item) => {
+    if (item['custom'] == false) {
+      flag = true
+      return;
+    }
+  })
+  return flag
+}
+
+export function getLinkCondition(formInfo) {
+  console.log(formInfo);
+  let LObj = {}
+  let FObj = {}
+  formInfo.fields.map((item,index) => {
+    let detailJson = JSON.parse(item['detailJson'])
+    if(detailJson['default_type'] == '2'){
+      LObj[item['id']] = detailJson['link_condition']
+      detailJson['link_condition']['conditions'].map((one) => {
+        if(one['custom'] == false){
+          if(FObj.hasOwnProperty(one['operand'])){
+            FObj[one['operand']].push(item['id'])
+          }else{
+            FObj[one['operand']] = []
+            FObj[one['operand']].push(item['id'])
+          }
+        }
+      })
+    }
+  })
+  console.log({LObj,FObj});
+  return {'LObj':LObj,'Fobj':FObj}
 }
