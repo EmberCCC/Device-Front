@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-04 12:43:55
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-11 17:40:42
+ * @LastEditTime: 2022-08-11 18:22:01
  * @FilePath: \bl-device-manage-test\src\layouts\FormEdit\self_item\link_item.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -29,7 +29,11 @@ const Linkquery_condition = observer((props) => {
         console.log(schema);
         console.log(props);
         if (value == undefined) {
-            onChange({ originId: props.addons.formData.$id.substr(2), restrictType: 'and', conditions: [], fieldIds: [], formId: null, mul: 'one' })
+            if (addons.formData.typeId == '14') {
+                onChange({ originId: props.addons.formData.$id.substr(2), restrictType: 'and', conditions: [], fieldIds: [], formId: null, mul: 'one' })
+            } else if (addons.formData.typeId == '15') {
+                onChange({ originId: props.addons.formData.$id.substr(2), restrictType: 'and', conditions: [], fieldIds: [], fieldShow: [], formId: null })
+            }
         } else {
             setList(value?.conditions)
         }
@@ -42,6 +46,10 @@ const Linkquery_condition = observer((props) => {
                     let obj = { ...value }
                     obj['formId'] = e
                     obj['fieldIds'] = []
+                    obj['conditions'] = []
+                    if (addons.formData.typeId == '15') {
+                        obj['fieldShow'] = []
+                    }
                     onChange(obj)
                 }}>
                     {
@@ -72,6 +80,27 @@ const Linkquery_condition = observer((props) => {
                     }
                 </Select>
             </div>
+            {
+                addons.formData.typeId == '15' && (
+                    <div className="query_showField">
+                        <div className="query_title">表单中显示字段</div>
+                        <Select value={value?.fieldShow} mode='multiple' style={{ width: '100%' }} onChange={(e) => {
+                            let obj = { ...value }
+                            obj['fieldShow'] = e
+                            onChange(obj)
+                        }}>
+                            {
+                                value?.fieldIds.map((one, index) => {
+                                    return (
+                                        <Select.Option key={index} value={one}>{FormStore.fieldNameObj[one]}</Select.Option>
+                                    )
+                                })
+                            }
+                        </Select>
+                    </div>
+
+                )
+            }
             <div className="query_condition">
                 <div className="query_title">数据过滤</div>
                 <Button onClick={() => {
@@ -87,17 +116,22 @@ const Linkquery_condition = observer((props) => {
 
                 }} style={{ width: '100%' }}>{`${value?.conditions.length > 0 ? "已设置过滤条件" : '添加过滤条件'}`}</Button>
             </div>
-            <div className="query_mul">
-                <div className="query_title">显示数据条数</div>
-                <Radio.Group value={value?.mul} onChange={(e) => {
-                    let obj = { ...value }
-                    obj['mul'] = e.target.value
-                    onChange(obj)
-                }}>
-                    <Radio value={'one'}>一条</Radio>
-                    <Radio value={'mul'}>多条</Radio>
-                </Radio.Group>
-            </div>
+
+            {
+                addons.formData.typeId == '14' && (
+                    <div className="query_mul">
+                        <div className="query_title">显示数据条数</div>
+                        <Radio.Group value={value?.mul} onChange={(e) => {
+                            let obj = { ...value }
+                            obj['mul'] = e.target.value
+                            onChange(obj)
+                        }}>
+                            <Radio value={'one'}>一条</Radio>
+                            <Radio value={'mul'}>多条</Radio>
+                        </Radio.Group>
+                    </div>
+                )
+            }
             <Modal title={'添加过滤条件'} destroyOnClose={true} onCancel={() => {
                 setList(value?.conditions)
                 setVis(false)
