@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-05 10:16:45
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-10 10:29:37
+ * @LastEditTime: 2022-08-11 17:40:08
  * @FilePath: \bl-device-manage-test\src\layouts\FormEdit\changeTool.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -221,25 +221,42 @@ export function checkSelf(list) {
 }
 
 export function getLinkCondition(formInfo) {
-  console.log(formInfo);
+  // console.log(formInfo);
   let LObj = {}
   let FObj = {}
-  formInfo.fields.map((item,index) => {
+  let DObj = {}
+  let DDObj = {}
+  formInfo.fields.map((item, index) => {
     let detailJson = JSON.parse(item['detailJson'])
-    if(detailJson['default_type'] == '2'){
+    if (detailJson['default_type'] == '2') {
       LObj[item['id']] = detailJson['link_condition']
       detailJson['link_condition']['conditions'].map((one) => {
-        if(one['custom'] == false){
-          if(FObj.hasOwnProperty(one['operand'])){
+        if (one['custom'] == false) {
+          if (FObj.hasOwnProperty(one['operand'])) {
             FObj[one['operand']].push(item['id'])
-          }else{
+          } else {
             FObj[one['operand']] = []
             FObj[one['operand']].push(item['id'])
           }
         }
       })
     }
+    if (item['typeId'] == '14') {
+      let obj = { ...detailJson['linkquery_condition'] }
+      DObj[item['id']] = obj
+      detailJson['linkquery_condition']['conditions'].map(one => {
+        if (one['custom'] == false) {
+          if (DDObj.hasOwnProperty(one['operand'])) {
+            DDObj[one['operand']].push(item['id'])
+          } else {
+            DDObj[one['operand']] = []
+            DDObj[one['operand']].push(item['id'])
+          }
+        }
+      })
+    }
+    console.log(detailJson);
   })
-  console.log({LObj,FObj});
-  return {'LObj':LObj,'Fobj':FObj}
+  console.log({ 'LObj': LObj, 'Fobj': FObj, 'DObj': DObj, 'DDObj': DDObj });
+  return { 'LObj': LObj, 'Fobj': FObj, 'DObj': DObj, 'DDObj': DDObj }
 }

@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-05 09:38:03
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-10 20:39:43
+ * @LastEditTime: 2022-08-11 17:48:25
  * @FilePath: \bl-device-manage-test\src\stores\FormStore.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -68,18 +68,38 @@ class Form {
 
     @observable linkDataObj = {}
     @observable linkFieldObj = {}
+    @observable linkqueryFieldObj = {}
+    @observable linkqueryDataObj = {}
     @observable formData = {}
+
+    @observable fieldNameObj = {}
     @observable flag = false
 
     @action.bound async handleBlur(schema) {
         let id = schema.hasOwnProperty('fieldId') ? schema.fieldId : schema.$id.substr(2)
+        let arr = []
+        let arrLink = []
         if (this.linkFieldObj.hasOwnProperty(id)) {
-            let arr = []
             this.linkFieldObj[id].map((item) => {
                 arr.push({ ...this.linkDataObj[item], 'nowValue': this.formData })
             })
-            this.getData(arr)
         }
+        if (this.linkqueryDataObj.hasOwnProperty(id)) {
+            this.linkqueryDataObj[id].map(item => {
+                arrLink.push({ ...this.linkqueryFieldObj[item], 'nowValue': this.formData })
+            })
+        }
+        let res1 = {}
+        let res2 = {}
+        if (arr.length > 0) {
+            res1 = await this.getData(arr)
+        }
+        if (arrLink.length > 0) {
+            res2 = await this.getSearchData(arrLink)
+        }
+        console.log(res1, res2);
+        this.setValue('formData', { ...this.formData, ...res1, ...res2 })
+        this.setValue('flag', !this.flag)
     }
 
     @action.bound setValue(key, value) {
@@ -105,14 +125,17 @@ class Form {
         this.setValue('loading', true);
         this.setValue('formField', {});
         this.setValue('schema', {});
+        this.setValue('formData', {})
         try {
             let res = await services.getRequest(services.requestList.getFieldInfo, params);
             if (isDataExist(res)) {
                 this.setValue('formField', res.data.data);
-                getLinkCondition(res.data.data)
+                let obj = getLinkCondition(res.data.data)
                 this.setValue('schema', restore(res.data.data, 'submit'));
-                this.setValue('linkDataObj', getLinkCondition(res.data.data)['LObj']);
-                this.setValue('linkFieldObj', getLinkCondition(res.data.data)['Fobj']);
+                this.setValue('linkDataObj', obj['LObj']);
+                this.setValue('linkFieldObj', obj['Fobj']);
+                this.setValue('linkqueryFieldObj', obj['DObj']);
+                this.setValue('linkqueryDataObj', obj['DDObj']);
             }
         } catch (error) {
             console.log(error);
@@ -251,6 +274,14 @@ class Form {
             let res = await services.getRequest(services.requestList.getSimpleStru, params);
             if (isDataExist(res)) {
                 this.setValue('formStru', res.data.data)
+                let obj = {}
+                res.data.data.map(item => {
+                    item['fieldSimpleVos'].map(one => {
+                        obj[one['fieldId']] = one['fieldName']
+                    })
+                })
+                console.log(obj);
+                this.setValue('fieldNameObj',obj)
             }
         } catch (error) {
 
@@ -294,8 +325,7 @@ class Form {
                 let obj = {}
                 res.data.data.map(item => obj[item['fieldId']] = item['fieldValue'])
                 console.log({ ...this.formData, ...obj });
-                this.setValue('formData', { ...this.formData, ...obj })
-                this.setValue('flag', !this.flag)
+                return obj;
             }
         } catch (error) {
             console.log(error);
@@ -308,14 +338,17 @@ class Form {
                 console.log(res.data.data);
                 let obj = {}
                 res.data.data.map(item => {
-                    let iObj = {}
+                    let iObj = []
                     item['values'].map(one => {
-                        iObj[one['fieldId']] = one['fieldValue']
+                        let iiObj = {}
+                        one.map(oone => {
+                            iiObj[oone['fieldId']] = oone['fieldValue']
+                        })
+                        iObj.push(iiObj)
                     })
                     obj[item['fieldId']] = iObj
                 })
-                this.setValue('formData', { ...this.formData, ...obj })
-                this.setValue('flag', !this.flag)
+                return obj;
             }
         } catch (error) {
             console.log(error);

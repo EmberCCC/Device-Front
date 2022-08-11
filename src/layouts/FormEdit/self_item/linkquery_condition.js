@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-04 12:43:55
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-10 19:52:06
+ * @LastEditTime: 2022-08-11 17:40:42
  * @FilePath: \bl-device-manage-test\src\layouts\FormEdit\self_item\link_item.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -15,7 +15,7 @@ import { checkCondition, getAllField } from "../changeTool";
 import { toJS } from "mobx";
 import { select_arr, select_condtion } from "constants/select_config";
 const Linkquery_condition = observer((props) => {
-    const { TableStore, FormStore, HomeStore, value, schema, onChange } = props
+    const { TableStore, FormStore, HomeStore, value, schema, onChange, addons } = props
     const formId = sessionStorage.getItem('formId') ? sessionStorage.getItem('formId') : HomeStore.firstFormId
     const dataRef = useRef()
     const [vis, setVis] = useState(false);
@@ -26,6 +26,8 @@ const Linkquery_condition = observer((props) => {
     }, [value])
     useEffect(() => {
         FormStore.getFormSimple();
+        console.log(schema);
+        console.log(props);
         if (value == undefined) {
             onChange({ originId: props.addons.formData.$id.substr(2), restrictType: 'and', conditions: [], fieldIds: [], formId: null, mul: 'one' })
         } else {
@@ -60,12 +62,11 @@ const Linkquery_condition = observer((props) => {
                     let obj = { ...value }
                     obj['fieldIds'] = e
                     onChange(obj)
-                    console.log(e);
                 }}>
                     {
                         FormStore.formStru.filter(one => one['formId'] == value?.formId)[0]?.['fieldSimpleVos'].map((item, index) => {
                             return (
-                                <Select.Option key={index} value={JSON.stringify({ 'fieldName': item['fieldName'], 'fieldId': item['fieldId'] })}>{item['fieldName']}</Select.Option>
+                                <Select.Option key={index} value={item['fieldId']}>{item['fieldName']}</Select.Option>
                             )
                         })
                     }
@@ -80,7 +81,6 @@ const Linkquery_condition = observer((props) => {
                         let arr = []
                         arr.push(toJS(FormStore.rootSchema['properties']))
                         FormStore.schemaList.map(item => arr.push(toJS(item['schema']['properties'])))
-                        console.log(getAllField(arr));
                         setFieldObj(getAllField(arr))
                         setVis(true)
                     }
