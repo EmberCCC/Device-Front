@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-24 21:41:47
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-02 09:09:17
+ * @LastEditTime: 2022-08-14 05:08:40
  * @FilePath: \bl-device-manage-test\src\layouts\FlowManage\Self_Form\node_charge.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -126,10 +126,13 @@ const Node_charge = observer(({ FlowStore, HomeStore, TableStore, SocketStore, i
                                             return (
                                                 <div key={parseInt(index.toString() + oIndex.toString())} className="select_display_item">
                                                     <UserOutlined style={{ color: '#5d9cee' }} />
-                                                    {userName[one]} <span onClick={() => {
+                                                    {userName[one]}
+                                                    <span onClick={() => {
                                                         let nCharge = { ...icharge }
                                                         let iArr = [...nCharge['user']]
+                                                        console.log(nCharge['user']);
                                                         iArr.splice(oIndex, 1);
+                                                        console.log(iArr);
                                                         nCharge['user'] = iArr
                                                         if (typeName == 'node') {
                                                             MODELS.SELECTED_NODE.useValue(modelService).then(res => {
@@ -143,7 +146,9 @@ const Node_charge = observer(({ FlowStore, HomeStore, TableStore, SocketStore, i
                                                             })
                                                         }
                                                         setIcharge({ ...nCharge })
-                                                    }} className="select_cancel">X</span>
+                                                    }} className="select_cancel">
+                                                        X
+                                                    </span>
                                                 </div>
                                             )
                                         }
@@ -276,18 +281,27 @@ const Node_charge = observer(({ FlowStore, HomeStore, TableStore, SocketStore, i
                                                         addUserList.length != 0 && (
                                                             allUsers.map((item, index) => {
                                                                 if (addUserList.some((one) => one['userId'] == item['userId'])) {
-                                                                    console.log(item);
                                                                     return (
                                                                         <Checkbox onClick={() => {
                                                                             console.log(item['userId'])
                                                                             let arr = [...icharge['user']]
                                                                             let obj = { ...addUserObjs }
-                                                                            let index = icharge['user'].indexOf(item['userId'])
+                                                                            let index 
+                                                                            if(typeName == 'node'){
+                                                                                index = icharge['user'].indexOf(item['userId'])
+                                                                            }else{
+                                                                                index = icharge['user'].indexOf(item['userId'].toString())
+                                                                            }
                                                                             if (index > -1) {
                                                                                 arr.splice(index, 1)
                                                                                 delete obj[item['userId']]
                                                                             } else {
-                                                                                arr.push(item['userId'])
+                                                                                if (typeName == 'node') {
+                                                                                    arr.push(item['userId'])
+                                                                                } else {
+                                                                                    arr.push(item['userId'].toString())
+
+                                                                                }
                                                                                 obj[item['userId']] = item['name']
                                                                             }
                                                                             let nCharge = { ...icharge }

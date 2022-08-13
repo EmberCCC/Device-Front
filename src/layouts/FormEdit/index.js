@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-01 20:45:23
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-13 20:54:17
+ * @LastEditTime: 2022-08-14 05:41:38
  * @FilePath: \bl-device-manage-test\src\layouts\FormEdit\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -34,6 +34,8 @@ import self_datapick from './self_item/self_datapick';
 import self_linkquery from './self_item/self_linkquery';
 import linkquery_condition from './self_item/linkquery_condition';
 import { Self_address } from './self_item/self_address';
+import self_department_user from './self_item/self_department_user';
+import self_setting from './self_item/self_setting';
 
 const { Provider, Sidebar, Canvas, Settings } = Generator;
 
@@ -92,8 +94,6 @@ const FormEdit = observer(({ HomeStore, FormStore }) => {
   }
   const save = () => {
     let params = exChange(ref.current.getValue(), HomeStore.firstFormId, 'root')
-    getAllField([ref.current.getValue(), ...toJS(schemaList)])
-    console.log(ref.current.getValue());
     if (schemaList.length > 0) {
       schemaList.map((item, index) => {
         // console.log(exChange(item['schema'], HomeStore.firstFormId, subFormName[index]));
@@ -130,7 +130,8 @@ const FormEdit = observer(({ HomeStore, FormStore }) => {
                   self_radio: self_radio,
                   self_datapick: self_datapick,
                   self_linkquery: self_linkquery,
-                  self_address: Self_address
+                  self_address: Self_address,
+                  self_department_user: self_department_user
                 }}
                 form={formList} style={{ overflowY: 'auto' }} />
             </Tabs.TabPane>
@@ -197,7 +198,9 @@ const FormEdit = observer(({ HomeStore, FormStore }) => {
                 self_datapick: self_datapick,
                 self_linkquery: self_linkquery,
                 linkquery_condition: linkquery_condition,
-                self_address: Self_address
+                self_address: Self_address,
+                self_department_user: self_department_user,
+                self_setting:self_setting
               }}
             >
               <div className="fr-generator-container" style={{ height: '100%' }}>
@@ -254,7 +257,9 @@ const FormEdit = observer(({ HomeStore, FormStore }) => {
             self_datapick: self_datapick,
             self_linkquery: self_linkquery,
             linkquery_condition: linkquery_condition,
-            self_address: Self_address
+            self_address: Self_address,
+            self_department_user: self_department_user,
+            self_setting:self_setting
           }}
         >
           <div className="fr-generator-container" >
@@ -296,7 +301,8 @@ const FormEdit = observer(({ HomeStore, FormStore }) => {
             self_radio: self_radio,
             self_datapick: self_datapick,
             self_linkquery: self_linkquery,
-            self_address: Self_address
+            self_address: Self_address,
+            self_department_user: self_department_user
           }} />
         <Tabs destroyInactiveTabPane={true} tabBarGutter={20} type='card'>
           {

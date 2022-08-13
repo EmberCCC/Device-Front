@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-04 12:43:55
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-11 21:39:48
+ * @LastEditTime: 2022-08-14 05:19:13
  * @FilePath: \bl-device-manage-test\src\layouts\FormEdit\self_item\link_item.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -29,8 +29,6 @@ const Link_condition = observer((props) => {
     useEffect(() => {
         FormStore.getFormSimple();
         let fId = props.addons.formData.hasOwnProperty('fieldId') ? props.addons.formData.fieldId : props.addons.formData.$id.substr(2)
-        console.log(schema);
-        console.log(props.addons.formData);
         if (value == undefined) {
             onChange({ 'formId': null, 'conditions': [], 'linkFieldId': null, 'originId': fId });
         } else {
@@ -246,12 +244,7 @@ const Link_condition = observer((props) => {
                                     onChange({ 'formId': id, 'conditions': conditionList, 'linkFieldId': link })
                                     setVis(false)
                                 }
-                                console.log(id);
-                                console.log(conditionList);
-                                console.log(link);
-
                             }
-
                         }}>确定</Button>
                     </div>
                 </div>

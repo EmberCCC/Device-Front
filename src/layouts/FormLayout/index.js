@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-02 03:21:54
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-13 20:00:32
+ * @LastEditTime: 2022-08-14 05:07:12
  * @FilePath: \bl-device-manage-test\src\layouts\FormLayout\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -23,6 +23,7 @@ import self_radio from 'layouts/FormEdit/self_item/self_radio';
 import self_datapick from 'layouts/FormEdit/self_item/self_datapick';
 import self_linkquery from 'layouts/FormEdit/self_item/self_linkquery';
 import { Self_address } from 'layouts/FormEdit/self_item/self_address';
+import self_department_user from 'layouts/FormEdit/self_item/self_department_user';
 const FormLayout = observer(({ HomeStore, FormStore }) => {
   const { schema, formField, formData, flag } = FormStore
   const [data, setData] = useState({});
@@ -103,7 +104,8 @@ const FormLayout = observer(({ HomeStore, FormStore }) => {
                   self_radio: self_radio,
                   self_datapick: self_datapick,
                   self_linkquery: self_linkquery,
-                  self_address:Self_address
+                  self_address: Self_address,
+                  self_department_user: self_department_user
                 }}
                 form={formList} style={{ overflowY: 'auto' }} watch={watch} onMount={handleMount} />
             </Tabs.TabPane>
@@ -136,7 +138,8 @@ const FormLayout = observer(({ HomeStore, FormStore }) => {
               self_radio: self_radio,
               self_datapick: self_datapick,
               self_linkquery: self_linkquery,
-              self_address:Self_address
+              self_address: Self_address,
+              self_department_user: self_department_user
             }}
             form={form}
             onFinish={onFinish}

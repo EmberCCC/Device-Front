@@ -1,0 +1,66 @@
+/*
+ * @Author: EmberCCC 1810888456@qq.com
+ * @Date: 2022-08-09 09:24:55
+ * @LastEditors: EmberCCC 1810888456@qq.com
+ * @LastEditTime: 2022-08-14 05:29:14
+ * @FilePath: \bl-device-manage-test\src\layouts\FormEdit\self_item\my_string.js
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
+import { Button, Input, Radio, Select } from "antd";
+import Node_charge from "layouts/FlowManage/Self_Form/node_charge";
+import { inject, observer } from "mobx-react";
+import React, { useEffect } from "react";
+
+import './index.css'
+const Self_setting = observer((props) => {
+    const { schema, FormStore, SocketStore } = props;
+    useEffect(() => {
+        if (props.value == undefined) {
+            props.onChange({ type: '1', scope: { 'department': [], 'role': [], 'user': [] }, judge: false, mul: false })
+        }
+    }, [])
+    const handleChange = (value) => {
+        let obj = { ...props.value }
+        obj.scope = value
+        props.onChange(obj)
+        console.log(value);
+    }
+    return (
+        <div style={{ width: '100%' }} >
+            <Select value={props.value?.type} style={{ width: '100%', marginBottom: '10px' }} onChange={(e) => {
+                let obj = { ...props.value }
+                obj.type = e
+                props.onChange(obj)
+            }}>
+                <Select.Option key={'1'}>自定义</Select.Option>
+                <Select.Option key={'2'}>由部门字段决定</Select.Option>
+            </Select>
+            {
+                props.value?.type == '1' && (
+                    <Node_charge handleUpdate={handleChange} charge_person={props.value?.scope} />
+                )
+            }
+            {
+                props.value?.type == '2' && (
+                    <Radio checked={props.value?.judge} onClick={(e) => {
+                        let obj = { ...props.value }
+                        obj.judge = !obj.judge
+                        props.onChange(obj)
+                    }}>部门单选</Radio>
+                )
+            }
+            <div>
+                <Radio.Group style={{ marginTop: '10px' }} value={props.value?.mul} onChange={(e) => {
+                    let obj = { ...props.value }
+                    obj.mul = e.target.value
+                    props.onChange(obj)
+                }}>
+                    <Radio value={false}>单选</Radio>
+                    <Radio value={true}>多选</Radio>
+                </Radio.Group>
+            </div>
+        </div>
+    );
+})
+
+export default inject((stores) => ({ FormStore: stores.FormStore, SocketStore: stores.SocketStore }))(Self_setting)

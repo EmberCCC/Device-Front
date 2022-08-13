@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-19 23:01:23
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-03 23:18:46
+ * @LastEditTime: 2022-08-14 04:13:21
  * @FilePath: \bl-device-manage-test\src\stores\SocketStore.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -69,6 +69,10 @@ class Socket {
     @observable deArr = []
 
     @observable createRoleVis = false
+
+    @observable roleUserList = []
+    @observable departmentUserList = []
+
     handleClick = ({ key, domEvent }) => {
         this.setValue('SelectKey', key);
         this.getOneDepartment({ 'departmentId': key })
@@ -414,10 +418,12 @@ class Socket {
     }
     @action.bound async getAddUserList(params) {
         this.setValue('addUserList', [])
+        this.setValue('departmentUserList', [])
         try {
             let res = await services.getRequest(services.requestList.getOneDepartmentUser, params)
             if (isDataExist(res)) {
                 this.setValue('addUserList', res.data.data);
+                this.setValue('departmentUserList', res.data.data);
             }
         } catch (error) {
             console.log(error);
@@ -583,11 +589,14 @@ class Socket {
         }
     }
     @action.bound async getOneRoleUser(params) {
+        this.setValue('roleList', [])
+        this.setValue('roleUserList', [])
         try {
             let res = await services.getRequest(services.requestList.getOneRoleUsers, params);
             if (isDataExist(res)) {
                 console.log(res.data.data);
                 this.setValue('roleList', res.data.data)
+                this.setValue('roleUserList', res.data.data)
             }
         } catch (error) {
             console.log(error);
