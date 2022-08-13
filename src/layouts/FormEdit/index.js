@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-01 20:45:23
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-11 16:01:22
+ * @LastEditTime: 2022-08-13 20:54:17
  * @FilePath: \bl-device-manage-test\src\layouts\FormEdit\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -33,6 +33,7 @@ import self_pattern from './self_item/self_pattern';
 import self_datapick from './self_item/self_datapick';
 import self_linkquery from './self_item/self_linkquery';
 import linkquery_condition from './self_item/linkquery_condition';
+import { Self_address } from './self_item/self_address';
 
 const { Provider, Sidebar, Canvas, Settings } = Generator;
 
@@ -99,9 +100,9 @@ const FormEdit = observer(({ HomeStore, FormStore }) => {
         params['subForms'].push(exChange(item['schema'], HomeStore.firstFormId, subFormName[index])['subForms'][0] || { 'name': subFormName[index], 'fields': [] })
       })
     }
-    // FormStore.saveForm(params).then(() => {
-    //   message.success('保存成功')
-    // })
+    FormStore.saveForm(params).then(() => {
+      message.success('保存成功')
+    })
     console.log(params);
   }
   const closeDrawer = () => {
@@ -129,6 +130,7 @@ const FormEdit = observer(({ HomeStore, FormStore }) => {
                   self_radio: self_radio,
                   self_datapick: self_datapick,
                   self_linkquery: self_linkquery,
+                  self_address: Self_address
                 }}
                 form={formList} style={{ overflowY: 'auto' }} />
             </Tabs.TabPane>
@@ -194,7 +196,8 @@ const FormEdit = observer(({ HomeStore, FormStore }) => {
                 self_pattern: self_pattern,
                 self_datapick: self_datapick,
                 self_linkquery: self_linkquery,
-                linkquery_condition: linkquery_condition
+                linkquery_condition: linkquery_condition,
+                self_address: Self_address
               }}
             >
               <div className="fr-generator-container" style={{ height: '100%' }}>
@@ -250,7 +253,8 @@ const FormEdit = observer(({ HomeStore, FormStore }) => {
             self_pattern: self_pattern,
             self_datapick: self_datapick,
             self_linkquery: self_linkquery,
-            linkquery_condition: linkquery_condition
+            linkquery_condition: linkquery_condition,
+            self_address: Self_address
           }}
         >
           <div className="fr-generator-container" >
@@ -292,6 +296,7 @@ const FormEdit = observer(({ HomeStore, FormStore }) => {
             self_radio: self_radio,
             self_datapick: self_datapick,
             self_linkquery: self_linkquery,
+            self_address: Self_address
           }} />
         <Tabs destroyInactiveTabPane={true} tabBarGutter={20} type='card'>
           {

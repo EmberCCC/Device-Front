@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-02 08:07:00
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-11 17:24:57
+ * @LastEditTime: 2022-08-11 21:48:02
  * @FilePath: \bl-device-manage-test\src\constants\field_config.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -781,6 +781,79 @@ var elements = [
         }
     }];
 var strongElements = [
+    {
+        text: '地址',
+        name: '9',
+        schema: {
+            title: '地址',
+            type: 'any',
+            typeId: '9',
+            widget: 'self_address'
+        },
+        setting: {
+            title: {
+                title: '标题',
+                type: 'string',
+            },
+            title_vis: {
+                title: '显示标题',
+                type: 'boolean',
+                props: {
+                    defaultValue: true
+                }
+            },
+            describe: {
+                title: '描述信息',
+                type: 'string',
+                widget: 'RichTextEditor'
+            },
+            default_type: {
+                title: '默认值',
+                type: 'string',
+                enum: ['1', '2', '3'],
+                enumNames: ['自定义', '数据联动', '公式编辑'],
+                widget: 'select',
+                props: {
+                    defaultValue: '1'
+                }
+            },
+            default: {
+                type: 'any',
+                widget: 'link_item',
+                dependencies: ['default_type']
+            },
+            address_pattern: {
+                title: '类型',
+                type: 'string',
+                widget: 'select',
+                enum: ['1', '2'],
+                enumNames: ['省-市-区', '省-市-区-详细地址'],
+                props: {
+                    defaultValue: '1'
+                }
+            },
+            required: {
+                title: '必填',
+                type: 'boolean'
+            },
+            hidden: {
+                title: '隐藏',
+                type: 'boolean'
+            },
+            disabled: {
+                title: '不可编辑',
+                type: 'boolean',
+                props: {
+                    disabled: '{{rootValue.hidden}}'
+                }
+            },
+            width: {
+                title: '元素宽度',
+                type: 'string',
+                widget: 'percentSlider'
+            }
+        }
+    },
     {
         text: '关联查询',
         name: '14',

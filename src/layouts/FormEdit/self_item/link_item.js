@@ -2,15 +2,16 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-04 12:43:55
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-10 16:03:16
+ * @LastEditTime: 2022-08-11 22:38:10
  * @FilePath: \bl-device-manage-test\src\layouts\FormEdit\self_item\link_item.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 import React, { useEffect, useState } from "react";
-import { Button, DatePicker, Input, Modal } from "antd";
+import { Button, Cascader, DatePicker, Input, Modal } from "antd";
 import Math_Modal from "../FormModal/Math_Modal";
 import './index.css'
 import moment from "moment";
+import { options } from "constants/address";
 export const Link_item = ({ value, onChange, ...rest }) => {
     const [math, setMath] = useState(false);
     const [relValue, setRelValue] = useState('');
@@ -68,6 +69,22 @@ export const Link_item = ({ value, onChange, ...rest }) => {
                     // onChange(moment(e).format(obj[format]))
                     onChange(e)
                 }} />
+            }
+            {
+                addons.dependValues[0] != '2' && addons.dependValues[0] != '3' && addons.formData.$id.substring(2, 3) == 9 && (
+                    <div>
+                        <Cascader
+                            style={{ width: '100%' }}
+                            placeholder={'请选择地址'}
+                            options={options}
+                            changeOnSelect
+                            onChange={(e) => {
+                                console.log(e);
+                            }}
+                        />
+                    </div>
+                )
+
             }
             {
                 addons.dependValues[0] == '3' &&

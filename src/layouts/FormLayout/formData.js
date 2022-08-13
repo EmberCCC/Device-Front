@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-02 03:21:54
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-10 20:20:37
+ * @LastEditTime: 2022-08-13 20:00:53
  * @FilePath: \bl-device-manage-test\src\layouts\FormLayout\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -23,6 +23,7 @@ import my_string from 'layouts/FormEdit/self_item/my_string';
 import self_select from 'layouts/FormEdit/self_item/self_select';
 import self_datapick from 'layouts/FormEdit/self_item/self_datapick';
 import self_linkquery from 'layouts/FormEdit/self_item/self_linkquery';
+import { Self_address } from 'layouts/FormEdit/self_item/self_address';
 
 const FormData = observer(({ HomeStore, FormStore, TableStore }) => {
   const { formField, formData, flag } = FormStore
@@ -161,7 +162,8 @@ const FormData = observer(({ HomeStore, FormStore, TableStore }) => {
                   self_number: self_number,
                   self_radio: self_radio,
                   self_datapick: self_datapick,
-                  self_linkquery: self_linkquery
+                  self_linkquery: self_linkquery,
+                  self_address:Self_address
                 }}
                 form={formList}
                 style={{ overflowY: 'auto' }}
@@ -197,7 +199,8 @@ const FormData = observer(({ HomeStore, FormStore, TableStore }) => {
             self_number: self_number,
             self_radio: self_radio,
             self_datapick: self_datapick,
-            self_linkquery: self_linkquery
+            self_linkquery: self_linkquery,
+            self_address:Self_address
           }}
           watch={watch}
         />

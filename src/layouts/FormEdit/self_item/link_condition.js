@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-04 12:43:55
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-10 10:42:14
+ * @LastEditTime: 2022-08-11 21:39:48
  * @FilePath: \bl-device-manage-test\src\layouts\FormEdit\self_item\link_item.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -200,16 +200,18 @@ const Link_condition = observer((props) => {
                             }}>
                                 {
                                     FormStore.formStru.filter(one => one['formId'] == id)[0]?.['fieldSimpleVos'].map((field, fI) => {
-                                        if (props.addons.formData.typeId == '3') {
-                                            if (field['fieldTypeId'] == '3') {
+                                        if (['0', '1', '4', '5'].indexOf(props.addons.formData.typeId) > -1) {
+                                            if (['0', '1', '4', '5'].indexOf(field['fieldTypeId']) > -1) {
                                                 return (
                                                     <Select.Option value={field['fieldId']} key={fI}>{field['fieldName']}</Select.Option>
                                                 )
                                             }
                                         } else {
-                                            return (
-                                                <Select.Option value={field['fieldId']} key={fI}>{field['fieldName']}</Select.Option>
-                                            )
+                                            if (props.addons.formData.typeId == field['fieldTypeId']) {
+                                                return (
+                                                    <Select.Option value={field['fieldId']} key={fI}>{field['fieldName']}</Select.Option>
+                                                )
+                                            }
                                         }
                                     })
                                 }

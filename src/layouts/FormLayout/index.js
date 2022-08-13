@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-02 03:21:54
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-11 16:01:19
+ * @LastEditTime: 2022-08-13 20:00:32
  * @FilePath: \bl-device-manage-test\src\layouts\FormLayout\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -22,6 +22,7 @@ import self_number from 'layouts/FormEdit/self_item/self_number';
 import self_radio from 'layouts/FormEdit/self_item/self_radio';
 import self_datapick from 'layouts/FormEdit/self_item/self_datapick';
 import self_linkquery from 'layouts/FormEdit/self_item/self_linkquery';
+import { Self_address } from 'layouts/FormEdit/self_item/self_address';
 const FormLayout = observer(({ HomeStore, FormStore }) => {
   const { schema, formField, formData, flag } = FormStore
   const [data, setData] = useState({});
@@ -49,11 +50,11 @@ const FormLayout = observer(({ HomeStore, FormStore }) => {
       )
       return;
     }
-    // if (checkArr.length > 0) {
-    //   FormStore.submitDataCheck({ 'formId': firstFormId, 'data': { ...formData, ...data }, 'checkFieldIds': checkArr })
-    // } else {
-    //   FormStore.submitData({ 'formId': firstFormId, 'data': { ...formData, ...data } })
-    // }
+    if (checkArr.length > 0) {
+      FormStore.submitDataCheck({ 'formId': firstFormId, 'data': { ...formData, ...data }, 'checkFieldIds': checkArr })
+    } else {
+      FormStore.submitData({ 'formId': firstFormId, 'data': { ...formData, ...data } })
+    }
     console.log(checkArr);
     form.resetFields();
     formList.resetFields();
@@ -101,7 +102,8 @@ const FormLayout = observer(({ HomeStore, FormStore }) => {
                   self_number: self_number,
                   self_radio: self_radio,
                   self_datapick: self_datapick,
-                  self_linkquery: self_linkquery
+                  self_linkquery: self_linkquery,
+                  self_address:Self_address
                 }}
                 form={formList} style={{ overflowY: 'auto' }} watch={watch} onMount={handleMount} />
             </Tabs.TabPane>
@@ -133,7 +135,8 @@ const FormLayout = observer(({ HomeStore, FormStore }) => {
               self_number: self_number,
               self_radio: self_radio,
               self_datapick: self_datapick,
-              self_linkquery: self_linkquery
+              self_linkquery: self_linkquery,
+              self_address:Self_address
             }}
             form={form}
             onFinish={onFinish}
