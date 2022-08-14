@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-04 12:43:55
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-14 05:34:00
+ * @LastEditTime: 2022-08-14 15:29:09
  * @FilePath: \bl-device-manage-test\src\layouts\FormEdit\self_item\link_item.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -10,7 +10,6 @@ import React, { useEffect, useState } from "react";
 import { Button, Cascader, DatePicker, Input, Modal } from "antd";
 import Math_Modal from "../FormModal/Math_Modal";
 import './index.css'
-import moment from "moment";
 import { options } from "constants/address";
 import User_choose from "../user_choose";
 export const Link_item = ({ value, onChange, ...rest }) => {
@@ -18,14 +17,8 @@ export const Link_item = ({ value, onChange, ...rest }) => {
     const [relValue, setRelValue] = useState('');
     const { addons } = rest;
     useEffect(() => {
-        console.log(addons.formData.typeId);
-        console.log(addons);
-        console.log(value);
-        // addons
-    }, [])
-    useEffect(() => {
         if (addons.formData.default_type == '2') {
-            if (addons.formData.typeId == '20') {
+            if (addons.formData.typeId == '20' && addons.formData.default == undefined) {
                 onChange([])
             } else {
                 onChange('')
@@ -33,7 +26,10 @@ export const Link_item = ({ value, onChange, ...rest }) => {
         }
     }, [addons.formData.default_type])
     useEffect(() => {
-        onChange([])
+        if (addons.formData.self_setting?.mul == true && value.length > 1) {
+            onChange([])
+        }
+
     }, [addons.formData.self_setting?.mul])
     const handleInput = (event) => {
         onChange(event.target.value);
@@ -101,7 +97,7 @@ export const Link_item = ({ value, onChange, ...rest }) => {
             }
             {
                 addons.formData.typeId == '20' && addons.formData?.self_setting?.type == '1' && addons.formData?.default_type != '2' && (
-                    <User_choose disabled={false} handleUpdate={handleUpdate} mode={addons.formData.self_setting.mul} initUserList={value == undefined ? [] : value} initChooseList={addons.formData.self_setting.scope} />
+                    <User_choose disabled={false} handleUpdate={handleUpdate} mode={addons.formData.self_setting.mul} initUserList={value == undefined || value == "" ? [] : value} initChooseList={addons.formData.self_setting.scope} />
                 )
             }
             {

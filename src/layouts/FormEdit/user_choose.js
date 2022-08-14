@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-24 21:41:47
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-14 05:39:55
+ * @LastEditTime: 2022-08-14 15:26:25
  * @FilePath: \bl-device-manage-test\src\layouts\FlowManage\Self_Form\node_charge.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -34,7 +34,7 @@ const User_choose = observer(({ SocketStore, handleUpdate, initUserList, mode, i
                 }
             }}>
                 {
-                    initUserList.map((item, index) => {
+                    Object.prototype.toString.call(initUserList) === '[object Array]' && initUserList.map((item, index) => {
                         return (
                             <div key={index} className="select_display_item">
                                 <UserOutlined style={{ color: '#5d9cee' }} />
@@ -48,7 +48,7 @@ const User_choose = observer(({ SocketStore, handleUpdate, initUserList, mode, i
                 <div className="select_person">
                     <div className="select_display">
                         {
-                            userList.map((item, index) => {
+                            Object.prototype.toString.call(userList) === '[object Array]' && userList.map((item, index) => {
                                 return (
                                     <div key={index} className="select_display_item">
                                         <UserOutlined style={{ color: '#5d9cee' }} />
