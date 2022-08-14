@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-08-09 09:24:55
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-14 05:29:14
+ * @LastEditTime: 2022-08-14 15:47:34
  * @FilePath: \bl-device-manage-test\src\layouts\FormEdit\self_item\my_string.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -15,10 +15,11 @@ import './index.css'
 const Self_setting = observer((props) => {
     const { schema, FormStore, SocketStore } = props;
     useEffect(() => {
+        console.log(props);
         if (props.value == undefined) {
             props.onChange({ type: '1', scope: { 'department': [], 'role': [], 'user': [] }, judge: false, mul: false })
         }
-    }, [])
+    }, [props])
     const handleChange = (value) => {
         let obj = { ...props.value }
         obj.scope = value
@@ -36,8 +37,8 @@ const Self_setting = observer((props) => {
                 <Select.Option key={'2'}>由部门字段决定</Select.Option>
             </Select>
             {
-                props.value?.type == '1' && (
-                    <Node_charge handleUpdate={handleChange} charge_person={props.value?.scope} />
+                props.value?.type != '2' && (
+                    <Node_charge handleUpdate={handleChange} charge_person={props.value?.scope ? props.value.scope : { 'department': [], 'role': [], 'user': [] }} />
                 )
             }
             {
