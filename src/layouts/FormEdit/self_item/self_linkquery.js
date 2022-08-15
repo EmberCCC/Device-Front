@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-10 16:01:23
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-15 11:07:42
+ * @LastEditTime: 2022-08-15 11:10:33
  * @FilePath: \bl-device-manage-test\src\layouts\FormEdit\self_item\myDivider.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -48,7 +48,7 @@ const Self_linkquery = observer((props) => {
             <div className='self_link_showlist'>
                 {
                     schema?.linkquery_condition?.mul == 'one' && schema.typeId == '14' && (
-                        schema?.linkquery_condition.fieldIds.map((item, index) => {
+                        schema?.linkquery_condition?.fieldIds.map((item, index) => {
                             // console.log(props.value);
                             return (
                                 <div className='self_link_show_one' key={index}>
