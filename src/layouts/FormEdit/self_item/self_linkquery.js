@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-10 16:01:23
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-11 20:31:52
+ * @LastEditTime: 2022-08-15 11:07:42
  * @FilePath: \bl-device-manage-test\src\layouts\FormEdit\self_item\myDivider.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -101,7 +101,7 @@ const Self_linkquery = observer((props) => {
                             }}>选择数据</Button>
                             <div>
                                 {
-                                    schema?.linkquery_condition.fieldShow.map((item, index) => {
+                                    schema?.linkquery_condition?.fieldShow.map((item, index) => {
                                         return (
                                             <div className='self_link_show_one' key={index}>
                                                 <div className='self_link_show_title'>
