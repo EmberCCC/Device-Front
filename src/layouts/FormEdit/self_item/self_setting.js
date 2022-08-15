@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-08-09 09:24:55
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-14 15:47:34
+ * @LastEditTime: 2022-08-15 14:25:37
  * @FilePath: \bl-device-manage-test\src\layouts\FormEdit\self_item\my_string.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -16,6 +16,7 @@ const Self_setting = observer((props) => {
     const { schema, FormStore, SocketStore } = props;
     useEffect(() => {
         console.log(props);
+        console.log(schema);
         if (props.value == undefined) {
             props.onChange({ type: '1', scope: { 'department': [], 'role': [], 'user': [] }, judge: false, mul: false })
         }

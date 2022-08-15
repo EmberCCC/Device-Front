@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-10 16:01:23
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-15 11:10:33
+ * @LastEditTime: 2022-08-15 19:41:13
  * @FilePath: \bl-device-manage-test\src\layouts\FormEdit\self_item\myDivider.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -10,6 +10,8 @@ import { Button, Modal, Select, Spin, Table } from 'antd';
 import { toJS } from 'mobx';
 import { inject, observer } from 'mobx-react';
 import React, { useEffect, useState } from 'react'
+import * as services from '../../../services/form';
+import { put } from 'utils/request';
 import { getAllField } from '../changeTool';
 
 import './index.css'
@@ -18,6 +20,7 @@ const Self_linkquery = observer((props) => {
     const [column, setColumn] = useState([])
     const [vis, setVis] = useState(false)
     const [dataSource, setDataSource] = useState([])
+    const [showData, setShowData] = useState([])
     const [load, setLoad] = useState(false)
     useEffect(() => {
         FormStore.getFormSimple().then(() => {
@@ -39,42 +42,75 @@ const Self_linkquery = observer((props) => {
                 arr.push({ title: FormStore.fieldNameObj[item], dataIndex: item, key: item, width: '50', ellipsis: true })
             })
         }
-
         setColumn(arr)
     }, [schema.linkquery_condition])
+    useEffect(() => {
+        if (props.value != undefined && props.value.length != 0) {
+            let arr = props.value
+            if (!Array.isArray(arr)) {
+                arr = JSON.parse(arr)
+            }
+            put('/data/FastQuery', arr).then((res) => {
+                let arr = []
+                res.data.data.map((item, index) => {
+                    let obj = {}
+                    let data = JSON.parse(item['formData'])
+                    obj = { ...data }
+                    obj['key'] = item['id']
+                    obj['id'] = item['id']
+                    arr.push(obj)
+                })
+                setShowData(arr)
+            })
+        }
+
+    }, [props.value])
+    const getInfo = () => {
+        if (showData.length > 0) {
+            return schema?.linkquery_condition?.fieldIds.map((item, index) => {
+                return (
+                    <div className='self_link_show_one' key={index}>
+                        <div className='self_link_show_title'>
+                            {FormStore.fieldNameObj[item]}
+                        </div>
+                        <div className='self_link_show_content'>
+                            {
+                                !showData[0].hasOwnProperty(item) && (
+                                    "暂无信息"
+                                )
+                            }
+                            {
+                                showData[0].hasOwnProperty(item) && (
+                                    showData[0][item]
+                                )
+                            }
+                        </div>
+                    </div>
+                )
+            })
+        } else {
+            return schema?.linkquery_condition?.fieldIds.map((item, index) => {
+                return (
+                    <div className='self_link_show_one' key={index}>
+                        <div className='self_link_show_title'>
+                            {FormStore.fieldNameObj[item]}
+                        </div>
+                        <div className='self_link_show_content'>
+                            暂无信息
+                        </div>
+                    </div>
+                )
+            })
+        }
+
+    }
     return (
         <div style={{ width: '100%' }}>
             <div className="self_rich_text" dangerouslySetInnerHTML={{ __html: schema.describe }} />
             <div className='self_link_showlist'>
                 {
                     schema?.linkquery_condition?.mul == 'one' && schema.typeId == '14' && (
-                        schema?.linkquery_condition?.fieldIds.map((item, index) => {
-                            // console.log(props.value);
-                            return (
-                                <div className='self_link_show_one' key={index}>
-                                    <div className='self_link_show_title'>
-                                        {FormStore.fieldNameObj[item]}
-                                    </div>
-                                    <div className='self_link_show_content'>
-                                        {
-                                            props.value == undefined && (
-                                                "暂无信息"
-                                            )
-                                        }
-                                        {
-                                            props.value != undefined && props.value.length == 0 && (
-                                                "暂无信息"
-                                            )
-                                        }
-                                        {
-                                            props.value != undefined && props.value.length > 0 && (
-                                                JSON.parse(props.value)[0][item]
-                                            )
-                                        }
-                                    </div>
-                                </div>
-                            )
-                        })
+                        getInfo()
                     )
                 }
                 {
@@ -82,7 +118,7 @@ const Self_linkquery = observer((props) => {
                         <Table
                             scroll={{ x: 800 }}
                             columns={column}
-                            dataSource={props.value}
+                            dataSource={showData}
                         />
                     )
                 }
@@ -93,40 +129,26 @@ const Self_linkquery = observer((props) => {
                                 setLoad(true)
                                 setVis(true)
                                 FormStore.getSearchData([{ ...schema?.linkquery_condition, "nowValue": FormStore.formData }]).then(res => {
-                                    console.log(res);
-                                    console.log(schema);
-                                    setDataSource(res[schema.$id])
-                                    setLoad(false)
+                                    console.log(res[schema.$id]);
+                                    let idArr = res[schema.$id]
+                                    put('/data/FastQuery', idArr).then((res) => {
+                                        let arr = []
+                                        res.data.data.map((item, index) => {
+                                            let obj = {}
+                                            let data = JSON.parse(item['formData'])
+                                            obj = { ...data }
+                                            obj['key'] = item['id']
+                                            obj['id'] = item['id']
+                                            arr.push(obj)
+                                        })
+                                        setLoad(false)
+                                        setDataSource(arr)
+                                    })
                                 })
                             }}>选择数据</Button>
                             <div>
                                 {
-                                    schema?.linkquery_condition?.fieldShow.map((item, index) => {
-                                        return (
-                                            <div className='self_link_show_one' key={index}>
-                                                <div className='self_link_show_title'>
-                                                    {FormStore.fieldNameObj[item]}
-                                                </div>
-                                                <div className='self_link_show_content'>
-                                                    {
-                                                        props.value == undefined && (
-                                                            "暂无信息"
-                                                        )
-                                                    }
-                                                    {
-                                                        props.value != undefined && !JSON.parse(props.value).hasOwnProperty(item) && (
-                                                            "暂无信息"
-                                                        )
-                                                    }
-                                                    {
-                                                        props.value != undefined && JSON.parse(props.value).hasOwnProperty(item) && (
-                                                            JSON.parse(props.value)[item]
-                                                        )
-                                                    }
-                                                </div>
-                                            </div>
-                                        )
-                                    })
+                                    getInfo()
                                 }
                             </div>
                         </div>
@@ -146,9 +168,7 @@ const Self_linkquery = observer((props) => {
                                     rowSelection={{
                                         type: 'radio',
                                         onChange: (selectedRowKeys, selectedRows) => {
-                                            console.log(selectedRows);
-                                            props.onChange(JSON.stringify(selectedRows[0]))
-                                            console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+                                            props.onChange([selectedRows[0]['id']])
                                         }
                                     }}
                                 />

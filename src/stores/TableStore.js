@@ -4,7 +4,7 @@
  * @Author: zhihao
  * @Date: 2022-04-17 15:22:43
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-08 09:31:55
+ * @LastEditTime: 2022-08-15 15:36:11
  */
 
 import { message, Modal } from 'antd';
@@ -278,7 +278,6 @@ class Table {
 							obj[front] = info['detailJson']['enumNames'][index];
 						} else if (info['key'] == front && ['5'].indexOf(info['detailJson']['typeId']) > -1) {
 							obj[front] = ""
-							// console.log(typeof (iObj[front]));
 							let iArr = iObj[front].substring(1, iObj[front].length - 1).split(',')
 							iArr.map((one, index) => {
 								let oneIndex = info['detailJson']['enum'].findIndex(item => item.charCodeAt() == one.substring(1, one.length - 1).charCodeAt())
