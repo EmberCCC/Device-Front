@@ -4,13 +4,14 @@
  * @Author: zhihao
  * @Date: 2022-04-17 15:22:43
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-15 20:47:03
+ * @LastEditTime: 2022-08-16 14:07:25
  */
 
 import { message, Modal } from 'antd';
 import { getSchema, restore } from 'layouts/FormEdit/changeTool';
 import { observable, action, toJS, makeObservable } from 'mobx';
 import { isDataExist } from 'utils/dataTools';
+import { put } from 'utils/request';
 import * as services from '../services/home';
 
 class Table {
@@ -51,7 +52,7 @@ class Table {
 	@observable relSortList = [];
 	@observable allData = [];
 
-
+	@observable oneDataInfo = {}
 
 	@action getModel() {
 		return this.model;
@@ -193,10 +194,9 @@ class Table {
 			this.setValue('detailData', res.data.data);
 			let data = {};
 			let field = [];
-			let fieldIds = []
+			let fieldIds = [];
+			let dataIdArr = []
 			let formObj = toJS(this.detailData['form']);
-			console.log(formObj);
-			console.log(res.data.data);
 			let formObj2 = {
 				'formFields': JSON.stringify(formObj),
 				'properties': "{\"displayType\":\"column\",\"labelWidth\":120,\"type\":\"object\"}"
@@ -217,7 +217,26 @@ class Table {
 			toJS(this.detailData['fields']).forEach(element => {
 				field.push(element);
 				fieldIds.push(element.id)
+				if(element.typeId == 15 || element.typeId == 14){
+					let json = JSON.parse(element['detailJson'])
+					console.log(formData[element['id']]);
+					if(formData[element['id']] != undefined && formData[element['id']] != ''){
+						dataIdArr = [...dataIdArr,...JSON.parse(formData[element['id']])]
+					}
+				}
 			});
+			put('/data/FastQuery', dataIdArr).then((res) => {
+                let arr = {}
+                res.data.data.map((item, index) => {
+                    let obj = {}
+                    let data = JSON.parse(item['formData'])
+                    obj = { ...data }
+                    obj['key'] = item['id']
+                    obj['id'] = item['id']
+					arr[item['id']] = obj
+                })
+                this.setValue('oneDataInfo',arr)
+            })
 			fieldIds.push('createPerson')
 			fieldIds.push('createTime')
 			fieldIds.push('updateTime')

@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-24 21:41:47
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-14 15:26:25
+ * @LastEditTime: 2022-08-16 13:14:08
  * @FilePath: \bl-device-manage-test\src\layouts\FlowManage\Self_Form\node_charge.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -16,7 +16,7 @@ const User_choose = observer(({ SocketStore, handleUpdate, initUserList, mode, i
     const { rolesName, mulSelect, userName, roleUserList, departmentUserList } = SocketStore
     const [userList, setUserList] = useState(initUserList)
     const [visible, setVisible] = useState(false);
-    const [type, setType] = useState('1')
+    const [type, setType] = useState(null)
     useEffect(() => {
         setUserList(initUserList)
     }, [initUserList])
@@ -67,18 +67,30 @@ const User_choose = observer(({ SocketStore, handleUpdate, initUserList, mode, i
                     </div>
                     <div className="select_menu">
                         <div className="select_menu_head">
-                            <div className={`select_menu_1 ${type == '1' ? 'checkedS' : ''}`} onClick={() => {
-                                setType('1')
-                                SocketStore.getAllDepartment();
-                            }}>组织架构</div>
-                            <div className={`select_menu_2 ${type == '2' ? 'checkedS' : ''}`} onClick={() => {
-                                setType('2')
-                                SocketStore.getAllRoles()
-                            }}>角色</div>
-                            <div className={`select_menu_3 ${type == '3' ? 'checkedS' : ''}`} onClick={() => {
-                                setType('3')
-                                SocketStore.getAllUsers()
-                            }}>成员</div>
+                            {
+                                Array.isArray(initChooseList?.department) && initChooseList['department'].length > 0 && (
+                                    <div className={`select_menu_1 ${type == '1' ? 'checkedS' : ''}`} onClick={() => {
+                                        setType('1')
+                                        SocketStore.getAllDepartment();
+                                    }}>组织架构</div>
+                                )
+                            }
+                            {
+                                Array.isArray(initChooseList?.role) && initChooseList['role'].length > 0 && (
+                                    <div className={`select_menu_2 ${type == '2' ? 'checkedS' : ''}`} onClick={() => {
+                                        setType('2')
+                                        SocketStore.getAllRoles()
+                                    }}>角色</div>
+                                )
+                            }
+                            {
+                                Array.isArray(initChooseList?.user) && initChooseList['user'].length > 0 && (
+                                    <div className={`select_menu_3 ${type == '3' ? 'checkedS' : ''}`} onClick={() => {
+                                        setType('3')
+                                        SocketStore.getAllUsers()
+                                    }}>成员</div>
+                                )
+                            }
                         </div>
                         <div className="select_choice">
                             {

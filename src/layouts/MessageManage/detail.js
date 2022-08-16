@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-30 05:48:44
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-14 05:07:37
+ * @LastEditTime: 2022-08-16 12:45:54
  * @FilePath: \bl-device-manage-test\src\layouts\MessageManage\detail.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -276,9 +276,9 @@ const DetailPage = observer(({ MessageStore, HomeStore, FlowStore, FormStore, pr
                                     }
                                 </Tabs>
                             </div>
-                            <div className='form_footer'>
+                            <div className='form_footer_detail'>
                                 <div style={{ fontWeight: '700' }}>审批意见</div>
-                                <Input ref={ref} style={{ marginTop: "20px", resize: 'none', marginBottom: '50px' }} />
+                                <Input ref={ref} style={{ marginTop: "10px", resize: 'none', marginBottom: '10px' }} />
                                 <div>
                                     <Button onClick={form.submit} type="primary">提交</Button>
                                     <Button onClick={handleCancel} style={{ marginLeft: '20px' }}>取消</Button>

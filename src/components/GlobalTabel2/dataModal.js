@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-06-30 09:07:55
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-16 12:01:49
+ * @LastEditTime: 2022-08-16 14:20:28
  * @FilePath: \bl-device-manage-test\src\components\GlobalTabel2\dataModal.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -22,9 +22,10 @@ import './index.less'
 @observer
 class DataModal extends Component {
     render() {
-        const { itemIndex, dataSource, modalFieldValue, modalField, modalData, formArr } = this.props.TableStore
+        const { itemIndex, dataSource, modalFieldValue, modalField, modalData, formArr, oneDataInfo } = this.props.TableStore
         const { fieldNameObj } = this.props.FormStore
         const getExactData = (formName) => {
+            console.log(toJS(oneDataInfo));
             if (typeof (formArr[formName]) != 'undefined') {
                 const element = formArr[formName]['properties'];
                 return (
@@ -32,6 +33,7 @@ class DataModal extends Component {
                         if (modalFieldValue.includes(item['id']) && !(['createPerson', 'createTime', 'updateTime'].indexOf(item['id']) > -1) && element.hasOwnProperty(item['id'])) {
                             let showData = modalData[item['id']]
                             let jsonData = JSON.parse(item['detailJson'])
+                            console.log(jsonData);
                             if (jsonData['typeId'] == '4') {
                                 let index = jsonData['enum'].indexOf(modalData[item['id']])
                                 showData = jsonData['enumNames'][index]
@@ -68,10 +70,6 @@ class DataModal extends Component {
                                     </div>
                                 )
                             } else if (jsonData['typeId'] == '14') {
-                                let arr = []
-                                if (showData != undefined && showData != '') {
-                                    arr = JSON.parse(showData)
-                                }
                                 return (
                                     <div className='item_content' key={index}>
                                         <div className='item_title'>
@@ -79,10 +77,19 @@ class DataModal extends Component {
                                         </div>
                                         {
                                             jsonData['linkquery_condition']['fieldIds'].map((one, index) => {
+                                                console.log(toJS(modalData[item['id']]));
+                                                let id = []
+                                                if(modalData[item['id']]){
+                                                    id = JSON.parse(modalData[item['id']])
+                                                }
                                                 return (
                                                     <div key={index}>
                                                         <div>{fieldNameObj[one]}</div>
-                                                        {/* <div>{arr[0][one]}</div> */}
+                                                        {
+                                                            id.length > 0 && oneDataInfo.hasOwnProperty(id[0]) && oneDataInfo[id[0]].hasOwnProperty(one) && (
+                                                                <div>{oneDataInfo[id[0]][one]}</div>
+                                                            )
+                                                        }
                                                     </div>
                                                 )
                                             })
@@ -90,18 +97,27 @@ class DataModal extends Component {
                                     </div>
                                 )
                             } else if (jsonData['typeId'] == '15') {
-                                jsonData['linkquery_condition']['fieldShow'].map(one => {
-                                    console.log(fieldNameObj[one]);
-                                })
                                 return (
                                     <div className='item_content' key={index}>
                                         <div className='item_title'>
                                             {element[item['id']]['title']}
                                         </div>
                                         {
-                                            jsonData['linkquery_condition']['fieldShow'].map(one => {
+                                            jsonData['linkquery_condition']['fieldShow'].map((one,index) => {
+                                                console.log(toJS(modalData[item['id']]));
+                                                let id = []
+                                                if(modalData[item['id']]){
+                                                    id = JSON.parse(modalData[item['id']])
+                                                }
                                                 return (
-                                                    <div>{fieldNameObj[one]}</div>
+                                                    <div key={index}>
+                                                        <div>{fieldNameObj[one]}</div>
+                                                        {
+                                                            id.length > 0 && oneDataInfo.hasOwnProperty(id[0]) && oneDataInfo[id[0]].hasOwnProperty(one) && (
+                                                                <div>{oneDataInfo[id[0]][one]}</div>
+                                                            )
+                                                        }
+                                                    </div>
                                                 )
                                             })
                                         }

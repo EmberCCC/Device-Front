@@ -184,9 +184,12 @@ class MenuLayout extends Component {
       this.props.MessageStore.getHandleList()
       this.props.MessageStore.getCopyList()
       this.props.SocketStore.getMyInfo();
+      this.props.HomeStore.getMenuList()
     }
     this.props.HomeStore.initMenu(this.props.location.pathname);
-    this.props.HomeStore.getMenuList()
+    if(sessionStorage.getItem('token')){
+      
+    }
     // this.props.HomeStore.getMenuList(this.props.location.pathname).then(() => {
     //   this.props.HomeStore.initMenu(this.props.location.pathname);
     // });
