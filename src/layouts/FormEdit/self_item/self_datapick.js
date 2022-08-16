@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-08-09 09:24:55
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-10 16:33:17
+ * @LastEditTime: 2022-08-16 22:43:55
  * @FilePath: \bl-device-manage-test\src\layouts\FormEdit\self_item\my_string.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -19,14 +19,12 @@ const Self_datapick = observer((props) => {
         <div style={{ width: '100%' }} >
             <div className="self_rich_text" dangerouslySetInnerHTML={{ __html: schema.describe }} />
             <DatePicker
-                showTime
+                format={props.format == 'date' ? 'YYYY-MM-DD' : 'YYYY-MM-DD hh:mm:ss'}
                 onBlur={() => {
-                    console.log(schema);
-                    console.log(props);
                     props.FormStore.handleBlur(schema)
                 }}
-                defaultValue={moment(schema.default)}
-                value={moment(props.value)}
+                showTime
+                defaultValue={moment(schema.default).isValid() && moment(schema.default)}
                 onChange={(e) => {
                     let format = props.format == undefined ? 'dateTime' : props.format
                     let obj = {
@@ -38,7 +36,6 @@ const Self_datapick = observer((props) => {
                     } else {
                         props.onChange(undefined)
                     }
-                    console.log(e);
                 }}
                 style={{ width: '100%' }}
                 disabled={schema.disabled}

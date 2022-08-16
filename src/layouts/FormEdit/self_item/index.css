@@ -226,3 +226,6 @@
 .query_condition_list_one{
     margin-bottom: 10px;
 }
+.ant-table-body{
+    max-height: 450px !important;
+}

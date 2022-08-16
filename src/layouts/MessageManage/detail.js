@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-30 05:48:44
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-16 12:45:54
+ * @LastEditTime: 2022-08-16 23:04:15
  * @FilePath: \bl-device-manage-test\src\layouts\MessageManage\detail.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -180,7 +180,6 @@ const DetailPage = observer(({ MessageStore, HomeStore, FlowStore, FormStore, pr
         return arr['fieldsId'].map((item, index) => {
             let field = fieldInfo.filter((one) => one.hasOwnProperty('fieldId') && one['fieldId'] == item)[0]
             if (field != undefined) {
-                console.log(field);
                 let showData = formData[item]
                 if (field['typeId'] == '4') {
                     let index = field['enum'].indexOf(formData[item])
@@ -304,7 +303,9 @@ const DetailPage = observer(({ MessageStore, HomeStore, FlowStore, FormStore, pr
                 <div className="mmr_header">
                     <div className={`mmr_h1 ${type == 1 ? "mmr_check" : ""}`} onClick={() => setType(1)}>流程动态</div>
                     <div className={`mmr_h2 ${type == 2 ? "mmr_check" : ""}`} onClick={() => setType(2)}>评论</div>
-                    <div className="mmr_flow" onClick={() => setDraVis(true)}><ApartmentOutlined />流转图</div>
+                    <div className="mmr_flow" onClick={() => {
+                        // setDraVis(true)
+                    }}><ApartmentOutlined />流转图</div>
                 </div>
                 {
                     type == 1 && (

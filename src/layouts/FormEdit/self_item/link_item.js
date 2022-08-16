@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-04 12:43:55
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-15 14:17:15
+ * @LastEditTime: 2022-08-16 22:27:25
  * @FilePath: \bl-device-manage-test\src\layouts\FormEdit\self_item\link_item.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -70,13 +70,7 @@ export const Link_item = ({ value, onChange, ...rest }) => {
             }
             {
                 addons.dependValues[0] != '2' && addons.dependValues[0] != '3' && addons.formData.$id.substring(2, 3) == 3 &&
-                <DatePicker value={addons.formData.default} showTime onChange={(e) => {
-                    let format = addons.formData.format == undefined ? 'date' : addons.formData.format
-                    let obj = {
-                        'date': 'YYYY-MM-DD',
-                        'dateTime': 'YYYY-MM-DD hh:mm:ss',
-                        'time': 'hh:mm:ss'
-                    }
+                <DatePicker format={addons.formData.format == 'date' ? 'YYYY-MM-DD' : 'YYYY-MM-DD hh:mm:ss'} value={addons.formData.default} showTime onChange={(e) => {
                     // onChange(moment(e).format(obj[format]))
                     onChange(e)
                 }} />
