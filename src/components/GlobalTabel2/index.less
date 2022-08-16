@@ -132,6 +132,7 @@
 
 .info_content {
     padding-left: 10px;
+    height: 50px;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -166,7 +167,10 @@
     white-space: nowrap;
     text-overflow: ellipsis;
 }
-
+.left_content_top{
+    height: calc(~"100% - 60px");
+    overflow: auto;
+}
 .modal_content {
     height: 97vh;
     padding-left: 20px;
@@ -547,4 +551,7 @@
 }
 .search_bar{
     margin-top: 20px;
+}
+.my_spin{
+    height: 100%;
 }

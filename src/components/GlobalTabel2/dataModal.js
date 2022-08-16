@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-06-30 09:07:55
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-10 10:58:43
+ * @LastEditTime: 2022-08-16 12:01:49
  * @FilePath: \bl-device-manage-test\src\components\GlobalTabel2\dataModal.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -15,13 +15,15 @@ import FormData from 'layouts/FormLayout/formData'
 import { toJS } from 'mobx'
 import { inject, observer } from 'mobx-react'
 import React, { Component } from 'react'
-import './index.css'
+import { put } from 'utils/request'
+import './index.less'
 
 @inject('TableStore', 'HomeStore', 'FormStore')
 @observer
 class DataModal extends Component {
     render() {
         const { itemIndex, dataSource, modalFieldValue, modalField, modalData, formArr } = this.props.TableStore
+        const { fieldNameObj } = this.props.FormStore
         const getExactData = (formName) => {
             if (typeof (formArr[formName]) != 'undefined') {
                 const element = formArr[formName]['properties'];
@@ -30,34 +32,93 @@ class DataModal extends Component {
                         if (modalFieldValue.includes(item['id']) && !(['createPerson', 'createTime', 'updateTime'].indexOf(item['id']) > -1) && element.hasOwnProperty(item['id'])) {
                             let showData = modalData[item['id']]
                             let jsonData = JSON.parse(item['detailJson'])
-                            if (modalData.hasOwnProperty(item['id'])) {
-                                if (jsonData['typeId'] == '4') {
-                                    let index = jsonData['enum'].indexOf(modalData[item['id']])
-                                    showData = jsonData['enumNames'][index]
-                                } else if (jsonData['typeId'] == '5') {
-                                    showData = ""
-                                    let iData = modalData[item['id']].substring(1, modalData[item['id']].length).split(",");
-                                    iData.map((one, index) => {
-                                        let oneIndex = jsonData['enum'].findIndex(value => value.charCodeAt() == one.substring(1, one.length - 1).charCodeAt());
-                                        if (index == 0) {
-                                            showData += jsonData['enumNames'][oneIndex]
-                                        } else {
-                                            showData += ","
-                                            showData += jsonData['enumNames'][oneIndex]
-                                        }
-                                    })
+                            if (jsonData['typeId'] == '4') {
+                                let index = jsonData['enum'].indexOf(modalData[item['id']])
+                                showData = jsonData['enumNames'][index]
+                                return (
+                                    <div className='item_content' key={index}>
+                                        <div className='item_title'>
+                                            {element[item['id']]['title']}
+                                        </div>
+                                        <div className='item_article'>
+                                            {showData}
+                                        </div>
+                                    </div>
+                                )
+                            } else if (jsonData['typeId'] == '5') {
+                                showData = ""
+                                let iData = modalData[item['id']].substring(1, modalData[item['id']].length).split(",");
+                                iData.map((one, index) => {
+                                    let oneIndex = jsonData['enum'].findIndex(value => value.charCodeAt() == one.substring(1, one.length - 1).charCodeAt());
+                                    if (index == 0) {
+                                        showData += jsonData['enumNames'][oneIndex]
+                                    } else {
+                                        showData += ","
+                                        showData += jsonData['enumNames'][oneIndex]
+                                    }
+                                })
+                                return (
+                                    <div className='item_content' key={index}>
+                                        <div className='item_title'>
+                                            {element[item['id']]['title']}
+                                        </div>
+                                        <div className='item_article'>
+                                            {showData}
+                                        </div>
+                                    </div>
+                                )
+                            } else if (jsonData['typeId'] == '14') {
+                                let arr = []
+                                if (showData != undefined && showData != '') {
+                                    arr = JSON.parse(showData)
                                 }
+                                return (
+                                    <div className='item_content' key={index}>
+                                        <div className='item_title'>
+                                            {element[item['id']]['title']}
+                                        </div>
+                                        {
+                                            jsonData['linkquery_condition']['fieldIds'].map((one, index) => {
+                                                return (
+                                                    <div key={index}>
+                                                        <div>{fieldNameObj[one]}</div>
+                                                        {/* <div>{arr[0][one]}</div> */}
+                                                    </div>
+                                                )
+                                            })
+                                        }
+                                    </div>
+                                )
+                            } else if (jsonData['typeId'] == '15') {
+                                jsonData['linkquery_condition']['fieldShow'].map(one => {
+                                    console.log(fieldNameObj[one]);
+                                })
+                                return (
+                                    <div className='item_content' key={index}>
+                                        <div className='item_title'>
+                                            {element[item['id']]['title']}
+                                        </div>
+                                        {
+                                            jsonData['linkquery_condition']['fieldShow'].map(one => {
+                                                return (
+                                                    <div>{fieldNameObj[one]}</div>
+                                                )
+                                            })
+                                        }
+                                    </div>
+                                )
+                            } else {
+                                return (
+                                    <div className='item_content' key={index}>
+                                        <div className='item_title'>
+                                            {element[item['id']]['title']}
+                                        </div>
+                                        <div className='item_article'>
+                                            {showData}
+                                        </div>
+                                    </div>
+                                )
                             }
-                            return (
-                                <div className='item_content' key={index}>
-                                    <div className='item_title'>
-                                        {element[item['id']]['title']}
-                                    </div>
-                                    <div className='item_article'>
-                                        {showData}
-                                    </div>
-                                </div>
-                            )
                         }
                     })
                 )
@@ -230,7 +291,7 @@ class DataModal extends Component {
             })
         }
         return (
-            <Spin spinning={this.props.TableStore.isLoading} size='large' tip='Loading..'>
+            <Spin spinning={this.props.TableStore.isLoading} size='large' tip='Loading..' wrapperClassName='my_spin'>
                 <div className='main_modal'>
                     {
                         this.props.TableStore.formEdit == false ? (
@@ -257,10 +318,12 @@ class DataModal extends Component {
                                     </div>
                                 </div>
                                 <div className='left_content'>
-                                    {getExactData('root')}
-                                    <Tabs type='card' style={{ paddingLeft: '5px' }}>
-                                        {getData()}
-                                    </Tabs>
+                                    <div className='left_content_top'>
+                                        {getExactData('root')}
+                                        <Tabs type='card' style={{ paddingLeft: '5px' }}>
+                                            {getData()}
+                                        </Tabs>
+                                    </div>
                                     <div className='info_content'>
                                         {getInfo()}
                                     </div>

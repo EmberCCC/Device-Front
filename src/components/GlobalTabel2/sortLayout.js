@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-08 06:52:37
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-07-08 15:56:47
+ * @LastEditTime: 2022-08-16 12:03:14
  * @FilePath: \bl-device-manage-test\src\components\GlobalTabel2\sortLayout.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -12,7 +12,7 @@ import { toJS } from 'mobx'
 import { inject, observer } from 'mobx-react'
 import React, { useEffect, useImperativeHandle, useState } from 'react'
 import stores from 'stores'
-import './index.css'
+import './index.less'
 const SortLayout = observer(({ TableStore, HomeStore, cRef }) => {
     const [sortList, setSortList] = useState(JSON.parse(sessionStorage.getItem('sort_' + HomeStore.firstFormId)) || []);
     const [menu, setMenu] = useState(null)

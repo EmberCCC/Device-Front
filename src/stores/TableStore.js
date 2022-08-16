@@ -4,7 +4,7 @@
  * @Author: zhihao
  * @Date: 2022-04-17 15:22:43
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-15 15:36:11
+ * @LastEditTime: 2022-08-15 20:47:03
  */
 
 import { message, Modal } from 'antd';
@@ -186,14 +186,17 @@ class Table {
 	}
 	@action.bound async getOneData(params) {
 		this.setValue('detailData', {});
+		this.setValue('modalFieldValue', []);
 		this.setValue('isLoading', true);
 		try {
 			let res = await services.getRequest(services.requestList.getOneData, params);
 			this.setValue('detailData', res.data.data);
 			let data = {};
 			let field = [];
+			let fieldIds = []
 			let formObj = toJS(this.detailData['form']);
 			console.log(formObj);
+			console.log(res.data.data);
 			let formObj2 = {
 				'formFields': JSON.stringify(formObj),
 				'properties': "{\"displayType\":\"column\",\"labelWidth\":120,\"type\":\"object\"}"
@@ -213,13 +216,18 @@ class Table {
 			}
 			toJS(this.detailData['fields']).forEach(element => {
 				field.push(element);
+				fieldIds.push(element.id)
 			});
+			fieldIds.push('createPerson')
+			fieldIds.push('createTime')
+			fieldIds.push('updateTime')
 			field.push({ 'name': '创建人', 'id': 'createPerson' })
 			field.push({ 'name': '创建时间', 'id': 'createTime' })
 			field.push({ 'name': '更新时间', 'id': 'updateTime' })
 			this.setValue('modalField', field);
 			this.setValue('modalData', data);
 			this.setValue('isLoading', false);
+			this.setValue('modalFieldValue', fieldIds);
 		} catch (error) {
 			console.log(error);
 		} finally {
@@ -258,10 +266,13 @@ class Table {
 			let iDataSource = [];
 			let iFieldValue = [];
 			data.fields.map((item) => {
-				let jsonItem = JSON.parse(item['detailJson']);
-				jsonItem['fieldId'] = item['id'];
-				iColumns.push({ 'title': jsonItem.title, 'dataIndex': item.id, 'key': item.id, 'detailJson': jsonItem, 'width': 200, 'ellipsis': true });
-				iFieldValue.push(item.id)
+				if (item['typeId'] != 14 && item['typeId'] != 15) {
+					let jsonItem = JSON.parse(item['detailJson']);
+					jsonItem['fieldId'] = item['id'];
+					iColumns.push({ 'title': jsonItem.title, 'dataIndex': item.id, 'key': item.id, 'detailJson': jsonItem, 'width': 200, 'ellipsis': true });
+					iFieldValue.push(item.id)
+				}
+
 			})
 			data.fieldsValue.map((item) => {
 				let obj = {}
@@ -302,7 +313,7 @@ class Table {
 			iColumns.push({ 'title': '创建时间', 'dataIndex': 'createTime', 'key': 'createTime', 'width': 200, 'ellipsis': true });
 			iColumns.push({ 'title': '更新时间', 'dataIndex': 'updateTime', 'key': 'updateTime', 'width': 200, 'ellipsis': true });
 			this.setValue('fieldValue', iFieldValue)
-			this.setValue('modalFieldValue', iFieldValue)
+			// this.setValue('modalFieldValue', iFieldValue)
 			this.setValue('columns', iColumns)
 			this.setValue('showColumns', iColumns)
 			this.setValue('lastColumns', iColumns)
@@ -339,16 +350,13 @@ class Table {
 			let iDataSource = [];
 			let iFieldValue = [];
 			data.fields.map((item) => {
-				let jsonItem = JSON.parse(item['detailJson']);
-				jsonItem['fieldId'] = item['id'];
-				let obj = {}
-				if (['4', '5'].indexOf(jsonItem['typeId']) > -1) {
-					jsonItem['enum'].map((item, index) => {
-						obj[item] = jsonItem['enumNames'][index]
-					})
+				if (item['typeId'] != 14 && item['typeId'] != 15) {
+					let jsonItem = JSON.parse(item['detailJson']);
+					jsonItem['fieldId'] = item['id'];
+					iColumns.push({ 'title': jsonItem.title, 'dataIndex': item.id, 'key': item.id, 'detailJson': jsonItem, 'width': 200, 'ellipsis': true });
+					iFieldValue.push(item.id)
 				}
-				iColumns.push({ 'title': jsonItem.title, 'dataIndex': item.id, 'key': item.id, 'detailJson': jsonItem, 'exchange': obj, 'width': 200, 'ellipsis': true });
-				iFieldValue.push(item.id)
+
 			})
 			data.fieldsValue.map((item) => {
 				let obj = {}
@@ -370,7 +378,7 @@ class Table {
 			iColumns.push({ 'title': '创建时间', 'dataIndex': 'createTime', 'key': 'createTime', 'width': 200, 'ellipsis': true });
 			iColumns.push({ 'title': '更新时间', 'dataIndex': 'updateTime', 'key': 'updateTime', 'width': 200, 'ellipsis': true });
 			this.setValue('fieldValue', iFieldValue)
-			this.setValue('modalFieldValue', iFieldValue)
+			// this.setValue('modalFieldValue', iFieldValue)
 			this.setValue('columns', iColumns)
 			this.setValue('showColumns', iColumns)
 			this.setValue('lastColumns', iColumns)

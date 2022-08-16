@@ -116,7 +116,10 @@ class HomeLayout extends Component {
     });
     /* 进入即请求菜单 */
     if (this.props.history.location.pathname !== '/login') {
-      this.props.HomeStore.getMenuList()
+      if(sessionStorage.getItem('token')){
+        this.props.HomeStore.getMenuList()
+
+      }
     }
   }
 }
