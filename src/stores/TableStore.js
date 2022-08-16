@@ -4,12 +4,13 @@
  * @Author: zhihao
  * @Date: 2022-04-17 15:22:43
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-16 14:07:25
+ * @LastEditTime: 2022-08-17 07:28:51
  */
-
+import React from 'react';
 import { message, Modal } from 'antd';
 import { getSchema, restore } from 'layouts/FormEdit/changeTool';
 import { observable, action, toJS, makeObservable } from 'mobx';
+import moment from 'moment';
 import { isDataExist } from 'utils/dataTools';
 import { put } from 'utils/request';
 import * as services from '../services/home';
@@ -217,26 +218,25 @@ class Table {
 			toJS(this.detailData['fields']).forEach(element => {
 				field.push(element);
 				fieldIds.push(element.id)
-				if(element.typeId == 15 || element.typeId == 14){
-					let json = JSON.parse(element['detailJson'])
+				if (element.typeId == 15 || element.typeId == 14) {
 					console.log(formData[element['id']]);
-					if(formData[element['id']] != undefined && formData[element['id']] != ''){
-						dataIdArr = [...dataIdArr,...JSON.parse(formData[element['id']])]
+					if (formData[element['id']] != undefined && formData[element['id']] != '') {
+						dataIdArr = [...dataIdArr, ...JSON.parse(formData[element['id']])]
 					}
 				}
 			});
 			put('/data/FastQuery', dataIdArr).then((res) => {
-                let arr = {}
-                res.data.data.map((item, index) => {
-                    let obj = {}
-                    let data = JSON.parse(item['formData'])
-                    obj = { ...data }
-                    obj['key'] = item['id']
-                    obj['id'] = item['id']
+				let arr = {}
+				res.data.data.map((item, index) => {
+					let obj = {}
+					let data = JSON.parse(item['formData'])
+					obj = { ...data }
+					obj['key'] = item['id']
+					obj['id'] = item['id']
 					arr[item['id']] = obj
-                })
-                this.setValue('oneDataInfo',arr)
-            })
+				})
+				this.setValue('oneDataInfo', arr)
+			})
 			fieldIds.push('createPerson')
 			fieldIds.push('createTime')
 			fieldIds.push('updateTime')
@@ -288,7 +288,29 @@ class Table {
 				if (item['typeId'] != 14 && item['typeId'] != 15) {
 					let jsonItem = JSON.parse(item['detailJson']);
 					jsonItem['fieldId'] = item['id'];
-					iColumns.push({ 'title': jsonItem.title, 'dataIndex': item.id, 'key': item.id, 'detailJson': jsonItem, 'width': 200, 'ellipsis': true });
+					if (item['typeId'] == '3') {
+						console.log(item);
+						console.log(jsonItem);
+						let format = jsonItem['format'] == 'date' ? 'YYYY-MM-DD' : 'YYYY-MM-DD hh:mm:ss'
+						iColumns.push({
+							'title': jsonItem.title,
+							'dataIndex': item.id,
+							'key': item.id,
+							'detailJson': jsonItem,
+							'width': 200,
+							'ellipsis': true,
+							'render': (text, record, index) => {
+								if (text) {
+									return <div>{moment(text).format(format)}</div>
+
+								}
+								console.log(text);
+								console.log(format);
+							}
+						});
+					} else {
+						iColumns.push({ 'title': jsonItem.title, 'dataIndex': item.id, 'key': item.id, 'detailJson': jsonItem, 'width': 200, 'ellipsis': true });
+					}
 					iFieldValue.push(item.id)
 				}
 

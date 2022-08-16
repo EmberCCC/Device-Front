@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-04 12:43:55
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-16 22:27:25
+ * @LastEditTime: 2022-08-17 07:30:14
  * @FilePath: \bl-device-manage-test\src\layouts\FormEdit\self_item\link_item.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -12,6 +12,7 @@ import Math_Modal from "../FormModal/Math_Modal";
 import './index.css'
 import { options } from "constants/address";
 import User_choose from "../user_choose";
+import moment from "moment";
 export const Link_item = ({ value, onChange, ...rest }) => {
     const [math, setMath] = useState(false);
     const [relValue, setRelValue] = useState('');
@@ -70,10 +71,14 @@ export const Link_item = ({ value, onChange, ...rest }) => {
             }
             {
                 addons.dependValues[0] != '2' && addons.dependValues[0] != '3' && addons.formData.$id.substring(2, 3) == 3 &&
-                <DatePicker format={addons.formData.format == 'date' ? 'YYYY-MM-DD' : 'YYYY-MM-DD hh:mm:ss'} value={addons.formData.default} showTime onChange={(e) => {
-                    // onChange(moment(e).format(obj[format]))
-                    onChange(e)
-                }} />
+                <DatePicker
+                    format={addons.formData.format == 'date' ? 'YYYY-MM-DD' : 'YYYY-MM-DD hh:mm:ss'}
+                    value={moment(addons.formData.default).isValid() && moment(addons.formData.default)}
+                    showTime
+                    onChange={(e) => {
+                        // onChange(moment(e).format(obj[format]))
+                        onChange(e)
+                    }} />
             }
             {
                 addons.dependValues[0] != '2' && addons.dependValues[0] != '3' && addons.formData.$id.substring(2, 3) == 9 && (
