@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-01 20:45:23
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-16 23:26:54
+ * @LastEditTime: 2022-08-17 10:07:45
  * @FilePath: \bl-device-manage-test\src\layouts\FormEdit\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -93,11 +93,12 @@ const FormEdit = observer(({ HomeStore, FormStore }) => {
     setVisisble(true);
   }
   const save = () => {
-    let params = exChange(ref.current.getValue(), HomeStore.firstFormId, 'root')
+    let formId = sessionStorage.getItem('formId') ? sessionStorage.getItem('formId') : HomeStore.firstFormId
+    let params = exChange(ref.current.getValue(), formId, 'root')
     if (schemaList.length > 0) {
       schemaList.map((item, index) => {
         // console.log(exChange(item['schema'], HomeStore.firstFormId, subFormName[index]));
-        params['subForms'].push(exChange(item['schema'], HomeStore.firstFormId, subFormName[index])['subForms'][0] || { 'name': subFormName[index], 'fields': [] })
+        params['subForms'].push(exChange(item['schema'], formId, subFormName[index])['subForms'][0] || { 'name': subFormName[index], 'fields': [] })
       })
     }
     FormStore.saveForm(params).then(() => {

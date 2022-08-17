@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-03-28 20:01:19
- * @LastEditTime: 2022-08-09 22:06:02
+ * @LastEditTime: 2022-08-17 09:16:51
  * @LastEditors: EmberCCC 1810888456@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage-test\src\layouts\BasicManage\index.js
@@ -66,7 +66,7 @@ class DesignManage extends React.Component {
         const item = [
             { label: '表单设计', key: '1' },
             { label: '扩展功能', key: '2' },
-            { label: '表单发布', key: '3', disabled: sessionStorage.getItem('formName') ? JSON.parse(sessionStorage.getItem('formName'))['type'] == 0 : false },
+            { label: '表单发布', key: '3', disabled: true },
             { label: '流程设计', key: '4', disabled: sessionStorage.getItem('formName') ? JSON.parse(sessionStorage.getItem('formName'))['type'] == 0 : false }
         ]
         let formName = sessionStorage.getItem('formName') && sessionStorage.getItem('formName') != '{}' ? JSON.parse(sessionStorage.getItem('formName'))['formName'] : '机房'

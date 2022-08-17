@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-10 16:01:23
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-15 19:49:39
+ * @LastEditTime: 2022-08-17 09:51:31
  * @FilePath: \bl-device-manage-test\src\layouts\FormEdit\self_item\myDivider.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -33,7 +33,6 @@ const Self_linkquery = observer((props) => {
             console.log(arr);
             setColumn(arr)
         })
-
     }, [])
     useEffect(() => {
         let arr = []
@@ -62,7 +61,7 @@ const Self_linkquery = observer((props) => {
                 })
                 setShowData(arr)
             })
-        }else{
+        } else {
             setShowData([])
         }
 
@@ -133,6 +132,16 @@ const Self_linkquery = observer((props) => {
                                 FormStore.getSearchData([{ ...schema?.linkquery_condition, "nowValue": FormStore.formData }]).then(res => {
                                     console.log(res[schema.$id]);
                                     let idArr = res[schema.$id]
+                                    FormStore.getFormSimple().then(() => {
+                                        let arr = []
+                                        if (schema.linkquery_condition && schema.linkquery_condition.fieldIds) {
+                                            schema.linkquery_condition.fieldIds.forEach((item, index) => {
+                                                arr.push({ title: FormStore.fieldNameObj[item], dataIndex: item, key: item, width: '50', ellipsis: true })
+                                            })
+                                        }
+                                        console.log(arr);
+                                        setColumn(arr)
+                                    })
                                     put('/data/FastQuery', idArr).then((res) => {
                                         let arr = []
                                         res.data.data.map((item, index) => {

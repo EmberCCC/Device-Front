@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-04 12:43:55
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-06 13:01:53
+ * @LastEditTime: 2022-08-17 09:55:45
  * @FilePath: \bl-device-manage-test\src\layouts\FormEdit\self_item\link_item.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -54,10 +54,13 @@ const Select_option = observer(({ FormStore, value, onChange, ...rest }) => {
             }
             {
                 addons.dependValues[0] == '2' && (
-                    <Select onChange={(e) => {
-                        let arr = e.split('-')
-                        onChange({ 'formId': arr[0], 'fieldId': arr[1] })
-                    }}>
+                    <Select
+                        value={`${value?.formId}.${value?.fieldId}`}
+                        onChange={(e) => {
+                            let arr = e.split('.')
+                            console.log(value);
+                            onChange({ 'formId': arr[0], 'fieldId': arr[1] })
+                        }}>
                         {
                             formStru.map((item, index) => {
                                 return (
@@ -67,7 +70,7 @@ const Select_option = observer(({ FormStore, value, onChange, ...rest }) => {
                                                 return (
                                                     <Select.Option key={one['fieldId']} onClick={() => {
                                                         onChange({ 'formId': item['formId'], 'fieldId': one['fieldId'] })
-                                                    }} value={`${item['formId']}-${one['fieldId']}`}>{one['fieldName']}</Select.Option>
+                                                    }} value={`${item['formId']}.${one['fieldId']}`}>{one['fieldName']}</Select.Option>
                                                 )
                                             })
                                         }
