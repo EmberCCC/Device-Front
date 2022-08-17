@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-06-30 09:07:55
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-16 14:20:28
+ * @LastEditTime: 2022-08-17 16:07:15
  * @FilePath: \bl-device-manage-test\src\components\GlobalTabel2\dataModal.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -18,9 +18,12 @@ import React, { Component } from 'react'
 import { put } from 'utils/request'
 import './index.less'
 
-@inject('TableStore', 'HomeStore', 'FormStore')
+@inject('TableStore', 'HomeStore', 'FormStore', 'SocketStore')
 @observer
 class DataModal extends Component {
+    componentDidMount(){
+        this.props.SocketStore.getAllUsers();
+    }
     render() {
         const { itemIndex, dataSource, modalFieldValue, modalField, modalData, formArr, oneDataInfo } = this.props.TableStore
         const { fieldNameObj } = this.props.FormStore
@@ -79,12 +82,12 @@ class DataModal extends Component {
                                             jsonData['linkquery_condition']['fieldIds'].map((one, index) => {
                                                 console.log(toJS(modalData[item['id']]));
                                                 let id = []
-                                                if(modalData[item['id']]){
+                                                if (modalData[item['id']]) {
                                                     id = JSON.parse(modalData[item['id']])
                                                 }
                                                 return (
                                                     <div key={index}>
-                                                        <div>{fieldNameObj[one]}</div>
+                                                        <div style={{ marginBottom: '5px', color: 'black' }}>{fieldNameObj[one]}</div>
                                                         {
                                                             id.length > 0 && oneDataInfo.hasOwnProperty(id[0]) && oneDataInfo[id[0]].hasOwnProperty(one) && (
                                                                 <div>{oneDataInfo[id[0]][one]}</div>
@@ -103,15 +106,15 @@ class DataModal extends Component {
                                             {element[item['id']]['title']}
                                         </div>
                                         {
-                                            jsonData['linkquery_condition']['fieldShow'].map((one,index) => {
+                                            jsonData['linkquery_condition']['fieldShow'].map((one, index) => {
                                                 console.log(toJS(modalData[item['id']]));
                                                 let id = []
-                                                if(modalData[item['id']]){
+                                                if (modalData[item['id']]) {
                                                     id = JSON.parse(modalData[item['id']])
                                                 }
                                                 return (
                                                     <div key={index}>
-                                                        <div>{fieldNameObj[one]}</div>
+                                                        <div style={{ marginBottom: '5px', color: 'black' }}>{fieldNameObj[one]}</div>
                                                         {
                                                             id.length > 0 && oneDataInfo.hasOwnProperty(id[0]) && oneDataInfo[id[0]].hasOwnProperty(one) && (
                                                                 <div>{oneDataInfo[id[0]][one]}</div>
@@ -123,7 +126,30 @@ class DataModal extends Component {
                                         }
                                     </div>
                                 )
-                            } else {
+                            } else if (jsonData['typeId'] == '20') {
+                                console.log(showData);
+                                let arr = []
+                                if(showData != undefined && showData != ''){
+                                    arr = JSON.parse(showData)
+                                }
+                                return (
+                                    <div className='item_content' key={index}>
+                                        <div className='item_title'>
+                                            {element[item['id']]['title']}
+                                        </div>
+                                        <div className='item_article'>
+                                            {
+                                                arr.map((one,index) => {
+                                                    return (
+                                                        <span style={{marginRight:'5px'}} key={index}>{this.props.SocketStore.userName[one]}</span>
+                                                    )
+                                                })
+                                            }
+                                        </div>
+                                    </div>
+                                )
+                            }
+                            else {
                                 return (
                                     <div className='item_content' key={index}>
                                         <div className='item_title'>

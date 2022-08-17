@@ -4,7 +4,7 @@
  * @Author: zhihao
  * @Date: 2022-04-17 15:22:43
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-17 07:28:51
+ * @LastEditTime: 2022-08-17 15:55:41
  */
 import React from 'react';
 import { message, Modal } from 'antd';
@@ -12,7 +12,7 @@ import { getSchema, restore } from 'layouts/FormEdit/changeTool';
 import { observable, action, toJS, makeObservable } from 'mobx';
 import moment from 'moment';
 import { isDataExist } from 'utils/dataTools';
-import { put } from 'utils/request';
+import { get, put } from 'utils/request';
 import * as services from '../services/home';
 
 class Table {
@@ -284,13 +284,17 @@ class Table {
 			let iColumns = []
 			let iDataSource = [];
 			let iFieldValue = [];
+			let nameObj = {}
+			let objName = await get('/uaa/user/show')
+			objName.data.data.map(item => {
+				nameObj[item['userId']] = item['name']
+			})
+			console.log(objName);
 			data.fields.map((item) => {
 				if (item['typeId'] != 14 && item['typeId'] != 15) {
 					let jsonItem = JSON.parse(item['detailJson']);
 					jsonItem['fieldId'] = item['id'];
 					if (item['typeId'] == '3') {
-						console.log(item);
-						console.log(jsonItem);
 						let format = jsonItem['format'] == 'date' ? 'YYYY-MM-DD' : 'YYYY-MM-DD hh:mm:ss'
 						iColumns.push({
 							'title': jsonItem.title,
@@ -304,11 +308,32 @@ class Table {
 									return <div>{moment(text).format(format)}</div>
 
 								}
-								console.log(text);
-								console.log(format);
 							}
 						});
-					} else {
+					} else if (item['typeId'] == '20') {
+						iColumns.push({
+							'title': jsonItem.title,
+							'dataIndex': item.id,
+							'key': item.id,
+							'detailJson': jsonItem,
+							'width': 200,
+							'ellipsis': true,
+							'render': (text, record, index) => {
+								let arr = []
+								if (text != undefined && text != '') {
+									arr = JSON.parse(text)
+								}
+								return <div className='person_list'>
+									{
+										arr.map((one, index) => {
+											return <span className='one_person' key={index}>{nameObj[one]}</span>
+										})
+									}
+								</div>
+							}
+						});
+					}
+					else {
 						iColumns.push({ 'title': jsonItem.title, 'dataIndex': item.id, 'key': item.id, 'detailJson': jsonItem, 'width': 200, 'ellipsis': true });
 					}
 					iFieldValue.push(item.id)
