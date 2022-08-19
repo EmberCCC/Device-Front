@@ -16326,7 +16326,7 @@
 
 "qrcode.react@^0.9.3":
   "integrity" "sha512-gGd30Ez7cmrKxyN2M3nueaNLk/f9J7NDRgaD5fVgxGpPLsYGWMn9UQ+XnDpv95cfszTQTdaf4QGLNMf3xU0hmw=="
-  "resolved" "https://registry.npmjs.org/qrcode.react/-/qrcode.react-0.9.3.tgz"
+  "resolved" "https://registry.npmmirror.com/qrcode.react/-/qrcode.react-0.9.3.tgz"
   "version" "0.9.3"
   dependencies:
     "prop-types" "^15.6.0"

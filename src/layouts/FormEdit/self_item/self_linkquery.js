@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-10 16:01:23
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-17 09:51:31
+ * @LastEditTime: 2022-08-20 01:10:00
  * @FilePath: \bl-device-manage-test\src\layouts\FormEdit\self_item\myDivider.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -49,7 +49,13 @@ const Self_linkquery = observer((props) => {
             if (!Array.isArray(arr)) {
                 arr = JSON.parse(arr)
             }
-            put('/data/FastQuery', arr).then((res) => {
+            let iArr = []
+            if (!Array.isArray(arr)) {
+                iArr = [arr]
+            } else {
+                iArr = arr
+            }
+            put('/data/FastQuery', iArr).then((res) => {
                 let arr = []
                 res.data.data.map((item, index) => {
                     let obj = {}

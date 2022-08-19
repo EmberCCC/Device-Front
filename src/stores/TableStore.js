@@ -4,7 +4,7 @@
  * @Author: zhihao
  * @Date: 2022-04-17 15:22:43
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-17 15:55:41
+ * @LastEditTime: 2022-08-20 02:06:01
  */
 import React from 'react';
 import { message, Modal } from 'antd';
@@ -52,6 +52,7 @@ class Table {
 	@observable schema = {};
 	@observable relSortList = [];
 	@observable allData = [];
+	@observable dataId = 1;
 
 	@observable oneDataInfo = {}
 

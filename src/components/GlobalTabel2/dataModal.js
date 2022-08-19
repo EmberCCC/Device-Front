@@ -2,11 +2,11 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-06-30 09:07:55
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-17 16:07:15
+ * @LastEditTime: 2022-08-20 02:25:21
  * @FilePath: \bl-device-manage-test\src\components\GlobalTabel2\dataModal.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
-import { CopyOutlined, DeleteOutlined, EditOutlined, EyeOutlined, FunnelPlotOutlined, PrinterOutlined, ShareAltOutlined } from '@ant-design/icons'
+import { CopyOutlined, DeleteOutlined, EditOutlined, EyeOutlined, FunnelPlotOutlined, PrinterOutlined, QrcodeOutlined, ShareAltOutlined } from '@ant-design/icons'
 import { Button, Checkbox, Modal, Popover, Spin, Tabs } from 'antd'
 import { Radio } from 'components/BLComps'
 import GlobalModal from 'components/GlobalModal'
@@ -15,20 +15,22 @@ import FormData from 'layouts/FormLayout/formData'
 import { toJS } from 'mobx'
 import { inject, observer } from 'mobx-react'
 import React, { Component } from 'react'
-import { put } from 'utils/request'
+import QRCode from 'qrcode.react'
 import './index.less'
+import moment from 'moment'
 
 @inject('TableStore', 'HomeStore', 'FormStore', 'SocketStore')
 @observer
 class DataModal extends Component {
-    componentDidMount(){
+    componentDidMount() {
         this.props.SocketStore.getAllUsers();
     }
     render() {
         const { itemIndex, dataSource, modalFieldValue, modalField, modalData, formArr, oneDataInfo } = this.props.TableStore
         const { fieldNameObj } = this.props.FormStore
         const getExactData = (formName) => {
-            console.log(toJS(oneDataInfo));
+            console.log(toJS(this.props.TableStore.modalData));
+
             if (typeof (formArr[formName]) != 'undefined') {
                 const element = formArr[formName]['properties'];
                 return (
@@ -36,7 +38,6 @@ class DataModal extends Component {
                         if (modalFieldValue.includes(item['id']) && !(['createPerson', 'createTime', 'updateTime'].indexOf(item['id']) > -1) && element.hasOwnProperty(item['id'])) {
                             let showData = modalData[item['id']]
                             let jsonData = JSON.parse(item['detailJson'])
-                            console.log(jsonData);
                             if (jsonData['typeId'] == '4') {
                                 let index = jsonData['enum'].indexOf(modalData[item['id']])
                                 showData = jsonData['enumNames'][index]
@@ -80,7 +81,6 @@ class DataModal extends Component {
                                         </div>
                                         {
                                             jsonData['linkquery_condition']['fieldIds'].map((one, index) => {
-                                                console.log(toJS(modalData[item['id']]));
                                                 let id = []
                                                 if (modalData[item['id']]) {
                                                     id = JSON.parse(modalData[item['id']])
@@ -107,7 +107,6 @@ class DataModal extends Component {
                                         </div>
                                         {
                                             jsonData['linkquery_condition']['fieldShow'].map((one, index) => {
-                                                console.log(toJS(modalData[item['id']]));
                                                 let id = []
                                                 if (modalData[item['id']]) {
                                                     id = JSON.parse(modalData[item['id']])
@@ -127,9 +126,8 @@ class DataModal extends Component {
                                     </div>
                                 )
                             } else if (jsonData['typeId'] == '20') {
-                                console.log(showData);
                                 let arr = []
-                                if(showData != undefined && showData != ''){
+                                if (showData != undefined && showData != '') {
                                     arr = JSON.parse(showData)
                                 }
                                 return (
@@ -139,17 +137,16 @@ class DataModal extends Component {
                                         </div>
                                         <div className='item_article'>
                                             {
-                                                arr.map((one,index) => {
+                                                arr.map((one, index) => {
                                                     return (
-                                                        <span style={{marginRight:'5px'}} key={index}>{this.props.SocketStore.userName[one]}</span>
+                                                        <span style={{ marginRight: '5px' }} key={index}>{this.props.SocketStore.userName[one]}</span>
                                                     )
                                                 })
                                             }
                                         </div>
                                     </div>
                                 )
-                            }
-                            else {
+                            } else {
                                 return (
                                     <div className='item_content' key={index}>
                                         <div className='item_title'>
@@ -189,11 +186,12 @@ class DataModal extends Component {
         const handleClickFront = () => {
             this.props.TableStore.getOneData({ 'formId': this.props.HomeStore.firstFormId, "dataId": dataSource[itemIndex - 1]['key'] })
             this.props.TableStore.setValue('itemIndex', itemIndex - 1);
+            this.props.TableStore.setValue('dataId', dataSource[itemIndex - 1]['key']);
         }
         const handleClickBehind = () => {
             this.props.TableStore.getOneData({ 'formId': this.props.HomeStore.firstFormId, "dataId": dataSource[itemIndex + 1]['key'] })
             this.props.TableStore.setValue('itemIndex', itemIndex + 1);
-
+            this.props.TableStore.setValue('dataId', dataSource[itemIndex + 1]['key']);
         }
         const judgeFront = () => {
             if (itemIndex == 0) {
@@ -216,6 +214,7 @@ class DataModal extends Component {
             console.log(visible);
         }
         const handleClick = (value) => {
+            console.log(toJS(this.props.FormStore.formData));
             if (value == 'del') {
                 this.props.TableStore.delOneData({ 'formId': this.props.HomeStore.firstFormId, 'dataId': modalData['id'] }).then(() => {
                     if (this.props.TableStore.model == 'subitAndManage') {
@@ -229,6 +228,16 @@ class DataModal extends Component {
                 this.props.FormStore.setValue('formCopyVis', true);
             } else if (value == 'edit') {
                 this.props.TableStore.setValue('formEdit', true);
+            } else if (value == 'qrcode') {
+                const imgUrl = document.getElementById('myCode')
+                const img = new Image()
+                img.src = imgUrl.toDataURL('image/png')
+                var link = document.createElement("a");
+                link.download = `${moment().format('YYYY-MM-DD')}-${this.props.TableStore.dataId}.png`;
+                link.href = img.src;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
             }
             console.log(value);
         }
@@ -269,7 +278,7 @@ class DataModal extends Component {
                             dex = dex + 1;
                         }
                         if (flag) return (
-                            <div className='right_content_item'>
+                            <div className='right_content_item' key={index}>
                                 <div className='right_content_header'>
                                     <div className='item_header_left'>
                                         1
@@ -351,7 +360,7 @@ class DataModal extends Component {
                                         <button onClick={() => { handleClick('copy') }} className='header_btn'><CopyOutlined style={{ color: '#0db3a6', marginRight: '5px' }} />复制</button>
                                         <button onClick={() => { handleClick('edit') }} className='header_btn'><EditOutlined style={{ color: '#0db3a6', marginRight: '5px' }} />编辑</button>
                                         <button onClick={() => { handleClick('del') }} className='header_btn'><DeleteOutlined style={{ color: '#0db3a6', marginRight: '5px' }} />删除</button>
-
+                                        <button onClick={() => { handleClick('qrcode') }} className='header_btn'><QrcodeOutlined style={{ color: '#0db3a6' }} />生成二维码</button>
                                     </div>
                                     <div className='left_header_right'>
                                         <Button size='small' disabled={judgeFront()} type='text' onClick={handleClickFront}>←</Button>
@@ -390,6 +399,15 @@ class DataModal extends Component {
 
                     </div>
                 </div>
+
+                <QRCode
+                    id='myCode'
+                    style={{ display: 'none' }}
+                    value={toJS(this.props.TableStore.dataId).toString()} //value为二维码中包含的内容
+                    size={200} //二维码的宽高尺寸
+                    fgColor="#000000" //二维码的颜色
+                />
+
                 {
                     this.props.FormStore.formCopyVis &&
                     <GlobalModal

@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-04-07 11:58:39
- * @LastEditTime: 2022-08-03 11:19:05
+ * @LastEditTime: 2022-08-20 02:05:45
  * @LastEditors: EmberCCC 1810888456@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage-test\src\components\GlobalTabel\index.js
@@ -154,19 +154,18 @@ class GlobalTabel2 extends React.Component {
                         onRow={(key, record) => {
                             return {
                                 onClick: event => {
-                                    console.log(toJS(dataSource));
-                                    console.log(toJS(key));
                                     let dindex = 0;
                                     dataSource.forEach((one, index) => {
                                         if (one['key'] == key['key']) {
                                             dindex = index
                                         }
                                     })
-                                    this.props.TableStore.getOneData({ 'formId': this.props.HomeStore.firstFormId, 'dataId': key.key })
-                                    this.props.TableStore.setDataPageModalVis(true);
-                                    this.props.TableStore.setValue('itemIndex', dindex)
-                                    console.log(record);
-                                    console.log(key);
+                                    this.props.TableStore.getOneData({ 'formId': this.props.HomeStore.firstFormId, 'dataId': key.key }).then(() => {
+                                        this.props.TableStore.setValue('dataId',key.key)
+                                        this.props.TableStore.setDataPageModalVis(true);
+                                        this.props.TableStore.setValue('itemIndex', dindex)
+                                    })
+
                                 }, // 点击行
                             };
                         }}
