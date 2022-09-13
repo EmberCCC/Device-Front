@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-02 03:21:54
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-20 01:13:44
+ * @LastEditTime: 2022-08-24 01:50:21
  * @FilePath: \bl-device-manage-test\src\layouts\FormLayout\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -126,7 +126,6 @@ const FormData = observer(({ HomeStore, FormStore, TableStore }) => {
     console.log(toJS(formData));
     FormStore.getFormField({ formId: HomeStore.firstFormId }).then(() => {
       setSchema(restore(toJS(FormStore.formField), 'submit'))
-      console.log(JSON.parse(toJS(TableStore.formData)['formData']));
       const formData = JSON.parse(toJS(TableStore.formData)['formData'])
       FormStore.setValue('formData', formData)
       setData(formData);
@@ -134,6 +133,31 @@ const FormData = observer(({ HomeStore, FormStore, TableStore }) => {
       form.setValues(formData);
     });
   }, [])
+  const watch = {
+    '#': val => {
+      let obj = {}
+      Object.keys(dataRef.current).map(one => {
+        if (val[one] == undefined) {
+          try {
+            let d = JSON.parse(dataRef.current[one])
+            obj[one] = d
+          } catch (error) {
+            obj[one] = dataRef.current[one]
+          }
+        } else {
+          try {
+            let d = JSON.parse(val[one])
+            obj[one] = d
+          } catch (error) {
+            obj[one] = val[one]
+          }
+        }
+      })
+      console.log(obj);
+      setData(obj)
+      FormStore.setValue('formData', obj)
+    }
+  }
   const getItem = () => {
     let nArr = []
     for (const key in schema) {
@@ -178,31 +202,7 @@ const FormData = observer(({ HomeStore, FormStore, TableStore }) => {
       })
     )
   }
-  const watch = {
-    '#': val => {
-      let obj = {}
-      Object.keys(dataRef.current).map(one => {
-        if (val[one] == undefined) {
-          try {
-            let d = JSON.parse(dataRef.current[one])
-            obj[one] = d
-          } catch (error) {
-            obj[one] = dataRef.current[one]
-          }
-        } else {
-          try {
-            let d = JSON.parse(val[one])
-            obj[one] = d
-          } catch (error) {
-            obj[one] = val[one]
-          }
-        }
-      })
-      console.log(obj);
-      setData(obj)
-      FormStore.setValue('formData', obj)
-    }
-  }
+
   return (
     <div className='form_content'>
       <div className='form_main'>

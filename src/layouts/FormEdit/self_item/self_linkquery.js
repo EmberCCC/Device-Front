@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-10 16:01:23
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-20 01:10:00
+ * @LastEditTime: 2022-08-24 02:27:53
  * @FilePath: \bl-device-manage-test\src\layouts\FormEdit\self_item\myDivider.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -15,6 +15,8 @@ import { put } from 'utils/request';
 import { getAllField } from '../changeTool';
 
 import './index.css'
+import FormLayout from 'layouts/FormLayout';
+import GlobalModal from 'components/GlobalModal';
 const Self_linkquery = observer((props) => {
     const { schema, FormStore } = props
     const [column, setColumn] = useState([])
@@ -22,6 +24,7 @@ const Self_linkquery = observer((props) => {
     const [dataSource, setDataSource] = useState([])
     const [showData, setShowData] = useState([])
     const [load, setLoad] = useState(false)
+    const [subVis, setSubVis] = useState(false)
     useEffect(() => {
         FormStore.getFormSimple().then(() => {
             let arr = []
@@ -116,6 +119,15 @@ const Self_linkquery = observer((props) => {
             <div className="self_rich_text" dangerouslySetInnerHTML={{ __html: schema.describe }} />
             <div className='self_link_showlist'>
                 {
+                    schema.typeId == '14' && (
+                        <div className='self_add_data' onClick={() => {
+                            // if(schema?.linkquery_condition?.formId){
+                            //     setSubVis(true)
+                            // }
+                        }}>+ 添加数据</div>
+                    )
+                }
+                {
                     schema?.linkquery_condition?.mul == 'one' && schema.typeId == '14' && (
                         getInfo()
                     )
@@ -194,6 +206,21 @@ const Self_linkquery = observer((props) => {
                     </Modal>
                 )
             }
+            <GlobalModal
+                visible={subVis}
+                onCancel={() => setSubVis(false)}
+                footer={null}
+                destroyOnClose={true}
+                width={1000}
+            >
+                <FormLayout
+                    formId={schema.linkquery_condition.formId}
+                    type={'link'}
+                    handleCancel={() => {
+                        setSubVis(false)
+                    }}
+                />
+            </GlobalModal>
         </div>
     )
 })

@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-06 08:14:52
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-16 12:03:07
+ * @LastEditTime: 2022-09-13 11:34:58
  * @FilePath: \bl-device-manage-test\src\components\GlobalTabel2\mulChange.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -12,6 +12,16 @@ import FormRender, { useForm } from 'form-render';
 import { inject, observer } from 'mobx-react'
 import React, { useState } from 'react'
 import stores from 'stores'
+import self_select from 'layouts/FormEdit/self_item/self_select';
+import My_string from 'layouts/FormEdit/self_item/my_string';
+import self_textarea from 'layouts/FormEdit/self_item/self_textarea';
+import self_number from 'layouts/FormEdit/self_item/self_number';
+import self_radio from 'layouts/FormEdit/self_item/self_radio';
+import self_datapick from 'layouts/FormEdit/self_item/self_datapick';
+import self_linkquery from 'layouts/FormEdit/self_item/self_linkquery';
+import { Self_address } from 'layouts/FormEdit/self_item/self_address';
+import { Self_divider } from 'layouts/FormEdit/self_item/self_divider';
+import self_department_user from 'layouts/FormEdit/self_item/self_department_user';
 
 import './index.less'
 import { LeftOutlined } from '@ant-design/icons';
@@ -113,7 +123,18 @@ const MulChange = observer(({ HomeStore, TableStore }) => {
                     <Option value={2}>公式计算值</Option>
                 </Select>}</div>
                 <br />
-                <FormRender schema={schema} form={form} onFinish={onFinish} style={{ overflowY: 'auto' }} />
+                <FormRender schema={schema} form={form} onFinish={onFinish} widgets={{
+                    self_divider: Self_divider,
+                    self_select: self_select,
+                    My_string: My_string,
+                    self_textarea: self_textarea,
+                    self_number: self_number,
+                    self_radio: self_radio,
+                    self_datapick: self_datapick,
+                    self_linkquery: self_linkquery,
+                    self_address: Self_address,
+                    self_department_user: self_department_user
+                }} style={{ overflowY: 'auto' }} />
                 <span className='mul_header_line'>如需清空字段，保留此项为空即可</span>
             </div>
             <div className='mul_footer'>

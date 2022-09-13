@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-04-07 11:58:39
- * @LastEditTime: 2022-08-20 02:05:45
+ * @LastEditTime: 2022-09-13 11:42:34
  * @LastEditors: EmberCCC 1810888456@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage-test\src\components\GlobalTabel\index.js
@@ -161,7 +161,7 @@ class GlobalTabel2 extends React.Component {
                                         }
                                     })
                                     this.props.TableStore.getOneData({ 'formId': this.props.HomeStore.firstFormId, 'dataId': key.key }).then(() => {
-                                        this.props.TableStore.setValue('dataId',key.key)
+                                        this.props.TableStore.setValue('dataId', key.key)
                                         this.props.TableStore.setDataPageModalVis(true);
                                         this.props.TableStore.setValue('itemIndex', dindex)
                                     })
@@ -225,7 +225,16 @@ class GlobalTabel2 extends React.Component {
                         footer={null}
                         children={
                             <div className='modal_content'>
-                                <FormLayout />
+                                <FormLayout handleClose={() => {
+                                    this.props.TableStore.setDataPageModalVis(false);
+                                    this.props.TableStore.setIsModalEdit(false);
+                                    this.props.TableStore.setValue('formEdit', false);
+                                    if (this.props.TableStore.model == 'subitAndManage') {
+                                        this.props.TableStore.getAllData({ formId: this.props.HomeStore.firstFormId }, 'myself')
+                                    } else {
+                                        this.props.TableStore.getAllData({ formId: this.props.HomeStore.firstFormId }, 'all')
+                                    }
+                                }} />
                             </div>
                         } />
                 }
@@ -256,7 +265,7 @@ class GlobalTabel2 extends React.Component {
         let columnWidths = []
         let sheetData = []
         let sheetName = firstFormName[this.props.HomeStore.firstFormId]
-        this.props.HomeStore.columns.map((item) => {
+        this.props.TableStore.columns.map((item) => {
             sheetFilter.push(item.dataIndex)
             sheetHeader.push(item.title)
             columnWidths.push('10');

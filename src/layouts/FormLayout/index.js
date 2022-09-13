@@ -2,11 +2,11 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-02 03:21:54
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-20 01:14:18
+ * @LastEditTime: 2022-09-13 11:44:16
  * @FilePath: \bl-device-manage-test\src\layouts\FormLayout\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import FormRender, { useForm } from 'form-render';
 import { Button, message, Modal, Spin, Tabs } from 'antd';
 import { inject, observer } from 'mobx-react';
@@ -24,12 +24,13 @@ import self_datapick from 'layouts/FormEdit/self_item/self_datapick';
 import self_linkquery from 'layouts/FormEdit/self_item/self_linkquery';
 import { Self_address } from 'layouts/FormEdit/self_item/self_address';
 import self_department_user from 'layouts/FormEdit/self_item/self_department_user';
-const FormLayout = observer(({ HomeStore, FormStore }) => {
+const FormLayout = observer(({ HomeStore, FormStore, type, formId, handleCancel, handleClose }) => {
   const { schema, formField, formData, flag } = FormStore
   const [data, setData] = useState({});
   const form = useForm();
   const formList = useForm()
-  const onFinish = ( error) => {
+  const dataRef = useRef()
+  const onFinish = (error) => {
     const { firstFormId } = HomeStore;
     if (error.length > 0) {
       return;
@@ -51,10 +52,21 @@ const FormLayout = observer(({ HomeStore, FormStore }) => {
       )
       return;
     }
-    if (checkArr.length > 0) {
-      FormStore.submitDataCheck({ 'formId': firstFormId, 'data': { ...formData, ...data }, 'checkFieldIds': checkArr })
+    if (formId) {
+      if (checkArr.length > 0) {
+        FormStore.submitDataCheck({ 'formId': formId, 'data': { ...formData, ...data }, 'checkFieldIds': checkArr })
+      } else {
+        FormStore.submitData({ 'formId': formId, 'data': { ...formData, ...data } })
+      }
     } else {
-      FormStore.submitData({ 'formId': firstFormId, 'data': { ...formData, ...data } })
+      if (checkArr.length > 0) {
+        FormStore.submitDataCheck({ 'formId': firstFormId, 'data': { ...formData, ...data }, 'checkFieldIds': checkArr })
+      } else {
+        FormStore.submitData({ 'formId': firstFormId, 'data': { ...formData, ...data } })
+      }
+    }
+    if (handleClose) {
+      handleClose()
     }
     console.log(toJS(data));
     console.log(checkArr);
@@ -63,17 +75,31 @@ const FormLayout = observer(({ HomeStore, FormStore }) => {
   }
   useEffect(() => {
     const { firstFormId } = HomeStore
-    FormStore.getFormField({ formId: firstFormId },'1')
+    if (formId) {
+      FormStore.getFormField({ formId: formId }, '1')
+    } else {
+      FormStore.getFormField({ formId: firstFormId }, '1')
+    }
+    FormStore.setValue('formData', {});
   }, [])
   useEffect(() => {
-    console.log(toJS(formData));
     setData(formData)
     form.setValues(formData)
     formList.setValues(formData)
   }, [flag])
+  useEffect(() => {
+    dataRef.current = data
+  }, [data])
   const handleMount = () => {
-    form.setValues(formData)
-    formList.setValues(formData)
+    form.setValues(dataRef.current)
+    formList.setValues(dataRef.current)
+  }
+  const watch = {
+    '#': val => {
+      let data = { ...formData, ...val }
+      setData(data)
+      FormStore.setValue('formData', data)
+    }
   }
   const getItem = () => {
     let nArr = []
@@ -115,13 +141,7 @@ const FormLayout = observer(({ HomeStore, FormStore }) => {
       })
     )
   }
-  const watch = {
-    '#': val => {
-      let data = { ...data, ...val }
-      setData(data)
-      FormStore.setValue('formData', data)
-    }
-  }
+
 
   return (
     <Spin spinning={FormStore.loading} tip={'loading...'} wrapperClassName={'myForm_layout'}>
@@ -155,6 +175,11 @@ const FormLayout = observer(({ HomeStore, FormStore }) => {
       </div>
       <div className='form_footer'>
         <Button onClick={form.submit} type="primary">提交</Button>
+        {
+          type == 'link' && (
+            <Button style={{ marginLeft: "10px" }} onClick={handleCancel}>取消</Button>
+          )
+        }
       </div>
     </Spin>
   );

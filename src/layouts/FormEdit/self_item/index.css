@@ -229,3 +229,9 @@
 .ant-table-body{
     max-height: 450px !important;
 }
+.self_add_data{
+    width: fit-content;
+    margin-bottom: 5px;
+    cursor: pointer;
+    color: #0DB3A6;
+}
