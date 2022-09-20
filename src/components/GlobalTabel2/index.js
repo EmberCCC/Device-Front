@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-04-07 11:58:39
- * @LastEditTime: 2022-09-20 10:35:50
+ * @LastEditTime: 2022-09-20 15:58:10
  * @LastEditors: EmberCCC 1810888456@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage-test\src\components\GlobalTabel\index.js
@@ -371,7 +371,7 @@ class GlobalTabel2 extends React.Component {
                 okText: '确定',
                 cancelText: '取消',
                 onOk: () => {
-                    let option = this.commExport(toJS(this.props.TableStore.selectedIdsList));
+                    let option = this.commExport(toJS(this.props.TableStore.selectedIdsList),export_list);
                     let toExcel = new ExportJsonExcel(option)
                     toExcel.saveExcel();
                 }

@@ -21,7 +21,7 @@
 }
 #root .ant-sider-menu-content .ant-menu-inline .ant-menu-item-selected {
   background: #ffffff !important;
-  color: #6236FF !important;
+  color: #0db3a6 !important;
 }
 #root .ant-sider-menu-content .ant-menu-inline .ant-menu-item {
   border-radius: 7px;
@@ -72,8 +72,8 @@
 }
 #root .btn-border-purple {
   border-radius: 3px;
-  border: 2px solid #6236FF !important;
-  color: #6236FF;
+  border: 2px solid #0db3a6 !important;
+  color: #0db3a6;
   background-color: transparent;
 }
 #root .btn-border-gray {
@@ -151,7 +151,7 @@
 }
 #root .ant-tabs-tab-active {
   background-color: rgb(144, 255, 218);
-  border-bottom: 3px solid #6236FF;
+  border-bottom: 3px solid #0db3a6;
 }
 #root .ant-tabs-bar {
   border: none;
@@ -160,7 +160,7 @@
   margin-right: 6px;
 }
 .ant-layout-sider-children #manu_container {
-  background: linear-gradient(129deg, #ff2a8e 0%, #6236ff 50%, #32c5ff 100%);
+  background: linear-gradient(129deg, #ff2a8e 0%, #0db3a6 50%, #32c5ff 100%);
 }
 .ant-layout-sider-children #manu_container .ant-menu {
   background: transparent !important;
@@ -179,7 +179,7 @@
 }
 .ant-layout-sider-children #manu_container .ant-menu-inline .ant-menu-item-selected {
   background: #ffffff !important;
-  color: #6236FF !important;
+  color: #0db3a6 !important;
 }
 .ant-layout-sider-children #manu_container .ant-menu-inline .ant-menu-item {
   border-radius: 7px;
