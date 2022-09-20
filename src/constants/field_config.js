@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-02 08:07:00
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-15 20:46:39
+ * @LastEditTime: 2022-09-20 15:05:07
  * @FilePath: \bl-device-manage-test\src\constants\field_config.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -852,6 +852,32 @@ var strongElements = [
                 type: 'string',
                 widget: 'percentSlider'
             }
+        }
+    },
+    {
+        text:'子表单',
+        name:'15',
+        schema:{
+            title:'子表单',
+            type:'array',
+            widget:'list2',
+            items:{
+                type:'object',
+                properties:{}
+            }
+        },
+        setting:{
+            title:{
+                title:'标题',
+                type:"string"
+            },
+            title_vis: {
+                title: '显示标题',
+                type: 'boolean',
+                props: {
+                    defaultValue: true
+                }
+            },
         }
     },
     {
