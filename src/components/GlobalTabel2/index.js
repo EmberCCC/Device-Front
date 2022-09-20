@@ -1,14 +1,14 @@
 /*
  * @Author: your name
  * @Date: 2022-04-07 11:58:39
- * @LastEditTime: 2022-09-13 11:42:34
+ * @LastEditTime: 2022-09-20 10:35:50
  * @LastEditors: EmberCCC 1810888456@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage-test\src\components\GlobalTabel\index.js
  */
 import React, { createRef } from 'react';
 import { inject, observer } from 'mobx-react';
-import { Button, Checkbox, Dropdown, Menu, Modal, Popover, Spin, Table } from 'antd';
+import { Button, Checkbox, Col, Dropdown, Menu, Modal, Popover, Row, Select, Spin, Table } from 'antd';
 import { ClockCircleOutlined, DeleteOutlined, DownOutlined, FilterOutlined, FullscreenExitOutlined, PlusOutlined, SortDescendingOutlined, UploadOutlined, FunnelPlotOutlined } from '@ant-design/icons';
 import GlobalModal from 'components/GlobalModal';
 import { toJS } from 'mobx';
@@ -257,7 +257,8 @@ class GlobalTabel2 extends React.Component {
     }
 
 
-    commExport = (data) => {
+    commExport = (data, export_list) => {
+        console.log(export_list);
         let option = {}
         option.fileName = moment(new Date()).format('L') + '  ' + moment(new Date()).format('LTS')
         let sheetFilter = []
@@ -265,7 +266,8 @@ class GlobalTabel2 extends React.Component {
         let columnWidths = []
         let sheetData = []
         let sheetName = firstFormName[this.props.HomeStore.firstFormId]
-        this.props.TableStore.columns.map((item) => {
+        export_list.map((item) => {
+            item = JSON.parse(item)
             sheetFilter.push(item.dataIndex)
             sheetHeader.push(item.title)
             columnWidths.push('10');
@@ -337,9 +339,35 @@ class GlobalTabel2 extends React.Component {
     /* 导出方法 */
     onExport = () => {
         if (this.props.TableStore.selectedIdsList.length > 0) {
+            let export_list = []
+            const onChange = (list) => {
+                export_list = list
+                console.log(list);
+            };
             Modal.confirm({
                 title: '筛选导出',
-                content: '确定要导出选中的记录？',
+                content: (
+                    <div className='export_list'>
+                        <Checkbox.Group style={{ width: '100%' }} onChange={(info) => {
+                            let list = JSON.parse(JSON.stringify(info))
+                            onChange(list)
+                        }}>
+                            {
+                                this.props.TableStore.columns.map((item, index) => {
+                                    console.log(toJS(item));
+                                    return (
+                                        <Row>
+                                            <Checkbox key={index} value={JSON.stringify(item)}>
+                                                {item.title}
+                                            </Checkbox>
+                                        </Row>
+                                    )
+                                })
+                            }
+                        </Checkbox.Group>
+                    </div>
+
+                ),
                 okText: '确定',
                 cancelText: '取消',
                 onOk: () => {
@@ -359,14 +387,40 @@ class GlobalTabel2 extends React.Component {
     };
 
     onExportAll = () => {
-        if (this.props.HomeStore.dataSource.length > 0) {
+        if (this.props.TableStore.dataSource.length > 0) {
+            let export_list = []
+            const onChange = (list) => {
+                export_list = list
+                console.log(list);
+            };
             Modal.confirm({
                 title: '全部导出',
-                content: '确定要导出全部记录？',
+                content: (
+                    <div className='export_list'>
+                        <Checkbox.Group style={{ width: '100%' }} onChange={(info) => {
+                            let list = JSON.parse(JSON.stringify(info))
+                            onChange(list)
+                        }}>
+                            {
+                                this.props.TableStore.columns.map((item, index) => {
+                                    console.log(toJS(item));
+                                    return (
+                                        <Row>
+                                            <Checkbox key={index} value={JSON.stringify(item)}>
+                                                {item.title}
+                                            </Checkbox>
+                                        </Row>
+                                    )
+                                })
+                            }
+                        </Checkbox.Group>
+                    </div>
+
+                ),
                 okText: '确定',
                 cancelText: '取消',
                 onOk: () => {
-                    let option = this.commExport(toJS(this.props.HomeStore.dataSource));
+                    let option = this.commExport(toJS(this.props.TableStore.dataSource), export_list);
                     let toExcel = new ExportJsonExcel(option)
                     toExcel.saveExcel();
                 }
@@ -382,6 +436,9 @@ class GlobalTabel2 extends React.Component {
 
     onDeleteAll = () => {
         console.log(toJS(this.props.TableStore.dataSource));
+        let arr = this.props.TableStore.dataSource.map(one => {
+            return one.key
+        })
         if (this.props.TableStore.dataSource.length > 0) {
             Modal.confirm({
                 title: '全部删除',
@@ -389,7 +446,8 @@ class GlobalTabel2 extends React.Component {
                 okText: '确定',
                 cancelText: '取消',
                 onOk: () => {
-                    this.props.TableStore.delMulData({ 'formId': this.props.HomeStore.firstFormId, 'dataIds': toJS(this.props.TableStore.selectedRowKeys) }).then(() => {
+
+                    this.props.TableStore.delMulData({ 'formId': this.props.HomeStore.firstFormId, 'dataIds': arr }).then(() => {
                         if (this.props.TableStore.model == 'subitAndManage') {
                             this.props.TableStore.getAllData({ formId: this.props.HomeStore.firstFormId }, 'myself')
                         } else {

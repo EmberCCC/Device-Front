@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-06 08:14:52
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-09-13 11:34:58
+ * @LastEditTime: 2022-09-19 10:57:48
  * @FilePath: \bl-device-manage-test\src\components\GlobalTabel2\mulChange.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -80,6 +80,8 @@ const MulChange = observer(({ HomeStore, TableStore }) => {
             TableStore.getBatchLog({ 'formId': toJS(HomeStore.firstFormId) }).then(() => {
                 TableStore.setValue('mulType', '2')
             });
+            TableStore.setSelectedRowKeys([]);
+            TableStore.selectedIdsList = [];
         });
         console.log(params);
     }
@@ -106,7 +108,7 @@ const MulChange = observer(({ HomeStore, TableStore }) => {
                 <br />
                 <Select style={{ width: 150 }} onSelect={handleSelect}>
                     {columns.map((item, index) => {
-                        if (!(['createPerson', 'createTime', 'updateTime'].includes(item.key))) {
+                        if (!(['createPerson', 'createTime', 'updateTime', '9', '14', '15', '20'].includes(item.key))) {
                             return (
                                 <Option value={item.key} key={index}>
                                     {item.title}
@@ -118,9 +120,9 @@ const MulChange = observer(({ HomeStore, TableStore }) => {
                 </Select>
             </div>
             <div>
-                <div className='mul_change'>修改为{itemVis && <Select style={{ width: 150, marginLeft: '15px' }}>
+                <div className='mul_change'>修改为{itemVis && <Select defaultValue={1} style={{ width: 150, marginLeft: '15px' }}>
                     <Option value={1}>固定值</Option>
-                    <Option value={2}>公式计算值</Option>
+                    {/* <Option value={2}>公式计算值</Option> */}
                 </Select>}</div>
                 <br />
                 <FormRender schema={schema} form={form} onFinish={onFinish} widgets={{

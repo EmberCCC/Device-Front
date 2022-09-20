@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-02 03:21:54
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-24 01:50:21
+ * @LastEditTime: 2022-09-14 08:14:32
  * @FilePath: \bl-device-manage-test\src\layouts\FormLayout\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -136,6 +136,11 @@ const FormData = observer(({ HomeStore, FormStore, TableStore }) => {
   const watch = {
     '#': val => {
       let obj = {}
+      Object.keys(val).map(one => {
+        if(val[one] != undefined){
+          obj[one] = val[one]
+        }
+      })
       Object.keys(dataRef.current).map(one => {
         if (val[one] == undefined) {
           try {
