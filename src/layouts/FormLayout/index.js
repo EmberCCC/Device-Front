@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-02 03:21:54
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-09-24 23:57:07
+ * @LastEditTime: 2022-09-25 00:47:27
  * @FilePath: \bl-device-manage-test\src\layouts\FormLayout\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -81,6 +81,7 @@ const FormLayout = observer(({ HomeStore, FormStore, type, formId, handleCancel,
       FormStore.getFormField({ formId: firstFormId }, '1')
     }
     FormStore.setValue('formData', {});
+    setData({})
   }, [])
   useEffect(() => {
     setData(formData)

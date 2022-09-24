@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-30 05:48:44
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-16 23:04:15
+ * @LastEditTime: 2022-09-25 01:13:32
  * @FilePath: \bl-device-manage-test\src\layouts\MessageManage\detail.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -36,7 +36,7 @@ const DetailPage = observer(({ MessageStore, HomeStore, FlowStore, FormStore, pr
         "displayType": "row"
     });
     const dataRef = useRef()
-    const { fieldInfo, formInfo, info, model, nameObj } = MessageStore
+    const { fieldInfo, formInfo, info, model, nameObj, oneDataInfo } = MessageStore
     const { picture } = FlowStore
     const { formData, flag } = FormStore
     const [type, setType] = useState(1)
@@ -177,6 +177,7 @@ const DetailPage = observer(({ MessageStore, HomeStore, FlowStore, FormStore, pr
     }
     const getExactItem = (itemName) => {
         let arr = formInfo.filter((item) => item['name'] == itemName)[0];
+        // console.log(arr);
         return arr['fieldsId'].map((item, index) => {
             let field = fieldInfo.filter((one) => one.hasOwnProperty('fieldId') && one['fieldId'] == item)[0]
             if (field != undefined) {
@@ -184,6 +185,16 @@ const DetailPage = observer(({ MessageStore, HomeStore, FlowStore, FormStore, pr
                 if (field['typeId'] == '4') {
                     let index = field['enum'].indexOf(formData[item])
                     showData = field['enumNames'][index]
+                    return (
+                        <div className='item_content' key={index}>
+                            <div className='item_title'>
+                                {nameObj[item]}
+                            </div>
+                            <div className='item_article'>
+                                {showData}
+                            </div>
+                        </div>
+                    )
                 } else if (field['typeId'] == '5') {
                     showData = ""
                     let iData = formData[item].substring(1, formData[item].length).split(",");
@@ -196,17 +207,82 @@ const DetailPage = observer(({ MessageStore, HomeStore, FlowStore, FormStore, pr
                             showData += field['enumNames'][oneIndex]
                         }
                     })
+                    return (
+                        <div className='item_content' key={index}>
+                            <div className='item_title'>
+                                {nameObj[item]}
+                            </div>
+                            <div className='item_article'>
+                                {showData}
+                            </div>
+                        </div>
+                    )
+                } else if (field['typeId'] == '14') {
+                    return (
+                        <div className='item_content' key={index}>
+                            <div className='item_title'>
+                                {nameObj[item]}
+                            </div>
+                            {
+                                field['linkquery_condition']['fieldIds']?.map((one, index) => {
+                                    let id = []
+                                    if (formData[field['fieldId']]) {
+                                        id = JSON.parse(formData[field['fieldId']])
+                                    }
+                                    return (
+                                        <div key={index}>
+                                            <div style={{ marginBottom: '5px', color: 'black' }}>{nameObj[one]}</div>
+                                            {
+                                                id.length > 0 && oneDataInfo.hasOwnProperty(id[0]) && oneDataInfo[id[0]].hasOwnProperty(one) && (
+                                                    <div>{oneDataInfo[id[0]][one]}</div>
+                                                )
+                                            }
+                                        </div>
+                                    )
+                                })
+                            }
+                        </div>
+                    )
+                } else if (field['typeId'] == '15') {
+                    return (
+                        <div className='item_content' key={index}>
+                            <div className='item_title'>
+                                {nameObj[item]}
+                            </div>
+                            {
+                                field['linkquery_condition']['fieldShow']?.map((one, index) => {
+                                    let id = []
+                                    if (formData[field['fieldId']]) {
+                                        id = JSON.parse(formData[field['fieldId']])
+                                    }
+                                    return (
+                                        <div key={index}>
+                                            <div style={{ marginBottom: '5px', color: 'black' }}>{nameObj[one]}</div>
+                                            {
+                                                id.length > 0 && oneDataInfo.hasOwnProperty(id[0]) && oneDataInfo[id[0]].hasOwnProperty(one) && (
+                                                    <div>{oneDataInfo[id[0]][one]}</div>
+                                                )
+                                            }
+                                        </div>
+                                    )
+                                })
+                            }
+                        </div>
+                    )
                 }
-                return (
-                    <div className='item_content' key={index}>
-                        <div className='item_title'>
-                            {nameObj[item]}
+                else {
+                    return (
+                        <div className='item_content' key={index}>
+                            <div className='item_title'>
+                                {nameObj[item]}
+                            </div>
+                            <div className='item_article'>
+                                {showData}
+                            </div>
                         </div>
-                        <div className='item_article'>
-                            {showData}
-                        </div>
-                    </div>
-                )
+                    )
+                }
+
             }
 
         })

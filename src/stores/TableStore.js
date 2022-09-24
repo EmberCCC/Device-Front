@@ -4,7 +4,7 @@
  * @Author: zhihao
  * @Date: 2022-04-17 15:22:43
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-09-25 00:06:04
+ * @LastEditTime: 2022-09-25 01:02:32
  */
 import React from 'react';
 import { message, Modal } from 'antd';
@@ -254,8 +254,6 @@ class Table {
 						this.setValue('oneDataInfo', arr)
 					}
 				}
-
-
 			})
 			fieldIds.push('createPerson')
 			fieldIds.push('createTime')
