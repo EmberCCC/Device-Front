@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-04-11 16:11:20
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-04 10:10:37
+ * @LastEditTime: 2022-09-24 16:26:29
  * @FilePath: \bl-device-manage-test\src\layouts\FlowManage\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -429,6 +429,8 @@ const FlowManage = observer(({ FlowStore, HomeStore, TableStore, SocketStore, pr
             config={useGraphConfig(props)}
             isAutoCenter={true}
           >
+              <FlowchartExtension />
+            
             {
               canOb == true && (
                 <CanvasToolbar
@@ -441,7 +443,7 @@ const FlowManage = observer(({ FlowStore, HomeStore, TableStore, SocketStore, pr
             <CanvasScaleToolbar
               layout='horizontal'
               position={{ right: 500 }} />
-            <XFlowCanvas
+            <FlowchartCanvas
               config={useGraphConfig()}
               position={{ top: 0, left: 0, height: 800 }}
             >
@@ -452,7 +454,7 @@ const FlowManage = observer(({ FlowStore, HomeStore, TableStore, SocketStore, pr
                 formSchemaService={NsJsonForm.formSchemaService}
                 formValueUpdateService={NsJsonForm.formValueUpdateService}
                 position={{ top: 0, bottom: 0, right: 0, width: 290 }} />
-            </XFlowCanvas>
+            </FlowchartCanvas>
           </XFlow>
         </Spin>
       </div>
