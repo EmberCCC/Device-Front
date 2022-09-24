@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-19 23:01:23
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-14 04:13:21
+ * @LastEditTime: 2022-09-24 23:55:11
  * @FilePath: \bl-device-manage-test\src\stores\SocketStore.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -462,8 +462,8 @@ class Socket {
             await this.getMyInfo();
             let res = await services.getRequest(services.requestList.getAllRole, params);
             if (isDataExist(res)) {
-                console.log(res.data.data);
-                console.log(toJS(this.userAuth));
+                // console.log(res.data.data);
+                // console.log(toJS(this.userAuth));
                 this.setValue('initRole', res.data.data)
                 let iArr = []
                 let nameObj = {}
@@ -893,7 +893,7 @@ class Socket {
         try {
             let res = await services.getRequest(services.requestList.getUserAuth, params);
             if (isDataExist(res)) {
-                console.log(res.data.data);
+                // console.log(res.data.data);
                 sessionStorage.setItem('auth', JSON.stringify(res.data.data))
                 this.setValue('userAuth', res.data.data)
                 this.setValue('deArr', res.data.data?.['authDetails']?.['scope']?.['department'])

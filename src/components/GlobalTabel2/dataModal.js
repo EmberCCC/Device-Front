@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-06-30 09:07:55
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-20 02:25:21
+ * @LastEditTime: 2022-09-25 00:08:20
  * @FilePath: \bl-device-manage-test\src\components\GlobalTabel2\dataModal.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -53,6 +53,7 @@ class DataModal extends Component {
                                 )
                             } else if (jsonData['typeId'] == '5') {
                                 showData = ""
+                                console.log(iData);
                                 let iData = modalData[item['id']].substring(1, modalData[item['id']].length).split(",");
                                 iData.map((one, index) => {
                                     let oneIndex = jsonData['enum'].findIndex(value => value.charCodeAt() == one.substring(1, one.length - 1).charCodeAt());
@@ -137,7 +138,7 @@ class DataModal extends Component {
                                         </div>
                                         <div className='item_article'>
                                             {
-                                                arr.map((one, index) => {
+                                                Array.isArray(arr) && arr.map((one, index) => {
                                                     return (
                                                         <span style={{ marginRight: '5px' }} key={index}>{this.props.SocketStore.userName[one]}</span>
                                                     )

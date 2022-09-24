@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-02 03:21:54
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-09-24 16:31:19
+ * @LastEditTime: 2022-09-24 23:57:07
  * @FilePath: \bl-device-manage-test\src\layouts\FormLayout\index.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -99,7 +99,7 @@ const FormLayout = observer(({ HomeStore, FormStore, type, formId, handleCancel,
       let obj = {}
       console.log(val);
       Object.keys(val).map(one => {
-        if(val[one] != undefined){
+        if (val[one] != undefined) {
           obj[one] = val[one]
         }
       })
@@ -108,16 +108,25 @@ const FormLayout = observer(({ HomeStore, FormStore, type, formId, handleCancel,
         if (val[one] == undefined) {
           try {
             let d = JSON.parse(dataRef.current[one])
-            obj[one] = d
+            if (Array.isArray(dataRef.current[one])) {
+              obj[one] = dataRef.current[one]
+            } else {
+              obj[one] = d
+            }
+
           } catch (error) {
             obj[one] = dataRef.current[one]
           }
         } else {
           try {
             let d = JSON.parse(val[one])
-            if(Array.isArray(val[one])){
+            if (Array.isArray(val[one])) {
               d = val[one]
             }
+            // if(Array.isArray(d)){
+            //   obj[one] = 
+            // }
+            console.log(d);
             obj[one] = d
           } catch (error) {
             obj[one] = val[one]

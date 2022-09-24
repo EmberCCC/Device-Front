@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-08-09 09:24:55
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-20 01:13:15
+ * @LastEditTime: 2022-09-25 00:35:07
  * @FilePath: \bl-device-manage-test\src\layouts\FormEdit\self_item\my_string.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -23,8 +23,8 @@ const Self_datapick = observer((props) => {
                     props.FormStore.handleBlur(schema)
                 }}
                 showTime
-                defaultValue={moment(schema.default).isValid() && moment(schema.default)}
-                value={moment(props.value).isValid() && moment(props.value)}
+                defaultValue={schema.default && moment(schema.default).isValid() && moment(schema.default)}
+                value={props.value && moment(props.value).isValid() && moment(props.value)}
                 onChange={(e) => {
                     let format = props.format == undefined ? 'dateTime' : props.format
                     let obj = {

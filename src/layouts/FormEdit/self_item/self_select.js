@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-10 16:01:23
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-09-22 22:08:15
+ * @LastEditTime: 2022-09-24 21:25:31
  * @FilePath: \bl-device-manage-test\src\layouts\FormEdit\self_item\myDivider.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -49,7 +49,7 @@ const Self_select = observer((props) => {
                             schema.hasOwnProperty('option_list') && schema['option_list'] != undefined && !schema['option_list'].hasOwnProperty('formId') && (
                                 schema['option_list'].map((item, index) => {
                                     return (
-                                        <Select.Option key={index}>{item}</Select.Option>
+                                        <Select.Option value={item} key={index}>{item}</Select.Option>
                                     )
                                 })
                             )
@@ -72,11 +72,14 @@ const Self_select = observer((props) => {
                         value={props.value}
                         mode={`${(schema.typeId == '7') ? 'multiple' : ''}`}
                         style={{ width: '100%' }}
-                        onChange={(e) => props.onChange(e)}>
+                        onChange={(e) => {
+                            props.onChange(e)
+                            console.log(e);
+                        }}>
                         {
                             FormStore.linkData.map((item, index) => {
                                 return (
-                                    <Select.Option key={index}>{item}</Select.Option>
+                                    <Select.Option value={item} key={index}>{item}</Select.Option>
                                 )
                             })
                         }

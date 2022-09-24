@@ -4,7 +4,7 @@
  * @Author: zhihao
  * @Date: 2022-04-17 15:22:43
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-20 02:06:01
+ * @LastEditTime: 2022-09-25 00:06:04
  */
 import React from 'react';
 import { message, Modal } from 'antd';
@@ -221,22 +221,41 @@ class Table {
 				fieldIds.push(element.id)
 				if (element.typeId == 15 || element.typeId == 14) {
 					console.log(formData[element['id']]);
+
 					if (formData[element['id']] != undefined && formData[element['id']] != '') {
-						dataIdArr = [...dataIdArr, ...JSON.parse(formData[element['id']])]
+						if (Array.isArray(formData[element['id']])) {
+							dataIdArr = dataIdArr.concat(formData[element['id']])
+							console.log(dataIdArr);
+						} else {
+							dataIdArr = dataIdArr.concat(JSON.parse(formData[element['id']]))
+							console.log(dataIdArr);
+						}
 					}
 				}
 			});
+			console.log(dataIdArr);
 			put('/data/FastQuery', dataIdArr).then((res) => {
 				let arr = {}
-				res.data.data.map((item, index) => {
-					let obj = {}
-					let data = JSON.parse(item['formData'])
-					obj = { ...data }
-					obj['key'] = item['id']
-					obj['id'] = item['id']
-					arr[item['id']] = obj
-				})
-				this.setValue('oneDataInfo', arr)
+				if (res.data && res.data.data) {
+					if (Array.isArray(res.data.data)) {
+						console.log(res.data.data);
+						res.data.data.map((item, index) => {
+							if (item != null) {
+								let obj = {}
+								let data = JSON.parse(item['formData'])
+								obj = { ...data }
+								obj['key'] = item['id']
+								obj['id'] = item['id']
+								arr[item['id']] = obj
+							}
+							console.log(item);
+
+						})
+						this.setValue('oneDataInfo', arr)
+					}
+				}
+
+
 			})
 			fieldIds.push('createPerson')
 			fieldIds.push('createTime')
@@ -324,13 +343,13 @@ class Table {
 								if (text != undefined && text != '') {
 									arr = JSON.parse(text)
 								}
-								return <div className='person_list'>
-									{
-										arr.map((one, index) => {
-											return <span className='one_person' key={index}>{nameObj[one]}</span>
-										})
-									}
-								</div>
+								// return <div className='person_list'>
+								// 	{
+								// 		arr && arr.map((one, index) => {
+								// 			return <span className='one_person' key={index}>{nameObj[one]}</span>
+								// 		})
+								// 	}
+								// </div>
 							}
 						});
 					}
