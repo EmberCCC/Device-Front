@@ -29,7 +29,7 @@ class HeaderLayout extends Component {
     const isMobile = this.props.mobile === 'true';
     const isShow = (isMobile ? false : this.props.sizetype === 'l_size');
     const handleClick = (value) => {
-      if(value == 'socket'){
+      if (value == 'socket') {
         this.props.history.push('/socket')
       }
     }
@@ -50,26 +50,9 @@ class HeaderLayout extends Component {
           }
         </div>
         <div className='global_header_right' style={{ display: 'flex', alignItems: 'center', paddingRight: 25 }}>
-          <Dropdown
-            // className={'noticePanel'}
-            overlay={<NoticePanel
-              className='noticePanel'
-              loading={false}
-            />} trigger={['hover']}>
-            <div style={{ display: 'inline-block', marginRight: '20px', cursor: 'pointer', color: '#C4C4C4' }}>
-              <i className='iconfont icon-warning' style={{ marginRight: '5px', color: '#9D9D9D' }} />预警
-            </div>
-          </Dropdown>
-          <Dropdown
-            // className={'noticePanel'}
-            overlay={<NoticePanel
-              className='noticePanel'
-              loading={false}
-            />} trigger={['hover']}>
-            <div style={{ display: 'inline-block', marginRight: '20px', cursor: 'pointer', color: '#C4C4C4' }}>
-              <i className='iconfont icon-alerm' style={{ marginRight: '5px', color: '#9D9D9D' }} />通知
-            </div>
-          </Dropdown>
+          <div style={{ display: 'inline-block', marginRight: '20px', cursor: 'pointer', color: '#C4C4C4' }}>
+            <i className='iconfont icon-alerm' style={{ marginRight: '5px', color: '#9D9D9D' }} />UserName
+          </div>
           <Divider type="vertical" />
           <Dropdown
             // className={'noticePanel'}

@@ -2,7 +2,7 @@
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-07-30 05:48:44
  * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-09-25 17:40:10
+ * @LastEditTime: 2022-09-25 21:28:43
  * @FilePath: \bl-device-manage-test\src\layouts\MessageManage\detail.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -177,15 +177,10 @@ const DetailPage = observer(({ MessageStore, HomeStore, FlowStore, FormStore, pr
     }
     const getExactItem = (itemName) => {
         let arr = formInfo.filter((item) => item['name'] == itemName)[0];
-        // console.log(arr);
-        console.log(toJS(formData));
         return arr['fieldsId'].map((item, index) => {
             let field = fieldInfo.filter((one) => one.hasOwnProperty('fieldId') && one['fieldId'] == item)[0]
-            // console.log(item);
-            console.log(toJS(formData));
             if (field != undefined) {
                 let showData = formData[item]
-                console.log(showData);
                 if (field['typeId'] == '4') {
                     let index = field['enum'].indexOf(formData[item])
                     showData = field['enumNames'][index]
