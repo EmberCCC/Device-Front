@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2022-04-24 12:36:43
- * @LastEditTime: 2022-09-25 01:03:14
+ * @LastEditTime: 2022-09-25 17:41:47
  * @LastEditors: EmberCCC 1810888456@qq.com
  * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  * @FilePath: \bl-device-manage-test\src\layouts\MessageManage\ListPage\index.js
@@ -98,23 +98,20 @@ class index extends Component {
                                             fieldList.forEach(element => {
                                                 if (element.typeId == 15 || element.typeId == 14) {
                                                     console.log(data[element['fieldId']]);
-                                                    if(data[element['fieldId']] != undefined && data[element['fieldId']] != ''){
-                                                        if(Array.isArray(JSON.parse(data[element['fieldId']]))){
+                                                    if (data[element['fieldId']] != undefined && data[element['fieldId']] != '') {
+                                                        if (Array.isArray(JSON.parse(data[element['fieldId']]))) {
                                                             dataIdArr = dataIdArr.concat(JSON.parse(data[element['fieldId']]))
-                                                        }else{
+                                                        } else {
                                                             dataIdArr = dataIdArr.concat(data[element['fieldId']])
                                                         }
 
                                                     }
-                                                    console.log(dataIdArr);
-                                                    
                                                 }
                                             });
                                             put('/data/FastQuery', dataIdArr).then((res) => {
                                                 let arr = {}
                                                 if (res.data && res.data.data) {
                                                     if (Array.isArray(res.data.data)) {
-                                                        console.log(res.data.data);
                                                         res.data.data.map((item, index) => {
                                                             if (item != null) {
                                                                 let obj = {}
@@ -124,10 +121,8 @@ class index extends Component {
                                                                 obj['id'] = item['id']
                                                                 arr[item['id']] = obj
                                                             }
-                                                            console.log(item);
-                                
+
                                                         })
-                                                        console.log(arr);
                                                         this.props.MessageStore.setValue('oneDataInfo', arr)
                                                     }
                                                 }
