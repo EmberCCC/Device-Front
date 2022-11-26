@@ -24,6 +24,7 @@ export function getCheckArr(schema) {
     return checkArr
 }
 
+
 export function getNotNullObj(field, fieldAuth, data) {
     console.log(fieldAuth);
     let auth = {}

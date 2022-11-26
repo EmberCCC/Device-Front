@@ -15,7 +15,7 @@ import FormData from 'layouts/FormLayout/formData'
 import { toJS } from 'mobx'
 import { inject, observer } from 'mobx-react'
 import React, { Component } from 'react'
-import QRCode from 'qrcode.react'
+import QRCode, { contextType } from 'qrcode.react'
 import './index.less'
 import moment from 'moment'
 
@@ -118,12 +118,13 @@ class DataModal extends Component {
                                     </div>
                                 )
                             } else if (jsonData['typeId'] == '15') {
+                                debugger
                                 return (
                                     <div className='item_content' key={index}>
                                         <div className='item_title'>
                                             {element[item['id']]['title']}
                                         </div>
-                                        {
+                                        {/* {
                                             jsonData['linkquery_condition']['fieldShow'].map((one, index) => {
                                                 let id = []
                                                 if (modalData[item['id']]) {
@@ -140,7 +141,7 @@ class DataModal extends Component {
                                                     </div>
                                                 )
                                             })
-                                        }
+                                        } */}
                                     </div>
                                 )
                             } else if (jsonData['typeId'] == '20') {
@@ -445,3 +446,5 @@ class DataModal extends Component {
 }
 
 export default DataModal
+
+

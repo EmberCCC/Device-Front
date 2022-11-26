@@ -26,7 +26,7 @@ import { message, Popover, Spin } from "antd";
 import { toJS } from "mobx";
 import { customAlphabet } from "nanoid";
 import { checkFlow } from "./checkTool";
-import { useMenuConfig } from "./menu_config.js"
+// import { useMenuConfig } from "./menu_config.js"
 export const useGraphConfig = createGraphConfig(graphConfig => {
   graphConfig.setX6Config(
     {
@@ -40,7 +40,7 @@ export const useGraphConfig = createGraphConfig(graphConfig => {
       // 节点是否可旋转
       rotating: false,
       // 节点是否可调整大小
-      resizing: false,
+      // resizing: false,
       selecting: {
         enabled: true,
         multiple: false,
@@ -107,7 +107,6 @@ const FlowManage = observer(({ FlowStore, HomeStore, TableStore, SocketStore, pr
   const [app, setApp] = useState(null)
   const [graph, setGraph] = useState(null)
   const [toolbarConfig, setBoolbarConfig] = useState(useToolbarConfig(props))
-  const [menucConfig, setMenucConfig] = useState(useMenuConfig(props))
   const forceUpdate = useReducer((bool) => !bool)[1]
   var NsJsonForm;
 
@@ -428,7 +427,7 @@ const FlowManage = observer(({ FlowStore, HomeStore, TableStore, SocketStore, pr
           <XFlow
             onLoad={onLoad}
             className="xflow-workspace"
-            config={useGraphConfig(props)}
+            // config={useGraphConfig(props)}
             isAutoCenter={true}
           >
             <FlowchartExtension />
@@ -442,14 +441,14 @@ const FlowManage = observer(({ FlowStore, HomeStore, TableStore, SocketStore, pr
                 />
               )
             }
-            <CanvasContextMenu
-              config={menucConfig}
-            />
+            {/* <CanvasContextMenu
+             
+            /> */}
             <CanvasScaleToolbar
               layout='horizontal'
               position={{ right: 500 }} />
             <FlowchartCanvas
-              config={useGraphConfig()}
+              config={useGraphConfig(props)}
               position={{ top: 0, left: 0, height: 800 }}
             >
               <CanvasSnapline />

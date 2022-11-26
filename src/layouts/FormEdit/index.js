@@ -96,15 +96,15 @@ const FormEdit = observer(({ HomeStore, FormStore }) => {
   const save = () => {
     let formId = sessionStorage.getItem('formId') ? sessionStorage.getItem('formId') : HomeStore.firstFormId
     let params = exChange(ref.current.getValue(), formId, 'root')
+    console.log('rootparams',params)
     if (schemaList.length > 0) {
       schemaList.map((item, index) => {
         // console.log(exChange(item['schema'], HomeStore.firstFormId, subFormName[index]));
         params['subForms'].push(exChange(item['schema'], formId, subFormName[index])['subForms'][0] || { 'name': subFormName[index], 'fields': [] })
       })
     }
-    FormStore.saveForm(params).then(() => {
-      message.success('保存成功')
-    })
+    
+    
     console.log(params);
   }
   const closeDrawer = () => {
@@ -146,12 +146,11 @@ const FormEdit = observer(({ HomeStore, FormStore }) => {
     }
   }
   const handleSchemaChange = (schema, index, type) => {
-
+    console.log(schema,'schema');
     if (type == 'root') {
       FormStore.setValue('rootSchema', schema)
     } else {
       let iList = [...schemaList]
-      console.log(schema);
       iList.splice(index, 1, { 'name': subFormName[index], 'schema': schema });
       FormStore.setValue('schemaList', iList);
     }

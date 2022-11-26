@@ -71,6 +71,7 @@ const InConLayout = observer(({ SocketStore }) => {
             dataIndex: 'role',
             key: 'role',
             render: (text, record, index) => {
+                console.log('text',toJS(text) )
                 let newArr = []
                 for (const key in text) {
                     if (Object.hasOwnProperty.call(text, key)) {
@@ -221,6 +222,7 @@ const InConLayout = observer(({ SocketStore }) => {
     const handleSwitch = (value) => {
         console.log(value);
     }
+    
     const rowSelection = {
         selectRowKeys,
         columnWidth: 2,
@@ -407,6 +409,8 @@ const InConLayout = observer(({ SocketStore }) => {
             <div onClick={() => handleCreate('role')} className="create_role">创建角色</div>
         </div>
     )
+    console.log('columnAll',columnAll)
+    console.log(SelectKey)
     return (
         <div className="all">
             <div className="in_all">
@@ -542,7 +546,6 @@ const InConLayout = observer(({ SocketStore }) => {
                                                             } else {
                                                                 message.info('权限不足，请联系管理员')
                                                             }
-
                                                         }
                                                     }
                                                 }}

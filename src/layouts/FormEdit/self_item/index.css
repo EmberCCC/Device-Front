@@ -235,3 +235,6 @@
     cursor: pointer;
     color: #0DB3A6;
 }
+.ant-popover-inner-content{
+    padding: 10px !important;
+}

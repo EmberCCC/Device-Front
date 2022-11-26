@@ -21,6 +21,7 @@ class Socket {
     }
 
     @observable userAuth = {}
+    @observable userInfo = {}
 
     @observable SocketId = '1'
     @observable SelectKey = '全部成员';
@@ -275,8 +276,8 @@ class Socket {
 
                 } else {
                     this.setValue('allUsers', res.data.data.filter((item) => item['state'] == 2))
-
                 }
+                console.log('allUsers',toJS(this.allUsers) )
                 let obj = {}
                 res.data.data.map((item, index) => {
                     obj[item['userId']] = item['name'];
@@ -318,7 +319,8 @@ class Socket {
                 } else if (params == 'leave') {
                     this.setValue('allUsers', res.data.data.filter((item) => item['state'] == 2))
                 } else {
-                    this.setValue('allUsers', res.data.data)
+                    // this.setValue('allUsers', res.data.data)
+                    this.setValue('allUsers', res.data.data.filter((item) => item['state'] == 1 || item['state'] == 0))
                 }
                 let obj = {}
                 res.data.data.map((item, index) => {
@@ -889,7 +891,7 @@ class Socket {
         }
     }
     /**
-     * 获取本人的信息，权限
+     * 获取本人的权限信息
      * @param {*} params 
      */
     @action.bound async getMyInfo(params) {
@@ -903,6 +905,21 @@ class Socket {
             }
         } catch (error) {
             console.log(error);
+        }
+    }
+    /**
+     * 
+     */
+    @action.bound async getUserInfo(params) {
+        try {
+            console.log(services.requestList.getUserInfo)
+            let res = await services.getRequest(services.requestList.getUserInfo, params)
+            if (isDataExist(res)) {
+                console.log('userAuth', res)
+                this.setValue('userInfo', res.data.data)
+            }
+        } catch (error) {
+            console.log(error)
         }
     }
 }

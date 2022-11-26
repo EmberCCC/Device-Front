@@ -5,20 +5,21 @@ import { ArrowRightOutlined, LogoutOutlined, TeamOutlined } from '@ant-design/ic
 import { Icon as LegacyIcon } from '@ant-design/compatible';
 import { Layout, Dropdown, Menu, Button, Modal, Divider, Select } from 'antd';
 import { inject, observer } from 'mobx-react';
+import { toJS } from 'mobx';
 import { withRouter } from 'react-router-dom';
 import GlobalCrumbs from 'Components/GlobalCrumbs'
 import { getCookie } from 'utils/dataTools'
 const { Header } = Layout;
 
 @withRouter
-@inject('HomeStore')
+@inject('HomeStore','SocketStore')
 @observer
 class HeaderLayout extends Component {
   render() {
     const menu = (
       <Menu selectedKeys={[]} style={{ marginTop: '-12px' }} onClick={this.backToLogin}>
         <div style={{ textAlign: "center" }}>
-          {getCookie('username')}
+          {/* {getCookie('username')} */}
         </div>
         <Menu.Item key="logout">
           <LogoutOutlined />
@@ -33,6 +34,8 @@ class HeaderLayout extends Component {
         this.props.history.push('/socket')
       }
     }
+    const userName=getCookie('username')
+    console.log('userName',userName)
     return (
       <Header className='header_layout'>
         <div style={{ display: 'flex', flex: 1, alignItems: 'center' }}>
@@ -51,7 +54,7 @@ class HeaderLayout extends Component {
         </div>
         <div className='global_header_right' style={{ display: 'flex', alignItems: 'center', paddingRight: 25 }}>
           <div style={{ display: 'inline-block', marginRight: '20px', cursor: 'pointer', color: '#C4C4C4' }}>
-            <i className='iconfont icon-alerm' style={{ marginRight: '5px', color: '#9D9D9D' }} />UserName
+            <i className='iconfont icon-alerm' style={{ marginRight: '5px', color: '#9D9D9D' }} />{getCookie('username')||null}
           </div>
           <Divider type="vertical" />
           <Dropdown

@@ -47,8 +47,8 @@ export const requestList = {
   searchRoUser:'/uaa/role/search',
 
   
-  getUserAuth:'/uaa/isAdmin'
-
+  getUserAuth:'/uaa/isAdmin',
+  getUserInfo:'/uaa/user/showSelf',//获取本人信息
 }
 
 export function gets(type) {

@@ -62,15 +62,17 @@ class LoginLayout extends Component {
         )
     }
     handleSubmit = values => {
-        if (values.remember) {
-            for (let name in values) {
-                setCookie(name, values[name]);
-            }
-        } else {
-            for (let name in values) {
-                clearCookie(name);
-            }
-        }
+        console.log(values)
+        setCookie('username',values.username)
+        // if (values.remember) {
+        //     for (let name in values) {
+        //         setCookie(name, values[name]);
+        //     }
+        // } else {
+        //     for (let name in values) {
+        //         clearCookie(name);
+        //     }
+        // }
         // 请求登陆接口
         this.props.HomeStore.setLogin({
             grant_type: 'password',
@@ -84,6 +86,7 @@ class LoginLayout extends Component {
                 sessionStorage.setItem('selfToken', 'Bearer ' + token); // 设置前局登陆token
                 sessionStorage.setItem('username', values.username); // 设置登录用户名
                 this.props.SocketStore.getMyInfo();
+                this.props.SocketStore.getUserInfo()
                 this.props.MessageStore.getWaitList()
                 this.props.MessageStore.getLaunchList()
                 this.props.MessageStore.getHandleList()

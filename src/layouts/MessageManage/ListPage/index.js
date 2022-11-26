@@ -197,7 +197,7 @@ class index extends Component {
 
     }
     selectList = (
-        <div className='selectList'>
+        <div className='selectList' >
             <div
                 label="发起人"
                 name="subPeople"

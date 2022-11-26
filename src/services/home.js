@@ -17,7 +17,7 @@ export const requestList = {
   getScreenData:'/data/screen/all',
   getScreenDataUser:'/data/screen/user',
   getMenuInfo:'/data/form/menu',
-
+  
 
   /* 基础信息 */
   getAllData: '/data/queryOneForm',

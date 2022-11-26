@@ -118,7 +118,7 @@ const Self_linkquery = observer((props) => {
         <div style={{ width: '100%' }}>
             <div className="self_rich_text" dangerouslySetInnerHTML={{ __html: schema.describe }} />
             <div className='self_link_showlist'>
-                {
+                {/* {
                     schema.typeId == '14' && (
                         <div className='self_add_data' onClick={() => {
                             // if(schema?.linkquery_condition?.formId){
@@ -126,7 +126,7 @@ const Self_linkquery = observer((props) => {
                             // }
                         }}>+ 添加数据</div>
                     )
-                }
+                } */}
                 {
                     schema?.linkquery_condition?.mul == 'one' && schema.typeId == '14' && (
                         getInfo()
