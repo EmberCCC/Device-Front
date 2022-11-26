@@ -90,6 +90,7 @@ const FormEdit = observer(({ HomeStore, FormStore }) => {
   }, []);
   const look = () => {
     setLookItem(ref.current.getValue())
+    console.log('ref',ref.current.getValue());
     setVisisble(true);
   }
   const save = () => {
@@ -109,7 +110,10 @@ const FormEdit = observer(({ HomeStore, FormStore }) => {
   const closeDrawer = () => {
     setVisisble(false)
   }
-
+  /**
+   * 获取列表单
+   * @returns 
+   */
   const getItem = () => {
     const { schemaList } = FormStore
     if (JSON.stringify(schemaList) != '{}') {
@@ -266,7 +270,7 @@ const FormEdit = observer(({ HomeStore, FormStore }) => {
           <div className="fr-generator-container" >
             <Sidebar />
             <div className='edit_main' style={{ width: '100%' }}>
-              <Canvas />
+              <Canvas  />
               <Tabs type='card' className={`myTabs ${type == 2 ? 'activedSub' : ''}`} tabBarGutter={5} size='small' destroyInactiveTabPane={true}>
                 {
                   getTag()
@@ -282,7 +286,7 @@ const FormEdit = observer(({ HomeStore, FormStore }) => {
         placement='bottom'
         size='large'
         width={1200}
-        visible={visible}
+        visible={visible} 
         extra={
           <CloseOutlined onClick={closeDrawer} />
         }

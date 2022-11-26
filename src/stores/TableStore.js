@@ -284,7 +284,11 @@ class Table {
 			console.log(error);
 		}
 	}
-
+	/**
+	 * 获取表单的全部数据
+	 * @param {*} params 
+	 * @param {*} type 
+	 */
 	@action.bound async getAllData(params, type) {
 		this.setValue('columns', [])
 		this.setValue('dataSource', [])
@@ -307,7 +311,7 @@ class Table {
 			objName.data.data.map(item => {
 				nameObj[item['userId']] = item['name']
 			})
-			console.log(objName);
+			console.log('objName',objName);
 			data.fields.map((item) => {
 				if (item['typeId'] != 14 && item['typeId'] != 15) {
 					let jsonItem = JSON.parse(item['detailJson']);
@@ -354,13 +358,37 @@ class Table {
 
 							}
 						});
+					}else if(item.typeId=='4'||item.typeId=='5'||item.typeId=='6'||item.typeId=='7'){
+						iColumns.push({
+							'title': jsonItem.title,
+							'dataIndex': item.id,
+							'key': item.id,
+							'detailJson': jsonItem,
+							'width': 200,
+							'ellipsis': true,
+							'render': (text, record, index) => {
+								try{
+									text=JSON.parse(text)
+									if(Array.isArray(text)){
+										text=text.join(',')
+									}
+									
+								}catch{}
+								return <div className='person_list'>
+									{
+										<span className='one_person' key={index}>{text}</span>
+									}
+								</div>
+								
+
+							}
+						});
 					}
 					else {
 						iColumns.push({ 'title': jsonItem.title, 'dataIndex': item.id, 'key': item.id, 'detailJson': jsonItem, 'width': 200, 'ellipsis': true });
 					}
 					iFieldValue.push(item.id)
 				}
-
 			})
 			data.fieldsValue.map((item) => {
 				let obj = {}
@@ -369,6 +397,8 @@ class Table {
 				obj.updateTime = item.updateTime;
 				obj.key = item.id;
 				let iObj = JSON.parse(toJS(item.formData))
+				console.log('iObjbefore',iObj)
+				console.log('iColumns',iColumns)
 				for (const front in iObj) {
 					obj[front] = iObj[front]
 					iColumns.map((info) => {
@@ -387,11 +417,14 @@ class Table {
 									obj[front] += info['detailJson']['enumNames'][oneIndex]
 								}
 							})
+						}else if(info['key'] == front && ['7'].indexOf(info['detailJson']['typeId']) > -1){
 						}
 					})
 				}
+				console.log('obj',obj)
 				iDataSource.push(obj)
 			})
+			console.log('iDataSource',iDataSource);
 			this.setValue('dataSource', iDataSource)
 			this.setValue('allData', iDataSource)
 			iFieldValue.push('createPerson')
@@ -411,15 +444,21 @@ class Table {
 			this.setValue('columnsList', data.fields)
 			this.setValue('isLoading', false);
 			this.setValue('schema', getSchema(iColumns, iDataSource));
-			console.log(iColumns);
-			console.log(iDataSource);
+			console.log('schema',this.schema)
+			console.log('iColumns',iColumns	);
+			console.log('dataSource',this.dataSource)
 		} catch (error) {
-			console.log(error);
+			console.log('getAllData',error);
 		} finally {
 			this.setValue('isLoading', false);
 
 		}
 	}
+
+
+
+
+
 
 	@action.bound async getScreenData(params, type) {
 		this.setValue('columns', [])

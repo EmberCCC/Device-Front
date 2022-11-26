@@ -123,7 +123,6 @@ const User_choose = observer(({ SocketStore, handleUpdate, initUserList, mode, i
                                                 })
                                             }
                                         </Space>
-
                                     </Checkbox.Group>
                                 )
                             }

@@ -92,6 +92,12 @@ function getOneForm(fields, fieldIds, type, flag, authInfo) {
   });
   return result
 }
+/**
+ * 将表单结构转换为scheme结构
+ * @param {*} obj 
+ * @param {*} type 
+ * @returns 
+ */
 export function restore(obj, type) {
   console.log(obj);
   if (JSON.stringify(obj) != "{}") {
@@ -99,6 +105,7 @@ export function restore(obj, type) {
     let fieldInfo;
     let properties;
     let authField = {}
+    //是否是流程表单
     if (obj.hasOwnProperty('fieldsAuth')) {
       authField = JSON.parse(obj['fieldsAuth'])
     }
@@ -221,7 +228,11 @@ export function checkSelf(list) {
   })
   return flag
 }
-
+/**
+ * 
+ * @param {*} formInfo 
+ * @returns 
+ */
 export function getLinkCondition(formInfo) {
   // console.log(formInfo);
   let LObj = {}

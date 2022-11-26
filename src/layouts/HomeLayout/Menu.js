@@ -93,12 +93,10 @@ class MenuLayout extends Component {
               <div className='message_logo' onClick={() => {
                 this.props.history.push({ pathname: '/message' });
                 this.props.MessageStore.setValue('loading', true)
-
                 this.props.MessageStore.getCopyList().then(() => {
                   this.props.MessageStore.setValue('list', copyList);
                   this.props.MessageStore.setValue('model', 'copy');
                   this.props.MessageStore.setValue('loading', false)
-
                 })
               }}>
                 <div className='message_item'>
@@ -136,8 +134,8 @@ class MenuLayout extends Component {
                         item.simpleForms.length > 0 && (
                           item.simpleForms.map((one, oIndex) => {
                             return (
-                              <div key={oIndex} onClick={() => {
-                                this.props.history.push({ pathname: '/common' });
+                              <div key={oIndex} onClick={() => {//进入表单的点击事件
+                                this.props.history.push({ pathname: '/common' });//router更改
                                 this.props.FormStore.getFormField({ 'formId': one['formId'] })
                                 this.props.HomeStore.setValue('firstFormId', one['formId'])
                                 this.props.FormStore.getFormAuthInfo({ 'formId': one['formId'] })
@@ -162,6 +160,7 @@ class MenuLayout extends Component {
             </div>
           </div>
           {
+            // 管理后台的权限
             (userAuth['creater'] || userAuth['sysAdmin']) && (
               <div className='bottom_name' onClick={() => {
                 console.log(11);
@@ -179,11 +178,13 @@ class MenuLayout extends Component {
   componentDidMount() {
     firstMount = false;
     if (sessionStorage.getItem('selfToken') != null) {
+      //获取我的待办，我处理的，抄送我的
       this.props.MessageStore.getWaitList()
       this.props.MessageStore.getLaunchList()
       this.props.MessageStore.getHandleList()
       this.props.MessageStore.getCopyList()
       this.props.SocketStore.getMyInfo();
+      //获取菜单信息
       this.props.HomeStore.getMenuList()
     }
     this.props.HomeStore.initMenu(this.props.location.pathname);

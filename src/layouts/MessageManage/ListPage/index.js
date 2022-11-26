@@ -25,13 +25,18 @@ class index extends Component {
         isLoading: false
     }
     componentDidMount() {
+        //获取我的待办
         this.props.MessageStore.getWaitList().then(() => {
             this.props.MessageStore.setValue('list', this.props.MessageStore.waitList);
             this.props.MessageStore.setValue('model', 'wait');
         })
+        //获取我发起的
         this.props.MessageStore.getLaunchList()
+        //获取我处理的
         this.props.MessageStore.getHandleList()
+        //获取抄送我的
         this.props.MessageStore.getCopyList()
+        //获取个人信息
         this.props.SocketStore.getMyInfo();
     }
     render() {
@@ -86,7 +91,9 @@ class index extends Component {
                                         }
 
                                     })
+                                    // 获取流程配置，设定字段是否可见
                                     auth = JSON.parse(item['nodeProperty']['fieldAuth'])
+                                    // 获取流程数据
                                     data = JSON.parse(item['oneDataVo']['data']['formData'])
                                     fieldList = getField(auth, fieldObj);
                                     return (

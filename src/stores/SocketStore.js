@@ -888,7 +888,10 @@ class Socket {
             console.log(error);
         }
     }
-
+    /**
+     * 获取本人的信息，权限
+     * @param {*} params 
+     */
     @action.bound async getMyInfo(params) {
         try {
             let res = await services.getRequest(services.requestList.getUserAuth, params);

@@ -24,7 +24,7 @@ class Form {
         "displayType": "row"
     };
     @observable loading = false
-    @observable formField = {};
+    @observable formField = {};//表单字段
     @observable formCopyVis = false;
     @observable rootSchema = {}
     @observable subFormList = [];
@@ -66,15 +66,18 @@ class Form {
 
     @observable fieldName = {}
 
-    @observable linkDataObj = {}
-    @observable linkFieldObj = {}
+    @observable linkDataObj = {}//当前表单中有绑定数据联动功能的表单
+    @observable linkFieldObj = {}//
     @observable linkqueryFieldObj = {}
     @observable linkqueryDataObj = {}
     @observable formData = {}
 
     @observable fieldNameObj = {}
     @observable flag = false
-
+    /**
+     * 取消焦点事件，发送请求
+     * @param {*} schema 
+     */
     @action.bound async handleBlur(schema) {
         let id = schema.hasOwnProperty('fieldId') ? schema.fieldId : schema.$id.substr(2)
         let arr = []
@@ -104,7 +107,10 @@ class Form {
     @action.bound setValue(key, value) {
         this[key] = value;
     }
-
+    /**
+     * 获取流程信息
+     * @param {*} params 
+     */
     @action.bound async getFormAuthInfo(params) {
         this.setValue('loading', true);
         try {
@@ -119,7 +125,11 @@ class Form {
             this.setValue('loading', false)
         }
     }
-
+    /**
+     * 获取表单字段
+     * @param {*} params 
+     * @param {*} type 
+     */
     @action.bound async getFormField(params, type) {
         this.setValue('loading', true);
         this.setValue('formField', {});

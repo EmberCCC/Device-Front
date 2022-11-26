@@ -76,6 +76,7 @@ const FormLayout = observer(({ HomeStore, FormStore, type, formId, handleCancel,
   useEffect(() => {
     const { firstFormId } = HomeStore
     if (formId) {
+      //获取表单信息
       FormStore.getFormField({ formId: formId }, '1')
     } else {
       FormStore.getFormField({ formId: firstFormId }, '1')

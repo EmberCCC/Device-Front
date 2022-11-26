@@ -1,8 +1,8 @@
 /*
  * @Author: EmberCCC 1810888456@qq.com
  * @Date: 2022-06-30 09:07:55
- * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-09-25 00:08:20
+ * @LastEditors: Superxmy 2378977732@qq.com
+ * @LastEditTime: 2022-11-03 18:22:20
  * @FilePath: \bl-device-manage-test\src\components\GlobalTabel2\dataModal.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -30,7 +30,6 @@ class DataModal extends Component {
         const { fieldNameObj } = this.props.FormStore
         const getExactData = (formName) => {
             console.log(toJS(this.props.TableStore.modalData));
-
             if (typeof (formArr[formName]) != 'undefined') {
                 const element = formArr[formName]['properties'];
                 return (
@@ -38,6 +37,9 @@ class DataModal extends Component {
                         if (modalFieldValue.includes(item['id']) && !(['createPerson', 'createTime', 'updateTime'].indexOf(item['id']) > -1) && element.hasOwnProperty(item['id'])) {
                             let showData = modalData[item['id']]
                             let jsonData = JSON.parse(item['detailJson'])
+                            try {
+                                showData=JSON.parse(showData)
+                            }catch{}
                             if (jsonData['typeId'] == '4') {
                                 let index = jsonData['enum'].indexOf(modalData[item['id']])
                                 showData = jsonData['enumNames'][index]
@@ -54,16 +56,31 @@ class DataModal extends Component {
                             } else if (jsonData['typeId'] == '5') {
                                 showData = ""
                                 console.log(iData);
-                                let iData = modalData[item['id']].substring(1, modalData[item['id']].length).split(",");
-                                iData.map((one, index) => {
-                                    let oneIndex = jsonData['enum'].findIndex(value => value.charCodeAt() == one.substring(1, one.length - 1).charCodeAt());
-                                    if (index == 0) {
-                                        showData += jsonData['enumNames'][oneIndex]
-                                    } else {
-                                        showData += ","
-                                        showData += jsonData['enumNames'][oneIndex]
-                                    }
-                                })
+                                let iData
+                                if(modalData[item['id']]){
+                                    iData = modalData[item['id']].substring(1, modalData[item['id']].length).split(",");
+                                    iData.map((one, index) => {
+                                        let oneIndex = jsonData['enum'].findIndex(value => value.charCodeAt() == one.substring(1, one.length - 1).charCodeAt());
+                                        if (index == 0) {
+                                            showData += jsonData['enumNames'][oneIndex]
+                                        } else {
+                                            showData += ","
+                                            showData += jsonData['enumNames'][oneIndex]
+                                        }
+                                    })
+                                }
+                                return (
+                                    <div className='item_content' key={index}>
+                                        <div className='item_title'>
+                                            {element[item['id']]['title']}
+                                        </div>
+                                        <div className='item_article'>
+                                            {showData}
+                                        </div>
+                                    </div>
+                                )
+                            }else if(jsonData['typeId'] == '7'){
+                                if (Array.isArray(showData)){showData=showData.join(',')}
                                 return (
                                     <div className='item_content' key={index}>
                                         <div className='item_title'>
@@ -127,10 +144,7 @@ class DataModal extends Component {
                                     </div>
                                 )
                             } else if (jsonData['typeId'] == '20') {
-                                let arr = []
-                                if (showData != undefined && showData != '') {
-                                    arr = JSON.parse(showData)
-                                }
+                                let arr = showData
                                 return (
                                     <div className='item_content' key={index}>
                                         <div className='item_title'>

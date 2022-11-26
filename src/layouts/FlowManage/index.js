@@ -8,7 +8,7 @@
  */
 
 import { BulbOutlined, CopyOutlined, FormOutlined, NodeExpandOutlined, PlayCircleOutlined, PoweroffOutlined } from "@ant-design/icons";
-import { CanvasToolbar, XFlow, XFlowNodeCommands, CanvasScaleToolbar, CanvasSnapline, JsonSchemaForm, NsJsonSchemaForm, CanvasNodePortTooltip, FlowchartCanvas, FlowchartExtension, XFlowGraphCommands, randomInt, XFlowEdgeCommands, XFlowCanvas, createGraphConfig } from "@antv/xflow";
+import { CanvasToolbar, XFlow, XFlowNodeCommands, CanvasScaleToolbar, CanvasSnapline, JsonSchemaForm, NsJsonSchemaForm, CanvasNodePortTooltip, FlowchartCanvas, FlowchartExtension, XFlowGraphCommands, randomInt, XFlowEdgeCommands, XFlowCanvas, createGraphConfig, CanvasContextMenu } from "@antv/xflow";
 import { DataUri } from '@antv/x6'
 import { inject, observer } from "mobx-react";
 import AuthShape from './Self_Form/field_auth';
@@ -26,6 +26,7 @@ import { message, Popover, Spin } from "antd";
 import { toJS } from "mobx";
 import { customAlphabet } from "nanoid";
 import { checkFlow } from "./checkTool";
+import { useMenuConfig } from "./menu_config.js"
 export const useGraphConfig = createGraphConfig(graphConfig => {
   graphConfig.setX6Config(
     {
@@ -106,6 +107,7 @@ const FlowManage = observer(({ FlowStore, HomeStore, TableStore, SocketStore, pr
   const [app, setApp] = useState(null)
   const [graph, setGraph] = useState(null)
   const [toolbarConfig, setBoolbarConfig] = useState(useToolbarConfig(props))
+  const [menucConfig, setMenucConfig] = useState(useMenuConfig(props))
   const forceUpdate = useReducer((bool) => !bool)[1]
   var NsJsonForm;
 
@@ -429,8 +431,8 @@ const FlowManage = observer(({ FlowStore, HomeStore, TableStore, SocketStore, pr
             config={useGraphConfig(props)}
             isAutoCenter={true}
           >
-              <FlowchartExtension />
-            
+            <FlowchartExtension />
+
             {
               canOb == true && (
                 <CanvasToolbar
@@ -440,6 +442,9 @@ const FlowManage = observer(({ FlowStore, HomeStore, TableStore, SocketStore, pr
                 />
               )
             }
+            <CanvasContextMenu
+              config={menucConfig}
+            />
             <CanvasScaleToolbar
               layout='horizontal'
               position={{ right: 500 }} />

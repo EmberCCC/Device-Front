@@ -147,7 +147,7 @@ class GlobalTabel2 extends React.Component {
                         bordered
                         rowKey={record => record.key}
                         dataSource={dataSource}
-                        columns={lastColumns}
+                        columns={lastColumns}//标题
                         pagination={PageInfo}
                         // onChange={this.onChange}
                         loading={isLoading}
@@ -165,7 +165,6 @@ class GlobalTabel2 extends React.Component {
                                         this.props.TableStore.setDataPageModalVis(true);
                                         this.props.TableStore.setValue('itemIndex', dindex)
                                     })
-
                                 }, // 点击行
                             };
                         }}
