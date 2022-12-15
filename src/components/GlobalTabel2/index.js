@@ -20,7 +20,6 @@ import FormLayout from 'layouts/FormLayout';
 import MulChange from './mulChange';
 import SortLayout from './sortLayout';
 import SelectLayout from './selectLayout';
-import columnTitle from './item/columnTitle';
 
 const ExportJsonExcel = require("js-export-excel");
 @inject('HomeStore', 'TableStore')
