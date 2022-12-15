@@ -20,11 +20,13 @@ import FormLayout from 'layouts/FormLayout';
 import MulChange from './mulChange';
 import SortLayout from './sortLayout';
 import SelectLayout from './selectLayout';
+import columnTitle from './item/columnTitle';
 
 const ExportJsonExcel = require("js-export-excel");
 @inject('HomeStore', 'TableStore')
 @observer
 class GlobalTabel2 extends React.Component {
+    
     render() {
         const childrenRef = createRef()
         const { isLoading } = this.props.HomeStore
@@ -52,6 +54,9 @@ class GlobalTabel2 extends React.Component {
                 childrenRef.current.setSort();
             }
         }
+        const expandable={
+            columnTitle:<columnTitle/>
+        }
         const fieldChoose = (
             <div className='field_list'>
                 <Checkbox.Group onChange={checkChange} defaultValue={this.props.TableStore.fieldValue}>
@@ -70,7 +75,6 @@ class GlobalTabel2 extends React.Component {
         return (
             <div>
                 <div className='search_bar'>
-
                     {
                         this.props.TableStore.model != 'look' && <>
                             {/* 添加 */}
@@ -111,17 +115,15 @@ class GlobalTabel2 extends React.Component {
                     {/* 显示字段 */}
                     <div style={{ border: 'none', margin: '0 10px 10px 10px', verticalAlign: 'middle', float: 'right' }}>
                         <Popover placement="bottomRight" content={fieldChoose} trigger="click"
-                            onVisibleChange={visibleChange}
+                            onOpenChange={visibleChange}
                         >
                             <Button icon={<FunnelPlotOutlined />} style={{ border: 'none', margin: '0 10px 10px 0', verticalAlign: 'middle', float: 'right' }} />
                         </Popover>
                     </div>
-
-
                     {/* 排序 */}
                     <div style={{ border: 'none', margin: '0 10px 10px 0', verticalAlign: 'middle', float: 'right' }}>
                         <Popover placement="bottomRight" content={<SortLayout cRef={childrenRef} />} trigger="click" destroyTooltipOnHide="true"
-                            onVisibleChange={handleVis}
+                            onOpenChange={handleVis}
                         >
                             <Button icon={<SortDescendingOutlined />} style={{ border: 'none', margin: '0 10px 10px 0', verticalAlign: 'middle', float: 'right' }} />
                         </Popover>
@@ -130,7 +132,7 @@ class GlobalTabel2 extends React.Component {
 
                     <div style={{ border: 'none', margin: '0 10px 10px 0', verticalAlign: 'middle', float: 'right' }}>
                         <Popover placement="bottomRight" content={<SelectLayout type={'select'} />} trigger="click" destroyTooltipOnHide="true"
-                            onVisibleChange={handleSelVis}
+                            onOpenChange={handleSelVis}
                         >
                             <Button icon={<FilterOutlined />} style={{ border: 'none', margin: '0 10px 10px 0', verticalAlign: 'middle', float: 'right' }} />
                         </Popover>
@@ -138,20 +140,21 @@ class GlobalTabel2 extends React.Component {
 
                 </div>
                 {
-                    this.props.TableStore.model != 'look' ? <Table
+                     <Table
                         rowSelection={{
                             type: 'checkbox',
                             ...rowSelection,
                         }}
                         scroll={{ x: 1500, y: 600 }}
-                        bordered
+                        bordered   
                         rowKey={record => record.key}
                         dataSource={dataSource}
                         columns={lastColumns}//标题
                         pagination={PageInfo}
                         // onChange={this.onChange}
+                        expandable={expandable}
                         loading={isLoading}
-                        onRow={(key, record) => {
+                        onRow={this.props.TableStore.model != 'look' ?(key, record) => {
                             return {
                                 onClick: event => {
                                     let dindex = 0;
@@ -167,18 +170,8 @@ class GlobalTabel2 extends React.Component {
                                     })
                                 }, // 点击行
                             };
-                        }}
-                    /> :
-                        <Table
-                            scroll={{ x: 1500, y: 600 }}
-                            bordered
-                            rowKey={record => record.key}
-                            dataSource={dataSource}
-                            columns={lastColumns}
-                            pagination={PageInfo}
-                            // onChange={this.onChange}
-                            loading={isLoading}
-                        />
+                        }:null}
+                    /> 
                 }
 
                 {

@@ -141,9 +141,15 @@ const SelectLayout = observer(({ TableStore, HomeStore,type }) => {
             }
         })
         let exchangeObj = {}
-        if (['4', '5', '6', '7'].indexOf(item['fieldInfo']['typeId']) > -1) {
+        if (['4', '5', ].indexOf(item['fieldInfo']['typeId']) > -1) {
             item['fieldInfo']['enum'].map((infoE, index) => {
                 exchangeObj[infoE] = item['fieldInfo']['enumNames'][index]
+            })
+        }
+        if(['6', '7'].indexOf(item['fieldInfo']['typeId']) > -1){
+            
+            item['fieldInfo']['option_list'].map((infoE, index) => {
+                exchangeObj[infoE] = item['fieldInfo']['option_list'][index]
             })
         }
         if (item) {
@@ -313,8 +319,13 @@ const SelectLayout = observer(({ TableStore, HomeStore,type }) => {
                                 ['='].indexOf(item['operator']) > -1 && (
                                     <Select style={{ width: '100%' }} defaultValue={item['operand']} onChange={(e) => handleMathChange(e, item, index)}>
                                         {
-                                            item['fieldInfo']['enum'].map((infoE, index) => {
+                                            item['fieldTypeId']=='5'&& item['fieldInfo']['enum'].map((infoE, index) => {
                                                 return <Select.Option key={index} value={infoE}>{item['fieldInfo']['enumNames'][index]}</Select.Option>
+                                            })
+                                        }
+                                        {
+                                            item['fieldTypeId']=='7'&& item['fieldInfo']['option_list'].map((infoE, index) => {
+                                                return <Select.Option key={index} value={infoE}>{item['fieldInfo']['option_list'][index]}</Select.Option>
                                             })
                                         }
                                     </Select>
@@ -324,8 +335,13 @@ const SelectLayout = observer(({ TableStore, HomeStore,type }) => {
                                 ['(', ')'].indexOf(item['operator']) > -1 && (
                                     <Select style={{ width: '100%' }} mode='multiple' defaultValue={item['operand']} onChange={(e) => handleMathChange(e, item, index)}>
                                         {
-                                            item['fieldInfo']['enum'].map((infoE, index) => {
+                                            item['fieldTypeId']=='5'&& item['fieldInfo']['enum'].map((infoE, index) => {
                                                 return <Select.Option key={index} value={infoE}>{item['fieldInfo']['enumNames'][index]}</Select.Option>
+                                            })
+                                        }
+                                        {
+                                            item['fieldTypeId']=='7'&& item['fieldInfo']['option_list'].map((infoE, index) => {
+                                                return <Select.Option key={index} value={infoE}>{item['fieldInfo']['option_list'][index]}</Select.Option>
                                             })
                                         }
                                     </Select>
@@ -377,6 +393,7 @@ const SelectLayout = observer(({ TableStore, HomeStore,type }) => {
                 <div className='columns_list'>
                     {
                         columns.map((item, index) => {
+                            console.log(toJS(item))
                             if (selectList.some(sort_item => sort_item['fieldInfo']['fieldId'] == item['key'])) {
                                 return (
                                     <div className="columns_item" key={index}>
@@ -384,11 +401,13 @@ const SelectLayout = observer(({ TableStore, HomeStore,type }) => {
                                     </div>
                                 )
                             } else {
-                                return (
-                                    <div className="columns_item item_uncheck" onClick={() => handleAdd(item)} key={index}>
-                                        {item['title']}
-                                    </div>
-                                )
+                                if(['createPerson', 'updateTime', 'createTime'].indexOf(item['key']) >-1 || item['detailJson']['typeId']<8){
+                                    return (
+                                        <div className="columns_item item_uncheck" onClick={() => handleAdd(item)} key={index}>
+                                            {item['title']}
+                                        </div>
+                                    )
+                                }
                             }
                         })
                     }
@@ -441,7 +460,7 @@ const SelectLayout = observer(({ TableStore, HomeStore,type }) => {
                 </Select>
                 条件的数据
             </div>
-            <Popover content={menu} trigger='click'>
+            <Popover content={menu} trigger='click'  placement="bottomLeft">
                 <div className='sort_add'>
                     <Button>+添加过滤条件</Button>
                 </div>

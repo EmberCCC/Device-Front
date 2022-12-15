@@ -40,12 +40,15 @@ const SortLayout = observer(({ TableStore, HomeStore, cRef }) => {
                                     </div>
                                 )
                             } else {
-                                return (
-                                    <div className="columns_item item_uncheck" onClick={() => handleAdd(item)} key={index}>
-                                        {item['title']}
-                                    </div>
-                                )
+                                if (['createPerson', 'updateTime', 'createTime'].indexOf(item['key']) > -1 || item['detailJson']['typeId'] < 8) {
+                                    return (
+                                        <div className="columns_item item_uncheck" onClick={() => handleAdd(item)} key={index}>
+                                            {item['title']}
+                                        </div>
+                                    )
+                                }
                             }
+
                         })
                     }
                 </div>
@@ -72,7 +75,7 @@ const SortLayout = observer(({ TableStore, HomeStore, cRef }) => {
     }
     return (
         <div className='sort_layout'>
-            <Popover content={menu} trigger='click'>
+            <Popover content={menu} trigger='click' placement="bottomLeft">
                 <div className='sort_add'>
                     <Button>+添加排序规则</Button>
                 </div>
@@ -95,7 +98,7 @@ const SortLayout = observer(({ TableStore, HomeStore, cRef }) => {
                                 <div className='list_item_del'>
                                     <UnorderedListOutlined />
                                     <Tooltip title='删除' placement='top'>
-                                        <DeleteOutlined onClick={() => { handleDel(index) }} style={{ cursor: 'pointer' ,marginLeft:'5px'}} />
+                                        <DeleteOutlined onClick={() => { handleDel(index) }} style={{ cursor: 'pointer', marginLeft: '5px' }} />
                                     </Tooltip>
                                 </div>
                             </div>

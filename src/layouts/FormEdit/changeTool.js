@@ -7,9 +7,10 @@
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 import { nanoid } from "nanoid";
+import Tab from "./self_item/Tab";
 
 export function exChange(item, firstFormId, name) {
-  console.log(item);
+  console.log('exChangeItem', item);
   let params = {};
   let pro = {};
   let subForms = [];
@@ -23,6 +24,50 @@ export function exChange(item, firstFormId, name) {
       let obj = {};
       obj['name'] = name;
       for (const keyP in item[key]) {
+        let iObj = {};
+        iObj['name'] = keyP
+        iObj['detailJson'] = item[key][keyP]
+        if (iObj['detailJson'].hasOwnProperty('order')) {
+          delete iObj.detailJson.order
+        }
+        if (iObj['detailJson'].hasOwnProperty('fieldId')) {
+          iObj['fieldId'] = iObj['detailJson']['fieldId'];
+        } else {
+          iObj['fieldId'] = keyP
+        }
+        if (!iObj['detailJson'].hasOwnProperty('typeId')) {
+          iObj['detailJson']['typeId'] = keyP.split('_')[0];
+        }
+        iObj['typeId'] = iObj['detailJson']['typeId']
+        iObj['name'] = iObj['detailJson']['title']
+        field.push(iObj);
+      }
+      obj['fields'] = field
+      subForms.push(obj)
+    }
+  }
+  console.log('finalparams', params);
+  params['properties'] = pro
+  params['subForms'] = subForms
+  return params;
+}
+
+export function newExChange(item, firstFormId, schemaList = []) {
+  let params = {};
+  let pro = {};
+  let subForms = [];
+  let haveTab = []
+  params.formId = firstFormId
+  params.formName = sessionStorage.getItem('formName') && sessionStorage.getItem('formName') != '{}' ? JSON.parse(sessionStorage.getItem('formName'))['formName'] : '机房'
+  for (const key in item) {
+    if (key != 'properties') {
+      pro[key] = item[key];
+    } else {
+      let field = [];
+      let obj = {};
+      obj['name'] = 'root';
+      for (const keyP in item[key]) {
+        if (keyP == 'Tabs') { break }
         let iObj = {};
         iObj['name'] = keyP
 
@@ -44,14 +89,54 @@ export function exChange(item, firstFormId, name) {
       }
       obj['fields'] = field
       subForms.push(obj)
+      console.log('schemaList', schemaList)
+      if (schemaList.length > 0) {
+        for (const keys in schemaList) {
+          let field = [];
+          let obj = {};
+          obj['name'] = schemaList[keys]['label'];
+          for (const keyP in schemaList[keys]['fields']) {
+            let iObj = {};
+            iObj['name'] = keyP
+            iObj['detailJson'] = schemaList[keys]['fields'][keyP]
+            if (iObj['detailJson'].hasOwnProperty('order')) {
+              delete iObj.detailJson.order
+            }
+            if (iObj['detailJson'].hasOwnProperty('fieldId')) {
+              iObj['fieldId'] = iObj['detailJson']['fieldId'];
+            } else {
+              iObj['fieldId'] = keyP
+            }
+            if (!iObj['detailJson'].hasOwnProperty('typeId')) {
+              iObj['detailJson']['typeId'] = keyP.split('_')[0];
+            }
+            iObj['typeId'] = iObj['detailJson']['typeId']
+            iObj['name'] = iObj['detailJson']['title']
+            field.push(iObj);
+          }
+          obj['fields'] = field
+          subForms.push(obj)
+        }
+      }
     }
+
   }
-  console.log(params);
+  console.log('finalparams', params);
   params['properties'] = pro
   params['subForms'] = subForms
   return params;
 }
 
+
+/**
+ * 
+ * @param {*} fields 
+ * @param {*} fieldIds 
+ * @param {*} type 
+ * @param {*} flag 
+ * @param {*} authInfo 
+ * @returns 
+ */
 function getOneForm(fields, fieldIds, type, flag, authInfo) {
   let result = {}
   fieldIds.forEach(item => {
@@ -59,7 +144,6 @@ function getOneForm(fields, fieldIds, type, flag, authInfo) {
       if (field != null) {
         if (field['id'] == item) {
           const detailJson = JSON.parse(field['detailJson']);
-
           const id = field['id']
           const name = type == 'submit' ? field['id'] : "".concat(detailJson['typeId'], "_").concat(nanoid(19))
           if (type == 'submit') {
@@ -126,12 +210,71 @@ export function restore(obj, type) {
         formArr[fieldInfo[index]['name']] = formItem;
       }
     }
+    console.log('formArr', formArr)
     return formArr;
   } else {
     return {}
   }
 
 }
+
+
+
+export function formEditRestore(obj, type) {
+  if (JSON.stringify(obj) != "{}") {
+    let formArr = {}
+    let newSchema = {}
+    let fieldInfo;
+    let properties;
+    let authField = {}
+    let Tabs=[]
+    if (obj.hasOwnProperty('form') && obj['form'].hasOwnProperty('formFields')) {
+      fieldInfo = JSON.parse(obj['form']['formFields']);
+      properties = JSON.parse(obj['form']['properties']);
+      const fields = obj['fields'];
+      //说明有多表单
+      
+      const element = fieldInfo[0];
+      let formItem={}
+      formItem['properties'] = getOneForm(fields, element['fieldsId'], type, obj.hasOwnProperty('fieldsAuth'), authField)
+      for (const key in properties) {
+        if (Object.hasOwnProperty.call(properties, key)) {
+          const element = properties[key];
+          formItem[key] = element
+        }
+      }
+      newSchema = formItem['properties'];
+      if (fieldInfo.length > 1) {//如果有多标签 
+        for(let i=1;i<fieldInfo.length;i++){
+          let item={}
+          item['label']=fieldInfo[i]['name']
+          item.key=nanoid()
+          let formItem={}
+          const element = fieldInfo[i];
+          formItem['properties'] = getOneForm(fields, element['fieldsId'], type, obj.hasOwnProperty('fieldsAuth'), authField)
+          for (const key in properties) {
+            if (Object.hasOwnProperty.call(properties, key)) {
+              const element = properties[key];
+              formItem[key] = element
+            }
+          }
+          item.fields=formItem['properties']
+          Tabs.push(item)
+        }
+      }
+      
+
+    }
+    formArr.properties=newSchema
+    formArr.Tabs=Tabs
+    console.log('rerere', formArr)
+    return formArr;
+  } else {
+    return {}
+  }
+}
+
+
 function getOneForm2(fields, fieldIds) {
   let result = {}
   fieldIds.forEach(item => {
@@ -145,6 +288,9 @@ function getOneForm2(fields, fieldIds) {
   });
   return result
 }
+
+
+
 export function restore2(obj) {
   let formArr = {}
   let fieldInfo;

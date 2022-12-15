@@ -23,6 +23,15 @@ class Form {
         "labelWidth": 120,
         "displayType": "row"
     };
+    @observable formEditSchema = {
+        "type": "object",
+        "properties": {},
+        "labelWidth": 120,
+        "displayType": "row"
+    }//编辑表单时使用的schema接受表单onSchemaChange
+    @observable formEditSchemaExtend = {}//编辑表单时使用，用于影响表单
+    @observable tabLastChoose = 0 //上一次Tab标签的表单
+
     @observable loading = false
     @observable formField = {};//表单字段
     @observable formCopyVis = false;
@@ -136,6 +145,7 @@ class Form {
         this.setValue('schema', {});
         try {
             let res = await services.getRequest(services.requestList.getFieldInfo, params);
+            console.log('getFormField', res)
             if (isDataExist(res)) {
                 this.setValue('formField', res.data.data);
                 let obj = getLinkCondition(res.data.data)
@@ -296,7 +306,7 @@ class Form {
     }
 
     @action.bound async getLinkData(params) {
-        this.setValue('linkData',[])
+        this.setValue('linkData', [])
         try {
             let res = await services.putRequest(services.requestList.getLinkData, params);
             if (isDataExist(res)) {
@@ -358,6 +368,66 @@ class Form {
         } catch (error) {
             console.log(error);
         }
+    }
+
+    /**
+     * 更改表单结果，第一个参数为转变之后的参数，第二个参数为之前的参数
+     * 
+     * @param {Number } TabKey 当前要切换的表单的key值
+     * @param {Number | undefined} lastChoose 上一个表单的key值
+     * @param {Boolean} isDelete 是否删除该表单
+     */
+    @action.bound changeFormEditSchema(TabKey, lastChoose, isDelete = false,isBegin=false) {
+        let isTab = false//用于判断之前是否在Tab之内
+        let items = {}
+        let formEdit = Object.assign({}, toJS(this.formEditSchema))
+        let formEditSchema = formEdit.properties
+        console.log('schema', formEdit)
+        for (let key in formEditSchema) {
+            console.log(key)
+            if (isTab) {
+                items[key] = Object.assign({}, formEditSchema[key])
+                delete formEditSchema[key]
+            }
+            if (key === 'Tabs') isTab = true
+        }
+        let schemaList = toJS(this.schemaList)
+        console.log('changeFormEdit', schemaList)
+        let subFormItem = schemaList.find((item) => item.key === TabKey)
+        let lastsubFormItem = schemaList.find((item) => item.key === lastChoose)
+        if (isDelete) {
+            schemaList.splice(schemaList.findIndex((item) => item.key === lastChoose), 1)
+        } else {
+            if(!isBegin){
+                lastsubFormItem.fields = items
+            }
+            
+        }
+        formEdit.properties = { ...formEditSchema, ...subFormItem.fields }
+        this.setValue('schemaList', schemaList)
+        this.setValue('formEditSchema', formEdit)
+        this.setValue('formEditSchemaExtend', formEdit)
+    }
+
+    @action.bound deleteAllTab(){
+        let formEdit= Object.assign({},toJS(this.formEditSchema))
+        let formEditSchema=formEdit.properties
+        let isTab=false
+        for (let key in formEditSchema) {
+            console.log(key)
+            if(isTab){
+                delete formEditSchema[key]
+            }
+            if(key==='Tabs') isTab=true
+        }
+        delete formEditSchema.Tabs
+        this.setValue('formEditSchema',formEdit)
+        this.setValue('formEditSchemaExtend',formEdit)
+        this.setValue('checked', !this.checked)
+    }
+
+    @action.bound copyForm(){
+        this.setValue('formEditSchemaExtend',this.formEditSchema)
     }
 }
 
