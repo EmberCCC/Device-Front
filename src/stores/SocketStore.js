@@ -132,7 +132,7 @@ class Socket {
                         message.info('无权限查看该部门，请联系管理员')
                     }
                 }}>
-                    <div className='de_name'><GoldFilled /> {item['name']}</div>
+                    <div className='de_name'><GoldFilled  /> {item['name']}</div>
                     {
                         (this.userAuth['creater'] || this.userAuth['sysAdmin'] || deArr.indexOf(-1) > -1 || deArr.indexOf(item['id']) > -1) && <Popover placement='right' trigger='hover' content={content} overlayClassName='myPopover' >
                             <div className='de_more'><MoreOutlined onMouseEnter={() => {

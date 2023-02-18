@@ -8,7 +8,7 @@
  */
 
 
-import { ApartmentOutlined, FolderAddOutlined, FolderOutlined, InfoCircleOutlined, MoreOutlined, TeamOutlined, UserAddOutlined, UserOutlined } from "@ant-design/icons";
+import { ApartmentOutlined, FolderAddOutlined, FolderOutlined, InfoCircleOutlined, MoreOutlined, TeamOutlined, CloseCircleFilled,UserAddOutlined, UserOutlined ,GoldFilled} from "@ant-design/icons";
 import { Button, Checkbox, Input, message, Modal, Popover, Radio, Space, Spin, Tooltip, Tree, TreeSelect } from "antd";
 import { toJS } from "mobx";
 import { inject, observer } from "mobx-react";
@@ -143,7 +143,7 @@ const MaLayout = observer(({ SocketStore }) => {
                         系统管理员
                     </div>
                     <div onClick={() => SocketStore.setValue('maSelectKey', '-1')} className={`ma_left_menu ${maSelectKey == '-1' ? `checked` : ``}`}>
-                        <UserOutlined />
+                        <UserOutlined  style={{'color':'#0db3a6',marginRight:'10px'}}/>
                         系统管理员
                     </div>
                     <div className="ma_normal">
@@ -165,7 +165,7 @@ const MaLayout = observer(({ SocketStore }) => {
 
                                     <div key={index} onClick={(e) => handleMenu(e, item, item['id'])} className={clsName}>
                                         <div className="one_menu_left">
-                                            <TeamOutlined />
+                                            <TeamOutlined style={{'color':'#0db3a6',marginRight:'10px'}}/>
                                             {item['name']}
                                         </div>
                                         <div className="one_menu_right">
@@ -211,12 +211,13 @@ const MaLayout = observer(({ SocketStore }) => {
                                                         Object.keys(sysList).map((item, index) => {
                                                             return (
                                                                 <div className="de_one" key={index}>
-                                                                    <ApartmentOutlined /> {sysList[item]['username']} <span style={{ cursor: 'pointer' }} onClick={() => {
+                                                                    
+                                                                    <GoldFilled style={{'color':'rgb(255, 190, 1)'}}/> {sysList[item]['username']} <span style={{ cursor: 'pointer' }} onClick={() => {
                                                                         SocketStore.delSys({ 'userId': item }).then(() => {
                                                                             initData('add');
                                                                         })
                                                                         console.log(item);
-                                                                    }}>X</span>
+                                                                    }}> <CloseCircleFilled  style={{color:'rgba(0,0,0,0.5)'}}/> </span>
                                                                 </div>
                                                             )
                                                         })
@@ -303,11 +304,11 @@ const MaLayout = observer(({ SocketStore }) => {
                                                         maSelectObj['admins'].map((item, index) => {
                                                             return (
                                                                 <div className="de_one" key={index}>
-                                                                    <ApartmentOutlined /> {userName[item['userId']]} <span style={{ cursor: 'pointer' }} onClick={() => {
+                                                                    <UserOutlined style={{'color':'#248af9'}}/> {userName[item['userId']]} <span style={{ cursor: 'pointer' }} onClick={() => {
                                                                         SocketStore.delNor({ 'userId': item['userId'] }).then(() => {
                                                                             initData();
                                                                         })
-                                                                    }}>X</span>
+                                                                    }}> <CloseCircleFilled  style={{color:'rgba(0,0,0,0.5)'}}/></span>
                                                                 </div>
                                                             )
                                                         })
@@ -355,7 +356,7 @@ const MaLayout = observer(({ SocketStore }) => {
                                                                             if (item != -1) {
                                                                                 return (
                                                                                     <div className="de_one" key={index}>
-                                                                                        <ApartmentOutlined /> {itemName[item]}
+                                                                                        <GoldFilled style={{'color':'rgb(255, 190, 1)'}}/> {itemName[item]}
                                                                                     </div>
                                                                                 )
                                                                             }
@@ -401,7 +402,7 @@ const MaLayout = observer(({ SocketStore }) => {
                                                                             if (item != -1) {
                                                                                 return (
                                                                                     <div className="de_one" key={index}>
-                                                                                        <UserAddOutlined /> {rolesName[item]}
+                                                                                        <UserAddOutlined style={{color: '#248af9'}}/> {rolesName[item]}
                                                                                     </div>
                                                                                 )
                                                                             }
@@ -629,7 +630,7 @@ const MaLayout = observer(({ SocketStore }) => {
                 <div className="addUser_main">
                     <TreeSelect multiple treeData={mulSelect} style={{ width: '100%' }} onChange={(value) => setAddList(value)} defaultValue={maSelectObj?.['authDto']?.['scope']?.['department'] || []} />
                     <div className="add_btn">
-                        <Button style={{ marginRight: '15px' }} onClick={() => () => setAddDeVisible(false)}>取消</Button>
+                        <Button style={{ marginRight: '15px' }} onClick={ () => setAddDeVisible(false)}>取消</Button>
                         <Button type='primary' onClick={() => handleAddDe('de')}>确定</Button>
                     </div>
                 </div>
@@ -699,7 +700,7 @@ const MaLayout = observer(({ SocketStore }) => {
                         </div>
                     </div>
                     <div className="add_btn">
-                        <Button style={{ marginRight: '15px' }} onClick={() => () => setAddRoleVisible(false)}>取消</Button>
+                        <Button style={{ marginRight: '15px' }} onClick={() =>  setAddRoleVisible(false)}>取消</Button>
                         <Button type='primary' onClick={() => handleAddDe('ro')}>确定</Button>
                     </div>
                 </div>

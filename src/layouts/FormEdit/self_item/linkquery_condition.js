@@ -11,7 +11,7 @@ import './index.css'
 import { inject, observer } from "mobx-react";
 import { Button, Input, message, Modal, Radio, Select } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
-import { checkCondition, getAllField } from "../changeTool";
+import { checkCondition, getAllField ,newExChange} from "../changeTool";
 import { toJS } from "mobx";
 import { select_arr, select_condtion } from "constants/select_config";
 const Linkquery_condition = observer((props) => {
@@ -21,6 +21,7 @@ const Linkquery_condition = observer((props) => {
     const [vis, setVis] = useState(false);
     const [fieldObj, setFieldObj] = useState({})
     const [list, setList] = useState([])
+    const [maps,setMaps]=useState({})
     useEffect(() => {
         dataRef.current = value
     }, [value])
@@ -38,6 +39,9 @@ const Linkquery_condition = observer((props) => {
             setList(value?.conditions)
         }
     }, [])
+    useEffect(()=>{
+
+    },[])
     return (
         <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
             <div className="query_form">
@@ -107,16 +111,24 @@ const Linkquery_condition = observer((props) => {
                     if (value?.formId == null) {
                         message.info('请先选择联动表单')
                     } else {
+                        console.log('formSchema',toJS(FormStore.formEditSchema['properties']) )
+                        let params = newExChange(FormStore.formEditSchema, FormStore.selectFormId, toJS(FormStore.schemaList))
+                        console.log('params',params)
+                        
                         let arr = []
-                        arr.push(toJS(FormStore.rootSchema['properties']))
-                        FormStore.schemaList.map(item => arr.push(toJS(item['schema']['properties'])))
-                        setFieldObj(getAllField(arr))
+                        let maps={}
+                        params.subForms.map(item => arr.push(...item.fields))
+                        console.log('arr',arr)
+                        for (const item of arr) {
+                            maps[item.fieldId]=item.name
+                        }
+                        setMaps(maps)
+                        setFieldObj(arr)
                         setVis(true)
                     }
 
                 }} style={{ width: '100%' }}>{`${value?.conditions.length > 0 ? "已设置过滤条件" : '添加过滤条件'}`}</Button>
             </div>
-
             {
                 addons.formData.typeId == '14' && (
                     <div className="query_mul">
@@ -201,31 +213,33 @@ const Linkquery_condition = observer((props) => {
                                     </Select>
                                     {
                                         item['custom'] == false && (
-                                            <Select value={item['operand']} placeholder='当前表单字段' style={{ width: '200px', marginRight: "10px" }} onChange={(e) => {
+                                            <Select value={maps[item['operand']] } placeholder='当前表单字段' style={{ width: '200px', marginRight: "10px" }} onChange={(e) => {
                                                 let arr = [...list]
                                                 let obj = arr[index]
                                                 obj['operand'] = e
                                                 arr.splice(index, 1, obj)
                                                 setList(arr)
                                             }}>
-                                                {Object.keys(fieldObj).map((info, iI) => {
+                                                {Object.keys(fieldObj).map((info,iI) => {
+                                                    let obj=fieldObj[info]
+                                                    console.log(obj)
                                                     if (info != props.addons.formData.fieldId) {
                                                         if ((item['fieldTypeId'] == '0' || item['fieldTypeId'] == '1' || item['fieldTypeId'] == '4' || item['fieldTypeId'] == '6') &&
-                                                            (fieldObj[info]['fieldTypeId'] == '0' ||
-                                                                fieldObj[info]['fieldTypeId'] == '1' ||
-                                                                fieldObj[info]['fieldTypeId'] == '4' ||
-                                                                fieldObj[info]['fieldTypeId'] == '6')) {
+                                                            (obj['typeId'] == '0' ||
+                                                                obj['typeId'] == '1' ||
+                                                                obj['typeId'] == '4' ||
+                                                                obj['typeId'] == '6')) {
                                                             return (
-                                                                <Select.Option key={iI} value={info}>{fieldObj[info]['fieldName']}</Select.Option>
+                                                                <Select.Option key={iI} value={info}>{obj['name']}</Select.Option>
                                                             )
                                                         } else if ((item['fieldTypeId'] == '5' || item['fieldTypeId'] == '7') &&
-                                                            (fieldObj[info]['fieldTypeId'] == '5' || fieldObj[info]['fieldTypeId'] == '7')) {
+                                                            (obj['fieldTypeId'] == '5' || obj['fieldTypeId'] == '7')) {
                                                             return (
-                                                                <Select.Option key={iI} value={info}>{fieldObj[info]['fieldName']}</Select.Option>
+                                                                <Select.Option key={iI} value={info}>{obj['name']}</Select.Option>
                                                             )
-                                                        } else if (item['fieldTypeId'] == fieldObj[info]['fieldTypeId']) {
+                                                        } else if (item['fieldTypeId'] == obj['fieldTypeId']) {
                                                             return (
-                                                                <Select.Option key={iI} value={info}>{fieldObj[info]['fieldName']}</Select.Option>
+                                                                <Select.Option key={iI} value={info}>{obj['name']}</Select.Option>
                                                             )
                                                         }
                                                     }

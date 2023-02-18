@@ -34,7 +34,7 @@ const SocketManage = observer(({ SocketStore, props }) => {
         <div className="socket_all">
             <div className="socket_header">
                 <NavLink to='/common'>
-                    <div className="socket_header_left"><LeftOutlined style={{ color: '#0db3a6' }} />通讯录</div>
+                    <div className="socket_header_left"><LeftOutlined style={{ color: '#0db3a6' }} />  通讯录</div>
                 </NavLink>
                 <Menu theme="light" mode='horizontal' selectedKeys={[SocketId]} justify='center' onClick={changeModel} items={item} />
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingRight: 10 }}>

@@ -57,7 +57,6 @@ const FormEdit = observer(({ HomeStore, FormStore }) => {
     FormStore.getFormSimple();
     let formId = sessionStorage.getItem('formId') ? sessionStorage.getItem('formId') : HomeStore.firstFormId
     FormStore.getFormField({ 'formId': formId }).then(() => {
-    
     let {formField}=FormStore
     let properties=JSON.parse(formField.form.properties)
     let newSchemma={}
@@ -120,6 +119,7 @@ const FormEdit = observer(({ HomeStore, FormStore }) => {
   }, []);
   useUpdateEffect(() => {
     ref.current.setValue(FormStore.formEditSchemaExtend)
+    setLookItem(FormStore.formEditSchemaExtend)
     console.log('ref', ref)
     console.log('refchange', toJS(FormStore.formEditSchemaExtend))
   }, [FormStore.formEditSchemaExtend])
@@ -133,7 +133,6 @@ const FormEdit = observer(({ HomeStore, FormStore }) => {
     const { tabLastChoose, checked } = FormStore
     if (checked) { FormStore.changeFormEditSchema(tabLastChoose, tabLastChoose) }
     let params = newExChange(ref.current.getValue(), formId, toJS(FormStore.schemaList))
-
     // FormStore.changeFormEditSchema(tabLastChoose,tabLastChoose)
     console.log('rootparams', params)
     // if (schemaList.length > 0) {
@@ -151,38 +150,38 @@ const FormEdit = observer(({ HomeStore, FormStore }) => {
    * 获取列表单
    * @returns 
    */
-  const getItem = () => {
-    const { schemaList } = FormStore
-    if (JSON.stringify(schemaList) != '{}') {
-      return (
-        schemaList.map((item, index) => {
-          return (
-            <Tabs.TabPane tab={schemaList[index]['label']} key={index}>
-              <FormRender
-                schema={item['schema']}
-                mapping={{ string: 'My_string' }}
-                widgets={{
-                  self_divider: Self_divider,
-                  RichTextEditor: RichTextEditor,
-                  self_select: Self_select,
-                  select_option: Select_option,
-                  My_string: My_string,
-                  self_textarea: self_textarea,
-                  self_number: self_number,
-                  self_radio: self_radio,
-                  self_datapick: self_datapick,
-                  self_linkquery: self_linkquery,
-                  self_address: Self_address,
-                  self_department_user: self_department_user,
+  // const getItem = () => {
+  //   const { schemaList } = FormStore
+  //   if (JSON.stringify(schemaList) != '{}') {
+  //     return (
+  //       schemaList.map((item, index) => {
+  //         return (
+  //           <Tabs.TabPane tab={schemaList[index]['label']} key={index}>
+  //             <FormRender
+  //               schema={item['schema']}
+  //               mapping={{ string: 'My_string' }}
+  //               widgets={{
+  //                 self_divider: Self_divider,
+  //                 RichTextEditor: RichTextEditor,
+  //                 self_select: Self_select,
+  //                 select_option: Select_option,
+  //                 My_string: My_string,
+  //                 self_textarea: self_textarea,
+  //                 self_number: self_number,
+  //                 self_radio: self_radio,
+  //                 self_datapick: self_datapick,
+  //                 self_linkquery: self_linkquery,
+  //                 self_address: Self_address,
+  //                 self_department_user: self_department_user,
 
-                }}
-                form={formList} style={{ overflowY: 'auto' }} />
-            </Tabs.TabPane>
-          )
-        })
-      )
-    }
-  }
+  //               }}
+  //               form={formList} style={{ overflowY: 'auto' }} />
+  //           </Tabs.TabPane>
+  //         )
+  //       })
+  //     )
+  //   }
+  // }
   const deleteField = (event, schema) => {
     if (schema.widget === 'Tab') { return }
     console.log(schema)
@@ -380,13 +379,10 @@ const FormEdit = observer(({ HomeStore, FormStore }) => {
             self_datapick: self_datapick,
             self_linkquery: self_linkquery,
             self_address: Self_address,
-            self_department_user: self_department_user
+            self_department_user: self_department_user,
+            self_setting: self_setting,
+            Tab: Tab
           }} />
-        <Tabs destroyInactiveTabPane={true} tabBarGutter={20} type='card'>
-          {
-            getItem()
-          }
-        </Tabs>
       </Drawer>
     </>
   );

@@ -170,13 +170,14 @@ const InConLayout = observer(({ SocketStore }) => {
                                     Modal.destroyAll()
                                 },
                                 onOk: () => {
+                                    
                                     let arr = []
                                     roleList.map((item) => {
                                         if (item['userId'] != text['userId']) {
                                             arr.push(item['userId'])
                                         }
                                     })
-                                    console.log(arr);
+                                    console.log('删除后的arr',arr);
                                     SocketStore.saveRoleUser({ 'roleId': SelectKey }, arr).then(() => {
                                         SocketStore.getOneRoleUser({ 'roleId': SelectKey })
                                         SocketStore.getAllRoles()
