@@ -47,6 +47,7 @@ const FormEdit = observer(({ HomeStore, FormStore }) => {
   const [visible, setVisisble] = useState(false)
   const [lookItem, setLookItem] = useState({})
   const [type, setType] = useState(1)
+  const [messageApi, contextHolder] = message.useMessage();
   const { schemaList } = FormStore
   const { formInfo } = HomeStore
   const ref = useRef();
@@ -141,6 +142,18 @@ const FormEdit = observer(({ HomeStore, FormStore }) => {
     //     params['subForms'].push(exChange(item['schema'], formId, schemaList[index]['label'])['subForms'][0] || { 'name': schemaList[index]['label'], 'fields': [] })
     //   })
     // }
+    FormStore.saveForm(params).then((req)=>{
+      console.log(req)
+      messageApi.open({
+        type: 'success',
+        content: req.msg,
+      });
+    },(res)=>{
+      messageApi.open({
+        type: 'fail',
+        content: res.msg,
+      });
+    })
     console.log(params);
   }
   const closeDrawer = () => {
@@ -296,6 +309,7 @@ const FormEdit = observer(({ HomeStore, FormStore }) => {
   // }
   return (
     <>
+    {contextHolder}
       <div className='edit_header'>
         <div className='edit_left'>
           <BulbTwoTone className='icon_edit' />
