@@ -45,6 +45,16 @@ const ManageManage = Loadable({
   loading: LoadingComponent
 })
 
+const RegisterPage=Loadable({
+  loader:()=> import('../layouts/RegisterPage'),
+  loading:LoadingComponent
+})
+
+const SettingPage=Loadable({
+  loader:()=> import('../layouts/PersonalSetting'),
+  loading:LoadingComponent
+})
+
 export {
   HomeRouter,
   LoginPage,
@@ -52,5 +62,7 @@ export {
   DesignPage,
   MessageManage,
   SocketManage,
-  ManageManage
+  ManageManage,
+  RegisterPage,
+  SettingPage
 };

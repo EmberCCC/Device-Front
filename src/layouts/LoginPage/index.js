@@ -18,6 +18,11 @@ import LoginLayout from './loginLayout';
 @inject('HomeStore')
 @observer
 class LoginPage extends React.Component {
+  register=()=>{
+    this.props.history.push({
+      pathname: '/register',
+    })
+  }
   render() {
     return (
       <div className='login_main'>
@@ -35,7 +40,7 @@ class LoginPage extends React.Component {
               <Button>登录</Button>
             </div>
             <div className='header_left_item'>
-              <Button>注册</Button>
+              <Button onClick={this.register}>注册</Button>
             </div>
             <div className='header_left_item'>
               简体中文

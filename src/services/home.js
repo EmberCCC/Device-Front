@@ -27,7 +27,7 @@ export const requestList = {
 
   /* 人员信息 */
   queryPerson: '/uaa/user/users/getAll',
-
+  ownMessage:'/uaa/user/showSelf'
 }
 
 export function gets(type) {

@@ -364,6 +364,7 @@ class Socket {
         try {
             await this.getMyInfo();
             let res = await services.getRequest(services.requestList.getAllDepartment, params);
+
             if (isDataExist(res)) {
                 this.setValue('departments', res.data.data)
                 let iArr = [
@@ -393,8 +394,8 @@ class Socket {
                     iArr.push({ 'children': arr, 'type': 'group', 'label': '部门' })
                 }
                 jsonArr.push(this.exchangeMul(res.data.data))
-
                 this.setValue('items', iArr)
+                this.setValue('changeId',res.data.data.id)
                 this.setValue('mulSelect', jsonArr)
                 this.setValue('fatherIds', this.getMulFather({}, res.data.data))
                 this.setValue('itemName', this.getNameObj(nameObj, res.data.data))

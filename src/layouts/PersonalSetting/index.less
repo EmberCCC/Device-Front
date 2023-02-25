@@ -1,0 +1,53 @@
+.Groud{
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.Setting{
+  background: #f5f6f8;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding-top: 20px;
+  height: auto;
+  top: 55px;
+  flex: auto;
+  .Setting-department{
+    font-size: 16px;
+    height: 72px;
+    display: flex;
+    align-items: center;
+  }
+  .Setting-container{
+    background-color: #fff;
+    width: 800px;
+    padding: 0 20px;
+    border-radius: 6px;
+
+    .Setting-container-line{
+      height: 72px;
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid #ccc;
+      .Setting-container-line-header{
+        width: 130px;
+      }
+    }
+
+  }
+  .Setting-container-last{
+    margin-top: 20px;
+  }
+  .Setting-container>.Setting-container-line:last-child{
+    border-bottom: none;
+  }
+  .Setting-title{
+    width: 800px;
+    padding: 16px 20px;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 24px;
+
+  }
+}

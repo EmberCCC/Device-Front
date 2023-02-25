@@ -854,32 +854,32 @@ var strongElements = [
             }
         }
     },
-    {
-        text:'子表单',
-        name:'15',
-        schema:{
-            title:'子表单',
-            type:'array',
-            widget:'list2',
-            items:{
-                type:'object',
-                properties:{}
-            }
-        },
-        setting:{
-            title:{
-                title:'标题',
-                type:"string"
-            },
-            title_vis: {
-                title: '显示标题',
-                type: 'boolean',
-                props: {
-                    defaultValue: true
-                }
-            },
-        }
-    },
+    // {
+    //     text:'子表单',
+    //     name:'15',
+    //     schema:{
+    //         title:'子表单',
+    //         type:'array',
+    //         widget:'list2',
+    //         items:{
+    //             type:'object',
+    //             properties:{}
+    //         }
+    //     },
+    //     setting:{
+    //         title:{
+    //             title:'标题',
+    //             type:"string"
+    //         },
+    //         title_vis: {
+    //             title: '显示标题',
+    //             type: 'boolean',
+    //             props: {
+    //                 defaultValue: true
+    //             }
+    //         },
+    //     }
+    // },
     {
         text: '关联查询',
         name: '14',

@@ -25,7 +25,7 @@ import {
 
 /* 引入组件 */
 import { 
-  HomeRouter,LoginPage,FlowPage,DesignPage, MessageManage, SocketManage, ManageManage
+  HomeRouter,LoginPage,FlowPage,DesignPage, MessageManage, SocketManage, ManageManage,RegisterPage,SettingPage
 } from './home';
 
 export default class RootRouter extends PureComponent{
@@ -39,6 +39,8 @@ export default class RootRouter extends PureComponent{
           <Route path="/globalList" component={WrapperList}/>
           <Route path="/socket" component={SocketManage} />
           <Route path="/manage" component={ManageManage} />
+          <Route path="/register" component={RegisterPage} />
+          <Route path="/personalSetting" component={SettingPage}/>
           <Route path='/' component={HomeRouter} />
         </Switch>
       </Router>

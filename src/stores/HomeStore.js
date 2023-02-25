@@ -352,7 +352,19 @@ class Home {
       console.log(error);
     }
   }
-
+  //获取本人信息
+  @action.bound async ownMessage(params){
+    this.isLoading=true
+    try {
+      let res=await services.getRequest(services.requestList.ownMessage,params)
+      this.isLoading=false
+      if (isDataExist(res)){
+        this.setValue("myInfo",res.data)
+      }
+    }catch (error){
+      console.log(error)
+    }
+  }
 }
 let HomeStore = new Home();
 export default HomeStore;

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './index.less';
 import NoticePanel from './NoticePanel';
-import { ArrowRightOutlined, LogoutOutlined, TeamOutlined } from '@ant-design/icons';
+import { ArrowRightOutlined, LogoutOutlined, TeamOutlined ,IdcardFilled} from '@ant-design/icons';
 import { Icon as LegacyIcon } from '@ant-design/compatible';
 import { Layout, Dropdown, Menu, Button, Modal, Divider, Select } from 'antd';
 import { inject, observer } from 'mobx-react';
@@ -17,13 +17,17 @@ const { Header } = Layout;
 class HeaderLayout extends Component {
   render() {
     const menu = (
-      <Menu selectedKeys={[]} style={{ marginTop: '-12px' }} onClick={this.backToLogin}>
+      <Menu selectedKeys={[]} style={{ marginTop: '-12px' }} onClick={this.onBindMenu}>
         <div style={{ textAlign: "center" }}>
           {/* {getCookie('username')} */}
         </div>
+        <Menu.Item key={"mySetting"} >
+          <IdcardFilled />
+          &nbsp;个人设置
+        </Menu.Item>
         <Menu.Item key="logout">
           <LogoutOutlined />
-          退出登录
+          &nbsp;退出登录
         </Menu.Item>
       </Menu>
     );
@@ -105,6 +109,19 @@ class HeaderLayout extends Component {
         })
       }
     })
+  }
+  onBindMy=(e)=>{
+    this.props.history.push('/personalSetting')
+  }
+
+  onBindMenu=(e)=>{
+    if (e.key==="logout") {
+      this.backToLogin(e)
+    }else if(e.key==="mySetting"){
+      if(this.props.history.location.pathname!=="/personalSetting"){
+        this.onBindMy(e)
+      }
+    }
   }
   backToLogin = (e) => {
     if (e.key === "logout") {
