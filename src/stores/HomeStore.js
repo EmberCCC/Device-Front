@@ -4,6 +4,8 @@ import * as services from '../services/home';
 import { isEmpty, uniqBy, } from 'lodash';
 import { checkCurrentMenu } from 'utils/dataTools';
 import { MenuObj } from '../constants/configs';
+import {putUrlRequest} from "../services/flow";
+import {putRequest} from "../services/home";
 
 class Home {
   constructor() {
@@ -110,7 +112,7 @@ class Home {
         });
       }
       /**
-       * 
+       *
        */
       if (currentMenu.path === pathname) {
         this.selectedKeys = [`${currentMenu.id}`];
@@ -359,8 +361,34 @@ class Home {
       let res=await services.getRequest(services.requestList.ownMessage,params)
       this.isLoading=false
       if (isDataExist(res)){
-        this.setValue("myInfo",res.data)
+        this.setValue("myInfo",res.data.data)
       }
+      console.log(res.data)
+    }catch (error){
+      console.log(error)
+    }
+  }
+  //修改个人信息接口
+  @action.bound async editMessage(params){
+    try{
+      let res=await services.putRequest(services.requestList.editMessage,params)
+      return res
+    }catch (error){
+      console.log(error)
+    }
+  }
+  //注册企业用户接口
+  @action.bound async registerUser(params){
+    try{
+      return await services.putRequest(services.requestList.registerUser,params)
+    }catch (error){
+      console.log(error)
+    }
+  }
+  //注册愚弄接口
+  @action.bound async registerEmployee(params){
+    try{
+      return await services.putRequest(services.requestList.registerEmployee,params)
     }catch (error){
       console.log(error)
     }

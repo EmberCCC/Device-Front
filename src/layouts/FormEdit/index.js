@@ -85,7 +85,7 @@ const FormEdit = observer(({ HomeStore, FormStore }) => {
     //     FormStore.setValue('subFormList', JSON.parse(FormStore?.['formField']?.['form']?.['formFields']))
     //     let nameArr = []
     //     console.log('FormStore.formField', toJS(FormStore.formField));
-        
+
     //     let iList = restore(toJS(FormStore.formField))
     //     console.log('restoreend',toJS(iList))
     //     delete iList.root
@@ -161,7 +161,7 @@ const FormEdit = observer(({ HomeStore, FormStore }) => {
   }
   /**
    * 获取列表单
-   * @returns 
+   * @returns
    */
   // const getItem = () => {
   //   const { schemaList } = FormStore
@@ -244,69 +244,7 @@ const FormEdit = observer(({ HomeStore, FormStore }) => {
     //   FormStore.setValue('formEditSchema', toJS(schema))
     // }
   }
-  // const getTag = () => {
-  //   const { schemaList } = FormStore
-  //   let newArr = []
-  //   for (const key in schemaList) {
-  //     if (Object.hasOwnProperty.call(schemaList, key)) {
-  //       const element = schemaList[key];
-  //       let iObj = {}
-  //       iObj['name'] = key
-  //       iObj['schema'] = element
-  //       newArr.push(iObj);
-  //     }
-  //   }
-  //   return (
-  //     newArr.map((item, index) => {
-  //       const { subFormName } = FormStore
-  //       return (
-  //         <Tabs.TabPane tab={subFormName[index]} key={index}>
-  //           <Provider
-  //             ref={refList}
-  //             defaultValue={item['schema']}
-  //             settings={defaultSettings}
-  //             commonSettings={defaultCommonSetting}
-  //             globalSettings={[]}
-  //             onSchemaChange={(schema) => handleSchemaChange(schema, index)}
-  //             extraButtons={[false, false, false, false]}
-  //             controlButtons={[true, false, { text: 'up', onClick: (event, schema) => console.log(event, schema) }]}
-  //             hideId={true}
-  //             getId={name => `${name}_${nanoid(19)}`}
-  //             mapping={{ string: 'My_string' }}
-  //             widgets={{
-  //               link_item: Link_item,
-  //               submit_check: Submit_check,
-  //               self_divider: Self_divider,
-  //               mul_tag: mul_tag,
-  //               RichTextEditor: RichTextEditor,
-  //               self_select: Self_select,
-  //               select_option: Select_option,
-  //               link_condition: link_condition,
-  //               My_string: My_string,
-  //               self_textarea: self_textarea,
-  //               self_number: self_number,
-  //               self_radio: self_radio,
-  //               self_pattern: self_pattern,
-  //               self_datapick: self_datapick,
-  //               self_linkquery: self_linkquery,
-  //               linkquery_condition: linkquery_condition,
-  //               self_address: Self_address,
-  //               self_department_user: self_department_user,
-  //               self_setting:self_setting
-  //             }}
-  //           >
-  //             <div className="fr-generator-container" style={{ height: '100%' }}>
-  //               <div className='edit_main subForm' style={{ width: '100%' }}>
-  //                 <Canvas />
-  //               </div>
-  //               <Settings />
-  //             </div>
-  //           </Provider>
-  //         </Tabs.TabPane>
-  //       )
-  //     })
-  //   )
-  // }
+
   return (
     <>
     {contextHolder}

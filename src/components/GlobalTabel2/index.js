@@ -25,7 +25,7 @@ const ExportJsonExcel = require("js-export-excel");
 @inject('HomeStore', 'TableStore')
 @observer
 class GlobalTabel2 extends React.Component {
-    
+
     render() {
         const childrenRef = createRef()
         const { isLoading } = this.props.HomeStore
@@ -75,7 +75,7 @@ class GlobalTabel2 extends React.Component {
             <div>
                 <div className='search_bar'>
                     {
-                        this.props.TableStore.model != 'look' && <>
+                        this.props.TableStore.model !== 'look' && <>
                             {/* 添加 */}
                             <Button type="primary" icon={<PlusOutlined />}
                                 style={{ margin: '0 10px 10px 0', padding: '0 20px', verticalAlign: 'middle' }}
@@ -145,7 +145,7 @@ class GlobalTabel2 extends React.Component {
                             ...rowSelection,
                         }}
                         scroll={{ x: 1500, y: 600 }}
-                        bordered   
+                        bordered
                         rowKey={record => record.key}
                         dataSource={dataSource}
                         columns={lastColumns}//标题
@@ -170,7 +170,7 @@ class GlobalTabel2 extends React.Component {
                                 }, // 点击行
                             };
                         }:null}
-                    /> 
+                    />
                 }
 
                 {

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './index.less';
 import NoticePanel from './NoticePanel';
-import { ArrowRightOutlined, LogoutOutlined, TeamOutlined ,IdcardFilled} from '@ant-design/icons';
+import { ArrowRightOutlined, LogoutOutlined, TeamOutlined ,IdcardFilled,LeftOutlined} from '@ant-design/icons';
 import { Icon as LegacyIcon } from '@ant-design/compatible';
 import { Layout, Dropdown, Menu, Button, Modal, Divider, Select } from 'antd';
 import { inject, observer } from 'mobx-react';
@@ -16,6 +16,9 @@ const { Header } = Layout;
 @observer
 class HeaderLayout extends Component {
   render() {
+    let history=this.props.history.location.pathname
+
+    console.log(history)
     const menu = (
       <Menu selectedKeys={[]} style={{ marginTop: '-12px' }} onClick={this.onBindMenu}>
         <div style={{ textAlign: "center" }}>
@@ -38,10 +41,19 @@ class HeaderLayout extends Component {
         this.props.history.push('/socket')
       }
     }
+    const pathReturn=()=>{
+      this.props.history.goBack()
+    }
     const userName=getCookie('username')
     console.log('userName',userName)
     return (
       <Header className='header_layout'>
+        { history==='/personalSetting' &&
+            <div className={'global_header_left'}>
+              <LeftOutlined onClick={pathReturn}/>
+            </div>
+
+        }
         <div style={{ display: 'flex', flex: 1, alignItems: 'center' }}>
           {
             this.props.isAuth && !this.props.ishome && <div style={{ display: 'flex', flex: 1, alignItems: 'center' }}>
@@ -56,6 +68,7 @@ class HeaderLayout extends Component {
             this.props.ishome && <Button type='primary' style={{ marginLeft: 25 }} onClick={this.handleInSystem}><ArrowRightOutlined style={{ padding: 0 }} />进入系统</Button>
           }
         </div>
+
         <div className='global_header_right' style={{ display: 'flex', alignItems: 'center', paddingRight: 25 }}>
           <div style={{ display: 'inline-block', marginRight: '20px', cursor: 'pointer', color: '#C4C4C4' }}>
             <i className='iconfont icon-alerm' style={{ marginRight: '5px', color: '#9D9D9D' }} />{getCookie('username')||null}
@@ -93,6 +106,7 @@ class HeaderLayout extends Component {
             </span>
           </Dropdown>
         </div>
+
       </Header>
     );
   }

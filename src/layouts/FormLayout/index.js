@@ -126,7 +126,7 @@ const FormLayout = observer(({ HomeStore, FormStore, type, formId, handleCancel,
               d = val[one]
             }
             // if(Array.isArray(d)){
-            //   obj[one] = 
+            //   obj[one] =
             // }
             console.log(d);
             obj[one] = d
@@ -145,7 +145,7 @@ const FormLayout = observer(({ HomeStore, FormStore, type, formId, handleCancel,
     for (const key in schema) {
       if (Object.hasOwnProperty.call(schema, key)) {
         const element = schema[key];
-        if (key != 'root') {
+        if (key !== 'root') {
           let iObj = {}
           iObj['name'] = key
           iObj['schema'] = element
@@ -155,7 +155,7 @@ const FormLayout = observer(({ HomeStore, FormStore, type, formId, handleCancel,
     }
     return (
       nArr.map((item, index) => {
-        if (JSON.stringify(item['schema']['properties']) != '{}') {
+        if (JSON.stringify(item['schema']['properties']) !== '{}') {
           return (
             <Tabs.TabPane tab={item['name']} key={index}>
               <FormRender

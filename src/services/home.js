@@ -17,7 +17,7 @@ export const requestList = {
   getScreenData:'/data/screen/all',
   getScreenDataUser:'/data/screen/user',
   getMenuInfo:'/data/form/menu',
-  
+
 
   /* 基础信息 */
   getAllData: '/data/queryOneForm',
@@ -27,7 +27,10 @@ export const requestList = {
 
   /* 人员信息 */
   queryPerson: '/uaa/user/users/getAll',
-  ownMessage:'/uaa/user/showSelf'
+  ownMessage:'/uaa/user/showSelf',
+  editMessage:'/uaa/user/editSelf',
+  registerUser:'/uaa/user/registerUser',
+  registerEmployee:'/uaa/user/registerEmployee'
 }
 
 export function gets(type) {

@@ -65,14 +65,14 @@ class DesignManage extends React.Component {
 
         const item = [
             { label: '表单设计', key: '1' },
-            { label: '扩展功能', key: '2' },
+            { label: '扩展功能', key: '2' ,disabled: true},
             { label: '表单发布', key: '3', disabled: true },
-            { label: '流程设计', key: '4', disabled: sessionStorage.getItem('formName') ? JSON.parse(sessionStorage.getItem('formName'))['type'] == 0 : false }
+            { label: '流程设计', key: '4', disabled: sessionStorage.getItem('formName') ? JSON.parse(sessionStorage.getItem('formName'))['type'] !==1 : false }
         ]
         let formName = sessionStorage.getItem('formName') && sessionStorage.getItem('formName') != '{}' ? JSON.parse(sessionStorage.getItem('formName'))['formName'] : '机房'
         return (
             <Layout>
-                <Header className="header">
+                <Header id={"headerItem"} className="header">
                     <NavLink to='/common'>
                         <span className='form_title'>{formName}</span>
                     </NavLink>

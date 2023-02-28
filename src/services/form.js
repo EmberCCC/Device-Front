@@ -28,8 +28,9 @@ export const requestList = {
   getSimpleStru: '/data/form/getFormSimpleStruc',
   getLinkData: '/data/link/other',
   getData:'/data/link',
-  getSearchData:'/data/link/form/search'
+  getSearchData:'/data/link/form/search',
 
+  initMenu:'/data/form/initMenu'
 }
 
 export function gets(type) {

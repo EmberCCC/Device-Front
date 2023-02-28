@@ -12,6 +12,7 @@ import * as services from '../services/form';
 import { observable, action, makeObservable, toJS } from 'mobx';
 import { message, Modal } from 'antd';
 import { getLinkCondition, restore } from 'layouts/FormEdit/changeTool';
+import {putUrlRequest} from "../services/flow";
 
 class Form {
     constructor() {
@@ -85,7 +86,7 @@ class Form {
     @observable flag = false
     /**
      * 取消焦点事件，发送请求
-     * @param {*} schema 
+     * @param {*} schema
      */
     @action.bound async handleBlur(schema) {
         let id = schema.hasOwnProperty('fieldId') ? schema.fieldId : schema.$id.substr(2)
@@ -118,7 +119,7 @@ class Form {
     }
     /**
      * 获取流程信息
-     * @param {*} params 
+     * @param {*} params
      */
     @action.bound async getFormAuthInfo(params) {
         this.setValue('loading', true);
@@ -136,8 +137,8 @@ class Form {
     }
     /**
      * 获取表单字段
-     * @param {*} params 
-     * @param {*} type 
+     * @param {*} params
+     * @param {*} type
      */
     @action.bound async getFormField(params, type) {
         this.setValue('loading', true);
@@ -372,7 +373,7 @@ class Form {
 
     /**
      * 更改表单结果，第一个参数为转变之后的参数，第二个参数为之前的参数
-     * 
+     *
      * @param {Number } TabKey 当前要切换的表单的key值
      * @param {Number | undefined} lastChoose 上一个表单的key值
      * @param {Boolean} isDelete 是否删除该表单
@@ -401,7 +402,7 @@ class Form {
             if(!isBegin){
                 lastsubFormItem.fields = items
             }
-            
+
         }
         formEdit.properties = { ...formEditSchema, ...subFormItem.fields }
         this.setValue('schemaList', schemaList)
@@ -429,6 +430,18 @@ class Form {
     @action.bound copyForm(){
         this.setValue('formEditSchemaExtend',this.formEditSchema)
     }
+    /**
+     * 用户注册初始化表单
+     *
+     * */
+    @action.bound async initMenu(params){
+        try{
+            return await services.putUrlRequest(services.requestList.initMenu,params)
+        }catch (error){
+            console.log(error)
+        }
+    }
+
 }
 
 let FormStore = new Form();

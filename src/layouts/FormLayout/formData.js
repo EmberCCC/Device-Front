@@ -96,7 +96,7 @@ const FormData = observer(({ HomeStore, FormStore, TableStore }) => {
         FormStore.changeDataCheck({ 'formId': firstFormId, 'data': dataRef.current, 'dataId': toJS(TableStore.detailData['data']['id']), 'checkFieldIds': checkArr }).then(() => {
           TableStore.setValue('formEdit', false);
           TableStore.getOneData({ 'formId': HomeStore.firstFormId, 'dataId': toJS(TableStore.detailData['data']['id']) })
-          if (TableStore.model == 'subitAndManage') {
+          if (TableStore.model === 'subitAndManage') {
             TableStore.getAllData({ formId: HomeStore.firstFormId }, 'myself')
           } else {
             TableStore.getAllData({ formId: HomeStore.firstFormId }, 'all')
