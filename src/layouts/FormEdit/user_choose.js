@@ -19,7 +19,9 @@ const User_choose = observer(({ SocketStore, handleUpdate, initUserList, mode, i
     const [type, setType] = useState(null)
     useEffect(() => {
         setUserList(initUserList)
-    }, [initUserList])
+        console.log('initUserList',initUserList)
+        console.log(Object.prototype.toString.call(initUserList))
+    }, [])
     useEffect(() => {
         SocketStore.getAllDepartment()
         SocketStore.getAllRoles()
@@ -35,6 +37,7 @@ const User_choose = observer(({ SocketStore, handleUpdate, initUserList, mode, i
             }}>
                 {
                     Object.prototype.toString.call(initUserList) === '[object Array]' && initUserList.map((item, index) => {
+
                         return (
                             <div key={index} className="select_display_item">
                                 <UserOutlined style={{ color: '#5d9cee' }} />

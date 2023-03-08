@@ -43,6 +43,11 @@
 .in_left {
     background: #fafcfe;
     width: 15%;
+    overflow: scroll;
+    height: 100%;
+}
+.in_left::-webkit-scrollbar{
+    display: none;
 }
 
 .inL_first {
@@ -378,3 +383,4 @@
     overflow-y: auto;
     height: 600px;
 }
+

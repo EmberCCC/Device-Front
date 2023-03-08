@@ -62,7 +62,7 @@ const Flow_Config = observer(({ HomeStore, FlowStore }) => {
             </div>
             <div className="formItem_title">
                 <div className="formItem_name">自动提交规则</div>
-                <Select defaultValue={flowProperty['flowProperty']['rule']} style={{ width: '100%' }} onChange={(value) => {
+                <Select disabled defaultValue={flowProperty['flowProperty']['rule']} style={{ width: '100%' }} onChange={(value) => {
                     let iObj = { ...flowProperty }
                     iObj['flowProperty']['rule'] = value;
                     FlowStore.setValue('flowProperty', iObj)

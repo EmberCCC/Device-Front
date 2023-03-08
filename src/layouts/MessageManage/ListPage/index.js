@@ -95,12 +95,19 @@ class index extends Component {
                                     auth = JSON.parse(item['nodeProperty']['fieldAuth'])
                                     // 获取流程数据
                                     data = JSON.parse(item['oneDataVo']['data']['formData'])
+                                    for( index in data){
+                                        try {
+                                            data[index]=JSON.parse(data[index])
+                                        }catch{
+                                            continue
+                                        }
+                                    }
                                     fieldList = getField(auth, fieldObj);
                                     return (
                                         <div className='one_message' key={index} onClick={() => {
                                             let dataIdArr = []
                                             this.props.MessageStore.setValue('fieldInfo', fieldList)
-                                            console.log(fieldList);
+                                            console.log('fieldList',fieldList);
                                             console.log(data);
                                             fieldList.forEach(element => {
                                                 if (element.typeId == 15 || element.typeId == 14) {
@@ -126,6 +133,7 @@ class index extends Component {
                                                                 obj = { ...data }
                                                                 obj['key'] = item['id']
                                                                 obj['id'] = item['id']
+
                                                                 arr[item['id']] = obj
                                                             }
 
@@ -197,39 +205,40 @@ class index extends Component {
 
     }
     selectList = (
-        <div className='selectList' >
-            <div
-                label="发起人"
-                name="subPeople"
-            >
-                <div>发起人</div>
-                <Select style={{ width: '100px' }}></Select>
-            </div>
-            <div
-                label="发起时间"
-                name="subTime"
-            >
-                <div>发起时间</div>
-                <DatePicker />
-            </div>
-            <div
-                label="流程表单"
-                name="flowForm"
-            >
-                <div>流程表单</div>
-                <Select style={{ width: '100px' }}></Select>
-            </div>
-            <div
-                label="当前节点"
-                name="atNode"
-            >
-                <div>当前节点</div>
-                <Select style={{ width: '100px' }}></Select>
-            </div>
-            <Button type="primary" htmlType="submit">
-                筛选
-            </Button>
-        </div>
+        <div></div>
+        // <div className='selectList' >
+        //     <div
+        //         label="发起人"
+        //         name="subPeople"
+        //     >
+        //         <div>发起人</div>
+        //         <Select style={{ width: '100px' }}></Select>
+        //     </div>
+        //     <div
+        //         label="发起时间"
+        //         name="subTime"
+        //     >
+        //         <div>发起时间</div>
+        //         <DatePicker />
+        //     </div>
+        //     <div
+        //         label="流程表单"
+        //         name="flowForm"
+        //     >
+        //         <div>流程表单</div>
+        //         <Select style={{ width: '100px' }}></Select>
+        //     </div>
+        //     <div
+        //         label="当前节点"
+        //         name="atNode"
+        //     >
+        //         <div>当前节点</div>
+        //         <Select style={{ width: '100px' }}></Select>
+        //     </div>
+        //     <Button type="primary" htmlType="submit">
+        //         筛选
+        //     </Button>
+        // </div>
     )
 }
 

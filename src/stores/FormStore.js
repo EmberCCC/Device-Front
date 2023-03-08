@@ -151,6 +151,7 @@ class Form {
                 this.setValue('formField', res.data.data);
                 let obj = getLinkCondition(res.data.data)
                 this.setValue('schema', restore(res.data.data, 'submit'));
+                console.log('requestSchema',restore(res.data.data, 'submit'))
                 this.setValue('linkDataObj', obj['LObj']);
                 this.setValue('linkFieldObj', obj['Fobj']);
                 this.setValue('linkqueryFieldObj', obj['DObj']);

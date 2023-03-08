@@ -30,7 +30,8 @@ export const requestList = {
   ownMessage:'/uaa/user/showSelf',
   editMessage:'/uaa/user/editSelf',
   registerUser:'/uaa/user/registerUser',
-  registerEmployee:'/uaa/user/registerEmployee'
+  registerEmployee:'/uaa/user/registerEmployee',
+  confirmPwd:'/uaa/user/confirmPwd'
 }
 
 export function gets(type) {

@@ -12,7 +12,7 @@ export function isDataExist(res){
       if(res.data.data)
         isExist = true;
       if(res.code.toString() == '0')
-        isExist = true; 
+        isExist = true;
     }
   }
   return isExist;
@@ -117,4 +117,16 @@ export function setCookie(name,value,seconds){
 export function clearCookie(name){
   setCookie(name, "");
   setCookie('isChecked',false);
+}
+
+
+
+/* 将string对象字符串转换为数组  */
+export function string2Array(string){
+  let s = string.substring(1, string.length - 1)
+  s=s.split(',')
+  for (const key in s) {
+    s[key]=s[key].substring(1,s[key].length-1)
+  }
+  return s
 }

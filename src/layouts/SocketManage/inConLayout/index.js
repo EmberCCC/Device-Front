@@ -170,7 +170,7 @@ const InConLayout = observer(({ SocketStore }) => {
                                     Modal.destroyAll()
                                 },
                                 onOk: () => {
-                                    
+
                                     let arr = []
                                     roleList.map((item) => {
                                         if (item['userId'] != text['userId']) {
@@ -223,7 +223,7 @@ const InConLayout = observer(({ SocketStore }) => {
     const handleSwitch = (value) => {
         console.log(value);
     }
-    
+
     const rowSelection = {
         selectRowKeys,
         columnWidth: 2,
@@ -415,7 +415,7 @@ const InConLayout = observer(({ SocketStore }) => {
     return (
         <div className="all">
             <div className="in_all">
-                <div className="in_left">
+                <div className="in_left" >
                     <div className="inL_first">
                         <div className={`inL_first_de ${total == 'department' ? 'active' : ''}`} onClick={() => {
                             handleChange('department')
@@ -424,28 +424,29 @@ const InConLayout = observer(({ SocketStore }) => {
                             handleChange('role')
                         }}>角色</div>
                     </div>
-                    {
-                        total == 'department' &&
-                        <Menu selectable={!loading} items={items} onClick={(value) => handleClick(value)} mode='inline' theme='light' defaultSelectedKeys={[SelectKey]} />
+                        {
+                            total == 'department' &&
+                            <Menu  selectable={!loading} items={items} onClick={(value) => handleClick(value)} mode='inline' theme='light' defaultSelectedKeys={[SelectKey]} />
 
-                    }
-                    {
-                        total == 'role' && (
-                            <div className="role_top">
-                                {
-                                    (userAuth['creater'] || userAuth['sysAdmin'] || userAuth?.['authDetails']?.['addressBook']?.['role'][1]) && (
-                                        <Popover overlayClassName={'myPopover'} placement='bottom' content={createContent} trigger='click'>
-                                            <div className="rt_F">
-                                                创建的角色 +
-                                            </div>
-                                        </Popover>
-                                    )
-                                }
-                                <Menu selectable={!loading} items={itemRoles} onClick={(value) => handleClickRole(value)} mode='inline' theme='light' defaultSelectedKeys={[SelectKey]} />
+                        }
+                        {
+                            total == 'role' && (
+                                <div className="role_top">
+                                    {
+                                        (userAuth['creater'] || userAuth['sysAdmin'] || userAuth?.['authDetails']?.['addressBook']?.['role'][1]) && (
+                                            <Popover overlayClassName={'myPopover'} placement='bottom' content={createContent} trigger='click'>
+                                                <div className="rt_F">
+                                                    创建的角色 +
+                                                </div>
+                                            </Popover>
+                                        )
+                                    }
+                                    <Menu className={"menu_flow"} selectable={!loading} items={itemRoles} onClick={(value) => handleClickRole(value)} mode='inline' theme='light' defaultSelectedKeys={[SelectKey]} />
 
-                            </div>
-                        )
-                    }
+                                </div>
+                            )
+                        }
+
                 </div>
                 {
                     (total == 'department' && !userAuth['creater'] && !userAuth['sysAdmin']) && (SelectKey == '全部成员' || SelectKey == '离职成员') && (

@@ -36,13 +36,24 @@ const Link_condition = observer((props) => {
             setId(value.formId)
             setLink(value.linkFieldId)
         }
+
     }, [])
     return (
         <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
             <Button onClick={() => {
                 let arr = []
-                arr.push(toJS(FormStore.rootSchema['properties']))
-                FormStore.schemaList.map(item => arr.push(toJS(item['schema']['properties'])))
+                // arr.push(toJS(FormStore.rootSchema['properties']))
+                let obj={...toJS(FormStore.formEditSchema['properties'])}
+                delete obj['Tabs']
+                arr.push(obj)
+                if (FormStore.formEditSchema['properties'].hasOwnProperty('Tabs')){
+                    console.log('schemaList',toJS(FormStore.schemaList))
+                    for (const item of FormStore.schemaList) {
+                        arr.push(item['fields'])
+                    }
+                }
+                // FormStore.schemaList.map(item => arr.push(toJS(item['schema']['properties'])))
+                console.log('props',props)
                 setFieldObj(getAllField(arr))
                 setVis(true)
             }}>数据联动设置</Button>
@@ -68,7 +79,7 @@ const Link_condition = observer((props) => {
                         <div className="link_condition_title">满足以下条件时</div>
                         <div className="link_condition_list">
                             {
-                                conditionList != undefined && (
+                                conditionList !== undefined && (
                                     conditionList.map((item, index) => {
                                         let oInfo = ''
                                         if (item['fieldId'] != null) {
@@ -137,7 +148,11 @@ const Link_condition = observer((props) => {
                                                             setConditionList(arr)
                                                         }}>
                                                             {Object.keys(fieldObj).map((info, iI) => {
-                                                                if (info != props.addons.formData.fieldId) {
+                                                                // console.log('info',info,'iI',iI)
+                                                                // console.log(item,fieldObj[info])
+                                                                // console.log('props',props)
+                                                                if (info !== props.addons.formData.fieldId) {
+                                                                    // console.log(item['fieldTypeId'],fieldObj[info]['fieldTypeId'])
                                                                     if ((item['fieldTypeId'] == '0' || item['fieldTypeId'] == '1' || item['fieldTypeId'] == '4' || item['fieldTypeId'] == '6') &&
                                                                         (fieldObj[info]['fieldTypeId'] == '0' ||
                                                                             fieldObj[info]['fieldTypeId'] == '1' ||
@@ -198,14 +213,16 @@ const Link_condition = observer((props) => {
                             }}>
                                 {
                                     FormStore.formStru.filter(one => one['formId'] == id)[0]?.['fieldSimpleVos'].map((field, fI) => {
+                                        console.log(toJS(field),fI)
+                                        console.log(field['typeId'],props.addons.formData.typeId)
                                         if (['0', '1', '4', '5'].indexOf(props.addons.formData.typeId) > -1) {
-                                            if (['0', '1', '4', '5'].indexOf(field['fieldTypeId']) > -1) {
+                                            if ([0, 1, 4, 5].indexOf(field['typeId']) > -1) {
                                                 return (
                                                     <Select.Option value={field['fieldId']} key={fI}>{field['fieldName']}</Select.Option>
                                                 )
                                             }
                                         } else {
-                                            if (props.addons.formData.typeId == field['fieldTypeId']) {
+                                            if (props.addons.formData.typeId == field['typeId']) {
                                                 return (
                                                     <Select.Option value={field['fieldId']} key={fI}>{field['fieldName']}</Select.Option>
                                                 )

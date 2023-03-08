@@ -135,6 +135,7 @@ const FlowManage = observer(({FlowStore, HomeStore, TableStore, SocketStore, pro
     const [graph, setGraph] = useState(null)
     const [toolbarConfig, setBoolbarConfig] = useState(useToolbarConfig(props))
     const forceUpdate = useReducer((bool) => !bool)[1]
+    const [isAdmin,setAdmin]=useState(true)
     var NsJsonForm;
     (function (NsJsonForm) {
         /** ControlShape的Enum */
@@ -276,7 +277,7 @@ const FlowManage = observer(({FlowStore, HomeStore, TableStore, SocketStore, pro
                     </div>
                 )
             }
-            if (targetType === 'edge') {
+            if (targetType === 'edge' &&isAdmin===true) {
                 return () => (
                     <div className={"form_edge"}>
                         <div className={"form_edge_title"}>
@@ -472,9 +473,13 @@ const FlowManage = observer(({FlowStore, HomeStore, TableStore, SocketStore, pro
                                         const result = checkFlow(data);
                                         console.log(result);
                                         if (JSON.stringify(result['auth']) == "{}" && JSON.stringify(result['person']) == "{}") {
-                                            graph.toPNG(datauri => {
-                                                DataUri.downloadDataUri(datauri, 'chart.png')
+                                            message.info({
+                                                type:'warning',
+                                                content:'请添加新版本进行编辑'
                                             })
+                                            // graph.toPNG(datauri => {
+                                            //     DataUri.downloadDataUri(datauri, 'chart.png')
+                                            // })
                                             return;
                                         } else {
                                             message.info(<div>
@@ -521,7 +526,7 @@ const FlowManage = observer(({FlowStore, HomeStore, TableStore, SocketStore, pro
                         {
                             canOb == true && (
                                 <CanvasToolbar
-                                    config={toolbarConfig}
+                                    config={isAdmin ? toolbarConfig:''}
                                     position={{left: 200}}
                                     style={{zIndex: 100}}
                                 />
@@ -534,7 +539,27 @@ const FlowManage = observer(({FlowStore, HomeStore, TableStore, SocketStore, pro
                             layout='horizontal'
                             position={{right: 500}}/>
                         <FlowchartCanvas
-                            config={{grid:false,resizing:false }}
+                            config={{grid:false,resizing:false ,
+                                connecting: {
+                                    snap: true,
+                                    dangling: false,
+                                    highlight: false,
+                                    allowNode:false,
+                                    allowPort:isAdmin,
+                                    connectionPoint: 'rect',
+                                    router: { name: 'er' },
+                                    connector: {
+                                        name: 'rounded',
+                                        args: {
+                                            radius: 15,
+                                        },
+                                    },
+                                },
+                                interacting: {
+                                    /** 节点默认可以被移动 */
+                                    nodeMovable: isAdmin,
+                                },
+                            }}
                             // config={useGraphConfig(props)}
                             style={{"overflow":"hidden"}}
                             onAddNode={(e)=>{console.log(e)}}
@@ -545,7 +570,7 @@ const FlowManage = observer(({FlowStore, HomeStore, TableStore, SocketStore, pro
                         >
                             <CanvasSnapline/>
                             <CanvasNodePortTooltip/>
-                            {/*<CanvasContextMenu config={menucConfig} />*/}
+
                             <JsonSchemaForm
                                 targetType={['node', 'edge', 'canvas']}
                                 getCustomRenderComponent={NsJsonForm.getCustomRenderComponent}
@@ -553,7 +578,8 @@ const FlowManage = observer(({FlowStore, HomeStore, TableStore, SocketStore, pro
                                 formValueUpdateService={NsJsonForm.formValueUpdateService}
                                 position={{top: 0, bottom: 0, right: 0, width: 290}}/>
                         </FlowchartCanvas>
-                        <CanvasContextMenu config={useMenuConfig()}/>
+                        {isAdmin && <CanvasContextMenu config={useMenuConfig()}/>}
+                        {/*<CanvasContextMenu config={useMenuConfig()}/>*/}
 
                     </XFlow>
                 </Spin>

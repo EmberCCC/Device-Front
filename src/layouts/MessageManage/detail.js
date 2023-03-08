@@ -108,12 +108,12 @@ const DetailPage = observer(({ MessageStore, HomeStore, FlowStore, FormStore, pr
         if (checkArr.length > 0) {
             FormStore.changeDataCheck({ 'formId': info['formId'], 'data': { ...formData, ...formList.getValues(), ...data }, 'checkFieldIds': checkArr, 'dataId': info['dataId'] }, (flag) => {
                 if (flag) {
-                    FlowStore.agreeFlow({ 'workLogId': info['id'] }, { 'message': ref.current.input.value, 'attachment': "" })
+                    FlowStore.agreeFlow({ 'workLogId': info['id'] }, { 'message': ref.current?.input?.value||'', 'attachment': "" })
                 }
             })
         } else {
             FormStore.changeData({ 'formId': info['formId'], 'data': { ...formData, ...formList.getValues(), ...data }, 'dataId': info['dataId'] }).then(() => {
-                FlowStore.agreeFlow({ 'workLogId': info['id'] }, { 'message': ref.current.input.value, 'attachment': "" })
+                FlowStore.agreeFlow({ 'workLogId': info['id'] }, { 'message': ref.current?.input?.value||'', 'attachment': "" })
             })
         }
         MessageStore.setValue('detailVis', false);
@@ -145,9 +145,12 @@ const DetailPage = observer(({ MessageStore, HomeStore, FlowStore, FormStore, pr
                 }
             }
         }
+
+
         return (
             nArr.map((item, index) => {
-                if (JSON.stringify(item['schema']['properties']) != '{}') {
+                console.log('item',item)
+                if (JSON.stringify(item['schema']['properties']) !== '{}') {
                     return (
                         <Tabs.TabPane tab={item['name']} key={index}>
                             <FormRender
@@ -291,7 +294,7 @@ const DetailPage = observer(({ MessageStore, HomeStore, FlowStore, FormStore, pr
     }
     const getData = () => {
         return formInfo.map((item, index) => {
-            if (item['name'] != 'root') {
+            if (item['name'] !== 'root') {
                 return (
                     <Tabs.TabPane tab={item['name']} key={index}>
                         {getExactItem(item['name'])}

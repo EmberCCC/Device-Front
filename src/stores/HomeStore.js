@@ -41,7 +41,7 @@ class Home {
 
   @observable formInfo = {}
   @observable menu = []
-
+  @observable tenementIdObj={} //注册用户时的对象
 
   @action.bound setValue(key, value) {
     this[key] = value
@@ -385,10 +385,18 @@ class Home {
       console.log(error)
     }
   }
-  //注册愚弄接口
+  //注册用户接口
   @action.bound async registerEmployee(params){
     try{
       return await services.putRequest(services.requestList.registerEmployee,params)
+    }catch (error){
+      console.log(error)
+    }
+  }
+  //验证密码接口
+  @action.bound async confirmPwd(params){
+    try{
+      return await services.putRequest(services.requestList.confirmPwd,params)
     }catch (error){
       console.log(error)
     }

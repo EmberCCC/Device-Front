@@ -118,7 +118,7 @@ class DataModal extends Component {
                                     </div>
                                 )
                             } else if (jsonData['typeId'] == '15') {
-                                debugger
+
                                 return (
                                     <div className='item_content' key={index}>
                                         <div className='item_title'>

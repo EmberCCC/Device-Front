@@ -142,6 +142,8 @@ const FormEdit = observer(({ HomeStore, FormStore }) => {
     //     params['subForms'].push(exChange(item['schema'], formId, schemaList[index]['label'])['subForms'][0] || { 'name': schemaList[index]['label'], 'fields': [] })
     //   })
     // }
+
+
     FormStore.saveForm(params).then((req)=>{
       console.log(req)
       messageApi.open({
@@ -207,20 +209,15 @@ const FormEdit = observer(({ HomeStore, FormStore }) => {
 
   const schemaChange = (schema) => {
     console.log('schema:change', toJS(schema))
-    if (schema.properties.hasOwnProperty('Tabs') === false && FormStore.checked === true) {
-      let { formEditSchemaExtend, tabLastChoose, schemaList } = FormStore
-      // console.log('beeefore',toJS(formEditSchemaExtend))
-      // FormStore.setValue('loading',true)
-      // setTimeout(()=>{
-      //   console.log('finally',toJS(formEditSchemaExtend))
-      //   // delete formEditSchemaExtend.properties['Tabs']
-
-      //   FormStore.setValue('loading',false)
-      // },1000)
-      ref.current.setValue(formEditSchemaExtend)
-    } else {
+      console.log(toJS(FormStore.checked),schema.properties.hasOwnProperty('Tabs') === false)
+    // if (schema.properties.hasOwnProperty('Tabs') === false && FormStore.checked === true) {
+    //   let { formEditSchemaExtend, tabLastChoose, schemaList } = FormStore
+    //   // console.log('beeefore',toJS(formEditSchemaExtend))
+    //   // FormStore.setValue('loading',true)
+    //   ref.current.setValue(formEditSchemaExtend)
+    // } else {
       FormStore.setValue('formEditSchema', toJS(schema))
-    }
+    // }
     // if (schema.properties.hasOwnProperty('Tabs') === false && FormStore.checked === true) {
     //   let {formEditSchemaExtend, tabLastChoose, schemaList } = FormStore
 

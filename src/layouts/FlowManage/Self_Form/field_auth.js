@@ -113,7 +113,7 @@ const AuthShape = observer(({ FlowStore, HomeStore, TableStore, FormStore, data,
                                                         <Col span={8}><Checkbox value={'edit'} /></Col>
                                                     )
                                                 }
-                                                <Col span={8}><Checkbox value={'sketch'} /></Col>
+                                                <Col span={8}><Checkbox disabled value={'sketch'} /></Col>
                                             </Row>
                                         </Checkbox.Group>
 
