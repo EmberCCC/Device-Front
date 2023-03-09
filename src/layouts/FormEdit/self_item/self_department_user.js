@@ -17,7 +17,6 @@ const Self_department_user = observer((props) => {
     console.log('Self_department_user',props)
     let value=props.value
     console.log(value)
-    debugger
     if(Object.prototype.toString.call(props.value)=='[object String]'){
         value=string2Array(value)
     }

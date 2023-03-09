@@ -48,6 +48,13 @@ const RegisterForm=observer((HomeStore,FormStore,setIsOk)=>{
 
         }
     }
+    const isRegisterUserName=(s)=>  {
+        var patrn=/^[a-zA-Z]{1}([a-zA-Z0-9]|[._]){4,19}$/;
+        if (!patrn.exec(s))
+            return false
+	return true
+    }
+
     return (
         <div className='register_main'>
             {contextHolder}
@@ -59,7 +66,22 @@ const RegisterForm=observer((HomeStore,FormStore,setIsOk)=>{
                 <Form className='register_Form'
                       onFinish={submit}
                 >
-                    <Form.Item name='username' rules={[{required: true, message: "请输入你的用户名"}]}>
+                    <Form.Item name='username'
+                               validateTrigger="onBlur"
+                               rules={[
+                        {required: true, message: "请输入你的用户名"},
+                        {
+                            validator:async (_, value) =>{
+                                // let res =await HomeStore.confirmPwd({'oldPassword':value})
+                                if(isRegisterUserName(value)){
+                                    return Promise.resolve()
+                                }else{
+                                    return Promise.reject(new Error("用户名必须长度为5-20,以字母开头可带数字、‘.’，‘_’的字符"));
+                                }
+                            }
+                        }
+                    ]
+                    }>
                         <Input
                             size="large"
                             prefix={<UserOutlined/>}

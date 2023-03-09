@@ -135,7 +135,7 @@ const FlowManage = observer(({FlowStore, HomeStore, TableStore, SocketStore, pro
     const [graph, setGraph] = useState(null)
     const [toolbarConfig, setBoolbarConfig] = useState(useToolbarConfig(props))
     const forceUpdate = useReducer((bool) => !bool)[1]
-    const [isAdmin,setAdmin]=useState(true)
+    const [isAdmin,setAdmin]=useState(false)
     var NsJsonForm;
     (function (NsJsonForm) {
         /** ControlShape的Enum */
@@ -344,6 +344,8 @@ const FlowManage = observer(({FlowStore, HomeStore, TableStore, SocketStore, pro
     useEffect(() => {
         let formId = sessionStorage.getItem('formId') ? sessionStorage.getItem('formId') : HomeStore.firstFormId
         FlowStore.getOneFlow({"formId": formId})
+        console.log('getformId',formId)
+        console.log(toJS(FlowStore.canOb))
     }, [])
     const nanoid = customAlphabet('1234567890', 7)
     const onLoad = async app => {
@@ -434,17 +436,18 @@ const FlowManage = observer(({FlowStore, HomeStore, TableStore, SocketStore, pro
                         </div>
                     </Popover>
                     <button className='edit_save' onClick={() => {
-                        if (canOb == true) {
+                        if (canOb === true) {
                             app.commandService.executeCommand(
                                 XFlowGraphCommands.SAVE_GRAPH_DATA.id,
                                 {
                                     saveGraphDataService: async (meta, data) => {
                                         console.log('finallyAns',changeFlow(data, firstFormId, flowProperty['flowProperty']))
+                                        let formId=sessionStorage.getItem('formId')
                                         const result = checkFlow(data);
                                         console.log(result);
-                                        if (JSON.stringify(result['auth']) == "{}" && JSON.stringify(result['person']) == "{}") {
-                                            FlowStore.createFlow(changeFlow(data, firstFormId, flowProperty['flowProperty'])).then(() => {
-                                                FlowStore.getOneFlow({'formId': firstFormId});
+                                        if (JSON.stringify(result['auth']) === "{}" && JSON.stringify(result['person']) === "{}") {
+                                            FlowStore.createFlow(changeFlow(data, formId, flowProperty['flowProperty'])).then(() => {
+                                                FlowStore.getOneFlow({'formId': formId});
                                             })
                                         } else {
                                             message.info(<div>

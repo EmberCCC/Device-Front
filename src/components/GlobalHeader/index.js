@@ -44,7 +44,7 @@ class HeaderLayout extends Component {
     const pathReturn=()=>{
       this.props.history.goBack()
     }
-    const userName=getCookie('username')
+    const userName=sessionStorage.getItem('username')
     console.log('userName',userName)
     return (
       <Header className='header_layout'>
@@ -71,7 +71,7 @@ class HeaderLayout extends Component {
 
         <div className='global_header_right' style={{ display: 'flex', alignItems: 'center', paddingRight: 25 }}>
           <div style={{ display: 'inline-block', marginRight: '20px', cursor: 'pointer', color: '#C4C4C4' }}>
-            <i className='iconfont icon-alerm' style={{ marginRight: '5px', color: '#9D9D9D' }} />{getCookie('username')||null}
+            <i className='iconfont icon-alerm' style={{ marginRight: '5px', color: '#9D9D9D' }} />{sessionStorage.getItem('username')||null}
           </div>
           <Divider type="vertical" />
           <Dropdown

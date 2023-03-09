@@ -28,6 +28,7 @@ import self_datapick from "layouts/FormEdit/self_item/self_datapick"
 import self_linkquery from "layouts/FormEdit/self_item/self_linkquery"
 import { Self_address } from "layouts/FormEdit/self_item/self_address"
 import self_department_user from "layouts/FormEdit/self_item/self_department_user"
+import {useHistory} from "react-router-dom";
 const DetailPage = observer(({ MessageStore, HomeStore, FlowStore, FormStore, props }) => {
     const [schema, setSchema] = useState({
         "type": "object",
@@ -45,6 +46,7 @@ const DetailPage = observer(({ MessageStore, HomeStore, FlowStore, FormStore, pr
     const form = useForm();
     const formList = useForm()
     const ref = useRef();
+    const history=useHistory()
     useEffect(() => {
         dataRef.current = data;
     }, [data])
@@ -101,23 +103,28 @@ const DetailPage = observer(({ MessageStore, HomeStore, FlowStore, FormStore, pr
             }
         });
     })
-    const onFinish = (formData) => {
+    const onFinish =   (formData) =>  {
         setData({})
-        const { firstFormId } = HomeStore;
         let checkArr = getCheckArr(schema);
         if (checkArr.length > 0) {
-            FormStore.changeDataCheck({ 'formId': info['formId'], 'data': { ...formData, ...formList.getValues(), ...data }, 'checkFieldIds': checkArr, 'dataId': info['dataId'] }, (flag) => {
+             FormStore.changeDataCheck({ 'formId': info['formId'], 'data': { ...formData, ...formList.getValues(), ...data }, 'checkFieldIds': checkArr, 'dataId': info['dataId'] }, (flag) => {
                 if (flag) {
-                    FlowStore.agreeFlow({ 'workLogId': info['id'] }, { 'message': ref.current?.input?.value||'', 'attachment': "" })
+                    FlowStore.agreeFlow({ 'workLogId': info['id'] }, { 'message': ref.current?.input?.value||'', 'attachment': "" }).then(()=>{
+                        console.log('111')
+                        history.push('/common')
+                    })
+
                 }
             })
         } else {
-            FormStore.changeData({ 'formId': info['formId'], 'data': { ...formData, ...formList.getValues(), ...data }, 'dataId': info['dataId'] }).then(() => {
+             FormStore.changeData({ 'formId': info['formId'], 'data': { ...formData, ...formList.getValues(), ...data }, 'dataId': info['dataId'] }).then(() => {
                 FlowStore.agreeFlow({ 'workLogId': info['id'] }, { 'message': ref.current?.input?.value||'', 'attachment': "" })
-            })
+            }).then(()=>{
+                console.log('111')
+                 history.push('/common')
+             })
         }
         MessageStore.setValue('detailVis', false);
-        MessageStore.getWaitList();
         form.resetFields();
         formList.resetFields();
     }
@@ -137,7 +144,7 @@ const DetailPage = observer(({ MessageStore, HomeStore, FlowStore, FormStore, pr
         for (const key in schema) {
             if (Object.hasOwnProperty.call(schema, key)) {
                 const element = schema[key];
-                if (key != 'root') {
+                if (key !== 'root') {
                     let iObj = {}
                     iObj['name'] = key
                     iObj['schema'] = element

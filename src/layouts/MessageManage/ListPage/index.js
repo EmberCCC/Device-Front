@@ -22,7 +22,8 @@ import { put } from 'utils/request';
 @observer
 class index extends Component {
     state = {
-        isLoading: false
+        isLoading: false,
+        isOk:false
     }
     componentDidMount() {
         //获取我的待办
@@ -42,6 +43,7 @@ class index extends Component {
     render() {
         const ContainerHeight = 800;
         const { waitList, launchList, handleList, copyList, model, list, detailVis, info } = this.props.MessageStore
+        console.log(toJS(list))
         return (
             <div>
                 <div className='title'>
@@ -104,7 +106,7 @@ class index extends Component {
                                     }
                                     fieldList = getField(auth, fieldObj);
                                     return (
-                                        <div className='one_message' key={index} onClick={() => {
+                                        <div className='one_message' key={item.id} onClick={() => {
                                             let dataIdArr = []
                                             this.props.MessageStore.setValue('fieldInfo', fieldList)
                                             console.log('fieldList',fieldList);
@@ -160,7 +162,7 @@ class index extends Component {
                                                 }
                                                 {
                                                     model != 'wait' && (
-                                                        <div className='message_statu'>{item['flowLog']['state'] ? '已结束' : '进行中'}</div>
+                                                        <div className='message_statu'>{item['state'] ? '已结束' : '进行中'}</div>
                                                     )
                                                 }
                                             </div>

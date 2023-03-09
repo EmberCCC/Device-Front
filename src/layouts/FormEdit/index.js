@@ -46,7 +46,6 @@ const FormEdit = observer(({ HomeStore, FormStore }) => {
   const [schema, setSchema] = useState({});
   const [visible, setVisisble] = useState(false)
   const [lookItem, setLookItem] = useState({})
-  const [type, setType] = useState(1)
   const [messageApi, contextHolder] = message.useMessage();
   const { schemaList } = FormStore
   const { formInfo } = HomeStore
