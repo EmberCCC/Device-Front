@@ -401,6 +401,7 @@ class Home {
       console.log(error)
     }
   }
+
 }
 let HomeStore = new Home();
 export default HomeStore;

@@ -30,7 +30,8 @@ export const requestList = {
   getData:'/data/link',
   getSearchData:'/data/link/form/search',
 
-  initMenu:'/data/form/initMenu'
+  initMenu:'/data/form/initMenu',
+  initTemplate:'/data/form/initTemplate'
 }
 
 export function gets(type) {

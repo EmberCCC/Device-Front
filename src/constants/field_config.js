@@ -1091,6 +1091,7 @@ export const defaultGlobalSettings = {
             type: 'number',
             enum: [1, 2, 3],
             enumNames: ['一行一列', '一行二列', '一行三列'],
+            disabled:true,
             props: {
                 placeholder: '默认一行一列'
             }
@@ -1099,6 +1100,7 @@ export const defaultGlobalSettings = {
             title: '标签展示模式',
             type: 'string',
             default: 'column',
+            disabled:true,
             enum: ['row', 'column'],
             enumNames: ['同行', '单独一行'],
             widget: 'radio'

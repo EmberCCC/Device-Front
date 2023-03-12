@@ -4,10 +4,11 @@ import {Button, Form, Input, message, Radio, Result} from "antd";
 import {useHistory} from "react-router-dom";
 import {DeploymentUnitOutlined, LockOutlined, MailOutlined, PhoneOutlined, UserOutlined} from "@ant-design/icons";
 
-const RegisterForm=observer((HomeStore,FormStore,setIsOk)=>{
+const RegisterForm=observer(({HomeStore, FormStore, setIsOk})=>{
     const [radioValue, setRadioValue] = useState('boss')
     const [messageApi, contextHolder] = message.useMessage();
-
+    const history= useHistory()
+    const [Loading,setLoading]=useState(false)
     const onChange = (e) => {
         console.log('radio checked', e.target.value);
         setRadioValue(e.target.value)
@@ -17,6 +18,7 @@ const RegisterForm=observer((HomeStore,FormStore,setIsOk)=>{
         const user = {...e}
         delete user['button']
         delete user['confirmPassword']
+        setLoading(true)
         if (radioValue === 'boss') {
             delete user['tenementId']
             let res = await HomeStore.registerUser(user)
@@ -28,9 +30,10 @@ const RegisterForm=observer((HomeStore,FormStore,setIsOk)=>{
                 });
             } else {
                 let tenementIdObj=res.data.data
-                setIsOk(true)
                 HomeStore.setValue('tenementIdObj',tenementIdObj)
                 let res2 = await FormStore.initMenu(tenementIdObj)
+                setLoading(false)
+                setIsOk(true)
                 messageApi.open({
                     type: res2.data.code === 1 ? 'error' : 'success',
                     content: res2.data.msg,
@@ -44,8 +47,7 @@ const RegisterForm=observer((HomeStore,FormStore,setIsOk)=>{
                 type: res.data.code === 1 ? 'error' : 'success',
                 content: res.data.msg,
             });
-
-
+            history.push('/login')
         }
     }
     const isRegisterUserName=(s)=>  {
@@ -172,7 +174,7 @@ const RegisterForm=observer((HomeStore,FormStore,setIsOk)=>{
                         ) : null
                     }
                     <Form.Item name='button'>
-                        <Button type="primary" htmlType="submit" id="login-form-button">
+                        <Button type="primary" htmlType="submit" id="login-form-button" loading={Loading}>
                             注册
                         </Button>
                     </Form.Item>

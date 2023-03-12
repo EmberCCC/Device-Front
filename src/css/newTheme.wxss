@@ -146,9 +146,7 @@
   border-radius: 0 0 10px 10px;
   min-height: 400px;
 }
-#root .ant-tabs-nav .ant-tabs-tab {
-  margin: 0;
-}
+
 #root .ant-tabs-tab-active {
   background-color: rgb(144, 255, 218);
   border-bottom: 3px solid #0db3a6;

@@ -47,7 +47,7 @@ class HeaderLayout extends Component {
     const userName=sessionStorage.getItem('username')
     console.log('userName',userName)
     return (
-      <Header className='header_layout'>
+      <Header className='common_header_layout'>
         { history==='/personalSetting' &&
             <div className={'global_header_left'}>
               <LeftOutlined onClick={pathReturn}/>

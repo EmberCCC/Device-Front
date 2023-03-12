@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {inject, observer} from "mobx-react";
-import {Button, Result} from "antd";
+import {Button, message, Result} from "antd";
 import {useHistory} from "react-router-dom";
 
 const RegisterResult=observer(({HomeStore,FormStore,setIsOk})=> {
@@ -9,8 +9,15 @@ const RegisterResult=observer(({HomeStore,FormStore,setIsOk})=> {
     const onBegin= async ()=>{
         setIsLoading(true)
         // setIsOk(false)
+        let res=await FormStore.initTemplate(HomeStore.tenementIdObj)
+        console.log(res)
+        if (res.code===0){
+            message.success(res?.data.msg)
+            history.push('/login')
+        }else{
+            message.error(res?.data.msg)
+        }
         setIsLoading(false)
-        // history.push('/login')
     }
     const onCancel=()=>{
         history.push('/login')

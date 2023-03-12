@@ -442,7 +442,17 @@ class Form {
             console.log(error)
         }
     }
-
+    /**
+     * 用户初始化表单内容
+     *
+     * */
+    @action.bound async initTemplate(params){
+        try {
+            return await services.putUrlRequest(services.requestList.initTemplate,params)
+        }catch (error){
+            console.log(error)
+        }
+    }
 }
 
 let FormStore = new Form();
