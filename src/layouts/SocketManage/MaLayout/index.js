@@ -20,10 +20,15 @@ const MaLayout = observer(({ SocketStore }) => {
         rolesName, itemRoles, maId, norName, addUserObjs, addUserVis, addUserIds, addUserList, allUsers, editForm, userName, sysList,
         initList, deObj, cantList, initRole, } = SocketStore
     useEffect(() => {
-        SocketStore.getNormalList();
-        SocketStore.getAllDepartment();
-        SocketStore.getAllRoles();
-        SocketStore.getAllSys();
+        (async ()=>{
+            setLoad(true)
+            await SocketStore.getNormalList();
+            await SocketStore.getAllDepartment();
+            await SocketStore.getAllRoles();
+            await SocketStore.getAllSys();
+            setLoad(false)
+        })()
+
     }, [])
     const [name, setName] = useState('')
     const [visible, setVisible] = useState(false)
@@ -211,7 +216,7 @@ const MaLayout = observer(({ SocketStore }) => {
                                                         Object.keys(sysList).map((item, index) => {
                                                             return (
                                                                 <div className="de_one" key={index}>
-                                                                    
+
                                                                     <GoldFilled style={{'color':'rgb(255, 190, 1)'}}/> {sysList[item]['username']} <span style={{ cursor: 'pointer' }} onClick={() => {
                                                                         SocketStore.delSys({ 'userId': item }).then(() => {
                                                                             initData('add');

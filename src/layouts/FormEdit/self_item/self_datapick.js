@@ -18,7 +18,7 @@ const Self_datapick = observer((props) => {
         <div style={{ width: '100%' }} >
             <div className="self_rich_text" dangerouslySetInnerHTML={{ __html: schema.describe }} />
             <DatePicker
-                format={props.format == 'date' ? 'YYYY-MM-DD' : 'YYYY-MM-DD hh:mm:ss'}
+                format={props.format == 'date' ? 'YYYY-MM-DD' : 'YYYY-MM-DD HH:mm:ss'}
                 onBlur={() => {
                     props.FormStore.handleBlur(schema)
                 }}
@@ -28,7 +28,7 @@ const Self_datapick = observer((props) => {
                 onChange={(e) => {
                     let format = props.format == undefined ? 'dateTime' : props.format
                     let obj = {
-                        dateTime: 'YYYY-MM-DD hh:mm:ss',
+                        dateTime: 'YYYY-MM-DD HH:mm:ss',
                         date: "YYYY-MM-DD"
                     }
                     if (e != null) {

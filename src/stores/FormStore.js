@@ -43,7 +43,7 @@ class Form {
     @observable checked = false;
     @observable initSchema = {};
     @observable formAuthInfo = []
-
+    @observable canvasLoading=false
     @observable formAuthManage = []
 
     @observable selectFormId = 1;
@@ -92,6 +92,7 @@ class Form {
         let id = schema.hasOwnProperty('fieldId') ? schema.fieldId : schema.$id.substr(2)
         let arr = []
         let arrLink = []
+
         if (this.linkFieldObj.hasOwnProperty(id)) {
             this.linkFieldObj[id].map((item) => {
                 arr.push({ ...this.linkDataObj[item], 'nowValue': this.formData })
@@ -338,10 +339,11 @@ class Form {
     }
 
     @action.bound async getData(params) {
+        console.log("数据联动",toJS(params[0].nowValue))
+        console.log("数据联动",toJS(params[0].conditions))
         try {
             let res = await services.putRequest(services.requestList.getData, params);
             if (isDataExist(res)) {
-                console.log(res.data.data);
                 let obj = {}
                 res.data.data.map(item => obj[item['fieldId']] = item['fieldValue'])
                 console.log({ ...this.formData, ...obj });

@@ -23,11 +23,9 @@ const RegisterForm=observer(({HomeStore, FormStore, setIsOk})=>{
             delete user['tenementId']
             let res = await HomeStore.registerUser(user)
             console.log(res)
-            if (res.data.code === 1) {
-                messageApi.open({
-                    type: 'error',
-                    content: res.data.msg,
-                });
+            if (res?.data?.code !== 0) {
+                setLoading(false)
+                return
             } else {
                 let tenementIdObj=res.data.data
                 HomeStore.setValue('tenementIdObj',tenementIdObj)
@@ -38,7 +36,6 @@ const RegisterForm=observer(({HomeStore, FormStore, setIsOk})=>{
                     type: res2.data.code === 1 ? 'error' : 'success',
                     content: res2.data.msg,
                 });
-
             }
         } else if (radioValue === 'member') {
             delete user['tenementName']
@@ -47,7 +44,9 @@ const RegisterForm=observer(({HomeStore, FormStore, setIsOk})=>{
                 type: res.data.code === 1 ? 'error' : 'success',
                 content: res.data.msg,
             });
-            history.push('/login')
+            if(res.data.code!==1){
+                history.push('/login')
+            }
         }
     }
     const isRegisterUserName=(s)=>  {

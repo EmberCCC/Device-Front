@@ -10,9 +10,13 @@ const Tab = observer(({FormStore})=> {
   }, [FormStore.schemaList])
   const onChange=(e)=>{
     console.log(e)
-    const lastChoose=toJS(FormStore.tabLastChoose)
-    FormStore.changeFormEditSchema(e,lastChoose)
-    FormStore.setValue('tabLastChoose',e)
+    FormStore.setValue('canvasLoading',true)
+    setTimeout(()=>{
+      FormStore.setValue('canvasLoading',false)
+      const lastChoose=toJS(FormStore.tabLastChoose)
+      FormStore.changeFormEditSchema(e,lastChoose)
+      FormStore.setValue('tabLastChoose',e)
+    },100)
   }
   return (
       <Tabs

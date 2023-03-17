@@ -17,6 +17,7 @@ import { getAllField } from '../changeTool';
 import './index.css'
 import FormLayout from 'layouts/FormLayout';
 import GlobalModal from 'components/GlobalModal';
+import {isDataExist} from "../../../utils/dataTools";
 const Self_linkquery = observer((props) => {
     const { schema, FormStore } = props
     const [column, setColumn] = useState([])
@@ -162,6 +163,7 @@ const Self_linkquery = observer((props) => {
                                     })
                                     put('/data/FastQuery', idArr).then((res) => {
                                         let arr = []
+                                        if(!isDataExist(res)){return}
                                         res.data.data.map((item, index) => {
                                             let obj = {}
                                             let data = JSON.parse(item['formData'])

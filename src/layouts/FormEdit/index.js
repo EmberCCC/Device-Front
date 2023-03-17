@@ -294,8 +294,9 @@ const FormEdit = observer(({ HomeStore, FormStore }) => {
             <div className="fr-generator-container" >
               <Sidebar />
               <div className='edit_main' style={{ width: '100%' }}>
-                <Canvas />
-
+                  <Spin  spinning={FormStore.canvasLoading}>
+                    <Canvas />
+                  </Spin>
               </div>
               <Settings />
             </div>

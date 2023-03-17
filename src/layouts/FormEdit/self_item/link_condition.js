@@ -22,6 +22,7 @@ const Link_condition = observer((props) => {
     const [fieldObj, setFieldObj] = useState({})
     const [id, setId] = useState(null)
     const [link, setLink] = useState(null)
+    const [fId,setFid]=useState(null)
     const dataRef = useRef()
     useEffect(() => {
         dataRef.current = value
@@ -29,6 +30,8 @@ const Link_condition = observer((props) => {
     useEffect(() => {
         FormStore.getFormSimple();
         let fId = props.addons.formData.hasOwnProperty('fieldId') ? props.addons.formData.fieldId : props.addons.formData.$id.substr(2)
+        console.log('fId',fId)
+        setFid(fId)
         if (value == undefined) {
             onChange({ 'formId': null, 'conditions': [], 'linkFieldId': null, 'originId': fId });
         } else {
@@ -237,7 +240,7 @@ const Link_condition = observer((props) => {
                     <div className="link_btn">
                         <Button style={{ marginRight: '20px' }} onClick={() => {
                             if (value == undefined) {
-                                onChange({ 'formId': null, 'conditions': [], 'linkFieldId': null });
+                                onChange({ 'formId': null, 'conditions': [], 'linkFieldId': null,'originId': fId });
                             } else {
                                 setConditionList(value.conditions)
                                 setId(value.formId)
@@ -258,7 +261,7 @@ const Link_condition = observer((props) => {
                                 if (!checkSelf(conditionList)) {
                                     message.info('至少选择一个当前字段类型')
                                 } else {
-                                    onChange({ 'formId': id, 'conditions': conditionList, 'linkFieldId': link })
+                                    onChange({ 'formId': id, 'conditions': conditionList, 'linkFieldId': link,'originId': fId })
                                     setVis(false)
                                 }
                             }

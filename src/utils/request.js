@@ -289,6 +289,7 @@ function checkStatus(response) {
   if (response.status >= 200 && response.status < 300) {
     return response;
   }
+  console.log(response.statusText)
   const error = new Error(response.statusText);
   error.response = response;
   throw error;
@@ -325,6 +326,9 @@ function handleError(err, options) {
     //针对faked与Pace的本地冲突的错误提示的关闭
     if (msg === 'request.addEventListener is not a function') {
       return;
+    }
+    if(msg==='Unauthorized'){
+      msg='登录失效，请返回登录页面重新登录'
     }
     if (err.code == 1) {
       return (dialogInstance = message.error(`${decodeHtml(msg)}`));

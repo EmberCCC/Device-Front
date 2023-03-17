@@ -6,8 +6,8 @@ import {Button, Input, Modal, message, Form, Spin} from "antd";
 import {useHistory} from "react-router-dom";
 import {ExclamationCircleFilled} from "@ant-design/icons";
 import {toJS} from "mobx";
-
-
+import ModelMessage from "./components/modelMessage";
+import ModelMEssagePwd from "./components/modelMEssagePwd";
 const PersonalSettingPage = observer(({HomeStore}) => {
     const [selectType, setSelectType] = useState('nickname')
     const [content, setContent] = useState('')
@@ -17,7 +17,8 @@ const PersonalSettingPage = observer(({HomeStore}) => {
     const [isLoading, setIsLoading] = useState(false)
     const [oldPassword,setOldPassword]=useState("")
     const [info,setInfo]=useState(HomeStore.myInfo)
-    const [olpPasswordTips,setolpPasswordTips]=useState(false)
+    const [showId,setShowId]=useState(false)
+    const [isPwdModal,setIsPwdModal]=useState(false)
     const history = useHistory();
     const [form]=Form.useForm()
     const {confirm}=Modal
@@ -84,70 +85,76 @@ const PersonalSettingPage = observer(({HomeStore}) => {
             setSelectType(e)
             const maps = {"nickname": "修改用户名", "password": "修改密码"}
             setTitle(maps[e])
-            setModalOpen(true)
+            if(e==='password'){
+                setIsPwdModal(true)
+            }else{
+                setModalOpen(true)
+            }
         }
     }
-
-    const ModelMessage = () => {
-        return (
-            <Spin tip="Loading" spinning={isLoading}>
-                {selectType === 'nickname'&&
-                    <Input onBlur={(e)=> setContent(e.target.value)} placeholder="输入新用户名"/>
-                }
-                {selectType === 'password'&&
-                    <Form
-                    form={form}>
-                        <Form.Item name='oldPassword'
-                                   // validateStatus={olpPasswordTips.validateStatus}
-                                   // help={olpPasswordTips.help}
-                                   validateTrigger="onBlur"
-                                   rules={[
-                                       {
-                                           required: true,
-                                           message:"旧密码为必填项"
-                                       }
-                                   ]}
-
-
-                        >
-                            <Input.Password    onBlur={(e)=> setOldPassword(e.target.value)} placeholder={"请输入旧密码"}/>
-                        </Form.Item>
-                        <Form.Item name='newPassword'
-                            rules={[
-                                {
-                                    required:true,
-                                    message:'输入新密码'
-                                }
-                            ]}
-                        >
-                            <Input.Password placeholder={"请输入新密码"}/>
-                        </Form.Item>
-                        <Form.Item name={'confirmPassword'}
-                                   dependencies={['newPassword']}
-                                   hasFeedback
-                                   rules={[
-                                       {
-                                           required: true,
-                                           message: '请确认你的密码',
-                                       },
-                                       ({getFieldValue}) => ({
-                                           validator(_, value) {
-                                               console.log('queren')
-                                               if (!value || getFieldValue('newPassword') === value) {
-                                                   return Promise.resolve();
-                                               }
-                                               return Promise.reject(new Error('与新密码不一致'));
-                                           },
-                                       }),
-                                   ]}>
-                            <Input.Password onBlur={(e)=> setContent(e.target.value)} placeholder={"重复密码"}/>
-                        </Form.Item>
-                    </Form>
-                }
-            </Spin>
-        )
-
+    const handlePwdCancel=(e)=>{
+        setIsPwdModal(false)
     }
+    // const ModelMessage = () => {
+    //     return (
+    //         <Spin tip="Loading" spinning={isLoading}>
+    //             {selectType !== 'password'&&
+    //                 <ModelMessage selectType={selectType} setContent={setContent}/>
+    //             }
+    //             {selectType === 'password'&&
+    //                 <Form
+    //                 form={form}>
+    //                     <Form.Item name='oldPassword'
+    //                                // validateStatus={olpPasswordTips.validateStatus}
+    //                                // help={olpPasswordTips.help}
+    //                                validateTrigger="onBlur"
+    //                                rules={[
+    //                                    {
+    //                                        required: true,
+    //                                        message:"旧密码为必填项"
+    //                                    }
+    //                                ]}
+    //
+    //
+    //                     >
+    //                         <Input.Password    onBlur={(e)=> setOldPassword(e.target.value)} placeholder={"请输入旧密码"}/>
+    //                     </Form.Item>
+    //                     <Form.Item name='newPassword'
+    //                         rules={[
+    //                             {
+    //                                 required:true,
+    //                                 message:'输入新密码'
+    //                             }
+    //                         ]}
+    //                     >
+    //                         <Input.Password placeholder={"请输入新密码"}/>
+    //                     </Form.Item>
+    //                     <Form.Item name={'confirmPassword'}
+    //                                dependencies={['newPassword']}
+    //                                hasFeedback
+    //                                rules={[
+    //                                    {
+    //                                        required: true,
+    //                                        message: '请确认你的密码',
+    //                                    },
+    //                                    ({getFieldValue}) => ({
+    //                                        validator(_, value) {
+    //                                            console.log('queren')
+    //                                            if (!value || getFieldValue('newPassword') === value) {
+    //                                                return Promise.resolve();
+    //                                            }
+    //                                            return Promise.reject(new Error('与新密码不一致'));
+    //                                        },
+    //                                    }),
+    //                                ]}>
+    //                         <Input.Password onBlur={(e)=> setContent(e.target.value)} placeholder={"重复密码"}/>
+    //                     </Form.Item>
+    //                 </Form>
+    //             }
+    //         </Spin>
+    //     )
+    //
+    // }
     return (
         <div className={"Groud"}>
             {contextHolder}
@@ -158,9 +165,20 @@ const PersonalSettingPage = observer(({HomeStore}) => {
                         <div className={"Setting-container-line-header"}>
                             当前所在企业
                         </div>
-                        <div>
+                        <div className={"Setting-container-line-content"}>
                             {info.tenementName}
                         </div>
+                    </div>
+                    <div className={"Setting-container-line"}>
+                        <div className={"Setting-container-line-header"}>
+                            企业Id
+                        </div>
+                        <div className={"Setting-container-line-content"}>
+                            {!showId?'******':info.tenementName}
+                        </div>
+                        <Button type={"link"} className={"Setting_chage"} onClick={()=> setShowId(!showId)}>
+                            {showId?'隐藏':'显示'}
+                        </Button>
                     </div>
                 </div>
                 <div className={"Setting-title"}>
@@ -183,7 +201,7 @@ const PersonalSettingPage = observer(({HomeStore}) => {
                         <div className={"Setting-container-line-header"}>
                             账户名称
                         </div>
-                        <div>
+                        <div className={"Setting-container-line-content"}>
                             {info.userName}
                         </div>
                     </div>
@@ -197,7 +215,7 @@ const PersonalSettingPage = observer(({HomeStore}) => {
                         <div className={"Setting-container-line-header"}>
                             密码
                         </div>
-                        <div>
+                        <div className={"Setting-container-line-content"}>
                             ******
                         </div>
                         <Button className={"Setting_chage"} type={"link"} onClick={changeMessage('password')}>
@@ -208,7 +226,7 @@ const PersonalSettingPage = observer(({HomeStore}) => {
                         <div className={"Setting-container-line-header"}>
                             手机
                         </div>
-                        <div>
+                        <div className={"Setting-container-line-content"}>
                             {HomeStore.myInfo.phone}
                         </div>
                     </div>
@@ -216,7 +234,7 @@ const PersonalSettingPage = observer(({HomeStore}) => {
                         <div className={"Setting-container-line-header"}>
                             邮箱
                         </div>
-                        <div>
+                        <div className={"Setting-container-line-content"}>
                             {HomeStore.myInfo.email}
                         </div>
                     </div>
@@ -234,7 +252,10 @@ const PersonalSettingPage = observer(({HomeStore}) => {
             </div>
             <Modal title={title} open={isModalOpen} onOk={handleOk} onCancel={handleCancel} okText="确认"
                    cancelText="取消" confirmLoading={isLoading}>
-                <ModelMessage/>
+                <ModelMessage selectType={selectType} setContent={setContent}/>
+            </Modal>
+            <Modal title={title} open={isPwdModal} footer={[]} onCancel={handlePwdCancel}>
+                <ModelMEssagePwd  setIsPwdModal={setIsPwdModal}></ModelMEssagePwd>
             </Modal>
 
         </div>

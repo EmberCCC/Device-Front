@@ -27,7 +27,8 @@ export const Link_item = ({ value, onChange, ...rest }) => {
         }
     }, [addons.formData.default_type])
     useEffect(() => {
-        console.log(addons.formData.self_setting);
+        console.log('format',addons.formData);
+        console.log(moment(addons.formData.default).isValid())
         console.log(value);
         if (addons.formData.self_setting?.mul == false && Object.prototype.toString.call(value) === '[object Array]' && value.length > 1) {
             onChange([])
@@ -72,8 +73,8 @@ export const Link_item = ({ value, onChange, ...rest }) => {
             {
                 addons.dependValues[0] != '2' && addons.dependValues[0] != '3' && addons.formData.$id.substring(2, 3) == 3 &&
                 <DatePicker
-                    format={addons.formData.format == 'date' ? 'YYYY-MM-DD' : 'YYYY-MM-DD hh:mm:ss'}
-                    value={moment(addons.formData.default).isValid() && moment(addons.formData.default)}
+                    format={addons.formData.format == 'date' ? 'YYYY-MM-DD' : 'YYYY-MM-DD HH:mm:ss'}
+                    value={addons.formData.default!==undefined && moment(addons.formData.default).isValid() && moment(addons.formData.default)}
                     showTime
                     onChange={(e) => {
                         // onChange(moment(e).format(obj[format]))

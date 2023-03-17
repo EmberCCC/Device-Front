@@ -22,6 +22,7 @@ const Linkquery_condition = observer((props) => {
     const [fieldObj, setFieldObj] = useState({})
     const [list, setList] = useState([])
     const [maps,setMaps]=useState({})
+    const [selectOption,setSelectOption]=useState([])
     useEffect(() => {
         dataRef.current = value
     }, [value])
@@ -29,6 +30,8 @@ const Linkquery_condition = observer((props) => {
         FormStore.getFormSimple();
         console.log(schema);
         console.log(props);
+        console.log('vallllllue',value)
+        console.log(toJS(FormStore.formStru))
         if (value == undefined) {
             if (addons.formData.typeId == '14') {
                 onChange({ originId: props.addons.formData.$id.substr(2), restrictType: 'and', conditions: [], fieldIds: [], formId: null, mul: 'one' })
@@ -38,6 +41,11 @@ const Linkquery_condition = observer((props) => {
         } else {
             setList(value?.conditions)
         }
+        let s=[]
+        for (let i=0;i<FormStore.formStru.length;i++){
+            s.push({value:FormStore.formStru[i].formId,label:FormStore.formStru[i].formName})
+        }
+        setSelectOption(s)
     }, [])
     useEffect(()=>{
 
@@ -55,7 +63,9 @@ const Linkquery_condition = observer((props) => {
                         obj['fieldShow'] = []
                     }
                     onChange(obj)
-                }}>
+                }}
+                options={selectOption}
+                >
                     {
                         FormStore.formStru.map((item, index) => {
                             if (item['formId'] != formId) {
@@ -114,7 +124,7 @@ const Linkquery_condition = observer((props) => {
                         console.log('formSchema',toJS(FormStore.formEditSchema['properties']) )
                         let params = newExChange(FormStore.formEditSchema, FormStore.selectFormId, toJS(FormStore.schemaList))
                         console.log('params',params)
-                        
+
                         let arr = []
                         let maps={}
                         params.subForms.map(item => arr.push(...item.fields))
