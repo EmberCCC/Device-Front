@@ -29,7 +29,7 @@ class DataModal extends Component {
         const { itemIndex, dataSource, modalFieldValue, modalField, modalData, formArr, oneDataInfo } = this.props.TableStore
         const { fieldNameObj } = this.props.FormStore
         const getExactData = (formName) => {
-            console.log(toJS(this.props.TableStore.modalData));
+            console.log('getExactData',toJS(this.props.TableStore.modalData));
             if (typeof (formArr[formName]) != 'undefined') {
                 const element = formArr[formName]['properties'];
                 return (
@@ -118,14 +118,14 @@ class DataModal extends Component {
                                     </div>
                                 )
                             } else if (jsonData['typeId'] == '15') {
-
+                                console.log("15",toJS(element))
                                 return (
                                     <div className='item_content' key={index}>
                                         <div className='item_title'>
                                             {element[item['id']]['title']}
                                         </div>
-                                        {/* {
-                                            jsonData['linkquery_condition']['fieldShow'].map((one, index) => {
+                                        {
+                                            jsonData['linkquery_condition']['fieldIds'].map((one, index) => {
                                                 let id = []
                                                 if (modalData[item['id']]) {
                                                     id = JSON.parse(modalData[item['id']])
@@ -141,7 +141,7 @@ class DataModal extends Component {
                                                     </div>
                                                 )
                                             })
-                                        } */}
+                                        }
                                     </div>
                                 )
                             } else if (jsonData['typeId'] == '20') {
@@ -343,7 +343,6 @@ class DataModal extends Component {
             let newArr = []
             for (const key in formArr) {
                 if (Object.hasOwnProperty.call(formArr, key)) {
-                    const element = formArr[key];
                     if (key != 'root') {
                         newArr.push(key);
                     }
