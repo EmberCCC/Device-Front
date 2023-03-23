@@ -8,7 +8,6 @@
     "@antv/data-set": "^0.10.2",
     "@antv/xflow": "^1.0.49",
     "@babel/core": "7.4.3",
-    "@form-render/rich-text": "^1.0.2",
     "@fullcalendar/core": "^4.1.0",
     "@fullcalendar/daygrid": "^4.1.0",
     "@fullcalendar/interaction": "^4.1.0",
@@ -31,14 +30,12 @@
     "braft-editor": "^2.3.9",
     "case-sensitive-paths-webpack-plugin": "2.2.0",
     "classnames": "^2.2.6",
-    "cnpm": "^6.0.0",
     "css-loader": "2.1.1",
     "d3-transition": "^3.0.1",
     "dom-to-image": "^2.6.0",
     "dotenv": "6.2.0",
     "dotenv-expand": "4.2.0",
     "dragm": "^0.0.5",
-    "eslint-config-react-app": "^4.0.0",
     "eslint-loader": "2.1.2",
     "eslint-plugin-flowtype": "2.50.1",
     "eslint-plugin-import": "2.16.0",
@@ -75,7 +72,6 @@
     "postcss-preset-env": "6.6.0",
     "postcss-safe-parser": "4.0.1",
     "prop-types": "^15.7.2",
-    "pubsub-js": "^1.9.4",
     "qrcode.react": "^0.9.3",
     "query-string": "^6.5.0",
     "rc-virtual-list": "^3.4.6",
@@ -180,7 +176,6 @@
     "eslint-config-react-app": "^4.0.1",
     "http-proxy-middleware": "^0.19.1",
     "lodash": "^4.17.21",
-    "react-app-rewired": "^2.1.3",
     "react-container-query": "^0.11.0"
   }
 }
