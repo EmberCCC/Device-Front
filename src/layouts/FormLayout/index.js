@@ -24,6 +24,7 @@ import self_datapick from 'layouts/FormEdit/self_item/self_datapick';
 import self_linkquery from 'layouts/FormEdit/self_item/self_linkquery';
 import { Self_address } from 'layouts/FormEdit/self_item/self_address';
 import self_department_user from 'layouts/FormEdit/self_item/self_department_user';
+import self_editable_table from "../FormEdit/self_item/self_editable_table";
 const FormLayout = observer(({ HomeStore, FormStore, type, formId, handleCancel, handleClose }) => {
   const { schema, formField, formData, flag } = FormStore
   const [data, setData] = useState({});
@@ -171,7 +172,8 @@ const FormLayout = observer(({ HomeStore, FormStore, type, formId, handleCancel,
                   self_datapick: self_datapick,
                   self_linkquery: self_linkquery,
                   self_address: Self_address,
-                  self_department_user: self_department_user
+                  self_department_user: self_department_user,
+                  self_editable_table: self_editable_table,
                 }}
                 form={formList} style={{ overflowY: 'auto' }} watch={watch} onMount={handleMount} />
             </Tabs.TabPane>
@@ -198,7 +200,8 @@ const FormLayout = observer(({ HomeStore, FormStore, type, formId, handleCancel,
             self_datapick: self_datapick,
             self_linkquery: self_linkquery,
             self_address: Self_address,
-            self_department_user: self_department_user
+            self_department_user: self_department_user,
+            self_editable_table: self_editable_table,
           }}
           form={form}
           onFinish={onFinish}

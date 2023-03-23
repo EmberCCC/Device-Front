@@ -855,16 +855,14 @@ var strongElements = [
         }
     },
     // {
-    //     text:'子表单',
-    //     name:'15',
+    //     text:'可编辑关联表格',
+    //     name:'16',
     //     schema:{
-    //         title:'子表单',
-    //         type:'array',
-    //         widget:'list2',
-    //         items:{
-    //             type:'object',
-    //             properties:{}
-    //         }
+    //         title:'可编辑关联表格',
+    //         type:'any',
+    //         widget:'self_editable_table',
+    //         typeId: '16',
+    //
     //     },
     //     setting:{
     //         title:{
@@ -878,6 +876,25 @@ var strongElements = [
     //                 defaultValue: true
     //             }
     //         },
+    //         describe: {
+    //             title: '描述信息',
+    //             type: 'string',
+    //             widget: 'RichTextEditor'
+    //         },
+    //         linkquery_condition: {
+    //             type: 'any',
+    //             widget: 'linkquery_condition'
+    //         },
+    //         width: {
+    //             title: '元素宽度',
+    //             type: 'string',
+    //             widget: 'percentSlider'
+    //         },
+    //
+    //         hidden: {
+    //             title: '隐藏',
+    //             type: 'boolean'
+    //         }
     //     }
     // },
     {

@@ -7,7 +7,7 @@
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 import { CopyOutlined, DeleteOutlined, EditOutlined, EyeOutlined, FunnelPlotOutlined, PrinterOutlined, QrcodeOutlined, ShareAltOutlined } from '@ant-design/icons'
-import { Button, Checkbox, Modal, Popover, Spin, Tabs } from 'antd'
+import {Button, Checkbox, Modal, Popover, Spin, Table, Tabs} from 'antd'
 import { Radio } from 'components/BLComps'
 import GlobalModal from 'components/GlobalModal'
 import { firstFormName } from 'constants/status_constant'
@@ -92,13 +92,33 @@ class DataModal extends Component {
                                     </div>
                                 )
                             } else if (jsonData['typeId'] == '14') {
+                                console.log("14",toJS(element),toJS(jsonData),toJS(modalData[item['id']]))
+                                console.log(toJS(oneDataInfo))
+                                let showData=[]
+                                debugger
+                                let data=[]
+                                if(modalData[item['id']]){
+                                    data=JSON.parse(modalData[item['id']])
+                                }
+                                //多表数据
+                                for (const showDatum of data) {
+                                    showData.push(oneDataInfo[showDatum])
+                                }
+
+                                //多表表头
+                                let column=[]
+                                if (jsonData.linkquery_condition && jsonData.linkquery_condition.fieldIds) {
+                                    jsonData.linkquery_condition.fieldIds.forEach((item, index) => {
+                                        column.push({ title: fieldNameObj[item], dataIndex: item, key: item, width: '50', ellipsis: true })
+                                    })
+                                }
                                 return (
                                     <div className='item_content' key={index}>
                                         <div className='item_title'>
                                             {element[item['id']]['title']}
                                         </div>
                                         {
-                                            jsonData['linkquery_condition']['fieldIds'].map((one, index) => {
+                                            jsonData['linkquery_condition']['mul']!=='mul'? jsonData['linkquery_condition']['fieldIds'].map((one, index) => {
                                                 let id = []
                                                 if (modalData[item['id']]) {
                                                     id = JSON.parse(modalData[item['id']])
@@ -113,7 +133,12 @@ class DataModal extends Component {
                                                         }
                                                     </div>
                                                 )
-                                            })
+                                            }):
+                                                <Table
+                                                    scroll={{ x: 800 }}
+                                                    columns={column}
+                                                    dataSource={showData}
+                                                />
                                         }
                                     </div>
                                 )

@@ -13,6 +13,7 @@ import { observable, action, makeObservable, toJS } from 'mobx';
 import { message, Modal } from 'antd';
 import { getLinkCondition, restore } from 'layouts/FormEdit/changeTool';
 import {putUrlRequest} from "../services/flow";
+import linkquery_condition from "../layouts/FormEdit/self_item/linkquery_condition";
 
 class Form {
     constructor() {
@@ -92,23 +93,37 @@ class Form {
         let id = schema.hasOwnProperty('fieldId') ? schema.fieldId : schema.$id.substr(2)
         let arr = []
         let arrLink = []
-
+        console.log('handleBlur',schema,id)
+        console.log(toJS(this.linkFieldObj),toJS(this.linkqueryDataObj),toJS(this.linkqueryFieldObj))
         if (this.linkFieldObj.hasOwnProperty(id)) {
             this.linkFieldObj[id].map((item) => {
                 arr.push({ ...this.linkDataObj[item], 'nowValue': this.formData })
             })
         }
+        debugger
+        //如果是联动查询的字段，需要发送请求
         if (this.linkqueryDataObj.hasOwnProperty(id)) {
             this.linkqueryDataObj[id].map(item => {
                 arrLink.push({ ...this.linkqueryFieldObj[item], 'nowValue': this.formData })
             })
+        }
+        //如果是联动查询的字段，没有设置数据源，需要发送请求
+        let linkqueryFieldObj=toJS(this.linkqueryFieldObj)
+        if(JSON.stringify(linkqueryFieldObj)!=='{}'){
+            for (const linkqueryFieldObjKey in linkqueryFieldObj) {
+                console.log(linkqueryFieldObjKey)
+                let linkqueryFieldObjValue=linkqueryFieldObj[linkqueryFieldObjKey]
+                if(linkqueryFieldObjValue.conditions.length===0){
+                    arrLink.push({ ...linkqueryFieldObjValue, 'nowValue': this.formData })
+                }
+            }
         }
         let res1 = {}
         let res2 = {}
         if (arr.length > 0) {
             res1 = await this.getData(arr)
         }
-        if (arrLink.length > 0) {
+        if (arrLink.length > 0 ) {
             res2 = await this.getSearchData(arrLink)
         }
         this.setValue('formData', { ...this.formData, ...res1, ...res2 })
@@ -341,8 +356,10 @@ class Form {
     @action.bound async getData(params) {
         console.log("数据联动",toJS(params[0].nowValue))
         console.log("数据联动",toJS(params[0].conditions))
+        console.log("数据联动",toJS(params[0]))
         try {
             let res = await services.putRequest(services.requestList.getData, params);
+
             if (isDataExist(res)) {
                 let obj = {}
                 res.data.data.map(item => obj[item['fieldId']] = item['fieldValue'])
@@ -372,6 +389,13 @@ class Form {
         } catch (error) {
             console.log(error);
         }
+    }
+
+    /**
+     * 快速排序
+     * */
+    @action.bound quickSort=(a,b)=>{
+
     }
 
     /**

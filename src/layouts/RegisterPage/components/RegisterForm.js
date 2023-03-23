@@ -1,18 +1,23 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {inject, observer} from "mobx-react";
 import {Button, Form, Input, message, Radio, Result} from "antd";
 import {useHistory} from "react-router-dom";
 import {DeploymentUnitOutlined, LockOutlined, MailOutlined, PhoneOutlined, UserOutlined} from "@ant-design/icons";
+import {isDataExist} from "../../../utils/dataTools";
 
 const RegisterForm=observer(({HomeStore, FormStore, setIsOk})=>{
     const [radioValue, setRadioValue] = useState('boss')
     const [messageApi, contextHolder] = message.useMessage();
     const history= useHistory()
+    const [form]=Form.useForm()
     const [Loading,setLoading]=useState(false)
     const onChange = (e) => {
         console.log('radio checked', e.target.value);
+        form.resetFields();
         setRadioValue(e.target.value)
+
     };
+
     const submit = async (e) => {
         console.log(e)
         const user = {...e}
@@ -23,6 +28,17 @@ const RegisterForm=observer(({HomeStore, FormStore, setIsOk})=>{
             delete user['tenementId']
             let res = await HomeStore.registerUser(user)
             console.log(res)
+            if(!isDataExist(res)){
+                return
+            }
+            if(res.data.data.tenementId<0){
+                messageApi.open({
+                    type:'error',
+                    content:res.data.msg
+                })
+                setLoading(false)
+                return
+            }
             if (res?.data?.code !== 0) {
                 setLoading(false)
                 return
@@ -40,11 +56,15 @@ const RegisterForm=observer(({HomeStore, FormStore, setIsOk})=>{
         } else if (radioValue === 'member') {
             delete user['tenementName']
             let res = await HomeStore.registerEmployee(user)
+            if(res.code!==0){
+                return
+            }
             messageApi.open({
-                type: res.data.code === 1 ? 'error' : 'success',
+                type: res.data.data !==undefined ? 'error' : 'success',
                 content: res.data.msg,
             });
-            if(res.data.code!==1){
+            setLoading(false)
+            if(res.data.data===undefined){
                 history.push('/login')
             }
         }
@@ -54,6 +74,12 @@ const RegisterForm=observer(({HomeStore, FormStore, setIsOk})=>{
         if (!patrn.exec(s))
             return false
 	return true
+    }
+    const isNumber=(s)=>{
+        if(!(/^[0-9]+$/.test(s))){
+            return false
+        }
+        return true
     }
 
     return (
@@ -66,6 +92,7 @@ const RegisterForm=observer(({HomeStore, FormStore, setIsOk})=>{
                 </Radio.Group>
                 <Form className='register_Form'
                       onFinish={submit}
+                      form={form}
                 >
                     <Form.Item name='username'
                                validateTrigger="onBlur"
@@ -148,7 +175,18 @@ const RegisterForm=observer(({HomeStore, FormStore, setIsOk})=>{
                         radioValue !== 'boss' ? (
                             <Form.Item
                                 name="tenementId"
-                                rules={[{required: true, message: "请输入公司id"}]}
+                                rules={[{required: true, message: "请输入公司id"},
+                                    {
+                                        validator:async (_, value) =>{
+                                            // let res =await HomeStore.confirmPwd({'oldPassword':value})
+                                            if(isNumber(value)){
+                                                return Promise.resolve()
+                                            }else{
+                                                return Promise.reject(new Error("公司id出错"));
+                                            }
+                                        }
+                                    }]}
+
                             >
                                 <Input
                                     placeholder="加入的公司id"
@@ -166,6 +204,7 @@ const RegisterForm=observer(({HomeStore, FormStore, setIsOk})=>{
                             >
                                 <Input
                                     placeholder="创建的公司名"
+
                                     prefix={<DeploymentUnitOutlined/>}
                                     size="large"
                                 />

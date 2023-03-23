@@ -8,7 +8,7 @@ import {ExclamationCircleFilled} from "@ant-design/icons";
 import {toJS} from "mobx";
 import ModelMessage from "./components/modelMessage";
 import ModelMEssagePwd from "./components/modelMEssagePwd";
-const PersonalSettingPage = observer(({HomeStore}) => {
+const PersonalSettingPage = observer(({HomeStore,SocketStore}) => {
     const [selectType, setSelectType] = useState('nickname')
     const [content, setContent] = useState('')
     const [messageApi, contextHolder] = message.useMessage();
@@ -26,6 +26,7 @@ const PersonalSettingPage = observer(({HomeStore}) => {
 
     useEffect(() => {
         HomeStore.ownMessage()
+        SocketStore.getMyInfo()
     }, [])
     useEffect(()=>{
         setInfo(HomeStore.myInfo)
@@ -95,66 +96,6 @@ const PersonalSettingPage = observer(({HomeStore}) => {
     const handlePwdCancel=(e)=>{
         setIsPwdModal(false)
     }
-    // const ModelMessage = () => {
-    //     return (
-    //         <Spin tip="Loading" spinning={isLoading}>
-    //             {selectType !== 'password'&&
-    //                 <ModelMessage selectType={selectType} setContent={setContent}/>
-    //             }
-    //             {selectType === 'password'&&
-    //                 <Form
-    //                 form={form}>
-    //                     <Form.Item name='oldPassword'
-    //                                // validateStatus={olpPasswordTips.validateStatus}
-    //                                // help={olpPasswordTips.help}
-    //                                validateTrigger="onBlur"
-    //                                rules={[
-    //                                    {
-    //                                        required: true,
-    //                                        message:"旧密码为必填项"
-    //                                    }
-    //                                ]}
-    //
-    //
-    //                     >
-    //                         <Input.Password    onBlur={(e)=> setOldPassword(e.target.value)} placeholder={"请输入旧密码"}/>
-    //                     </Form.Item>
-    //                     <Form.Item name='newPassword'
-    //                         rules={[
-    //                             {
-    //                                 required:true,
-    //                                 message:'输入新密码'
-    //                             }
-    //                         ]}
-    //                     >
-    //                         <Input.Password placeholder={"请输入新密码"}/>
-    //                     </Form.Item>
-    //                     <Form.Item name={'confirmPassword'}
-    //                                dependencies={['newPassword']}
-    //                                hasFeedback
-    //                                rules={[
-    //                                    {
-    //                                        required: true,
-    //                                        message: '请确认你的密码',
-    //                                    },
-    //                                    ({getFieldValue}) => ({
-    //                                        validator(_, value) {
-    //                                            console.log('queren')
-    //                                            if (!value || getFieldValue('newPassword') === value) {
-    //                                                return Promise.resolve();
-    //                                            }
-    //                                            return Promise.reject(new Error('与新密码不一致'));
-    //                                        },
-    //                                    }),
-    //                                ]}>
-    //                         <Input.Password onBlur={(e)=> setContent(e.target.value)} placeholder={"重复密码"}/>
-    //                     </Form.Item>
-    //                 </Form>
-    //             }
-    //         </Spin>
-    //     )
-    //
-    // }
     return (
         <div className={"Groud"}>
             {contextHolder}
@@ -169,17 +110,19 @@ const PersonalSettingPage = observer(({HomeStore}) => {
                             {info.tenementName}
                         </div>
                     </div>
-                    <div className={"Setting-container-line"}>
+                    {
+                        (SocketStore.userAuth.creater || SocketStore.userAuth.sysAdmin) &&
+                        <div className={"Setting-container-line"}>
                         <div className={"Setting-container-line-header"}>
                             企业Id
                         </div>
                         <div className={"Setting-container-line-content"}>
-                            {!showId?'******':info.tenementName}
+                            {!showId ? '******' : info.tenementId}
                         </div>
-                        <Button type={"link"} className={"Setting_chage"} onClick={()=> setShowId(!showId)}>
-                            {showId?'隐藏':'显示'}
+                        <Button type={"link"} className={"Setting_chage"} onClick={() => setShowId(!showId)}>
+                            {showId ? '隐藏' : '显示'}
                         </Button>
-                    </div>
+                    </div>}
                 </div>
                 <div className={"Setting-title"}>
                     基本信息
@@ -263,4 +206,4 @@ const PersonalSettingPage = observer(({HomeStore}) => {
 
 })
 
-export default inject((stores) => ({HomeStore: stores.HomeStore,}))(PersonalSettingPage);
+export default inject((stores) => ({HomeStore: stores.HomeStore,SocketStore:stores.SocketStore}))(PersonalSettingPage);

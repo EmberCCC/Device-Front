@@ -34,7 +34,7 @@ const Self_linkquery = observer((props) => {
                     arr.push({ title: FormStore.fieldNameObj[item], dataIndex: item, key: item, width: '50', ellipsis: true })
                 })
             }
-            console.log(arr);
+            console.log('column',arr);
             setColumn(arr)
         })
     }, [])
@@ -48,7 +48,8 @@ const Self_linkquery = observer((props) => {
         setColumn(arr)
     }, [schema.linkquery_condition])
     useEffect(() => {
-        if (props.value != undefined && props.value.length != 0) {
+        console.log('这是否是多余的fastQuery',props)
+        if (props.value !== undefined && props.value.length !== 0) {
             let arr = props.value
             if (!Array.isArray(arr)) {
                 arr = JSON.parse(arr)
@@ -60,6 +61,7 @@ const Self_linkquery = observer((props) => {
                 iArr = arr
             }
             put('/data/FastQuery', iArr).then((res) => {
+
                 let arr = []
                 res.data.data.map((item, index) => {
                     let obj = {}
@@ -69,6 +71,7 @@ const Self_linkquery = observer((props) => {
                     obj['id'] = item['id']
                     arr.push(obj)
                 })
+                console.log('showData',arr)
                 setShowData(arr)
             })
         } else {
@@ -148,8 +151,11 @@ const Self_linkquery = observer((props) => {
                             <Button style={{ width: '50%' }} onClick={() => {
                                 setLoad(true)
                                 setVis(true)
+                                console.log('params',[{ ...schema?.linkquery_condition, "nowValue": FormStore.formData }])
                                 FormStore.getSearchData([{ ...schema?.linkquery_condition, "nowValue": FormStore.formData }]).then(res => {
+                                    console.log('/data/link/form/search',res)
                                     console.log(res[schema.$id]);
+
                                     let idArr = res[schema.$id]
                                     FormStore.getFormSimple().then(() => {
                                         let arr = []

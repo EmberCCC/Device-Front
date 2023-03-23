@@ -17,15 +17,19 @@ import { select_arr, select_condtion } from "constants/select_config";
 const Linkquery_condition = observer((props) => {
     const { TableStore, FormStore, HomeStore, value, schema, onChange, addons } = props
     const formId = sessionStorage.getItem('formId') ? sessionStorage.getItem('formId') : HomeStore.firstFormId
-    const dataRef = useRef()
+    // const dataRef = useRef()
     const [vis, setVis] = useState(false);
     const [fieldObj, setFieldObj] = useState({})
     const [list, setList] = useState([])
     const [maps,setMaps]=useState({})
     const [selectOption,setSelectOption]=useState([])
-    useEffect(() => {
-        dataRef.current = value
-    }, [value])
+
+    // useEffect(() => {
+    //     dataRef.current = value
+    // }, [value])
+    useEffect(()=>{
+
+    },[props])
     useEffect(() => {
         FormStore.getFormSimple();
         console.log(schema);
@@ -38,15 +42,17 @@ const Linkquery_condition = observer((props) => {
             } else if (addons.formData.typeId == '15') {
                 onChange({ originId: props.addons.formData.$id.substr(2), restrictType: 'and', conditions: [], fieldIds: [], fieldShow: [], formId: null })
             }
+            console.log('changeValue',value)
         } else {
             setList(value?.conditions)
         }
+        console.log('vll',value)
         let s=[]
         for (let i=0;i<FormStore.formStru.length;i++){
             s.push({value:FormStore.formStru[i].formId,label:FormStore.formStru[i].formName})
         }
         setSelectOption(s)
-    }, [])
+    },[props.addons.formData.$id.substring(2)])
     useEffect(()=>{
 
     },[])
@@ -226,11 +232,15 @@ const Linkquery_condition = observer((props) => {
                                             <Select value={maps[item['operand']] } placeholder='当前表单字段' style={{ width: '200px', marginRight: "10px" }} onChange={(e) => {
                                                 let arr = [...list]
                                                 let obj = arr[index]
+                                                console.log(e)
                                                 obj['operand'] = e
                                                 arr.splice(index, 1, obj)
+                                                console.log('arr',arr)
                                                 setList(arr)
                                             }}>
                                                 {Object.keys(fieldObj).map((info,iI) => {
+                                                    console.log('info',info,'iI',iI)
+                                                    console.log(fieldObj)
                                                     let obj=fieldObj[info]
                                                     console.log(obj)
                                                     if (info != props.addons.formData.fieldId) {
@@ -240,16 +250,16 @@ const Linkquery_condition = observer((props) => {
                                                                 obj['typeId'] == '4' ||
                                                                 obj['typeId'] == '6')) {
                                                             return (
-                                                                <Select.Option key={iI} value={info}>{obj['name']}</Select.Option>
+                                                                <Select.Option key={iI} value={obj['fieldId']}>{obj['name']}</Select.Option>
                                                             )
                                                         } else if ((item['fieldTypeId'] == '5' || item['fieldTypeId'] == '7') &&
                                                             (obj['fieldTypeId'] == '5' || obj['fieldTypeId'] == '7')) {
                                                             return (
-                                                                <Select.Option key={iI} value={info}>{obj['name']}</Select.Option>
+                                                                <Select.Option key={iI} value={obj['fieldId']}>{obj['name']}</Select.Option>
                                                             )
                                                         } else if (item['fieldTypeId'] == obj['fieldTypeId']) {
                                                             return (
-                                                                <Select.Option key={iI} value={info}>{obj['name']}</Select.Option>
+                                                                <Select.Option key={iI} value={obj['fieldId']}>{obj['name']}</Select.Option>
                                                             )
                                                         }
                                                     }
