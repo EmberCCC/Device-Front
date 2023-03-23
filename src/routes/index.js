@@ -14,9 +14,8 @@
 * HomeLayout 最外层Home包裹架子
 */
 
-import WrapperList from 'components/GlobalList';
-import React,{PureComponent} from 'react';
-import { 
+import React, { PureComponent } from 'react';
+import {
   BrowserRouter as Router,
   // Redirect,
   Route,
@@ -24,23 +23,22 @@ import {
 } from 'react-router-dom';
 
 /* 引入组件 */
-import { 
-  HomeRouter,LoginPage,FlowPage,DesignPage, MessageManage, SocketManage, ManageManage,RegisterPage,SettingPage
+import {
+  HomeRouter, LoginPage, FlowPage, DesignPage, SocketManage, ManageManage, RegisterPage, SettingPage
 } from './home';
 
-export default class RootRouter extends PureComponent{
-  render(){
+export default class RootRouter extends PureComponent {
+  render() {
     return (
       <Router >
         <Switch>
-          <Route path="/design" component={DesignPage}/>
-          <Route path="/flow" component={FlowPage}/>
-          <Route path="/login" component={LoginPage}/>
-          <Route path="/globalList" component={WrapperList}/>
+          <Route path="/design" component={DesignPage} />
+          <Route path="/flow" component={FlowPage} />
+          <Route path="/login" component={LoginPage} />
           <Route path="/socket" component={SocketManage} />
           <Route path="/manage" component={ManageManage} />
           <Route path="/register" component={RegisterPage} />
-          <Route path="/personalSetting" component={SettingPage}/>
+          <Route path="/personalSetting" component={SettingPage} />
           <Route path='/' component={HomeRouter} />
         </Switch>
       </Router>

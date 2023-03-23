@@ -6,16 +6,15 @@
  * @FilePath: \bl-device-manage-test\src\components\GlobalTabel2\dataModal.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
-import { CopyOutlined, DeleteOutlined, EditOutlined, EyeOutlined, FunnelPlotOutlined, PrinterOutlined, QrcodeOutlined, ShareAltOutlined } from '@ant-design/icons'
-import {Button, Checkbox, Modal, Popover, Spin, Table, Tabs} from 'antd'
-import { Radio } from 'components/BLComps'
+import { CopyOutlined, DeleteOutlined, EditOutlined, EyeOutlined, PrinterOutlined, QrcodeOutlined, ShareAltOutlined } from '@ant-design/icons'
+import { Button, Checkbox, Popover, Radio, Spin, Table, Tabs } from 'antd'
 import GlobalModal from 'components/GlobalModal'
 import { firstFormName } from 'constants/status_constant'
 import FormData from 'layouts/FormLayout/formData'
 import { toJS } from 'mobx'
 import { inject, observer } from 'mobx-react'
 import React, { Component } from 'react'
-import QRCode, { contextType } from 'qrcode.react'
+import QRCode from 'qrcode.react'
 import './index.less'
 import moment from 'moment'
 
@@ -29,7 +28,7 @@ class DataModal extends Component {
         const { itemIndex, dataSource, modalFieldValue, modalField, modalData, formArr, oneDataInfo } = this.props.TableStore
         const { fieldNameObj } = this.props.FormStore
         const getExactData = (formName) => {
-            console.log('getExactData',toJS(this.props.TableStore.modalData));
+            console.log('getExactData', toJS(this.props.TableStore.modalData));
             if (typeof (formArr[formName]) != 'undefined') {
                 const element = formArr[formName]['properties'];
                 return (
@@ -38,8 +37,8 @@ class DataModal extends Component {
                             let showData = modalData[item['id']]
                             let jsonData = JSON.parse(item['detailJson'])
                             try {
-                                showData=JSON.parse(showData)
-                            }catch{}
+                                showData = JSON.parse(showData)
+                            } catch { }
                             if (jsonData['typeId'] == '4') {
                                 let index = jsonData['enum'].indexOf(modalData[item['id']])
                                 showData = jsonData['enumNames'][index]
@@ -57,7 +56,7 @@ class DataModal extends Component {
                                 showData = ""
                                 console.log(iData);
                                 let iData
-                                if(modalData[item['id']]){
+                                if (modalData[item['id']]) {
                                     iData = modalData[item['id']].substring(1, modalData[item['id']].length).split(",");
                                     iData.map((one, index) => {
                                         let oneIndex = jsonData['enum'].findIndex(value => value.charCodeAt() == one.substring(1, one.length - 1).charCodeAt());
@@ -79,8 +78,8 @@ class DataModal extends Component {
                                         </div>
                                     </div>
                                 )
-                            }else if(jsonData['typeId'] == '7'){
-                                if (Array.isArray(showData)){showData=showData.join(',')}
+                            } else if (jsonData['typeId'] == '7') {
+                                if (Array.isArray(showData)) { showData = showData.join(',') }
                                 return (
                                     <div className='item_content' key={index}>
                                         <div className='item_title'>
@@ -92,13 +91,13 @@ class DataModal extends Component {
                                     </div>
                                 )
                             } else if (jsonData['typeId'] == '14') {
-                                console.log("14",toJS(element),toJS(jsonData),toJS(modalData[item['id']]))
+                                console.log("14", toJS(element), toJS(jsonData), toJS(modalData[item['id']]))
                                 console.log(toJS(oneDataInfo))
-                                let showData=[]
+                                let showData = []
                                 debugger
-                                let data=[]
-                                if(modalData[item['id']]){
-                                    data=JSON.parse(modalData[item['id']])
+                                let data = []
+                                if (modalData[item['id']]) {
+                                    data = JSON.parse(modalData[item['id']])
                                 }
                                 //多表数据
                                 for (const showDatum of data) {
@@ -106,7 +105,7 @@ class DataModal extends Component {
                                 }
 
                                 //多表表头
-                                let column=[]
+                                let column = []
                                 if (jsonData.linkquery_condition && jsonData.linkquery_condition.fieldIds) {
                                     jsonData.linkquery_condition.fieldIds.forEach((item, index) => {
                                         column.push({ title: fieldNameObj[item], dataIndex: item, key: item, width: '50', ellipsis: true })
@@ -118,7 +117,7 @@ class DataModal extends Component {
                                             {element[item['id']]['title']}
                                         </div>
                                         {
-                                            jsonData['linkquery_condition']['mul']!=='mul'? jsonData['linkquery_condition']['fieldIds'].map((one, index) => {
+                                            jsonData['linkquery_condition']['mul'] !== 'mul' ? jsonData['linkquery_condition']['fieldIds'].map((one, index) => {
                                                 let id = []
                                                 if (modalData[item['id']]) {
                                                     id = JSON.parse(modalData[item['id']])
@@ -133,7 +132,7 @@ class DataModal extends Component {
                                                         }
                                                     </div>
                                                 )
-                                            }):
+                                            }) :
                                                 <Table
                                                     scroll={{ x: 800 }}
                                                     columns={column}
@@ -143,7 +142,7 @@ class DataModal extends Component {
                                     </div>
                                 )
                             } else if (jsonData['typeId'] == '15') {
-                                console.log("15",toJS(element))
+                                console.log("15", toJS(element))
                                 return (
                                     <div className='item_content' key={index}>
                                         <div className='item_title'>
