@@ -115,10 +115,7 @@ class index extends Component {
                                             fieldList.forEach(element => {
                                                 if (element.typeId == 15 || element.typeId == 14) {
                                                     console.log(data[element['fieldId']]);
-
-
                                                     if (data[element['fieldId']] != undefined && data[element['fieldId']] != '') {
-
                                                         console.log(data);
                                                         let item
                                                         debugger
