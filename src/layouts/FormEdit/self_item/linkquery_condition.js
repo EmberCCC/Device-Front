@@ -163,7 +163,7 @@ const Linkquery_condition = observer((props) => {
             <Modal title={'添加过滤条件'} destroyOnClose={true} onCancel={() => {
                 setList(value?.conditions)
                 setVis(false)
-            }} visible={vis} footer={null} width={1000}>
+            }} open={vis} footer={null} width={1000}>
                 <div className="query_conditions_title">
                     添加过滤条件来限定关联数据范围
                 </div>

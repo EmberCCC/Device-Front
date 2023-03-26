@@ -38,6 +38,7 @@ import { Self_address } from './self_item/self_address';
 import self_department_user from './self_item/self_department_user';
 import self_setting from './self_item/self_setting';
 import self_editable_table from "./self_item/self_editable_table";
+import table_addEditColumn from "./self_item/table_addEditColumn";
 import Tab from './self_item/Tab';
 
 const { Provider, Sidebar, Canvas, Settings } = Generator;
@@ -289,6 +290,7 @@ const FormEdit = observer(({ HomeStore, FormStore }) => {
               self_address: Self_address,
               self_department_user: self_department_user,
               self_setting: self_setting,
+                table_addEditColumn: table_addEditColumn,
               self_editable_table: self_editable_table,
               Tab: Tab
             }}
@@ -332,6 +334,7 @@ const FormEdit = observer(({ HomeStore, FormStore }) => {
             self_address: Self_address,
             self_department_user: self_department_user,
             self_setting: self_setting,
+              table_addEditColumn: table_addEditColumn,
             self_editable_table: self_editable_table,
             Tab: Tab
           }} />

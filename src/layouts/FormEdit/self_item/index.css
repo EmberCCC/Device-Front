@@ -89,7 +89,7 @@
 }
 
 .my_controller * {}
-.text-color-dropdown 
+.text-color-dropdown
 
 
 /* .bf-link-editor {
@@ -235,6 +235,22 @@
     cursor: pointer;
     color: #0DB3A6;
 }
+.query_condition{
+    width: 100%;
+}
 .ant-popover-inner-content{
     padding: 10px !important;
+}
+.query_condition_item .query_condition_item_title{
+    font-size: 25px;
+    font-weight: 500;
+
+}
+.Select_columns_item{
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.Select_columns_item_title_content{
+    padding: 0 20px 0 10px;
 }

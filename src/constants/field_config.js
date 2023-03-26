@@ -6,6 +6,8 @@
  * @FilePath: \bl-device-manage-test\src\constants\field_config.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
+import table_addEditColumn from "../layouts/FormEdit/self_item/table_addEditColumn";
+
 var elements = [
     {
         text: '单行文本',
@@ -854,49 +856,53 @@ var strongElements = [
             }
         }
     },
-    // {
-    //     text:'可编辑关联表格',
-    //     name:'16',
-    //     schema:{
-    //         title:'可编辑关联表格',
-    //         type:'any',
-    //         widget:'self_editable_table',
-    //         typeId: '16',
-    //
-    //     },
-    //     setting:{
-    //         title:{
-    //             title:'标题',
-    //             type:"string"
-    //         },
-    //         title_vis: {
-    //             title: '显示标题',
-    //             type: 'boolean',
-    //             props: {
-    //                 defaultValue: true
-    //             }
-    //         },
-    //         describe: {
-    //             title: '描述信息',
-    //             type: 'string',
-    //             widget: 'RichTextEditor'
-    //         },
-    //         linkquery_condition: {
-    //             type: 'any',
-    //             widget: 'linkquery_condition'
-    //         },
-    //         width: {
-    //             title: '元素宽度',
-    //             type: 'string',
-    //             widget: 'percentSlider'
-    //         },
-    //
-    //         hidden: {
-    //             title: '隐藏',
-    //             type: 'boolean'
-    //         }
-    //     }
-    // },
+    {
+        text:'可编辑关联表格',
+        name:'16',
+        schema:{
+            title:'可编辑关联表格',
+            type:'any',
+            widget:'self_editable_table',
+            typeId: '16',
+
+        },
+        setting:{
+            title:{
+                title:'标题',
+                type:"string"
+            },
+            title_vis: {
+                title: '显示标题',
+                type: 'boolean',
+                props: {
+                    defaultValue: true
+                }
+            },
+            describe: {
+                title: '描述信息',
+                type: 'string',
+                widget: 'RichTextEditor'
+            },
+            linkquery_condition: {
+                type: 'any',
+                widget: 'linkquery_condition'
+            },
+            table_addEditColumn: {
+                type: 'any',
+                widget: 'table_addEditColumn'
+            },
+            width: {
+                title: '元素宽度',
+                type: 'string',
+                widget: 'percentSlider'
+            },
+
+            hidden: {
+                title: '隐藏',
+                type: 'boolean'
+            }
+        }
+    },
     {
         text: '关联查询',
         name: '14',

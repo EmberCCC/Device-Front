@@ -571,6 +571,7 @@ const MaLayout = observer(({ SocketStore }) => {
                             addUserIds.map((item, index) => {
                                 return (
                                     <div className="addUser_one" key={index}>
+                                        <GoldFilled style={{'color':'rgb(255, 190, 1)'}}/>
                                         <div className="one_name">{userName[item]}</div>
                                         {
                                             initList.indexOf(item) <= -1 && (

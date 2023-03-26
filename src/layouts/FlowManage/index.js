@@ -343,10 +343,18 @@ const FlowManage = observer(({FlowStore, HomeStore, TableStore, SocketStore, pro
     })(NsJsonForm || (NsJsonForm = {}));
     useEffect(() => {
         let formId = sessionStorage.getItem('formId') ? sessionStorage.getItem('formId') : HomeStore.firstFormId
-        FlowStore.getOneFlow({"formId": formId})
+        (async ()=>{
+            setIsload(true)
+            await FlowStore.getOneFlow({"formId": formId})
+            setIsload(false)
+        })
+
         console.log('getformId',formId)
         console.log(toJS(FlowStore.canOb))
     }, [])
+    useEffect(()=>{
+
+    },[JSON.stringify(NsJsonForm)])
     const nanoid = customAlphabet('1234567890', 7)
     const onLoad = async app => {
         setApp(app)
@@ -354,6 +362,7 @@ const FlowManage = observer(({FlowStore, HomeStore, TableStore, SocketStore, pro
         console.log(toJS(flowProperty));
         let iObj = JSON.parse(JSON.stringify(flowProperty))
         delete iObj['flowProperty']
+        console.log('iObj',iObj)
         await app.executeCommand(
             XFlowGraphCommands.GRAPH_RENDER.id,
             {

@@ -204,7 +204,6 @@ const RegisterForm=observer(({HomeStore, FormStore, setIsOk})=>{
                             >
                                 <Input
                                     placeholder="创建的公司名"
-
                                     prefix={<DeploymentUnitOutlined/>}
                                     size="large"
                                 />

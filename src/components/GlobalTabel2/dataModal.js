@@ -37,6 +37,7 @@ class DataModal extends Component {
                         if (modalFieldValue.includes(item['id']) && !(['createPerson', 'createTime', 'updateTime'].indexOf(item['id']) > -1) && element.hasOwnProperty(item['id'])) {
                             let showData = modalData[item['id']]
                             let jsonData = JSON.parse(item['detailJson'])
+                            jsonData=toJS(jsonData)
                             try {
                                 showData=JSON.parse(showData)
                             }catch{}
@@ -98,11 +99,14 @@ class DataModal extends Component {
                                 debugger
                                 let data=[]
                                 if(modalData[item['id']]){
-                                    data=JSON.parse(modalData[item['id']])
+                                    if(typeof JSON.parse(modalData[item['id']])=='object')
+                                        data=JSON.parse(modalData[item['id']])
+                                    else
+                                        data.push(modalData[item['id']])
                                 }
                                 //多表数据
-                                for (const showDatum of data) {
-                                    showData.push(oneDataInfo[showDatum])
+                                for (const i in data) {
+                                    showData.push(oneDataInfo[data[i]])
                                 }
 
                                 //多表表头

@@ -1,14 +1,15 @@
 import React, {useState} from 'react';
 import {Form, Input, Spin} from "antd";
+import {placeHolder_config_map} from "../config/Person_config"
+
+
 
 const ModelMessage = ({selectType,setContent}) => {
     const [isLoading,setIsLoading]=useState(false)
-    console.log(selectType,setContent)
+
     return (
         <div>
-                {selectType === 'nickname'&&
-                    <Input onBlur={(e)=> setContent(e.target.value)} placeholder="输入新用户名"/>
-                }
+             <Input onBlur={(e)=> setContent(e.target.value)} placeholder={placeHolder_config_map[selectType]}/>
         </div>
     );
 };

@@ -8,6 +8,8 @@ import {ExclamationCircleFilled} from "@ant-design/icons";
 import {toJS} from "mobx";
 import ModelMessage from "./components/modelMessage";
 import ModelMEssagePwd from "./components/modelMEssagePwd";
+import {person_config_map}from "./config/Person_config"
+
 const PersonalSettingPage = observer(({HomeStore,SocketStore}) => {
     const [selectType, setSelectType] = useState('nickname')
     const [content, setContent] = useState('')
@@ -62,8 +64,9 @@ const PersonalSettingPage = observer(({HomeStore,SocketStore}) => {
 
         let res = await HomeStore.editMessage(req)
         console.log(res)
-        if(res.code==='0'){
-            messageApi.info(res.data.msg)
+        if(res.code===0){
+            messageApi.success(res.data.msg)
+            await HomeStore.ownMessage()
         }else{
             messageApi.info(
                 {
@@ -72,9 +75,11 @@ const PersonalSettingPage = observer(({HomeStore,SocketStore}) => {
                 }
             )
         }
-        if(selectType==='nickname'){
-            HomeStore.setValue('myInfo', {...toJS(HomeStore.myInfo),'name':req.information})
-        }
+        // if(selectType!=='password'){
+        //     HomeStore.setValue('myInfo', {...toJS(HomeStore.myInfo),[selectType]:req.information})
+        // }
+        //
+
         setIsLoading(false)
         setModalOpen(false)
     }
@@ -84,8 +89,7 @@ const PersonalSettingPage = observer(({HomeStore,SocketStore}) => {
     const changeMessage = (e) => {
         return () => {
             setSelectType(e)
-            const maps = {"nickname": "修改用户名", "password": "修改密码"}
-            setTitle(maps[e])
+            setTitle(person_config_map[e])
             if(e==='password'){
                 setIsPwdModal(true)
             }else{
@@ -147,6 +151,7 @@ const PersonalSettingPage = observer(({HomeStore,SocketStore}) => {
                         <div className={"Setting-container-line-content"}>
                             {info.userName}
                         </div>
+
                     </div>
 
                 </div>
@@ -172,6 +177,9 @@ const PersonalSettingPage = observer(({HomeStore,SocketStore}) => {
                         <div className={"Setting-container-line-content"}>
                             {HomeStore.myInfo.phone}
                         </div>
+                        <Button className={"Setting_chage"} type={"link"} onClick={changeMessage('telephone')}>
+                            修改
+                        </Button>
                     </div>
                     <div className={"Setting-container-line"}>
                         <div className={"Setting-container-line-header"}>
@@ -180,6 +188,9 @@ const PersonalSettingPage = observer(({HomeStore,SocketStore}) => {
                         <div className={"Setting-container-line-content"}>
                             {HomeStore.myInfo.email}
                         </div>
+                        <Button className={"Setting_chage"} type={"link"} onClick={changeMessage('email')}>
+                            修改
+                        </Button>
                     </div>
                 </div>
                 <div className={"Setting-container Setting-container-last"}>
@@ -194,10 +205,11 @@ const PersonalSettingPage = observer(({HomeStore,SocketStore}) => {
                 </div>
             </div>
             <Modal title={title} open={isModalOpen} onOk={handleOk} onCancel={handleCancel} okText="确认"
+                   destroyOnClose
                    cancelText="取消" confirmLoading={isLoading}>
                 <ModelMessage selectType={selectType} setContent={setContent}/>
             </Modal>
-            <Modal title={title} open={isPwdModal} footer={[]} onCancel={handlePwdCancel}>
+            <Modal title={title} open={isPwdModal} footer={[]} onCancel={handlePwdCancel} destroyOnClose>
                 <ModelMEssagePwd  setIsPwdModal={setIsPwdModal}></ModelMEssagePwd>
             </Modal>
 

@@ -29,7 +29,7 @@ import self_linkquery from "layouts/FormEdit/self_item/self_linkquery"
 import { Self_address } from "layouts/FormEdit/self_item/self_address"
 import self_department_user from "layouts/FormEdit/self_item/self_department_user"
 import {useHistory} from "react-router-dom";
-const DetailPage = observer(({ MessageStore, HomeStore, FlowStore, FormStore, props }) => {
+const DetailPage = observer(({ MessageStore, HomeStore, SocketStore, FlowStore, FormStore, props }) => {
     const [schema, setSchema] = useState({
         "type": "object",
         "properties": {},
@@ -49,6 +49,7 @@ const DetailPage = observer(({ MessageStore, HomeStore, FlowStore, FormStore, pr
     const history=useHistory()
     useEffect(() => {
         dataRef.current = data;
+
     }, [data])
     useEffect(() => {
         console.log(toJS(formData));
@@ -59,6 +60,7 @@ const DetailPage = observer(({ MessageStore, HomeStore, FlowStore, FormStore, pr
     useEffect(() => {
         setSchema(restore2({ 'form': toJS(formInfo), 'formFields': toJS(fieldInfo) }));
         FlowStore.getShowFlow({ 'formId': info['formId'] })
+        SocketStore.getAllUsers()
         setData(formData)
         formList.setValues(formData);
         form.setValues(formData);
@@ -156,10 +158,11 @@ const DetailPage = observer(({ MessageStore, HomeStore, FlowStore, FormStore, pr
 
         return (
             nArr.map((item, index) => {
-                console.log('item',item)
+                console.log('item',item,index)
                 if (JSON.stringify(item['schema']['properties']) !== '{}') {
+
                     return (
-                        <Tabs.TabPane tab={item['name']} key={index}>
+                        <Tabs.items tab={item['name']} key={index}>
                             <FormRender
                                 schema={item['schema']}
                                 mapping={{ string: 'My_string' }}
@@ -179,7 +182,7 @@ const DetailPage = observer(({ MessageStore, HomeStore, FlowStore, FormStore, pr
                                 style={{ overflowY: 'auto' }}
                                 watch={watch}
                                 onMount={handleMount} />
-                        </Tabs.TabPane>
+                        </Tabs.items>
                     )
                 }
             })
@@ -279,6 +282,28 @@ const DetailPage = observer(({ MessageStore, HomeStore, FlowStore, FormStore, pr
                         </div>
                     )
                 }
+                else if (field['typeId'] == '20') {
+                    let arr = JSON.parse(showData)
+                    console.log('arr', arr)
+                    console.log(toJS(SocketStore.userName))
+                    return (
+                        <div className='item_content' key={index}>
+                            <div className='item_title'>
+                                {nameObj[item]}
+                            </div>
+                            <div className='item_article'>
+                                {
+                                    Array.isArray(arr) && arr.map((one, index) => {
+                                        console.log(one,index)
+                                        return (
+                                            <span style={{ marginRight: '5px' }} key={index}>{SocketStore.userName[one]}</span>
+                                        )
+                                    })
+                                }
+                            </div>
+                        </div>
+                    )
+                }
                 else {
                     return (
                         <div className='item_content' key={index}>
@@ -303,9 +328,9 @@ const DetailPage = observer(({ MessageStore, HomeStore, FlowStore, FormStore, pr
         return formInfo.map((item, index) => {
             if (item['name'] !== 'root') {
                 return (
-                    <Tabs.TabPane tab={item['name']} key={index}>
+                    <Tabs.item tab={item['name']} key={index}>
                         {getExactItem(item['name'])}
-                    </Tabs.TabPane>
+                    </Tabs.item>
                 )
             }
 
@@ -427,4 +452,4 @@ const DetailPage = observer(({ MessageStore, HomeStore, FlowStore, FormStore, pr
 })
 
 
-export default inject((stores) => ({ MessageStore: stores.MessageStore, HomeStore: stores.HomeStore, FlowStore: stores.FlowStore, FormStore: stores.FormStore }))(DetailPage)
+export default inject((stores) => ({ MessageStore: stores.MessageStore, HomeStore: stores.HomeStore, FlowStore: stores.FlowStore, FormStore: stores.FormStore,SocketStore:stores.SocketStore }))(DetailPage)

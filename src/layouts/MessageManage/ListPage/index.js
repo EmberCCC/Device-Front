@@ -17,6 +17,7 @@ import GlobalModal from 'components/GlobalModal';
 import Detail from '../detail';
 import { getLinkCondition } from 'layouts/FormEdit/changeTool';
 import { put } from 'utils/request';
+import { state}from "../../../constants/status_constant"
 
 @inject('MessageStore', 'HomeStore', 'TableStore', 'FormStore', 'SocketStore')
 @observer
@@ -114,9 +115,20 @@ class index extends Component {
                                             fieldList.forEach(element => {
                                                 if (element.typeId == 15 || element.typeId == 14) {
                                                     console.log(data[element['fieldId']]);
+
+
                                                     if (data[element['fieldId']] != undefined && data[element['fieldId']] != '') {
-                                                        if (Array.isArray(JSON.parse(data[element['fieldId']]))) {
-                                                            dataIdArr = dataIdArr.concat(JSON.parse(data[element['fieldId']]))
+
+                                                        console.log(data);
+                                                        let item
+                                                        debugger
+                                                        try {
+                                                            item=JSON.parse(data[element['fieldId']])
+                                                        }catch (e){
+                                                            item=data[element['fieldId']]
+                                                        }
+                                                        if (Array.isArray(item)) {
+                                                            dataIdArr = dataIdArr.concat(item)
                                                         } else {
                                                             dataIdArr = dataIdArr.concat(data[element['fieldId']])
                                                         }
@@ -162,7 +174,7 @@ class index extends Component {
                                                 }
                                                 {
                                                     model != 'wait' && (
-                                                        <div className='message_statu'>{item['state'] ? '已结束' : '进行中'}</div>
+                                                        <div className='message_statu'>{item['state']>=1?'已完成':'进行中'}</div>
                                                     )
                                                 }
                                             </div>
