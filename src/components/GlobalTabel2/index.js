@@ -8,14 +8,13 @@
  */
 import React, { createRef } from 'react';
 import { inject, observer } from 'mobx-react';
-import { Button, Checkbox, Col, Dropdown, Menu, Modal, Popover, Row, Select, Spin, Table } from 'antd';
+import { Button, Checkbox, Dropdown, Menu, Modal, Popover, Row, Table } from 'antd';
 import { ClockCircleOutlined, DeleteOutlined, DownOutlined, FilterOutlined, FullscreenExitOutlined, PlusOutlined, SortDescendingOutlined, UploadOutlined, FunnelPlotOutlined } from '@ant-design/icons';
 import GlobalModal from 'components/GlobalModal';
 import { toJS } from 'mobx';
 import { firstFormName } from 'constants/status_constant';
 import moment from 'moment';
 import DataModal from './dataModal';
-import { injectSelfToken } from 'utils/request';
 import FormLayout from 'layouts/FormLayout';
 import MulChange from './mulChange';
 import SortLayout from './sortLayout';
@@ -53,8 +52,8 @@ class GlobalTabel2 extends React.Component {
                 childrenRef.current.setSort();
             }
         }
-        const expandable={
-            columnTitle:<columnTitle/>
+        const expandable = {
+            columnTitle: <columnTitle />
         }
         const fieldChoose = (
             <div className='field_list'>
@@ -139,7 +138,7 @@ class GlobalTabel2 extends React.Component {
 
                 </div>
                 {
-                     <Table
+                    <Table
                         rowSelection={{
                             type: 'checkbox',
                             ...rowSelection,
@@ -153,7 +152,7 @@ class GlobalTabel2 extends React.Component {
                         // onChange={this.onChange}
                         expandable={expandable}
                         loading={isLoading}
-                        onRow={this.props.TableStore.model != 'look' ?(key, record) => {
+                        onRow={this.props.TableStore.model != 'look' ? (key, record) => {
                             return {
                                 onClick: event => {
                                     let dindex = 0;
@@ -169,7 +168,7 @@ class GlobalTabel2 extends React.Component {
                                     })
                                 }, // 点击行
                             };
-                        }:null}
+                        } : null}
                     />
                 }
 
@@ -362,7 +361,7 @@ class GlobalTabel2 extends React.Component {
                 okText: '确定',
                 cancelText: '取消',
                 onOk: () => {
-                    let option = this.commExport(toJS(this.props.TableStore.selectedIdsList),export_list);
+                    let option = this.commExport(toJS(this.props.TableStore.selectedIdsList), export_list);
                     let toExcel = new ExportJsonExcel(option)
                     toExcel.saveExcel();
                 }
