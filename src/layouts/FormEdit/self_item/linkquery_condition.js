@@ -229,7 +229,9 @@ const Linkquery_condition = observer((props) => {
                                     </Select>
                                     {
                                         item['custom'] == false && (
-                                            <Select value={maps[item['operand']] } placeholder='当前表单字段' style={{ width: '200px', marginRight: "10px" }} onChange={(e) => {
+                                            <Select value={maps[item['operand']] }
+                                                    disabled={oInfo==''}
+                                                    placeholder='当前表单字段' style={{ width: '200px', marginRight: "10px" }} onChange={(e) => {
                                                 let arr = [...list]
                                                 let obj = arr[index]
                                                 console.log(e)

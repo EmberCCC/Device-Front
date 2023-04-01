@@ -17,9 +17,9 @@ import { getAllField } from '../changeTool';
 import './index.css'
 import FormLayout from 'layouts/FormLayout';
 import GlobalModal from 'components/GlobalModal';
-import {isDataExist} from "../../../utils/dataTools";
+import {isDataExist, string2Array} from "../../../utils/dataTools";
 const Self_linkquery = observer((props) => {
-    const { schema, FormStore } = props
+    const { schema, FormStore ,SocketStore } = props
     const [column, setColumn] = useState([])
     const [vis, setVis] = useState(false)
     const [dataSource, setDataSource] = useState([])
@@ -37,6 +37,9 @@ const Self_linkquery = observer((props) => {
             console.log('column',arr);
             setColumn(arr)
         })
+        if(SocketStore.allUsers.length===0){
+            SocketStore.getAllUsers()
+        }
     }, [])
     useEffect(() => {
         let arr = []
@@ -48,7 +51,6 @@ const Self_linkquery = observer((props) => {
         setColumn(arr)
     }, [schema.linkquery_condition])
     useEffect(() => {
-        console.log('这是否是多余的fastQuery',props)
         if (props.value !== undefined && props.value.length !== 0) {
             let arr = props.value
             if (!Array.isArray(arr)) {
@@ -65,10 +67,33 @@ const Self_linkquery = observer((props) => {
                 let arr = []
                 res.data.data.map((item, index) => {
                     let obj = {}
+
                     let data = JSON.parse(item['formData'])
                     obj = { ...data }
                     obj['key'] = item['id']
                     obj['id'] = item['id']
+                    console.log('fastQuery',obj)
+                    //找20
+                    for(const i in obj){
+                        if(i.substring(0,2)==='20'){
+                            let data=JSON.parse(obj[i])
+                            try {
+                                data=string2Array(obj[i])
+                            }catch (e){}
+                            let arr=[]
+
+                            let alluser=toJS(SocketStore.allUsers)
+                            //找数
+                            for (const t in data){
+                                for (const user in alluser){
+                                    if(alluser[user].userId==data[t]){
+                                        arr.push(alluser[user].name)
+                                    }
+                                }
+                            }
+                            obj[i]=arr
+                        }
+                    }
                     arr.push(obj)
                 })
                 console.log('showData',arr)
@@ -233,4 +258,4 @@ const Self_linkquery = observer((props) => {
     )
 })
 
-export default inject((stores) => ({ FormStore: stores.FormStore }))(Self_linkquery)
+export default inject((stores) => ({ FormStore: stores.FormStore ,SocketStore:stores.SocketStore }))(Self_linkquery)
