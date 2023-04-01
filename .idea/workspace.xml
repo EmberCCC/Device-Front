@@ -2,10 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d0f636be-eafc-4739-9c82-f6c78cbc7282" name="变更" comment="login">
-      <change beforePath="$PROJECT_DIR$/src/layouts/FlowManage/Self_Form/node_charge.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/FlowManage/Self_Form/node_charge.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/layouts/FormEdit/self_item/linkquery_condition.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/FormEdit/self_item/linkquery_condition.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/layouts/FormEdit/self_item/self_linkquery.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/FormEdit/self_item/self_linkquery.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/layouts/MessageManage/detail.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/MessageManage/detail.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/request.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/request.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -141,7 +139,8 @@
       <workItem from="1679904660616" duration="1185000" />
       <workItem from="1680161944705" duration="603000" />
       <workItem from="1680257718109" duration="2646000" />
-      <workItem from="1680325466131" duration="3545000" />
+      <workItem from="1680325466131" duration="6236000" />
+      <workItem from="1680353967011" duration="1144000" />
     </task>
     <task id="LOCAL-00001" summary="login">
       <created>1678279318279</created>
