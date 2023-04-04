@@ -29,6 +29,7 @@ const Link_condition = observer((props) => {
     }, [value])
     useEffect(() => {
         FormStore.getFormSimple();
+
         let fId = props.addons.formData.hasOwnProperty('fieldId') ? props.addons.formData.fieldId : props.addons.formData.$id.substr(2)
         console.log('fId',fId)
         setFid(fId)

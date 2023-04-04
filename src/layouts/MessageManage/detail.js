@@ -283,7 +283,10 @@ const DetailPage = observer(({ MessageStore, HomeStore, SocketStore, FlowStore, 
                     )
                 }
                 else if (field['typeId'] == '20') {
-                    let arr = JSON.parse(showData)
+                    let arr=[]
+                    try {
+                        arr = JSON.parse(showData)
+                    }catch (e){}
                     console.log('arr', arr)
                     console.log(toJS(SocketStore.userName))
                     return (

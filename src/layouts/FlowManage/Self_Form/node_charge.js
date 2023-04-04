@@ -67,7 +67,7 @@ const Node_charge = observer(({ FlowStore, HomeStore, TableStore, SocketStore, i
                     })
                 }
             </div>
-            <Modal width={650} visible={visible} title={'部门成员列表'} onCancel={() => setVisible(false)} footer={null} destroyOnClose={true}>
+            <Modal width={650} visible={visible} title={'部门成员列表'} onCancel={() => setVisible(false)} footer={null} destroyOnClose={true}    >
                 <div className="select_person">
                     <div className="select_display">
                         {
@@ -87,9 +87,12 @@ const Node_charge = observer(({ FlowStore, HomeStore, TableStore, SocketStore, i
                                                             MODELS.SELECTED_NODE.useValue(modelService).then(res => {
                                                                 let nCharge = res.data.charge_person
                                                                 nCharge = iArr
+                                                                console.log(iArr)
+                                                                res.data.charge_person.department= nCharge
+                                                                console.log('删除部门',res.data)
                                                                 commandService.executeCommand(XFlowNodeCommands.UPDATE_NODE.id, {
                                                                     nodeConfig:
-                                                                        { ...res.data, ...nCharge }
+                                                                        { ...res.data }
 
                                                                 })
                                                             })
@@ -111,9 +114,10 @@ const Node_charge = observer(({ FlowStore, HomeStore, TableStore, SocketStore, i
                                                             MODELS.SELECTED_NODE.useValue(modelService).then(res => {
                                                                 let nCharge = res.data.charge_person
                                                                 nCharge = iArr
+                                                                res.data.charge_person.role= nCharge
                                                                 commandService.executeCommand(XFlowNodeCommands.UPDATE_NODE.id, {
                                                                     nodeConfig:
-                                                                        { ...res.data, ...nCharge }
+                                                                        { ...res.data }
 
                                                                 })
                                                             })
@@ -134,13 +138,16 @@ const Node_charge = observer(({ FlowStore, HomeStore, TableStore, SocketStore, i
                                                         iArr.splice(oIndex, 1);
                                                         console.log(iArr);
                                                         nCharge['user'] = iArr
+
                                                         if (typeName == 'node') {
                                                             MODELS.SELECTED_NODE.useValue(modelService).then(res => {
                                                                 let nCharge = res.data.charge_person
                                                                 nCharge = iArr
+                                                                console.log('点击',res.data,nCharge)
+                                                                res.data.charge_person.user= nCharge
                                                                 commandService.executeCommand(XFlowNodeCommands.UPDATE_NODE.id, {
                                                                     nodeConfig:
-                                                                        { ...res.data, ...nCharge }
+                                                                        { ...res.data }
 
                                                                 })
                                                             })
@@ -286,7 +293,7 @@ const Node_charge = observer(({ FlowStore, HomeStore, TableStore, SocketStore, i
                                                                             console.log(item['userId'])
                                                                             let arr = [...icharge['user']]
                                                                             let obj = { ...addUserObjs }
-                                                                            let index 
+                                                                            let index
                                                                             if(typeName == 'node'){
                                                                                 index = icharge['user'].indexOf(item['userId'])
                                                                             }else{

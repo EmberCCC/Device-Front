@@ -14,6 +14,7 @@ import { message, Modal } from 'antd';
 import { getLinkCondition, restore } from 'layouts/FormEdit/changeTool';
 import {putUrlRequest} from "../services/flow";
 import linkquery_condition from "../layouts/FormEdit/self_item/linkquery_condition";
+import {putRequest} from "../services/form";
 
 class Form {
     constructor() {
@@ -46,7 +47,6 @@ class Form {
     @observable formAuthInfo = []
     @observable canvasLoading=false
     @observable formAuthManage = []
-
     @observable selectFormId = 1;
     @observable testObj = {}
 
@@ -475,6 +475,17 @@ class Form {
     @action.bound async initTemplate(params){
         try {
             return await services.putUrlRequest(services.requestList.initTemplate,params)
+        }catch (error){
+            console.log(error)
+        }
+    }
+
+    /**
+     * 快速查询数据
+     */
+    @action.bound async fastQuery(params) {
+        try {
+            return await services.putRequest(services.requestList.initTemplate,params)
         }catch (error){
             console.log(error)
         }

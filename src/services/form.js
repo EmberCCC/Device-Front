@@ -29,6 +29,7 @@ export const requestList = {
   getLinkData: '/data/link/other',
   getData:'/data/link',
   getSearchData:'/data/link/form/search',
+  fastQuery:'/data/link/form/fastQuery',
 
   initMenu:'/data/form/initMenu',
   initTemplate:'/data/form/initTemplate'

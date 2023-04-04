@@ -29,6 +29,7 @@ class DataModal extends Component {
         const { fieldNameObj } = this.props.FormStore
         const getExactData = (formName) => {
             console.log('getExactData', toJS(this.props.TableStore.modalData));
+            console.log('modalField',toJS(modalField),toJS(modalFieldValue))
             if (typeof (formArr[formName]) != 'undefined') {
                 const element = formArr[formName]['properties'];
                 return (
@@ -37,6 +38,8 @@ class DataModal extends Component {
                             let showData = modalData[item['id']]
                             let jsonData = JSON.parse(item['detailJson'])
                             jsonData = toJS(jsonData)
+                            console.log('jsonData',jsonData)
+                            debugger
                             try {
                                 showData = JSON.parse(showData)
                             } catch {
@@ -163,67 +166,68 @@ class DataModal extends Component {
                                             }
                                         </div>
                                     )
-                                } else if (jsonData['typeId'] == '15') {
-                                    console.log("15", toJS(element))
-                                    return (
-                                        <div className='item_content' key={index}>
-                                            <div className='item_title'>
-                                                {element[item['id']]['title']}
-                                            </div>
+                                }
+                            }else if (jsonData['typeId'] == '15') {
+                                console.log("15", toJS(element))
+                                return (
+                                    <div className='item_content' key={index}>
+                                        <div className='item_title'>
+                                            {element[item['id']]['title']}
+                                        </div>
+                                        {
+                                            jsonData['linkquery_condition']['fieldIds'].map((one, index) => {
+                                                let id = []
+                                                if (modalData[item['id']]) {
+                                                    id = JSON.parse(modalData[item['id']])
+                                                }
+                                                return (
+                                                    <div key={index}>
+                                                        <div style={{
+                                                            marginBottom: '5px',
+                                                            color: 'black'
+                                                        }}>{fieldNameObj[one]}</div>
+                                                        {
+                                                            id.length > 0 && oneDataInfo.hasOwnProperty(id[0]) && oneDataInfo[id[0]].hasOwnProperty(one) && (
+                                                                <div>{oneDataInfo[id[0]][one]}</div>
+                                                            )
+                                                        }
+                                                    </div>
+                                                )
+                                            })
+                                        }
+                                    </div>
+                                )
+                            } else if (jsonData['typeId'] == '20') {
+                                let arr = showData
+                                return (
+                                    <div className='item_content' key={index}>
+                                        <div className='item_title'>
+                                            {element[item['id']]['title']}
+                                        </div>
+                                        <div className='item_article'>
                                             {
-                                                jsonData['linkquery_condition']['fieldIds'].map((one, index) => {
-                                                    let id = []
-                                                    if (modalData[item['id']]) {
-                                                        id = JSON.parse(modalData[item['id']])
-                                                    }
+                                                Array.isArray(arr) && arr.map((one, index) => {
                                                     return (
-                                                        <div key={index}>
-                                                            <div style={{
-                                                                marginBottom: '5px',
-                                                                color: 'black'
-                                                            }}>{fieldNameObj[one]}</div>
-                                                            {
-                                                                id.length > 0 && oneDataInfo.hasOwnProperty(id[0]) && oneDataInfo[id[0]].hasOwnProperty(one) && (
-                                                                    <div>{oneDataInfo[id[0]][one]}</div>
-                                                                )
-                                                            }
-                                                        </div>
+                                                        <span style={{marginRight: '5px'}}
+                                                              key={index}>{this.props.SocketStore.userName[one]}</span>
                                                     )
                                                 })
                                             }
                                         </div>
-                                    )
-                                } else if (jsonData['typeId'] == '20') {
-                                    let arr = showData
-                                    return (
-                                        <div className='item_content' key={index}>
-                                            <div className='item_title'>
-                                                {element[item['id']]['title']}
-                                            </div>
-                                            <div className='item_article'>
-                                                {
-                                                    Array.isArray(arr) && arr.map((one, index) => {
-                                                        return (
-                                                            <span style={{marginRight: '5px'}}
-                                                                  key={index}>{this.props.SocketStore.userName[one]}</span>
-                                                        )
-                                                    })
-                                                }
-                                            </div>
+                                    </div>
+                                )
+                            } else {
+                                console.log('没有这个类型')
+                                return (
+                                    <div className='item_content' key={index}>
+                                        <div className='item_title'>
+                                            {element[item['id']]['title']}
                                         </div>
-                                    )
-                                } else {
-                                    return (
-                                        <div className='item_content' key={index}>
-                                            <div className='item_title'>
-                                                {element[item['id']]['title']}
-                                            </div>
-                                            <div className='item_article'>
-                                                {showData}
-                                            </div>
+                                        <div className='item_article'>
+                                            {showData}
                                         </div>
-                                    )
-                                }
+                                    </div>
+                                )
                             }
                         }
                     })
