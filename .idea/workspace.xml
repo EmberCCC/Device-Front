@@ -2,8 +2,19 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d0f636be-eafc-4739-9c82-f6c78cbc7282" name="变更" comment="login">
+      <change afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/request.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/request.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/GlobalTabel2/dataModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/GlobalTabel2/dataModal.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/css/index.less" beforeDir="false" afterPath="$PROJECT_DIR$/src/css/index.less" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/css/newTheme.less" beforeDir="false" afterPath="$PROJECT_DIR$/src/css/newTheme.less" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/layouts/FormEdit/self_item/link_condition.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/FormEdit/self_item/link_condition.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/layouts/FormEdit/self_item/self_editable_table.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/FormEdit/self_item/self_editable_table.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/layouts/FormEdit/self_item/self_linkquery.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/FormEdit/self_item/self_linkquery.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/layouts/FormLayout/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/FormLayout/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/services/form.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/form.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/stores/FormStore.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/stores/FormStore.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -140,7 +151,14 @@
       <workItem from="1680161944705" duration="603000" />
       <workItem from="1680257718109" duration="2646000" />
       <workItem from="1680325466131" duration="6236000" />
-      <workItem from="1680353967011" duration="1144000" />
+      <workItem from="1680353967011" duration="1250000" />
+      <workItem from="1680356173683" duration="31000" />
+      <workItem from="1680361140191" duration="5000" />
+      <workItem from="1680414207906" duration="18459000" />
+      <workItem from="1680518795265" duration="5000" />
+      <workItem from="1680520446410" duration="1880000" />
+      <workItem from="1680522623506" duration="940000" />
+      <workItem from="1680591837951" duration="663000" />
     </task>
     <task id="LOCAL-00001" summary="login">
       <created>1678279318279</created>

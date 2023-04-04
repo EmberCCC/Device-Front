@@ -62,12 +62,11 @@ const Self_linkquery = observer((props) => {
             } else {
                 iArr = arr
             }
+            console.log('iArr',iArr)
             put('/data/FastQuery', iArr).then((res) => {
-
                 let arr = []
                 res.data.data.map((item, index) => {
                     let obj = {}
-
                     let data = JSON.parse(item['formData'])
                     obj = { ...data }
                     obj['key'] = item['id']

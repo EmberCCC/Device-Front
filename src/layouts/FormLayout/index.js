@@ -24,7 +24,7 @@ import self_datapick from 'layouts/FormEdit/self_item/self_datapick';
 import self_linkquery from 'layouts/FormEdit/self_item/self_linkquery';
 import { Self_address } from 'layouts/FormEdit/self_item/self_address';
 import self_department_user from 'layouts/FormEdit/self_item/self_department_user';
-import self_editable_table from "../FormEdit/self_item/self_editable_table";
+import self_editable_table from "layouts/FormEdit/self_item/self_editable_table";
 const FormLayout = observer(({ HomeStore, FormStore, type, formId, handleCancel, handleClose }) => {
   const { schema, formField, formData, flag } = FormStore
   const [data, setData] = useState({});
