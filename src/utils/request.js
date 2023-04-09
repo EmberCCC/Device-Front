@@ -36,9 +36,9 @@ export function request(url, options) {
   // console.log('test request: ',Pace);
   // Pace && Pace.restart();
   // setDefault
-  if (config.env === 'product'){
-    url='http://http://124.222.87.213:8888'+url
-  }
+  // if (config.env === 'product'){
+  //   url='http://http://124.222.87.213:8888'+url
+  // }
   options = {
     ...defaultOptions,
     ...options

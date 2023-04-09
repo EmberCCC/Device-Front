@@ -197,7 +197,45 @@ class DataModal extends Component {
                                         }
                                     </div>
                                 )
-                            } else if (jsonData['typeId'] == '20') {
+                            } else if(jsonData['typeId']=='16'){
+                                //多表表头
+                                let column = []
+                                console.log('多表头',jsonData)
+                                if (jsonData.linkquery_condition && jsonData.linkquery_condition.fieldIds) {
+                                    jsonData.linkquery_condition.fieldIds.forEach((item, index) => {
+                                        column.push({
+                                            title: fieldNameObj[item],
+                                            dataIndex: item,
+                                            key: item,
+                                            width: '50',
+                                            ellipsis: true
+                                        })
+                                    })
+                                }
+                                if(jsonData.table_addEditColumn&& jsonData.table_addEditColumn.conditions){
+                                    jsonData.table_addEditColumn.conditions.forEach((item,index)=>{
+                                        column.push({
+                                            title: item.title,
+                                            dataIndex: item.columnId,
+                                            key: item.columnId,
+                                            width: '50',
+                                            ellipsis: true
+                                        })
+                                    })
+                                }
+                                return (
+                                    <div className='item_content' key={index}>
+                                        <div className='item_title'>
+                                            {element[item['id']]['title']}
+                                        </div>
+                                        <Table
+                                            scroll={{x: 800}}
+                                            columns={column}
+                                            dataSource={showData}
+                                        />
+                                    </div>
+                                )
+                            }else if (jsonData['typeId'] == '20') {
                                 let arr = showData
                                 return (
                                     <div className='item_content' key={index}>
