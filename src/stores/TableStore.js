@@ -1,6 +1,6 @@
 /*
- * @Description: 
- * @version: 
+ * @Description:
+ * @version:
  * @Author: zhihao
  * @Date: 2022-04-17 15:22:43
  * @LastEditors: EmberCCC 1810888456@qq.com
@@ -22,7 +22,7 @@ class Table {
 	}
 	@observable isModalEdit = false; //保养数据的对话框是否为编辑状态
 	@observable dataPageModalVis = false; //弹窗是否可见
-	@observable selectedIdsList = [];   // 保养数据表格第一列的选择ID列表  
+	@observable selectedIdsList = [];   // 保养数据表格第一列的选择ID列表
 	@observable allSelectedIdsList = [];  //全选ID列表
 	@observable selectedDate = '';//日历选中的日期
 	@observable chosenDateRow = [];//选中日期的保养数据
@@ -286,8 +286,8 @@ class Table {
 	}
 	/**
 	 * 获取表单的全部数据
-	 * @param {*} params 
-	 * @param {*} type 
+	 * @param {*} params
+	 * @param {*} type
 	 */
 	@action.bound async getAllData(params, type) {
 		this.setValue('columns', [])
@@ -313,7 +313,7 @@ class Table {
 			})
 			console.log('objName',objName);
 			data.fields.map((item) => {
-				if (item['typeId'] != 14 && item['typeId'] != 15) {
+				if (item['typeId'] != 14 && item['typeId'] != 15 && item['typeId']!=16) {
 					let jsonItem = JSON.parse(item['detailJson']);
 					jsonItem['fieldId'] = item['id'];
 					if (item['typeId'] == '3') {
@@ -372,14 +372,14 @@ class Table {
 									if(Array.isArray(text)){
 										text=text.join(',')
 									}
-									
+
 								}catch{}
 								return <div className='person_list'>
 									{
 										<span className='one_person' key={index}>{text}</span>
 									}
 								</div>
-								
+
 
 							}
 						});

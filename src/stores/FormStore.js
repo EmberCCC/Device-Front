@@ -372,6 +372,8 @@ class Form {
     }
     @action.bound async getSearchData(params) {
         try {
+            debugger
+            console.log('参数',params)
             let res = await services.putRequest(services.requestList.getSearchData, params);
             if (isDataExist(res)) {
                 console.log(res.data.data);

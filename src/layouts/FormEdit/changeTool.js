@@ -406,7 +406,7 @@ export function getLinkCondition(formInfo) {
                 }
             })
         }
-        if (item['typeId'] == '14') {
+        if (item['typeId'] == '14' || item['typeId']=='16') {
             let obj = {...detailJson['linkquery_condition']}
 
             DObj[item['id']] = obj

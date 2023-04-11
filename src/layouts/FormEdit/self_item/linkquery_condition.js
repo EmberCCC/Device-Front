@@ -41,6 +41,8 @@ const Linkquery_condition = observer((props) => {
                 onChange({ originId: props.addons.formData.$id.substr(2), restrictType: 'and', conditions: [], fieldIds: [], formId: null, mul: 'one' })
             } else if (addons.formData.typeId == '15') {
                 onChange({ originId: props.addons.formData.$id.substr(2), restrictType: 'and', conditions: [], fieldIds: [], fieldShow: [], formId: null })
+            }else{
+                onChange({ originId: props.addons.formData.$id.substr(2), restrictType: 'and', conditions: [], fieldIds: [], fieldShow: [], formId: null })
             }
             console.log('changeValue',value)
         } else {

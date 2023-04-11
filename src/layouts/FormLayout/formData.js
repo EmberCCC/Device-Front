@@ -25,6 +25,7 @@ import self_datapick from 'layouts/FormEdit/self_item/self_datapick';
 import self_linkquery from 'layouts/FormEdit/self_item/self_linkquery';
 import { Self_address } from 'layouts/FormEdit/self_item/self_address';
 import self_department_user from 'layouts/FormEdit/self_item/self_department_user';
+import self_editable_table from "../FormEdit/self_item/self_editable_table";
 
 const FormData = observer(({ HomeStore, FormStore, TableStore }) => {
   const { formField, formData, flag } = FormStore
@@ -195,7 +196,8 @@ const FormData = observer(({ HomeStore, FormStore, TableStore }) => {
                   self_datapick: self_datapick,
                   self_linkquery: self_linkquery,
                   self_address: Self_address,
-                  self_department_user: self_department_user
+                  self_department_user: self_department_user,
+                  self_editable_table: self_editable_table,
                 }}
                 form={formList}
                 style={{ overflowY: 'auto' }}
@@ -227,7 +229,9 @@ const FormData = observer(({ HomeStore, FormStore, TableStore }) => {
             self_datapick: self_datapick,
             self_linkquery: self_linkquery,
             self_address: Self_address,
-            self_department_user: self_department_user
+            self_department_user: self_department_user,
+            self_editable_table: self_editable_table,
+
           }}
           watch={watch}
         />

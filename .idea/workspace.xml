@@ -2,19 +2,19 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d0f636be-eafc-4739-9c82-f6c78cbc7282" name="变更" comment="login">
-      <change afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/webpackDevServer.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/config/webpackDevServer.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/GlobalHeader/index.less" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/GlobalHeader/index.less" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/GlobalTabel2/dataModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/GlobalTabel2/dataModal.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/css/index.less" beforeDir="false" afterPath="$PROJECT_DIR$/src/css/index.less" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/css/newTheme.less" beforeDir="false" afterPath="$PROJECT_DIR$/src/css/newTheme.less" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/layouts/FormEdit/self_item/link_condition.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/FormEdit/self_item/link_condition.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/layouts/FormEdit/changeTool.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/FormEdit/changeTool.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/layouts/FormEdit/self_item/linkquery_condition.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/FormEdit/self_item/linkquery_condition.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/layouts/FormEdit/self_item/self_editable_table.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/FormEdit/self_item/self_editable_table.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/layouts/FormEdit/self_item/self_linkquery.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/FormEdit/self_item/self_linkquery.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/layouts/FormLayout/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/FormLayout/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/services/form.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/services/form.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/layouts/FormLayout/formData.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/FormLayout/formData.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/stores/FormStore.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/stores/FormStore.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/stores/TableStore.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/stores/TableStore.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/utils/request.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/request.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -158,7 +158,12 @@
       <workItem from="1680518795265" duration="5000" />
       <workItem from="1680520446410" duration="1880000" />
       <workItem from="1680522623506" duration="940000" />
-      <workItem from="1680591837951" duration="663000" />
+      <workItem from="1680591837951" duration="1210000" />
+      <workItem from="1680928311494" duration="2403000" />
+      <workItem from="1680941142746" duration="11000" />
+      <workItem from="1680945056490" duration="14000" />
+      <workItem from="1680959954267" duration="4290000" />
+      <workItem from="1681013853454" duration="10546000" />
     </task>
     <task id="LOCAL-00001" summary="login">
       <created>1678279318279</created>
