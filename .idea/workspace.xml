@@ -2,15 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d0f636be-eafc-4739-9c82-f6c78cbc7282" name="变更" comment="login">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/GlobalHeader/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/GlobalHeader/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/layouts/FormEdit/self_item/self_editable_table.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/FormEdit/self_item/self_editable_table.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/layouts/FormLayout/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/FormLayout/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/layouts/HomeLayout/Menu.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/HomeLayout/Menu.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/layouts/LoginPage/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/LoginPage/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/layouts/LoginPage/loginLayout.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/LoginPage/loginLayout.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/stores/FormStore.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/stores/FormStore.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/nginx/default.conf" beforeDir="false" afterPath="$PROJECT_DIR$/nginx/default.conf" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -166,6 +158,7 @@
       <workItem from="1681121864599" duration="6169000" />
       <workItem from="1681288224708" duration="8000" />
       <workItem from="1681358584187" duration="8676000" />
+      <workItem from="1681385240818" duration="180000" />
     </task>
     <task id="LOCAL-00001" summary="login">
       <created>1678279318279</created>
