@@ -84,15 +84,18 @@ const FormLayout = observer(({ HomeStore, FormStore, type, formId, handleCancel,
     }
     FormStore.setValue('formData', {});
     setData({})
+
   }, [])
   useEffect(() => {
     setData(formData)
     form.setValues(formData)
     formList.setValues(formData)
+    // FormStore.handleBlur({fieldId:'1'})
   }, [flag])
   useEffect(() => {
     dataRef.current = data
   }, [data])
+
   const handleMount = () => {
     form.setValues(dataRef.current)
     formList.setValues(dataRef.current)

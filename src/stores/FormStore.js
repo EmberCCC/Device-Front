@@ -90,6 +90,7 @@ class Form {
      * @param {*} schema
      */
     @action.bound async handleBlur(schema) {
+
         let id = schema.hasOwnProperty('fieldId') ? schema.fieldId : schema.$id.substr(2)
         let arr = []
         let arrLink = []
@@ -100,7 +101,7 @@ class Form {
                 arr.push({ ...this.linkDataObj[item], 'nowValue': this.formData })
             })
         }
-        debugger
+
         //如果是联动查询的字段，需要发送请求
         if (this.linkqueryDataObj.hasOwnProperty(id)) {
             this.linkqueryDataObj[id].map(item => {
@@ -372,7 +373,7 @@ class Form {
     }
     @action.bound async getSearchData(params) {
         try {
-            debugger
+
             console.log('参数',params)
             let res = await services.putRequest(services.requestList.getSearchData, params);
             if (isDataExist(res)) {

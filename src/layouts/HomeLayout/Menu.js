@@ -24,6 +24,27 @@ class MenuLayout extends Component {
     }
     this.store = this.props.HomeStore;
   }
+
+  /**
+   * 菜单点击事件
+   * @param item
+   */
+  menuFormClick = (item) => {
+    return ()=>{
+
+      console.log(item)
+      this.props.history.push({ pathname: '/common' });//router更改
+      this.props.FormStore.getFormField({ 'formId': item['formId'] })
+      this.props.HomeStore.setValue('firstFormId', item['formId'])
+      this.props.FormStore.getFormAuthInfo({ 'formId': item['formId'] })
+      this.props.HomeStore.setValue('formInfo', item)
+      this.props.TableStore.setValue('model', 'submit')
+      this.props.SocketStore.getMyInfo()
+      sessionStorage.setItem('formId', item['formId'])
+      sessionStorage.setItem('formName', JSON.stringify(item))
+    }
+  }
+
   render() {
     const isMobile = this.props.mobile === 'false';
     const { menu } = this.props.HomeStore;
@@ -133,18 +154,9 @@ class MenuLayout extends Component {
                       {
                         item.simpleForms.length > 0 && (
                           item.simpleForms.map((one, oIndex) => {
+
                             return (
-                              <div key={oIndex} onClick={() => {//进入表单的点击事件
-                                this.props.history.push({ pathname: '/common' });//router更改
-                                this.props.FormStore.getFormField({ 'formId': one['formId'] })
-                                this.props.HomeStore.setValue('firstFormId', one['formId'])
-                                this.props.FormStore.getFormAuthInfo({ 'formId': one['formId'] })
-                                this.props.HomeStore.setValue('formInfo', one)
-                                this.props.TableStore.setValue('model', 'submit')
-                                this.props.SocketStore.getMyInfo()
-                                sessionStorage.setItem('formId', one['formId'])
-                                sessionStorage.setItem('formName', JSON.stringify(one))
-                              }} className={`left_menu_child ${idIndex > -1 ? 'display' : 'undisplay'} ${this.props.HomeStore.firstFormId == one['formId'] ? 'selectForm' : ''}`}>
+                              <div key={oIndex} onClick={this.menuFormClick(one)} className={`left_menu_child ${idIndex > -1 ? 'display' : 'undisplay'} ${this.props.HomeStore.firstFormId == one['formId'] ? 'selectForm' : ''}`}>
                                 <FileTextOutlined className='node_icon' style={{ 'color': `${one['type'] == 0 ? "#5da0cc" : "rgb(245, 164, 57)"}` }} />
                                 <span className='node_name'>{one.formName}</span>
                                 <SettingOutlined className='node_setting' />
@@ -189,7 +201,7 @@ class MenuLayout extends Component {
     }
     this.props.HomeStore.initMenu(this.props.location.pathname);
     if(sessionStorage.getItem('token')){
-      
+
     }
     // this.props.HomeStore.getMenuList(this.props.location.pathname).then(() => {
     //   this.props.HomeStore.initMenu(this.props.location.pathname);

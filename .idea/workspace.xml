@@ -4,17 +4,13 @@
     <list default="true" id="d0f636be-eafc-4739-9c82-f6c78cbc7282" name="变更" comment="login">
       <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/webpackDevServer.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/config/webpackDevServer.config.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/GlobalHeader/index.less" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/GlobalHeader/index.less" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/GlobalTabel2/dataModal.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/GlobalTabel2/dataModal.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/css/newTheme.less" beforeDir="false" afterPath="$PROJECT_DIR$/src/css/newTheme.less" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/layouts/FormEdit/changeTool.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/FormEdit/changeTool.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/layouts/FormEdit/self_item/linkquery_condition.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/FormEdit/self_item/linkquery_condition.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/GlobalHeader/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/GlobalHeader/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/layouts/FormEdit/self_item/self_editable_table.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/FormEdit/self_item/self_editable_table.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/layouts/FormLayout/formData.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/FormLayout/formData.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/layouts/FormLayout/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/FormLayout/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/layouts/HomeLayout/Menu.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/HomeLayout/Menu.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/layouts/LoginPage/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/LoginPage/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/layouts/LoginPage/loginLayout.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/layouts/LoginPage/loginLayout.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/stores/FormStore.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/stores/FormStore.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/stores/TableStore.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/stores/TableStore.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils/request.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils/request.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,7 +52,7 @@
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;yarn&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;,
     &quot;ts.external.directory.path&quot;: &quot;E:\\React\\Device\\Device-Front\\node_modules\\typescript\\lib&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
@@ -163,7 +159,13 @@
       <workItem from="1680941142746" duration="11000" />
       <workItem from="1680945056490" duration="14000" />
       <workItem from="1680959954267" duration="4290000" />
-      <workItem from="1681013853454" duration="10546000" />
+      <workItem from="1681013853454" duration="11264000" />
+      <workItem from="1681026762465" duration="7561000" />
+      <workItem from="1681113876557" duration="602000" />
+      <workItem from="1681119269548" duration="1736000" />
+      <workItem from="1681121864599" duration="6169000" />
+      <workItem from="1681288224708" duration="8000" />
+      <workItem from="1681358584187" duration="8676000" />
     </task>
     <task id="LOCAL-00001" summary="login">
       <created>1678279318279</created>

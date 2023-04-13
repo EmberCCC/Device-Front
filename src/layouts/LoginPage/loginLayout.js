@@ -63,6 +63,7 @@ class LoginLayout extends Component {
     }
     handleSubmit = values => {
         console.log(values)
+        sessionStorage.clear();
         setCookie('username',values.username)
         // if (values.remember) {
         //     for (let name in values) {

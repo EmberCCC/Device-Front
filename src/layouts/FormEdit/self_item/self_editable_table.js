@@ -41,7 +41,7 @@ const Self_editable_table = observer((props) => {
         debugger
         console.log(props)
         if (props.value !== undefined && props.value.length !== 0) {
-            if(typeof props.value[0]==='object'){
+            if(typeof props.value[0]==='object' || undefined){
                 return
             }
             let arr = props.value
@@ -176,6 +176,9 @@ const Self_editable_table = observer((props) => {
                                         defaultDom.cancel,
                                     ];
                                 },
+                            }}
+                            pagination={{
+                                pageSize:10,
                             }}
                             recordCreatorProps = {false}
                             scroll={{ x: 800 }}

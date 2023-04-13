@@ -30,11 +30,7 @@ const iconConfig={
 @inject('HomeStore')
 @observer
 class LoginPage extends React.Component {
-  register=()=>{
-    this.props.history.push({
-      pathname: '/register',
-    })
-  }
+
 
   render() {
     return (
@@ -264,34 +260,5 @@ class LoginPage extends React.Component {
         <div className='login_footer'></div>
       </div>);
   }
-  handleSubmit = values => {
-    if (values.remember) {
-      for (let name in values) {
-        setCookie(name, values[name]);
-      }
-    } else {
-      for (let name in values) {
-        clearCookie(name);
-      }
-    }
-    // 请求登陆接口
-    this.props.HomeStore.setLogin({
-      grant_type: 'password',
-      username: values.username,
-      password: values.password,
-      client_id: 'pc',
-      client_secret: 'secret',
-    }, (result) => {
-      const { success, token } = result;
-      if (success) {
-        sessionStorage.setItem('selfToken', 'Bearer ' + token); // 设置前局登陆token
-        sessionStorage.setItem('username', values.username); // 设置登录用户名
-        this.props.history.push({
-          pathname: '/form',
-          state: { username: values.username, password: values.password, selfToken: token }
-        });
-      }
-    })
-  };
 }
 export default LoginPage;
