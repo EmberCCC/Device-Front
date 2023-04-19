@@ -38,7 +38,7 @@ const Self_editable_table = observer((props) => {
     }, [schema.linkquery_condition,schema.table_addEditColumn])
 
     useEffect(()=>{
-        debugger
+
         console.log(props)
         if (props.value !== undefined && props.value.length !== 0) {
             if(typeof props.value[0]==='object' || undefined){
@@ -48,6 +48,11 @@ const Self_editable_table = observer((props) => {
             try {
                 arr= JSON.parse(arr)
             }catch (e){}
+            debugger
+            if(Array.isArray(arr)===false){
+                arr=[arr]
+            }
+            console.log('beforeValue',arr)
             let {newValue,deleteArr}=dataExchange(arr)
             console.log('newValue',newValue)
             console.log('deleteArr',deleteArr)
@@ -63,8 +68,10 @@ const Self_editable_table = observer((props) => {
                 tableDataChange(arr)
                 return;
             }
+
             put('/data/FastQuery', newValue).then((res) => {
                 let arr = [...showData]
+
                 res.data.data.map((item, index) => {
                     let obj = {}
                     let data = JSON.parse(item['formData'])
@@ -94,24 +101,27 @@ const Self_editable_table = observer((props) => {
      */
     const dataExchange= (newValue) => {
         let deleteArr = []
-        debugger
-        if(newValue!==undefined && typeof newValue[0]!=='object'){
-            for(let i in dataSource){
-                let index=newValue.findIndex(dataSource[i].id)
+        if(newValue!==undefined && typeof newValue[0]!=='object'&&Array.isArray(newValue)){
+            for(let i in showData){
+                debugger
+                console.log(showData[i])
+                let index=newValue.findIndex((item)=>item===showData[i].id)
                 if(index===-1){//不存在
-                    deleteArr.push(dataSource[i].id)
+                    deleteArr.push(showData[i].id)
                 }else{
                     newValue.splice(index,1)
                 }
             }
         }
-        return {deleteArr,newValue}
+        return {newValue,deleteArr}
 
     }
 
     const tableDataChange=(value)=>{
+        debugger
         setShowData(value)
-        onChange(value)
+        setDataSource(value)
+        props.onChange(value)
     }
 
     const actionColumn = {
@@ -154,6 +164,15 @@ const Self_editable_table = observer((props) => {
 
         setColumn(arr)
     }
+    // useEffect(()=>{
+    //     if(JSON.stringify(showData)!==JSON.s)
+    // })
+    // useEffect(()=>{
+    //     debugger
+    //     if(props.value===undefined || props.value.length===0){
+    //         setDataSource(props.value)
+    //     }
+    // },[props.value])
 
     return (
         <div style={{ width: '100%' }}>
@@ -183,7 +202,7 @@ const Self_editable_table = observer((props) => {
                             recordCreatorProps = {false}
                             scroll={{ x: 800 }}
                             columns={column}
-                            value={showData}
+                            value={ Array.isArray(props.value) &&typeof props.value[0] ==='object' ? props.value : showData}
                             onChange={tableDataChange}
                         />
                         </Form>

@@ -28,6 +28,7 @@ import self_datapick from "layouts/FormEdit/self_item/self_datapick"
 import self_linkquery from "layouts/FormEdit/self_item/self_linkquery"
 import { Self_address } from "layouts/FormEdit/self_item/self_address"
 import self_department_user from "layouts/FormEdit/self_item/self_department_user"
+import self_editable_table from "layouts/FormEdit/self_item/self_editable_table";
 import {useHistory} from "react-router-dom";
 const DetailPage = observer(({ MessageStore, HomeStore, SocketStore, FlowStore, FormStore, props }) => {
     const [schema, setSchema] = useState({
@@ -176,7 +177,8 @@ const DetailPage = observer(({ MessageStore, HomeStore, SocketStore, FlowStore, 
                                     self_datapick: self_datapick,
                                     self_linkquery: self_linkquery,
                                     self_address: Self_address,
-                                    self_department_user: self_department_user
+                                    self_department_user: self_department_user,
+                                    self_editable_table: self_editable_table,
                                 }}
                                 form={formList}
                                 style={{ overflowY: 'auto' }}
@@ -377,7 +379,8 @@ const DetailPage = observer(({ MessageStore, HomeStore, SocketStore, FlowStore, 
                                         self_datapick: self_datapick,
                                         self_linkquery: self_linkquery,
                                         self_address: Self_address,
-                                        self_department_user: self_department_user
+                                        self_department_user: self_department_user,
+                                        self_editable_table: self_editable_table,
                                     }}
                                     watch={watch}
                                 />

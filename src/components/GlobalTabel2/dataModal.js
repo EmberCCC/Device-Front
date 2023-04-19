@@ -407,6 +407,7 @@ class DataModal extends Component {
                                 <div className='right_content_content'>
                                     {
                                         infoItem.map((item, key) => {
+                                            console.log('评论',item);
                                             return <>
                                                 <div className='item_title' key={key}>{item.title}:</div>
                                                 {

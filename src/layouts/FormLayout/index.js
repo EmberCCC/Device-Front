@@ -139,7 +139,7 @@ const FormLayout = observer(({ HomeStore, FormStore, type, formId, handleCancel,
           }
         }
       })
-      console.log(obj);
+      console.log('watch',obj);
       setData(obj)
       FormStore.setValue('formData', obj)
     }
@@ -212,7 +212,7 @@ const FormLayout = observer(({ HomeStore, FormStore, type, formId, handleCancel,
           watch={watch}
         />
 
-        <Tabs tabBarGutter={20} destroyInactiveTabPane={true} type='card'>
+        <Tabs  tabBarGutter={20} destroyInactiveTabPane={true} type='card'>
           {
             getItem()
           }
