@@ -40,7 +40,7 @@ class LoginPage extends React.Component {
         <div className='login_content'>
           <div className='content_first'>
             <div className='first_left'>
-              <div className='first_lineO'>解决设备全生命周期管理难题</div>
+              <div className='first_lineO'>解决设备全生命周期管理难题12312312312</div>
               <div className='first_lineT'>一张二维码就能搞定设备管理？手机扫描设备二维码，
                 <br />即可解决设备档案管理、巡检、报修、保养、分析预警等问题
               </div>
