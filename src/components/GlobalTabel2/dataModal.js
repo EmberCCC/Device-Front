@@ -39,7 +39,7 @@ class DataModal extends Component {
                             let jsonData = JSON.parse(item['detailJson'])
                             jsonData = toJS(jsonData)
                             console.log('jsonData',jsonData)
-                            debugger
+
                             try {
                                 showData = JSON.parse(showData)
                             } catch {
@@ -101,7 +101,7 @@ class DataModal extends Component {
                                 console.log("14", toJS(element), toJS(jsonData), toJS(modalData[item['id']]))
                                 console.log(toJS(oneDataInfo))
                                 let showData = []
-                                debugger
+
 
                                 let data = []
                                 if (modalData[item['id']]) {
@@ -371,14 +371,22 @@ class DataModal extends Component {
                         let dex = 0
                         let infoItem = []
                         let flag = false;
+                        debugger
                         for (const key in changeContent) {
                             if (Object.hasOwnProperty.call(changeContent, key)) {
+
                                 const element = changeContent[key];
                                 infoItem[dex] = new Object()
                                 infoItem[dex].front = element[0]
                                 infoItem[dex].behind = element[1]
                                 toJS(this.props.TableStore.detailData['fields']).filter((info) => {
+
                                     if (info['id'] == key) {
+                                        console.log('标题', JSON.parse(info['detailJson']))
+                                        if(parseInt(JSON.parse(info['detailJson']).typeId)>10){
+                                            infoItem[dex].front=''
+                                            infoItem[dex].behind='暂不支持展示增强字段'
+                                        }
                                         infoItem[dex].title = JSON.parse(info['detailJson'])['title'];
                                         flag = true;
                                     }
@@ -407,7 +415,7 @@ class DataModal extends Component {
                                 <div className='right_content_content'>
                                     {
                                         infoItem.map((item, key) => {
-                                            console.log('评论',item);
+                                            console.log('评论',infoItem);
                                             return <>
                                                 <div className='item_title' key={key}>{item.title}:</div>
                                                 {

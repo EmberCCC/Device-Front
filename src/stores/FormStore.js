@@ -127,6 +127,8 @@ class Form {
         if (arrLink.length > 0 ) {
             res2 = await this.getSearchData(arrLink)
         }
+        console.log('handlerRes',res1, res2)
+
         this.setValue('formData', { ...this.formData, ...res1, ...res2 })
         this.setValue('flag', !this.flag)
     }
@@ -493,6 +495,8 @@ class Form {
             console.log(error)
         }
     }
+
+
 }
 
 let FormStore = new Form();

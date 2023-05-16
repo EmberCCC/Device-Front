@@ -13,7 +13,6 @@ const Self_editable_table = observer((props) => {
     const { schema, FormStore,edit=true ,value ,onChange} = props
     const [column, setColumn] = useState([])
     const [form]=Form.useForm()
-    const [dataSource, setDataSource] = useState([])
     const editorFormRef = useRef();
     const [editingKey, setEditingKey] = useState('');
     const [editableKeys, setEditableRowKeys] = useState( []);
@@ -120,7 +119,6 @@ const Self_editable_table = observer((props) => {
     const tableDataChange=(value)=>{
         debugger
         setShowData(value)
-        setDataSource(value)
         props.onChange(value)
     }
 
@@ -173,7 +171,14 @@ const Self_editable_table = observer((props) => {
     //         setDataSource(props.value)
     //     }
     // },[props.value])
-
+    useEffect(()=>{
+        console.log('11111')
+        if(JSON.stringify(props.value)!==JSON.stringify(showData)) {
+            if(Array.isArray(props.value) && typeof props.value[0] === 'object'){
+                setShowData(props.value)
+            }
+        }
+    })
     return (
         <div style={{ width: '100%' }}>
             <div className="self_rich_text" dangerouslySetInnerHTML={{ __html: schema.describe }} />
@@ -202,7 +207,7 @@ const Self_editable_table = observer((props) => {
                             recordCreatorProps = {false}
                             scroll={{ x: 800 }}
                             columns={column}
-                            value={ Array.isArray(props.value) &&typeof props.value[0] ==='object' ? props.value : showData}
+                            value={ showData}
                             onChange={tableDataChange}
                         />
                         </Form>

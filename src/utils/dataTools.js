@@ -130,3 +130,13 @@ export function string2Array(string){
   }
   return s
 }
+
+/**
+ * @description 用于将关联查询的数据转换为表格数据
+ * @param {Object} res 传递的关联查询的数据
+ * @param {Object} tableData 传递的表格数据
+ * @return {Object} 返回更改后的表格数据
+ * */
+export function selfEditableTableValueExchange(res,tableData){
+
+}
