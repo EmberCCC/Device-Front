@@ -1,10 +1,3 @@
-/**
- * @author zyn on 0516
- * @description 全局crumbs设置
- * @param {Array} dataSource - 面包屑的数据源数组
- * @param {String} mobile - 判断是否是移动端
- */
-
 import React, { Component } from 'react';
 import { Breadcrumb } from 'antd';
 import './index.less';

@@ -1,11 +1,3 @@
-/*
- * @Author: your name
- * @Date: 2021-11-02 14:29:58
- * @LastEditTime: 2022-02-14 10:07:45
- * @LastEditors: Please set LastEditors
- * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
- * @FilePath: \bl-device-manage\src\services\system.js
- */
 import { get, post, put } from '../utils/request';
 
 /* 存储请求地址*/

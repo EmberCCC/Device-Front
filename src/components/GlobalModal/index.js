@@ -1,11 +1,3 @@
-/**
- * @author zyn on 0513
- * @description 实现弹窗的拖拽、最大化、还原、关闭
- * @basic-params 基本实现参数可参照antd组件库Modal API
- * @param {Boolean} maxmin -是否支持最大化 - 默认值 false;
- * @param {Boolean} dragable -是否支持拖拽 - 默认值 false;
- * @param {String || ReactNode} children - Modal组件添加的content内容 - 默认 null
- */
 import React, {Component} from 'react';
 import {Modal,} from 'antd';
 import classnames from 'classnames';

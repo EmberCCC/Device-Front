@@ -1,10 +1,7 @@
-import {Button, Form, Input, Modal, Popconfirm, Select, Spin, Table, Typography} from 'antd';
-import { toJS } from 'mobx';
+import {Form,} from 'antd';
 import { inject, observer } from 'mobx-react';
-import React, {useContext, useEffect, useRef, useState} from 'react'
-import * as services from '../../../services/form';
+import React, { useEffect, useRef, useState} from 'react'
 import { put } from 'utils/request';
-import { getAllField } from '../changeTool';
 import {EditableProTable} from "@ant-design/pro-components";
 import './index.css'
 

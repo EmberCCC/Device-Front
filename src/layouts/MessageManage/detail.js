@@ -1,11 +1,3 @@
-/*
- * @Author: EmberCCC 1810888456@qq.com
- * @Date: 2022-07-30 05:48:44
- * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-09-25 21:28:43
- * @FilePath: \bl-device-manage-test\src\layouts\MessageManage\detail.js
- * @Description: 详细数据页面
- */
 import { ApartmentOutlined, CopyOutlined, FormOutlined, NodeExpandOutlined, PlayCircleOutlined, PoweroffOutlined } from "@ant-design/icons"
 import { createGraphConfig, FlowchartCanvas, XFlow, XFlowCanvas, XFlowGraphCommands } from "@antv/xflow"
 import { Button, Drawer, Input, message, Tabs } from "antd"

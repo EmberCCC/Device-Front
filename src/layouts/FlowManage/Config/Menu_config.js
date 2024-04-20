@@ -1,10 +1,5 @@
 import {createCtxMenuConfig, MenuItemType, XFlowEdgeCommands, XFlowNodeCommands} from '@antv/xflow'
 
-
-
-
-
-
 export const DELETE_EDGE = {
     id: XFlowEdgeCommands.DEL_EDGE.id,
     label: '删除边',

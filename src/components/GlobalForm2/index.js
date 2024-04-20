@@ -1,12 +1,3 @@
-/*
- * @Author: your name
- * @Date: 2022-04-05 11:02:45
- * @LastEditTime: 2022-05-06 04:30:49
- * @LastEditors: EmberCCC 1810888456@qq.com
- * @Description: 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
- * @FilePath: \bl-device-manage-test\src\components\GlobalForm\index.js
- */
-
 import React from 'react'
 import { Form, Button, Select, Modal, message, Tabs } from 'antd'
 import { EditOutlined } from '@ant-design/icons';

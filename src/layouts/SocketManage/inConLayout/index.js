@@ -1,11 +1,3 @@
-/*
- * @Author: EmberCCC 1810888456@qq.com
- * @Date: 2022-07-19 23:03:37
- * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-03 11:20:56
- * @FilePath: \bl-device-manage-test\src\layouts\SocketManage\inConLayout\index.js
- * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
- */
 import { CheckCircleFilled, DeleteOutlined, FolderFilled } from "@ant-design/icons";
 import { Button, Checkbox, Divider, Drawer, Empty, Form, Input, Menu, message, Modal, Popover, Radio, Select, Space, Spin, Switch, Table, Tree, TreeSelect } from "antd";
 import { toJS } from "mobx";

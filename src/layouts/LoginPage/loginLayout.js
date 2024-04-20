@@ -1,11 +1,3 @@
-/*
- * @Author: EmberCCC 1810888456@qq.com
- * @Date: 2022-07-07 16:13:38
- * @LastEditors: EmberCCC 1810888456@qq.com
- * @LastEditTime: 2022-08-01 11:27:40
- * @FilePath: \bl-device-manage-test\src\layouts\LoginPage\loginLayout.js
- * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
- */
 import { LockOutlined, UserOutlined } from '@ant-design/icons'
 import { Button, Checkbox, Form, Input } from 'antd'
 import React, { Component } from 'react'
