@@ -102,15 +102,12 @@ class index extends Component {
                                         <div className='one_message' key={item.id} onClick={() => {
                                             let dataIdArr = []
                                             this.props.MessageStore.setValue('fieldInfo', fieldList)
-                                            console.log('fieldList',fieldList);
-                                            console.log(data);
                                             fieldList.forEach(element => {
                                                 if (element.typeId == 15 || element.typeId == 14) {
                                                     console.log(data[element['fieldId']]);
                                                     if (data[element['fieldId']] != undefined && data[element['fieldId']] != '') {
                                                         console.log(data);
                                                         let item
-                                                        debugger
                                                         try {
                                                             item=JSON.parse(data[element['fieldId']])
                                                         }catch (e){

@@ -17,7 +17,7 @@ class LoginLayout extends Component {
             <div className='login_window'>
                 <div className='basic_login'>
                     <div>
-                        <div className='login_title' style={{ paddingTop: 27, paddingBottom: 5, color: '#161616', letterSpacing: 10 }}>设备协同管理</div>
+                        <div className='login_title' style={{ paddingTop: 27, paddingBottom: 5, color: '#161616', letterSpacing: 10 }}>维修工单管理</div>
                     </div>
                     <div style={{ height: 4, width: 80, background: '#0db3a6', marginTop: 17 }}></div>
                     <Form onFinish={this.handleSubmit} className="login-form">

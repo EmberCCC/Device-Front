@@ -44,7 +44,6 @@ const Self_editable_table = observer((props) => {
             try {
                 arr= JSON.parse(arr)
             }catch (e){}
-            debugger
             if(Array.isArray(arr)===false){
                 arr=[arr]
             }
@@ -99,7 +98,6 @@ const Self_editable_table = observer((props) => {
         let deleteArr = []
         if(newValue!==undefined && typeof newValue[0]!=='object'&&Array.isArray(newValue)){
             for(let i in showData){
-                debugger
                 console.log(showData[i])
                 let index=newValue.findIndex((item)=>item===showData[i].id)
                 if(index===-1){//不存在
@@ -114,7 +112,6 @@ const Self_editable_table = observer((props) => {
     }
 
     const tableDataChange=(value)=>{
-        debugger
         setShowData(value)
         props.onChange(value)
     }

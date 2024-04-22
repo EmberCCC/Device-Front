@@ -363,7 +363,6 @@ class DataModal extends Component {
                         let dex = 0
                         let infoItem = []
                         let flag = false;
-                        debugger
                         for (const key in changeContent) {
                             if (Object.hasOwnProperty.call(changeContent, key)) {
 
