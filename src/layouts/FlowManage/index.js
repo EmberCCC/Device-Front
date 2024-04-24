@@ -125,8 +125,7 @@ const FlowManage = observer(({FlowStore, HomeStore, TableStore, SocketStore, pro
     const [app, setApp] = useState(null)
     const [graph, setGraph] = useState(null)
     const [toolbarConfig, setBoolbarConfig] = useState(useToolbarConfig(props))
-    const forceUpdate = useReducer((bool) => !bool)[1]
-    const [isAdmin,setAdmin]=useState(false)
+    const [isAdmin,setAdmin]=useState(true)
     var NsJsonForm;
     (function (NsJsonForm) {
         /** ControlShape的Enum */
@@ -150,9 +149,6 @@ const FlowManage = observer(({FlowStore, HomeStore, TableStore, SocketStore, pro
             targetType,
             targetData
         ) => {
-            console.log('targetType', targetType)
-
-            console.log(targetData);
             if (targetData != null && !targetData.hasOwnProperty('auth_info')) {
                 targetData['auth_info'] = {}
             }
@@ -340,13 +336,10 @@ const FlowManage = observer(({FlowStore, HomeStore, TableStore, SocketStore, pro
             setIsload(false)
         })
 
-        console.log('getformId',formId)
-        console.log(toJS(FlowStore.canOb))
     }, [])
     useEffect(()=>{
 
     },[JSON.stringify(NsJsonForm)])
-    const nanoid = customAlphabet('1234567890', 7)
     const onLoad = async app => {
         setApp(app)
         await app.getGraphInstance().then(res => setGraph(res))
@@ -529,15 +522,12 @@ const FlowManage = observer(({FlowStore, HomeStore, TableStore, SocketStore, pro
                         {
                             canOb == true && (
                                 <CanvasToolbar
-                                    config={isAdmin ? toolbarConfig:''}
+                                    config={isAdmin ? toolbarConfig : ''}
                                     position={{left: 200}}
                                     style={{zIndex: 100}}
                                 />
                             )
                         }
-                        {/* <CanvasContextMenu
-
-                        /> */}
                         <CanvasScaleToolbar
                             layout='horizontal'
                             position={{right: 500}}/>
